@@ -32,6 +32,7 @@ This project aims to develop a  website for a museum such that it offers better 
 
 Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/Deliverable-1) to view Deliverable 1.
 
+
 |         Name         | Contributions                                            | Effort (hours) |
 | :------------------: | -------------------------------------------------------- | :------------: |
 |       Siger Ma       | Lorem ipsum dolor sit amet, consectetur adipiscing elit, |       0        |
@@ -40,3 +41,4 @@ Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/De
 |      Eric Joung      | Lorem ipsum dolor sit amet, consectetur adipiscing elit, |       0        |
 | Kieyan Mamiche Afara | Lorem ipsum dolor sit amet, consectetur adipiscing elit, |       0        |
 |      Kevin Luo       | Lorem ipsum dolor sit amet, consectetur adipiscing elit, |       0        |
+
