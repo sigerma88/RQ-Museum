@@ -1,7 +1,6 @@
 # Welcome to the ECSE 321 Project of Group 17
 
 ## Scope of Project
-
 This project aims to develop a  website for a museum such that it offers better services for the community. The museum software system allows visitors to browse all artworks and create an account where they can purchase museum passes and request items on loan. The application also assists the manager in managing the museum through their account. For instance, it allows the manager to schedule opening hours, make employee schedules, price visitor and rental fees, manage tasks, and hire/fire employees. Each employee will also have a unique account where they can decide where artwork should be displayed and move artwork from storage to rooms and vice-versa. 
 
 
