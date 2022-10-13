@@ -30,7 +30,7 @@ This project aims to develop a  website for a museum such that it offers better 
 
 ### Deliverable 1
 
-ADD LINK TO WIKI!!!
+Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/Deliverable-1) to view Deliverable 1.
 
 |         Name         | Contributions                                            | Effort (hours) |
 | :------------------: | -------------------------------------------------------- | :------------: |
