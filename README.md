@@ -1,10 +1,12 @@
 # Welcome to the ECSE 321 Project of Group 17
 
 ## Scope of Project
-This project aims to develop a  website for a museum such that it offers better services for the community. The museum software system allows visitors to browse all artworks and create an account where they can purchase museum passes and request items on loan. The application also assists the manager in managing the museum through their account. For instance, it allows the manager to schedule opening hours, make employee schedules, price visitor and rental fees, manage tasks, and hire/fire employees. Each employee will also have a unique account where they can decide where artwork should be displayed and move artwork from storage to rooms and vice-versa. 
+This project aims to develop a website for a museum such that it offers better services for the community. The museum software system allows visitors to browse all of the museum's artworks and create an account where they can purchase museum passes and request items on loan. The application also assists the manager in managing the museum through their account. For instance, it allows the manager to schedule opening hours, make employee schedules, price visitor and rental fees, manage tasks, and hire/fire employees. Each employee will also have a unique account where they can decide where artwork should be displayed and move artwork from storage to rooms and vice-versa. 
 
 
 ## Group Members
+
+We are 6 McGill University students in the ECSE department.
 
 |         Name         |                    Github                     |        Major         | Year |
 | :------------------: | :-------------------------------------------: | :------------------: | :--: |
@@ -30,7 +32,7 @@ This project aims to develop a  website for a museum such that it offers better 
 
 ### Deliverable 1
 
-Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/Deliverable-1) to view Deliverable 1.
+Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/Deliverable-1) to view the project report for Deliverable 1.
 
 
 |         Name         | Contributions                                            | Effort (hours) |
@@ -41,4 +43,7 @@ Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/De
 |      Eric Joung      | Lorem ipsum dolor sit amet, consectetur adipiscing elit, |       0        |
 | Kieyan Mamiche Afara | Lorem ipsum dolor sit amet, consectetur adipiscing elit, |       0        |
 |      Kevin Luo       | Lorem ipsum dolor sit amet, consectetur adipiscing elit, |       0        |
+
+### Deliverable 2
+### Deliverable 3
 
