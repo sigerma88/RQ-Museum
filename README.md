@@ -8,14 +8,14 @@ This project aims to develop a website for a museum such that it offers better s
 
 We are 6 McGill University students in the ECSE department.
 
-|         Name         |                    Github                     |        Major         | Year |
-| :------------------: | :-------------------------------------------: | :------------------: | :--: |
-|       Siger Ma       |   [sigerma88](https://github.com/sigerma88)   | Software Engineering |  U2  |
-|     Victor Zhao      |      [telmaq](https://github.com/telmaq)      | Software Engineering |  U2  |
-|     Zahra Landou     | [ZahraLandou](https://github.com/ZahraLandou) | Software Engineering |  U2  |
-|      Eric Joung      | [Don-Barista](https://github.com/Don-Barista) | Software Engineering |  U2  |
-| Kieyan Mamiche Afara |             Kieyan Mamiche Afara              | Computer Engineering |  U3  |
-|      Kevin Luo       |   [Luo-Kevin](https://github.com/Luo-Kevin)   | Software Engineering |  U2  |
+|         Name         |                      Github                       |        Major         | Year |
+| :------------------: | :-----------------------------------------------: | :------------------: | :--: |
+|       Siger Ma       |     [sigerma88](https://github.com/sigerma88)     | Software Engineering |  U2  |
+|     Victor Zhao      |        [telmaq](https://github.com/telmaq)        | Software Engineering |  U2  |
+|     Zahra Landou     |   [ZahraLandou](https://github.com/ZahraLandou)   | Software Engineering |  U2  |
+|      Eric Joung      |   [Don-Barista](https://github.com/Don-Barista)   | Software Engineering |  U2  |
+| Kieyan Mamiche Afara | [kieyanmamiche](https://github.com/kieyanmamiche) | Computer Engineering |  U3  |
+|      Kevin Luo       |     [Luo-Kevin](https://github.com/Luo-Kevin)     | Software Engineering |  U2  |
 
 ## Overview Table
 
