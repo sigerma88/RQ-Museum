@@ -19,7 +19,7 @@ We are 6 McGill University students in the ECSE department.
 
 ## Overview Table
 
-|         Name         | Team Roles | Year | Sprint 1 Efforts (hours) | Sprint 2 Efforts (hours) | Sprint 3 Efforts(hours) | Total Effort (hours) |
+|         Name         | Team Roles | Year | Sprint 1 Efforts (hours) | Sprint 2 Efforts (hours) | Sprint 3 Efforts (hours) | Total Effort (hours) |
 | :------------------: | :--------: | :--: | :----------------------: | :----------------------: | :---------------------: | :------------------: |
 |       Siger Ma       |    TBA     |  U2  |            0             |            0             |            0            |          0           |
 |     Victor Zhao      |    TBA     |  U2  |            0             |            0             |            0            |          0           |
