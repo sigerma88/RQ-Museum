@@ -1,4 +1,4 @@
-package ca.mcgill.ecse321.museum.museum;
+package ca.mcgill.ecse321.museum;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
