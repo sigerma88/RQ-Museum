@@ -7,7 +7,12 @@
   - You can set the same username and password when you download PostgreSQL if you do not want to change them in the code (see section _Build and start the back-end application_ for how to change it to your username and password)
 - Download Java (the project is currently using Java version 17)
 
-# Start PostgreSQL Server
+**For Mac users:**
+It's possible to install postgresql with [homebrew](https://formulae.brew.sh/formula/postgresql@14).
+Run the following command on the terminal `brew install postgresql@14`
+
+
+# Start PostgreSQL Server Locally
 
 ## Windows
 
@@ -22,7 +27,8 @@
 
 ## Mac
 
-to be completed
+1. Open terminal
+2. Run the command `brew services start postgresql`
 
 # Build and start the back-end application
 
