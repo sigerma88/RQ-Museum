@@ -33,7 +33,11 @@ _Note:_
 - For the application, they are set in `Museum-Backend/src/main/resources/application.properties`
   - You can change `spring.datasource.username` and `spring.datasource.password` to your own
 
-## Different options
+## First step
+
+From the project folder, run the command: `gradle build`
+
+## Second step options
 
 1. From the IDE, run the application from the file `Museum-Backend/src/main/java/ca/mcgill/ecse321/museum/MuseumApplication.java` by clicking on the run or play button beside the code.
 2. From the project folder, run the command: `gradle bootRun`
