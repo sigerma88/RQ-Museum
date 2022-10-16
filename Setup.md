@@ -9,8 +9,7 @@
 
 **For Mac users:**
 It's possible to install postgresql with [homebrew](https://formulae.brew.sh/formula/postgresql@14).
-Run the following command on the terminal `brew install postgresql@14`
-
+Run the following command on the terminal `brew install postgresql`
 
 # Start PostgreSQL Server Locally
 
