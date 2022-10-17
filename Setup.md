@@ -36,13 +36,17 @@ _Note:_
 - For the application to access the local database, the username and password need to be validated
   - Username and password need to be the same between your local PostgreSQL server and the properties of the application
 - For the application, they are set in `Museum-Backend/src/main/resources/application.properties`
-  - You can change `spring.datasource.username` and `spring.datasource.password` to your own
 
 ## First step
 
+1. Copy paste the file `Museum-Backend/src/main/resources/application.properties.example` and rename it to `application.properties` by removing the `.example` part.
+2. Open the file `application.properties` and change the username and password to your local PostgreSQL server username and password
+
+## Second step
+
 From the project folder, run the command: `gradle build`
 
-## Second step options
+## Third step options
 
 1. From the IDE, run the application from the file `Museum-Backend/src/main/java/ca/mcgill/ecse321/museum/MuseumApplication.java` by clicking on the run or play button beside the code.
 2. From the project folder, run the command: `gradle bootRun`
