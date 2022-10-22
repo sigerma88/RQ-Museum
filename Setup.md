@@ -49,9 +49,9 @@ _Note:_
 
 ## Second step
 
-From the project folder, run the command: `gradle build`
+From the project folder, run the command: `gradle build` or `./gradlew build`
 
 ## Third step options
 
 1. From the IDE, run the application from the file `Museum-Backend/src/main/java/ca/mcgill/ecse321/museum/MuseumApplication.java` by clicking on the run or play button beside the code.
-2. From the project folder, run the command: `gradle bootRun`
+2. From the project folder, run the command: `gradle bootRun` or `gradle run` or `./gradlew bootRun` or `./gradlew run`

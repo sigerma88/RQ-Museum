@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.7.4'
 	id 'io.spring.dependency-management' version '1.0.14.RELEASE'
 	id 'java'
+	id 'application'
 }
 
 group = 'ca.mcgill.ecse321.museum'
@@ -41,5 +42,15 @@ sourceSets {
   }
   test {
     java { srcDir 'src/test/java'}
+  }
+}
+
+mainClassName='ca.mcgill.ecse321.museum.MuseumApplication'
+
+jar {
+  destinationDir=file('distributable')
+  manifest {
+    // It is smart to reuse the name of the main class variable instead of hardcoding it
+    attributes "Main-Class": "$mainClassName"
   }
 }
