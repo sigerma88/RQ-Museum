@@ -17,8 +17,29 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'junit:junit:4.12'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+task compile(type: JavaCompile) {
+  classpath = sourceSets.main.compileClasspath
+  classpath += sourceSets.test.runtimeClasspath
+  sourceSets.test.java.outputDir = file('build/bin')
+  sourceSets.main.java.outputDir = file('build/bin')
+}
+
+task stage () {
+    dependsOn ':Museum-Backend:assemble'
+}
+
+sourceSets {
+  main {
+    java { srcDir 'src/main/java' }
+  }
+  test {
+    java { srcDir 'src/test/java'}
+  }
 }
