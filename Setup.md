@@ -22,7 +22,12 @@ Run the following command on the terminal `brew install postgresql`
 3. Start the PostgreSQL server
    1. Command: `pg_ctl -D "C:\Program Files\PostgreSQL\15\data" start`
    2. Other possible commands instead of `start` are `stop` or `restart`
-4. If you have the PgAdmin application downloaded, you can access and view the database there after starting the PostgreSQL server
+4. Accesss the PostgreSQL server and create a `museum` database
+   1. Command: `psql -U postgres`
+   2. Enter your password
+   3. Command: `CREATE DATABASE museum;`
+
+Note: If you have the PgAdmin application downloaded, you can access and view the database there after starting the PostgreSQL server
 
 ## Mac
 
