@@ -4,8 +4,8 @@
 package ca.mcgill.ecse321.museum.model;
 
 
-// line 53 "model.ump"
-// line 163 "model.ump"
+// line 46 "model.ump"
+// line 150 "model.ump"
 public class Schedule {
 
   // ------------------------

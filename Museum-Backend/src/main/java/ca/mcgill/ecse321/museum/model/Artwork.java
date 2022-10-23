@@ -4,8 +4,8 @@
 package ca.mcgill.ecse321.museum.model;
 
 
-// line 66 "model.ump"
-// line 178 "model.ump"
+// line 59 "model.ump"
+// line 165 "model.ump"
 public class Artwork {
 
   // ------------------------
@@ -18,6 +18,7 @@ public class Artwork {
   private String artist;
   private boolean isAvailableForLoan;
   private double loanFee;
+  private String image;
 
   // Artwork Associations
   private Room room;
@@ -28,12 +29,13 @@ public class Artwork {
   // ------------------------
 
   public Artwork(long aArtworkId, String aName, String aArtist, boolean aIsAvailableForLoan,
-      double aLoanFee, Room aRoom, MuseumSystem aMuseumSystem) {
+      double aLoanFee, String aImage, Room aRoom, MuseumSystem aMuseumSystem) {
     artworkId = aArtworkId;
     name = aName;
     artist = aArtist;
     isAvailableForLoan = aIsAvailableForLoan;
     loanFee = aLoanFee;
+    image = aImage;
     if (!setRoom(aRoom)) {
       throw new RuntimeException(
           "Unable to create Artwork due to aRoom. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
@@ -84,6 +86,13 @@ public class Artwork {
     return wasSet;
   }
 
+  public boolean setImage(String aImage) {
+    boolean wasSet = false;
+    image = aImage;
+    wasSet = true;
+    return wasSet;
+  }
+
   public long getArtworkId() {
     return artworkId;
   }
@@ -102,6 +111,10 @@ public class Artwork {
 
   public double getLoanFee() {
     return loanFee;
+  }
+
+  public String getImage() {
+    return image;
   }
 
   /* Code from template association_GetOne */
@@ -154,8 +167,8 @@ public class Artwork {
   public String toString() {
     return super.toString() + "[" + "artworkId" + ":" + getArtworkId() + "," + "name" + ":"
         + getName() + "," + "artist" + ":" + getArtist() + "," + "isAvailableForLoan" + ":"
-        + getIsAvailableForLoan() + "," + "loanFee" + ":" + getLoanFee() + "]"
-        + System.getProperties().getProperty("line.separator") + "  " + "room = "
+        + getIsAvailableForLoan() + "," + "loanFee" + ":" + getLoanFee() + "," + "image" + ":"
+        + getImage() + "]" + System.getProperties().getProperty("line.separator") + "  " + "room = "
         + (getRoom() != null ? Integer.toHexString(System.identityHashCode(getRoom())) : "null")
         + System.getProperties().getProperty("line.separator") + "  " + "museumSystem = "
         + (getMuseumSystem() != null
