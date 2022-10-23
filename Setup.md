@@ -44,8 +44,7 @@ _Note:_
 
 ## First step
 
-1. Copy paste the file `Museum-Backend/src/main/resources/application.properties.example` and rename it to `application.properties` by removing the `.example` part.
-2. Open the file `application.properties` and change the username and password to your local PostgreSQL server username and password
+1. Open the file `application.properties` and change the username and password to your local PostgreSQL server username and password
 
 ## Second step
 
