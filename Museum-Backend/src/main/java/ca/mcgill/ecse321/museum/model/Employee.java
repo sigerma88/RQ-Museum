@@ -4,9 +4,9 @@
 package ca.mcgill.ecse321.museum.model;
 
 
-// line 31 "model.ump"
-// line 145 "model.ump"
-public class Employee extends Staff {
+// line 24 "model.ump"
+// line 132 "model.ump"
+public class Employee extends MuseumUser {
 
   // ------------------------
   // MEMBER VARIABLES

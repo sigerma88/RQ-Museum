@@ -6,7 +6,7 @@ package ca.mcgill.ecse321.museum.model;
 import java.sql.Date;
 
 // line 2 "model.ump"
-// line 123 "model.ump"
+// line 115 "model.ump"
 public class Ticket {
 
   // ------------------------
@@ -14,7 +14,7 @@ public class Ticket {
   // ------------------------
 
   // Ticket Attributes
-  private Long ticketId;
+  private long ticketId;
   private Date visitDate;
 
   // Ticket Associations
@@ -25,7 +25,7 @@ public class Ticket {
   // CONSTRUCTOR
   // ------------------------
 
-  public Ticket(Long aTicketId, Date aVisitDate, Visitor aVisitor, MuseumSystem aMuseumSystem) {
+  public Ticket(long aTicketId, Date aVisitDate, Visitor aVisitor, MuseumSystem aMuseumSystem) {
     ticketId = aTicketId;
     visitDate = aVisitDate;
     if (!setVisitor(aVisitor)) {
@@ -43,7 +43,7 @@ public class Ticket {
   // INTERFACE
   // ------------------------
 
-  public boolean setTicketId(Long aTicketId) {
+  public boolean setTicketId(long aTicketId) {
     boolean wasSet = false;
     ticketId = aTicketId;
     wasSet = true;
@@ -57,7 +57,7 @@ public class Ticket {
     return wasSet;
   }
 
-  public Long getTicketId() {
+  public long getTicketId() {
     return ticketId;
   }
 
