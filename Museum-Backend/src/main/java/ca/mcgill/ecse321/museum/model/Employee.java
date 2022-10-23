@@ -40,12 +40,12 @@ public class Employee extends Staff {
   }
 
   public Employee(String aEmail, String aName, String aPassword, long aEmployeeId,
-      long aScheduleForSchedule, Museum aMuseumForSchedule, MuseumSystem aMuseumSystemForSchedule,
+      long aScheduleIdForSchedule, Museum aMuseumForSchedule, MuseumSystem aMuseumSystemForSchedule,
       MuseumSystem aMuseumSystem) {
     super(aEmail, aName, aPassword);
     employeeId = aEmployeeId;
     schedule =
-        new Schedule(aScheduleForSchedule, this, aMuseumForSchedule, aMuseumSystemForSchedule);
+        new Schedule(aScheduleIdForSchedule, this, aMuseumForSchedule, aMuseumSystemForSchedule);
     boolean didAddMuseumSystem = setMuseumSystem(aMuseumSystem);
     if (!didAddMuseumSystem) {
       throw new RuntimeException(

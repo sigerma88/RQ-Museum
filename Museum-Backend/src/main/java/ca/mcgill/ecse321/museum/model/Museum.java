@@ -42,14 +42,14 @@ public class Museum {
     }
   }
 
-  public Museum(long aMuseumId, String aName, double aVisitFee, long aScheduleForSchedule,
+  public Museum(long aMuseumId, String aName, double aVisitFee, long aScheduleIdForSchedule,
       Employee aEmployeeForSchedule, MuseumSystem aMuseumSystemForSchedule,
       MuseumSystem aMuseumSystem) {
     museumId = aMuseumId;
     name = aName;
     visitFee = aVisitFee;
     schedule =
-        new Schedule(aScheduleForSchedule, aEmployeeForSchedule, this, aMuseumSystemForSchedule);
+        new Schedule(aScheduleIdForSchedule, aEmployeeForSchedule, this, aMuseumSystemForSchedule);
     boolean didAddMuseumSystem = setMuseumSystem(aMuseumSystem);
     if (!didAddMuseumSystem) {
       throw new RuntimeException(

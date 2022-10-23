@@ -711,8 +711,8 @@ public class MuseumSystem {
   }
 
   /* Code from template association_AddManyToOne */
-  public Schedule addSchedule(long aSchedule, Employee aEmployee, Museum aMuseum) {
-    return new Schedule(aSchedule, aEmployee, aMuseum, this);
+  public Schedule addSchedule(long aScheduleId, Employee aEmployee, Museum aMuseum) {
+    return new Schedule(aScheduleId, aEmployee, aMuseum, this);
   }
 
   public boolean addSchedule(Schedule aSchedule) {

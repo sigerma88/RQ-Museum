@@ -13,7 +13,7 @@ public class Schedule {
   // ------------------------
 
   // Schedule Attributes
-  private long schedule;
+  private long scheduleId;
 
   // Schedule Associations
   private Employee employee;
@@ -24,8 +24,9 @@ public class Schedule {
   // CONSTRUCTOR
   // ------------------------
 
-  public Schedule(long aSchedule, Employee aEmployee, Museum aMuseum, MuseumSystem aMuseumSystem) {
-    schedule = aSchedule;
+  public Schedule(long aScheduleId, Employee aEmployee, Museum aMuseum,
+      MuseumSystem aMuseumSystem) {
+    scheduleId = aScheduleId;
     if (aEmployee == null || aEmployee.getSchedule() != null) {
       throw new RuntimeException(
           "Unable to create Schedule due to aEmployee. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
@@ -43,11 +44,11 @@ public class Schedule {
     }
   }
 
-  public Schedule(long aSchedule, String aEmailForEmployee, String aNameForEmployee,
+  public Schedule(long aScheduleId, String aEmailForEmployee, String aNameForEmployee,
       String aPasswordForEmployee, long aEmployeeIdForEmployee,
       MuseumSystem aMuseumSystemForEmployee, long aMuseumIdForMuseum, String aNameForMuseum,
       double aVisitFeeForMuseum, MuseumSystem aMuseumSystemForMuseum, MuseumSystem aMuseumSystem) {
-    schedule = aSchedule;
+    scheduleId = aScheduleId;
     employee = new Employee(aEmailForEmployee, aNameForEmployee, aPasswordForEmployee,
         aEmployeeIdForEmployee, this, aMuseumSystemForEmployee);
     museum = new Museum(aMuseumIdForMuseum, aNameForMuseum, aVisitFeeForMuseum, this,
@@ -63,15 +64,15 @@ public class Schedule {
   // INTERFACE
   // ------------------------
 
-  public boolean setSchedule(long aSchedule) {
+  public boolean setScheduleId(long aScheduleId) {
     boolean wasSet = false;
-    schedule = aSchedule;
+    scheduleId = aScheduleId;
     wasSet = true;
     return wasSet;
   }
 
-  public long getSchedule() {
-    return schedule;
+  public long getScheduleId() {
+    return scheduleId;
   }
 
   /* Code from template association_GetOne */
@@ -126,7 +127,7 @@ public class Schedule {
 
 
   public String toString() {
-    return super.toString() + "[" + "schedule" + ":" + getSchedule() + "]"
+    return super.toString() + "[" + "scheduleId" + ":" + getScheduleId() + "]"
         + System.getProperties().getProperty("line.separator") + "  " + "employee = "
         + (getEmployee() != null ? Integer.toHexString(System.identityHashCode(getEmployee()))
             : "null")
