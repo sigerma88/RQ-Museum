@@ -37,7 +37,8 @@ public class Room {
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
-
+//no arg constructor
+  public Room(){}
   public Room(long aRoomId, String aRoomName, int aCurrentNumberOfArtwork, Museum aMuseum,
       MuseumSystem aMuseumSystem) {
     roomId = aRoomId;

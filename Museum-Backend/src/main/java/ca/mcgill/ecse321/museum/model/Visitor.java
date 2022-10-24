@@ -29,6 +29,8 @@ public class Visitor extends MuseumUser {
   // CONSTRUCTOR
   // ------------------------
 
+  //no arg constructor 
+  public Visitor(){}
   public Visitor(String aEmail, String aName, String aPassword, long aVisitorId,
       MuseumSystem aMuseumSystem) {
     super(aEmail, aName, aPassword);

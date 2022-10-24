@@ -33,6 +33,9 @@ public class Artwork {
   // CONSTRUCTOR
   // ------------------------
 
+  //no arg constructor
+  public Artwork(){}
+
   public Artwork(long aArtworkId, String aName, String aArtist, boolean aIsAvailableForLoan,
       double aLoanFee, String aImage, Room aRoom, MuseumSystem aMuseumSystem) {
     artworkId = aArtworkId;

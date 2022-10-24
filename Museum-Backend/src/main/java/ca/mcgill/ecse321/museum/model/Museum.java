@@ -31,6 +31,9 @@ public class Museum {
   // CONSTRUCTOR
   // ------------------------
 
+  //no arg constructor
+  public Museum(){}
+  
   public Museum(long aMuseumId, String aName, double aVisitFee, Schedule aSchedule,
       MuseumSystem aMuseumSystem) {
     museumId = aMuseumId;

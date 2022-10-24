@@ -25,6 +25,8 @@ public class Manager extends MuseumUser {
   // CONSTRUCTOR
   // ------------------------
 
+  //no arg constructor
+  public Manager(){}
   public Manager(String aEmail, String aName, String aPassword, long aManagerId,
       MuseumSystem aMuseumSystem) {
     super(aEmail, aName, aPassword);

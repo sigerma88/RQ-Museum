@@ -21,6 +21,7 @@ public abstract class MuseumUser {
   // CONSTRUCTOR
   // ------------------------
 
+  public MuseumUser(){}
   public MuseumUser(String aEmail, String aName, String aPassword) {
     email = aEmail;
     name = aName;

@@ -32,6 +32,10 @@ public class TimePeriod {
   // CONSTRUCTOR
   // ------------------------
 
+
+  //no arg constructor
+  public TimePeriod(){}
+  
   public TimePeriod(long aTimePeriodId, Date aStartDate, Date aEndDate,
       MuseumSystem aMuseumSystem) {
     timePeriodId = aTimePeriodId;

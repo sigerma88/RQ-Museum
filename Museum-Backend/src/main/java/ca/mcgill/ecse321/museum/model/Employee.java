@@ -26,6 +26,9 @@ public class Employee extends MuseumUser {
   // CONSTRUCTOR
   // ------------------------
 
+  //no arg constructor
+  public Employee(){}
+
   public Employee(String aEmail, String aName, String aPassword, long aEmployeeId,
       Schedule aSchedule, MuseumSystem aMuseumSystem) {
     super(aEmail, aName, aPassword);

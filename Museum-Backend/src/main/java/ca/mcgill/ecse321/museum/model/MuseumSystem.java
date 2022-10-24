@@ -35,7 +35,7 @@ public class MuseumSystem {
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
-
+  public MuseumSystem(){}
   public MuseumSystem(int aMuseumSystemId) {
     museumSystemId = aMuseumSystemId;
     room = new ArrayList<Room>();
