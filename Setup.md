@@ -22,7 +22,12 @@ Run the following command on the terminal `brew install postgresql`
 3. Start the PostgreSQL server
    1. Command: `pg_ctl -D "C:\Program Files\PostgreSQL\15\data" start`
    2. Other possible commands instead of `start` are `stop` or `restart`
-4. If you have the PgAdmin application downloaded, you can access and view the database there after starting the PostgreSQL server
+4. Accesss the PostgreSQL server and create a `museum` database (if it is the first time on this computer)
+   1. Command: `psql -U postgres`
+   2. Enter your password
+   3. Command: `CREATE DATABASE museum;`
+
+Note: If you have the PgAdmin application downloaded, you can access and view the database there after starting the PostgreSQL server
 
 ## Mac
 
@@ -39,14 +44,13 @@ _Note:_
 
 ## First step
 
-1. Copy paste the file `Museum-Backend/src/main/resources/application.properties.example` and rename it to `application.properties` by removing the `.example` part.
-2. Open the file `application.properties` and change the username and password to your local PostgreSQL server username and password
+1. Open the file `application.properties` and change the username and password to your local PostgreSQL server username and password
 
 ## Second step
 
-From the project folder, run the command: `gradle build`
+From the project folder, run the command: `gradle build` or `./gradlew build`
 
 ## Third step options
 
 1. From the IDE, run the application from the file `Museum-Backend/src/main/java/ca/mcgill/ecse321/museum/MuseumApplication.java` by clicking on the run or play button beside the code.
-2. From the project folder, run the command: `gradle bootRun`
+2. From the project folder, run the command: `gradle bootRun` or `gradle run` or `./gradlew bootRun` or `./gradlew run`
