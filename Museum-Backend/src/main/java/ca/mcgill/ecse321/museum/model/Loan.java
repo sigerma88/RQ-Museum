@@ -3,11 +3,11 @@
 
 package ca.mcgill.ecse321.museum.model;
 
+import javax.persistence.Entity;
 
-import javax.persistence.*;
-
-// line 38 "model.ump"
-// line 137 "model.ump"
+// line 36 "model.ump"
+// line 118 "model.ump"
+// line 148 "model.ump"
 @Entity
 public class Loan {
 
@@ -27,9 +27,10 @@ public class Loan {
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
-  
-  //no arg constructor
-  public Loan(){}
+
+  // no arg constructor
+  public Loan() {}
+
   public Loan(long aLoanId, boolean aRequestedAccepted, Visitor aVisitor, Artwork aArtwork,
       MuseumSystem aMuseumSystem) {
     loanId = aLoanId;

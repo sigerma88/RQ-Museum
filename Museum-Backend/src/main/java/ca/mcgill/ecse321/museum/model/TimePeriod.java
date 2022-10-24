@@ -10,9 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-// line 87 "model.ump"
-// line 168 "model.ump"
-
+// line 85 "model.ump"
+// line 178 "model.ump"
 @Entity
 public class TimePeriod {
 
@@ -33,9 +32,9 @@ public class TimePeriod {
   // ------------------------
 
 
-  //no arg constructor
-  public TimePeriod(){}
-  
+  // no arg constructor
+  public TimePeriod() {}
+
   public TimePeriod(long aTimePeriodId, Date aStartDate, Date aEndDate,
       MuseumSystem aMuseumSystem) {
     timePeriodId = aTimePeriodId;

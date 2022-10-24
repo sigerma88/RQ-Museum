@@ -12,8 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 // line 2 "model.ump"
-// line 112 "model.ump"
-
+// line 123 "model.ump"
 @Entity
 public class Ticket {
 
@@ -33,9 +32,9 @@ public class Ticket {
   // CONSTRUCTOR
   // ------------------------
 
-  //no arg constructor
-  public Ticket(){}
-  
+  // no arg constructor
+  public Ticket() {}
+
   public Ticket(long aTicketId, Date aVisitDate, Visitor aVisitor, MuseumSystem aMuseumSystem) {
     ticketId = aTicketId;
     visitDate = aVisitDate;
