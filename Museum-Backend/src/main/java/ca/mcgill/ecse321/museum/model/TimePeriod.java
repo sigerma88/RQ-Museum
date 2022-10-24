@@ -10,9 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-// line 87 "model.ump"
-// line 168 "model.ump"
-
+// line 85 "model.ump"
+// line 178 "model.ump"
 @Entity
 public class TimePeriod {
 

@@ -9,8 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-// line 70 "model.ump"
-// line 158 "model.ump"
+// line 68 "model.ump"
+// line 168 "model.ump"
 @Entity
 public class ScheduleOfTimePeriod {
 

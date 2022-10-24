@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.ManyToOne;
 
-// line 59 "model.ump"
-// line 153 "model.ump"
+// line 57 "model.ump"
+// line 163 "model.ump"
 @Entity
 public class Artwork {
 

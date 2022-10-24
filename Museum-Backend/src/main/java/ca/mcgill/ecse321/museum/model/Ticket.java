@@ -12,8 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 // line 2 "model.ump"
-// line 112 "model.ump"
-
+// line 123 "model.ump"
 @Entity
 public class Ticket {
 

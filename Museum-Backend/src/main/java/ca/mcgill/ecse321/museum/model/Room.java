@@ -8,8 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-// line 77 "model.ump"
-// line 163 "model.ump"
+// line 75 "model.ump"
+// line 173 "model.ump"
 @Entity
 public class Room {
 
