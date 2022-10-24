@@ -4,8 +4,8 @@
 package ca.mcgill.ecse321.museum.model;
 
 
-// line 76 "model.ump"
-// line 185 "model.ump"
+// line 70 "model.ump"
+// line 172 "model.ump"
 public class ScheduleOfTimePeriod {
 
   // ------------------------
@@ -13,9 +13,7 @@ public class ScheduleOfTimePeriod {
   // ------------------------
 
   // ScheduleOfTimePeriod Attributes
-  private long scheduleOfTimePeriod;
-  private long timePeriodId;
-  private long scheduleId;
+  private long scheduleOfTimePeriodId;
 
   // ScheduleOfTimePeriod Associations
   private Schedule schedule;
@@ -26,11 +24,9 @@ public class ScheduleOfTimePeriod {
   // CONSTRUCTOR
   // ------------------------
 
-  public ScheduleOfTimePeriod(long aScheduleOfTimePeriod, long aTimePeriodId, long aScheduleId,
-      Schedule aSchedule, TimePeriod aTimePeriod, MuseumSystem aMuseumSystem) {
-    scheduleOfTimePeriod = aScheduleOfTimePeriod;
-    timePeriodId = aTimePeriodId;
-    scheduleId = aScheduleId;
+  public ScheduleOfTimePeriod(long aScheduleOfTimePeriodId, Schedule aSchedule,
+      TimePeriod aTimePeriod, MuseumSystem aMuseumSystem) {
+    scheduleOfTimePeriodId = aScheduleOfTimePeriodId;
     if (!setSchedule(aSchedule)) {
       throw new RuntimeException(
           "Unable to create ScheduleOfTimePeriod due to aSchedule. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
@@ -50,37 +46,15 @@ public class ScheduleOfTimePeriod {
   // INTERFACE
   // ------------------------
 
-  public boolean setScheduleOfTimePeriod(long aScheduleOfTimePeriod) {
+  public boolean setScheduleOfTimePeriodId(long aScheduleOfTimePeriodId) {
     boolean wasSet = false;
-    scheduleOfTimePeriod = aScheduleOfTimePeriod;
+    scheduleOfTimePeriodId = aScheduleOfTimePeriodId;
     wasSet = true;
     return wasSet;
   }
 
-  public boolean setTimePeriodId(long aTimePeriodId) {
-    boolean wasSet = false;
-    timePeriodId = aTimePeriodId;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setScheduleId(long aScheduleId) {
-    boolean wasSet = false;
-    scheduleId = aScheduleId;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public long getScheduleOfTimePeriod() {
-    return scheduleOfTimePeriod;
-  }
-
-  public long getTimePeriodId() {
-    return timePeriodId;
-  }
-
-  public long getScheduleId() {
-    return scheduleId;
+  public long getScheduleOfTimePeriodId() {
+    return scheduleOfTimePeriodId;
   }
 
   /* Code from template association_GetOne */
@@ -147,8 +121,7 @@ public class ScheduleOfTimePeriod {
 
 
   public String toString() {
-    return super.toString() + "[" + "scheduleOfTimePeriod" + ":" + getScheduleOfTimePeriod() + ","
-        + "timePeriodId" + ":" + getTimePeriodId() + "," + "scheduleId" + ":" + getScheduleId()
+    return super.toString() + "[" + "scheduleOfTimePeriodId" + ":" + getScheduleOfTimePeriodId()
         + "]" + System.getProperties().getProperty("line.separator") + "  " + "schedule = "
         + (getSchedule() != null ? Integer.toHexString(System.identityHashCode(getSchedule()))
             : "null")

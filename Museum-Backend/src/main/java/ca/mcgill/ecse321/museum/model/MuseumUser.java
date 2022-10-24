@@ -5,7 +5,7 @@ package ca.mcgill.ecse321.museum.model;
 
 
 // line 10 "model.ump"
-// line 130 "model.ump"
+// line 122 "model.ump"
 public abstract class MuseumUser {
 
   // ------------------------

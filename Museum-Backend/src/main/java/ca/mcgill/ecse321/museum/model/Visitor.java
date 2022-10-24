@@ -5,7 +5,7 @@ package ca.mcgill.ecse321.museum.model;
 
 
 // line 18 "model.ump"
-// line 135 "model.ump"
+// line 127 "model.ump"
 public class Visitor extends MuseumUser {
 
   // ------------------------
@@ -14,7 +14,6 @@ public class Visitor extends MuseumUser {
 
   // Visitor Attributes
   private long visitorId;
-  private int numOfPass;
 
   // Visitor Associations
   private MuseumSystem museumSystem;
@@ -23,11 +22,10 @@ public class Visitor extends MuseumUser {
   // CONSTRUCTOR
   // ------------------------
 
-  public Visitor(String aEmail, String aName, String aPassword, long aVisitorId, int aNumOfPass,
+  public Visitor(String aEmail, String aName, String aPassword, long aVisitorId,
       MuseumSystem aMuseumSystem) {
     super(aEmail, aName, aPassword);
     visitorId = aVisitorId;
-    numOfPass = aNumOfPass;
     boolean didAddMuseumSystem = setMuseumSystem(aMuseumSystem);
     if (!didAddMuseumSystem) {
       throw new RuntimeException(
@@ -46,19 +44,8 @@ public class Visitor extends MuseumUser {
     return wasSet;
   }
 
-  public boolean setNumOfPass(int aNumOfPass) {
-    boolean wasSet = false;
-    numOfPass = aNumOfPass;
-    wasSet = true;
-    return wasSet;
-  }
-
   public long getVisitorId() {
     return visitorId;
-  }
-
-  public int getNumOfPass() {
-    return numOfPass;
   }
 
   /* Code from template association_GetOne */
@@ -94,9 +81,8 @@ public class Visitor extends MuseumUser {
 
 
   public String toString() {
-    return super.toString() + "[" + "visitorId" + ":" + getVisitorId() + "," + "numOfPass" + ":"
-        + getNumOfPass() + "]" + System.getProperties().getProperty("line.separator") + "  "
-        + "museumSystem = "
+    return super.toString() + "[" + "visitorId" + ":" + getVisitorId() + "]"
+        + System.getProperties().getProperty("line.separator") + "  " + "museumSystem = "
         + (getMuseumSystem() != null
             ? Integer.toHexString(System.identityHashCode(getMuseumSystem()))
             : "null");

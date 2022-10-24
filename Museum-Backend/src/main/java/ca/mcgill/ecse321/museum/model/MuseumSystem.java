@@ -6,8 +6,8 @@ package ca.mcgill.ecse321.museum.model;
 import java.util.*;
 import java.sql.Date;
 
-// line 102 "model.ump"
-// line 207 "model.ump"
+// line 94 "model.ump"
+// line 194 "model.ump"
 public class MuseumSystem {
 
   // ------------------------
@@ -473,8 +473,9 @@ public class MuseumSystem {
 
   /* Code from template association_AddManyToOne */
   public Artwork addArtwork(long aArtworkId, String aName, String aArtist,
-      boolean aIsAvailableForLoan, double aLoanFee, Room aRoom) {
-    return new Artwork(aArtworkId, aName, aArtist, aIsAvailableForLoan, aLoanFee, aRoom, this);
+      boolean aIsAvailableForLoan, double aLoanFee, String aImage, Room aRoom) {
+    return new Artwork(aArtworkId, aName, aArtist, aIsAvailableForLoan, aLoanFee, aImage, aRoom,
+        this);
   }
 
   public boolean addArtwork(Artwork aArtwork) {
@@ -711,8 +712,8 @@ public class MuseumSystem {
   }
 
   /* Code from template association_AddManyToOne */
-  public Schedule addSchedule(long aSchedule, Employee aEmployee, Museum aMuseum) {
-    return new Schedule(aSchedule, aEmployee, aMuseum, this);
+  public Schedule addSchedule(long aScheduleId, Employee aEmployee, Museum aMuseum) {
+    return new Schedule(aScheduleId, aEmployee, aMuseum, this);
   }
 
   public boolean addSchedule(Schedule aSchedule) {
@@ -782,9 +783,8 @@ public class MuseumSystem {
   }
 
   /* Code from template association_AddManyToOne */
-  public Visitor addVisitor(String aEmail, String aName, String aPassword, long aVisitorId,
-      int aNumOfPass) {
-    return new Visitor(aEmail, aName, aPassword, aVisitorId, aNumOfPass, this);
+  public Visitor addVisitor(String aEmail, String aName, String aPassword, long aVisitorId) {
+    return new Visitor(aEmail, aName, aPassword, aVisitorId, this);
   }
 
   public boolean addVisitor(Visitor aVisitor) {
@@ -854,7 +854,7 @@ public class MuseumSystem {
   }
 
   /* Code from template association_AddManyToOne */
-  public Ticket addTicket(Long aTicketId, Date aVisitDate, Visitor aVisitor) {
+  public Ticket addTicket(long aTicketId, Date aVisitDate, Visitor aVisitor) {
     return new Ticket(aTicketId, aVisitDate, aVisitor, this);
   }
 
@@ -925,10 +925,9 @@ public class MuseumSystem {
   }
 
   /* Code from template association_AddManyToOne */
-  public ScheduleOfTimePeriod addScheduleOfTimePeriod(long aScheduleOfTimePeriod,
-      long aTimePeriodId, long aScheduleId, Schedule aSchedule, TimePeriod aTimePeriod) {
-    return new ScheduleOfTimePeriod(aScheduleOfTimePeriod, aTimePeriodId, aScheduleId, aSchedule,
-        aTimePeriod, this);
+  public ScheduleOfTimePeriod addScheduleOfTimePeriod(long aScheduleOfTimePeriodId,
+      Schedule aSchedule, TimePeriod aTimePeriod) {
+    return new ScheduleOfTimePeriod(aScheduleOfTimePeriodId, aSchedule, aTimePeriod, this);
   }
 
   public boolean addScheduleOfTimePeriod(ScheduleOfTimePeriod aScheduleOfTimePeriod) {
