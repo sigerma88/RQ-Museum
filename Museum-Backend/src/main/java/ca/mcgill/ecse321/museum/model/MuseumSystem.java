@@ -78,12 +78,12 @@ public class MuseumSystem {
   }
 
   /* Code from template association_GetMany */
-  @OneToMany
   public Room getRoom(int index) {
     Room aRoom = room.get(index);
     return aRoom;
   }
 
+  @OneToMany
   public List<Room> getRoom() {
     List<Room> newRoom = Collections.unmodifiableList(room);
     return newRoom;
@@ -105,12 +105,12 @@ public class MuseumSystem {
   }
 
   /* Code from template association_GetMany */
-  @OneToMany
   public TimePeriod getTimePeriod(int index) {
     TimePeriod aTimePeriod = timePeriod.get(index);
     return aTimePeriod;
   }
 
+  @OneToMany
   public List<TimePeriod> getTimePeriod() {
     List<TimePeriod> newTimePeriod = Collections.unmodifiableList(timePeriod);
     return newTimePeriod;
@@ -132,12 +132,12 @@ public class MuseumSystem {
   }
 
   /* Code from template association_GetMany */
-  @OneToMany
   public Artwork getArtwork(int index) {
     Artwork aArtwork = artwork.get(index);
     return aArtwork;
   }
 
+  @OneToMany
   public List<Artwork> getArtwork() {
     List<Artwork> newArtwork = Collections.unmodifiableList(artwork);
     return newArtwork;
@@ -159,12 +159,12 @@ public class MuseumSystem {
   }
 
   /* Code from template association_GetMany */
-  @OneToMany
   public Loan getLoan(int index) {
     Loan aLoan = loan.get(index);
     return aLoan;
   }
 
+  @OneToMany
   public List<Loan> getLoan() {
     List<Loan> newLoan = Collections.unmodifiableList(loan);
     return newLoan;
@@ -186,12 +186,12 @@ public class MuseumSystem {
   }
 
   /* Code from template association_GetMany */
-  @OneToMany
   public Employee getEmployee(int index) {
     Employee aEmployee = employee.get(index);
     return aEmployee;
   }
 
+  @OneToMany
   public List<Employee> getEmployee() {
     List<Employee> newEmployee = Collections.unmodifiableList(employee);
     return newEmployee;
@@ -224,12 +224,12 @@ public class MuseumSystem {
   }
 
   /* Code from template association_GetMany */
-  @OneToMany
   public Schedule getSchedule(int index) {
     Schedule aSchedule = schedule.get(index);
     return aSchedule;
   }
 
+  @OneToMany
   public List<Schedule> getSchedule() {
     List<Schedule> newSchedule = Collections.unmodifiableList(schedule);
     return newSchedule;
@@ -251,12 +251,12 @@ public class MuseumSystem {
   }
 
   /* Code from template association_GetMany */
-  @OneToMany
   public Visitor getVisitor(int index) {
     Visitor aVisitor = visitor.get(index);
     return aVisitor;
   }
 
+  @OneToMany
   public List<Visitor> getVisitor() {
     List<Visitor> newVisitor = Collections.unmodifiableList(visitor);
     return newVisitor;
@@ -278,12 +278,12 @@ public class MuseumSystem {
   }
 
   /* Code from template association_GetMany */
-  @OneToMany
   public Ticket getTicket(int index) {
     Ticket aTicket = ticket.get(index);
     return aTicket;
   }
 
+  @OneToMany
   public List<Ticket> getTicket() {
     List<Ticket> newTicket = Collections.unmodifiableList(ticket);
     return newTicket;
@@ -305,12 +305,12 @@ public class MuseumSystem {
   }
 
   /* Code from template association_GetMany */
-  @OneToMany
   public ScheduleOfTimePeriod getScheduleOfTimePeriod(int index) {
     ScheduleOfTimePeriod aScheduleOfTimePeriod = scheduleOfTimePeriod.get(index);
     return aScheduleOfTimePeriod;
   }
 
+  @OneToMany
   public List<ScheduleOfTimePeriod> getScheduleOfTimePeriod() {
     List<ScheduleOfTimePeriod> newScheduleOfTimePeriod =
         Collections.unmodifiableList(scheduleOfTimePeriod);
