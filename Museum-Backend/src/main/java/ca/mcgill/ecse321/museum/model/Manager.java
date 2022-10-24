@@ -4,8 +4,11 @@
 package ca.mcgill.ecse321.museum.model;
 
 
+import javax.persistence.*;
+
 // line 31 "model.ump"
 // line 132 "model.ump"
+@Entity
 public class Manager extends MuseumUser {
 
   // ------------------------
@@ -44,11 +47,14 @@ public class Manager extends MuseumUser {
     return wasSet;
   }
 
+  @Id
+  @GeneratedValue
   public long getManagerId() {
     return managerId;
   }
 
   /* Code from template association_GetOne */
+  @OneToOne(optional = false)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }

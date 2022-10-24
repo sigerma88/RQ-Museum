@@ -4,8 +4,11 @@
 package ca.mcgill.ecse321.museum.model;
 
 
+import javax.persistence.*;
+
 // line 38 "model.ump"
 // line 137 "model.ump"
+@Entity
 public class Loan {
 
   // ------------------------
@@ -62,6 +65,8 @@ public class Loan {
     return wasSet;
   }
 
+  @Id
+  @GeneratedValue
   public long getLoanId() {
     return loanId;
   }
@@ -71,15 +76,18 @@ public class Loan {
   }
 
   /* Code from template association_GetOne */
+  @ManyToOne(optional = false)
   public Visitor getVisitor() {
     return visitor;
   }
 
+  @OneToOne(optional = false)
   /* Code from template association_GetOne */
   public Artwork getArtwork() {
     return artwork;
   }
 
+  @ManyToOne(optional = false)
   /* Code from template association_GetOne */
   public MuseumSystem getMuseumSystem() {
     return museumSystem;

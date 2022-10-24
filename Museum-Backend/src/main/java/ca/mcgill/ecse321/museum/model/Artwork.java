@@ -3,9 +3,14 @@
 
 package ca.mcgill.ecse321.museum.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.ManyToOne;
 
 // line 59 "model.ump"
 // line 153 "model.ump"
+@Entity
 public class Artwork {
 
   // ------------------------
@@ -93,6 +98,8 @@ public class Artwork {
     return wasSet;
   }
 
+  @Id
+  @GeneratedValue
   public long getArtworkId() {
     return artworkId;
   }
@@ -118,11 +125,13 @@ public class Artwork {
   }
 
   /* Code from template association_GetOne */
+  @ManyToOne(optional = false)
   public Room getRoom() {
     return room;
   }
 
   /* Code from template association_GetOne */
+  @ManyToOne(optional = false)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }
