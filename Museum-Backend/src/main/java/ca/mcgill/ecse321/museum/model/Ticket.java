@@ -4,9 +4,17 @@
 package ca.mcgill.ecse321.museum.model;
 
 import java.sql.Date;
+import javax.annotation.Generated;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 // line 2 "model.ump"
 // line 112 "model.ump"
+
+@Entity
 public class Ticket {
 
   // ------------------------
@@ -57,6 +65,8 @@ public class Ticket {
     return wasSet;
   }
 
+  @GeneratedValue
+  @Id
   public long getTicketId() {
     return ticketId;
   }
@@ -66,11 +76,13 @@ public class Ticket {
   }
 
   /* Code from template association_GetOne */
+  @ManyToOne(cascade = CascadeType.ALL)
   public Visitor getVisitor() {
     return visitor;
   }
 
   /* Code from template association_GetOne */
+  @ManyToOne(cascade = CascadeType.ALL)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }

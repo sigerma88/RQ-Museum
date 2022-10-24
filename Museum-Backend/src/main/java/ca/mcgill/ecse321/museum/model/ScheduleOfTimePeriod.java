@@ -3,9 +3,15 @@
 
 package ca.mcgill.ecse321.museum.model;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 // line 70 "model.ump"
 // line 158 "model.ump"
+@Entity
 public class ScheduleOfTimePeriod {
 
   // ------------------------
@@ -53,21 +59,26 @@ public class ScheduleOfTimePeriod {
     return wasSet;
   }
 
+  @GeneratedValue
+  @Id
   public long getScheduleOfTimePeriodId() {
     return scheduleOfTimePeriodId;
   }
 
   /* Code from template association_GetOne */
+  @ManyToOne(cascade = CascadeType.ALL)
   public Schedule getSchedule() {
     return schedule;
   }
 
   /* Code from template association_GetOne */
+  @ManyToOne(cascade = CascadeType.ALL)
   public TimePeriod getTimePeriod() {
     return timePeriod;
   }
 
   /* Code from template association_GetOne */
+  @ManyToOne(cascade = CascadeType.ALL)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }

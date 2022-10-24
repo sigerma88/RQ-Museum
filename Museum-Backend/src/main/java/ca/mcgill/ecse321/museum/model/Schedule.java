@@ -3,9 +3,18 @@
 
 package ca.mcgill.ecse321.museum.model;
 
+import javax.annotation.Generated;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import org.hibernate.annotations.ManyToAny;
 
 // line 46 "model.ump"
 // line 143 "model.ump"
+@Entity
 public class Schedule {
 
   // ------------------------
@@ -71,21 +80,26 @@ public class Schedule {
     return wasSet;
   }
 
+  @GeneratedValue
+  @Id
   public long getScheduleId() {
     return scheduleId;
   }
 
   /* Code from template association_GetOne */
+  @OneToOne
   public Employee getEmployee() {
     return employee;
   }
 
   /* Code from template association_GetOne */
+  @OneToOne
   public Museum getMuseum() {
     return museum;
   }
 
   /* Code from template association_GetOne */
+  @ManyToOne(cascade = CascadeType.ALL)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }

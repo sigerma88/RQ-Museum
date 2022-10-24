@@ -3,9 +3,15 @@
 
 package ca.mcgill.ecse321.museum.model;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 // line 77 "model.ump"
 // line 163 "model.ump"
+@Entity
 public class Room {
 
   // ------------------------
@@ -74,6 +80,8 @@ public class Room {
     return wasSet;
   }
 
+  @GeneratedValue
+  @Id
   public long getRoomId() {
     return roomId;
   }
@@ -87,11 +95,13 @@ public class Room {
   }
 
   /* Code from template association_GetOne */
+  @ManyToOne(cascade = CascadeType.ALL)
   public Museum getMuseum() {
     return museum;
   }
 
   /* Code from template association_GetOne */
+  @ManyToOne(cascade = CascadeType.ALL)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }

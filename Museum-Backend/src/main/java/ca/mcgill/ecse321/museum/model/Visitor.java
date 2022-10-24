@@ -3,9 +3,16 @@
 
 package ca.mcgill.ecse321.museum.model;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 // line 18 "model.ump"
 // line 122 "model.ump"
+
+@Entity
 public class Visitor extends MuseumUser {
 
   // ------------------------
@@ -44,11 +51,15 @@ public class Visitor extends MuseumUser {
     return wasSet;
   }
 
+  @GeneratedValue
+  @Id
   public long getVisitorId() {
     return visitorId;
   }
 
+
   /* Code from template association_GetOne */
+  @ManyToOne(cascade = CascadeType.ALL)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }

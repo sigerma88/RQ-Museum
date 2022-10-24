@@ -4,9 +4,16 @@
 package ca.mcgill.ecse321.museum.model;
 
 import java.sql.Date;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 // line 87 "model.ump"
 // line 168 "model.ump"
+
+@Entity
 public class TimePeriod {
 
   // ------------------------
@@ -62,6 +69,8 @@ public class TimePeriod {
     return wasSet;
   }
 
+  @GeneratedValue
+  @Id
   public long getTimePeriodId() {
     return timePeriodId;
   }
@@ -75,6 +84,7 @@ public class TimePeriod {
   }
 
   /* Code from template association_GetOne */
+  @ManyToOne(cascade = CascadeType.ALL)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }
