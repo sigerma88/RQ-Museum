@@ -4,11 +4,7 @@
 package ca.mcgill.ecse321.museum.model;
 
 import java.sql.Date;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 // line 85 "model.ump"
 // line 178 "model.ump"

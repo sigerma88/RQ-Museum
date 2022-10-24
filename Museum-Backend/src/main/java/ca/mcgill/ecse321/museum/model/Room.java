@@ -3,10 +3,7 @@
 
 package ca.mcgill.ecse321.museum.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 // line 75 "model.ump"
 // line 173 "model.ump"
