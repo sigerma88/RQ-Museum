@@ -3,9 +3,11 @@
 
 package ca.mcgill.ecse321.museum.model;
 
+import javax.persistence.*;
 
 // line 10 "model.ump"
 // line 128 "model.ump"
+@Entity
 public abstract class MuseumUser {
 
   // ------------------------
@@ -74,6 +76,8 @@ public abstract class MuseumUser {
     return password;
   }
 
+  @Id
+  @GeneratedValue()
   public long getMuseumUserId() {
     return museumUserId;
   }

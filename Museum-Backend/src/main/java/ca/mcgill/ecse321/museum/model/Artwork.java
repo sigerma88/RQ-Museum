@@ -125,7 +125,7 @@ public class Artwork {
   }
 
   /* Code from template association_GetOne */
-  @ManyToOne(optional = false)
+  @ManyToOne(optional = true)
   public Room getRoom() {
     return room;
   }

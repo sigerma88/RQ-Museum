@@ -83,14 +83,14 @@ public class Loan {
     return visitor;
   }
 
-  @OneToOne(optional = false)
   /* Code from template association_GetOne */
+  @OneToOne(optional = false)
   public Artwork getArtwork() {
     return artwork;
   }
 
-  @ManyToOne(optional = false)
   /* Code from template association_GetOne */
+  @ManyToOne(optional = false)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }

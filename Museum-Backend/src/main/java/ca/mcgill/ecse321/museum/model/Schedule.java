@@ -84,19 +84,19 @@ public class Schedule {
   }
 
   /* Code from template association_GetOne */
-  @OneToOne
+  @OneToOne(optional = false)
   public Employee getEmployee() {
     return employee;
   }
 
   /* Code from template association_GetOne */
-  @OneToOne
+  @OneToOne(optional = false)
   public Museum getMuseum() {
     return museum;
   }
 
   /* Code from template association_GetOne */
-  @ManyToOne
+  @ManyToOne(optional = false)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }

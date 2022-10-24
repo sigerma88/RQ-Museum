@@ -64,19 +64,19 @@ public class ScheduleOfTimePeriod {
   }
 
   /* Code from template association_GetOne */
-  @ManyToOne
+  @ManyToOne(optional=false)
   public Schedule getSchedule() {
     return schedule;
   }
 
   /* Code from template association_GetOne */
-  @ManyToOne
+  @ManyToOne(optional=false)
   public TimePeriod getTimePeriod() {
     return timePeriod;
   }
 
   /* Code from template association_GetOne */
-  @ManyToOne
+  @ManyToOne(optional=false)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }

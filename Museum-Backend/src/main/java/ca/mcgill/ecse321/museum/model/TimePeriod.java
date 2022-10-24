@@ -83,7 +83,7 @@ public class TimePeriod {
   }
 
   /* Code from template association_GetOne */
-  @ManyToOne
+  @ManyToOne(optional=false)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }

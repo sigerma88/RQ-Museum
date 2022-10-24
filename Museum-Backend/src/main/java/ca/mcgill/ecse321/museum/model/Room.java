@@ -92,13 +92,13 @@ public class Room {
   }
 
   /* Code from template association_GetOne */
-  @ManyToOne
+  @ManyToOne(optional = false)
   public Museum getMuseum() {
     return museum;
   }
 
   /* Code from template association_GetOne */
-  @ManyToOne
+  @ManyToOne(optional = false)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }

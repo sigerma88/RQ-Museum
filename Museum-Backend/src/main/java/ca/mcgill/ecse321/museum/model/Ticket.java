@@ -73,13 +73,13 @@ public class Ticket {
   }
 
   /* Code from template association_GetOne */
-  @ManyToOne
+  @ManyToOne(optional=false)
   public Visitor getVisitor() {
     return visitor;
   }
 
   /* Code from template association_GetOne */
-  @ManyToOne
+  @ManyToOne(optional=false)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }

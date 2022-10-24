@@ -107,7 +107,7 @@ public class MuseumSystem {
     return aRoom;
   }
 
-  @OneToMany
+  @OneToMany(optional = false)
   public List<Room> getRoom() {
     List<Room> newRoom = Collections.unmodifiableList(room);
     return newRoom;
@@ -134,7 +134,7 @@ public class MuseumSystem {
     return aTimePeriod;
   }
 
-  @OneToMany
+  @OneToMany(optional = true)
   public List<TimePeriod> getTimePeriod() {
     List<TimePeriod> newTimePeriod = Collections.unmodifiableList(timePeriod);
     return newTimePeriod;
@@ -161,7 +161,7 @@ public class MuseumSystem {
     return aArtwork;
   }
 
-  @OneToMany
+  @OneToMany(opttional = true)
   public List<Artwork> getArtwork() {
     List<Artwork> newArtwork = Collections.unmodifiableList(artwork);
     return newArtwork;
@@ -188,7 +188,7 @@ public class MuseumSystem {
     return aLoan;
   }
 
-  @OneToMany
+  @OneToMany(optional = true)
   public List<Loan> getLoan() {
     List<Loan> newLoan = Collections.unmodifiableList(loan);
     return newLoan;
@@ -215,7 +215,7 @@ public class MuseumSystem {
     return aEmployee;
   }
 
-  @OneToMany
+  @OneToMany(optional = true)
   public List<Employee> getEmployee() {
     List<Employee> newEmployee = Collections.unmodifiableList(employee);
     return newEmployee;
@@ -237,7 +237,7 @@ public class MuseumSystem {
   }
 
   /* Code from template association_GetOne */
-  @OneToOne
+  @OneToOne(optional = false)
   public Manager getManager() {
     return manager;
   }
@@ -248,7 +248,7 @@ public class MuseumSystem {
     return aSchedule;
   }
 
-  @OneToMany
+  @OneToMany(optional = true)
   public List<Schedule> getSchedule() {
     List<Schedule> newSchedule = Collections.unmodifiableList(schedule);
     return newSchedule;
@@ -275,7 +275,7 @@ public class MuseumSystem {
     return aVisitor;
   }
 
-  @OneToMany
+  @OneToMany(optional = true)
   public List<Visitor> getVisitor() {
     List<Visitor> newVisitor = Collections.unmodifiableList(visitor);
     return newVisitor;
@@ -302,7 +302,7 @@ public class MuseumSystem {
     return aTicket;
   }
 
-  @OneToMany
+  @OneToMany(optional = true)
   public List<Ticket> getTicket() {
     List<Ticket> newTicket = Collections.unmodifiableList(ticket);
     return newTicket;
@@ -329,7 +329,7 @@ public class MuseumSystem {
     return aScheduleOfTimePeriod;
   }
 
-  @OneToMany
+  @OneToMany(optional = true)
   public List<ScheduleOfTimePeriod> getScheduleOfTimePeriod() {
     List<ScheduleOfTimePeriod> newScheduleOfTimePeriod =
         Collections.unmodifiableList(scheduleOfTimePeriod);
