@@ -3,9 +3,13 @@
 
 package ca.mcgill.ecse321.museum.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 // line 46 "model.ump"
 // line 150 "model.ump"
+@Entity
 public class Schedule {
 
   // ------------------------
@@ -13,6 +17,8 @@ public class Schedule {
   // ------------------------
 
   // Schedule Attributes
+  @Id
+  @GeneratedValue
   private long scheduleId;
 
   // Schedule Associations

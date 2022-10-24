@@ -5,8 +5,14 @@ package ca.mcgill.ecse321.museum.model;
 
 import java.sql.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+
+
 // line 87 "model.ump"
 // line 189 "model.ump"
+@Entity
 public class TimePeriod {
 
   // ------------------------
@@ -14,6 +20,8 @@ public class TimePeriod {
   // ------------------------
 
   // TimePeriod Attributes
+  @Id
+  @GeneratedValue
   private long timePeriodId;
   private Date startDate;
   private Date endDate;

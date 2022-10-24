@@ -3,9 +3,13 @@
 
 package ca.mcgill.ecse321.museum.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 // line 24 "model.ump"
 // line 132 "model.ump"
+@Entity
 public class Employee extends MuseumUser {
 
   // ------------------------
@@ -13,6 +17,8 @@ public class Employee extends MuseumUser {
   // ------------------------
 
   // Employee Attributes
+  @Id
+  @GeneratedValue
   private long employeeId;
 
   // Employee Associations

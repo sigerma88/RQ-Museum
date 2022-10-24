@@ -3,9 +3,13 @@
 
 package ca.mcgill.ecse321.museum.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 // line 59 "model.ump"
 // line 165 "model.ump"
+@Entity
 public class Artwork {
 
   // ------------------------
@@ -13,6 +17,8 @@ public class Artwork {
   // ------------------------
 
   // Artwork Attributes
+  @Id
+  @GeneratedValue
   private long artworkId;
   private String name;
   private String artist;

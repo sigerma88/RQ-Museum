@@ -3,9 +3,13 @@
 
 package ca.mcgill.ecse321.museum.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
 
 // line 70 "model.ump"
 // line 172 "model.ump"
+@Entity
 public class ScheduleOfTimePeriod {
 
   // ------------------------
@@ -13,6 +17,8 @@ public class ScheduleOfTimePeriod {
   // ------------------------
 
   // ScheduleOfTimePeriod Attributes
+  @Id
+  @GeneratedValue   
   private long scheduleOfTimePeriodId;
 
   // ScheduleOfTimePeriod Associations

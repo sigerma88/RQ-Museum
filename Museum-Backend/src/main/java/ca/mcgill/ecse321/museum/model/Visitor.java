@@ -3,9 +3,14 @@
 
 package ca.mcgill.ecse321.museum.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+
 
 // line 18 "model.ump"
 // line 127 "model.ump"
+@Entity
 public class Visitor extends MuseumUser {
 
   // ------------------------
@@ -13,6 +18,8 @@ public class Visitor extends MuseumUser {
   // ------------------------
 
   // Visitor Attributes
+  @Id
+  @GeneratedValue
   private long visitorId;
 
   // Visitor Associations
