@@ -57,7 +57,7 @@ public class Employee extends MuseumUser {
   // INTERFACE
   // ------------------------
   /* Code from template association_GetOne */
-  @OneToOne(optional = false)
+  @OneToOne(optional = false, cascade = CascadeType.ALL)
   public Schedule getSchedule() {
     return schedule;
   }
