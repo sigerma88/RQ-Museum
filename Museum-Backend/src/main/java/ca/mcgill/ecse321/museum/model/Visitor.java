@@ -20,11 +20,10 @@ public class Visitor extends MuseumUser {
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
+
   // no arg constructor
   public Visitor() {}
 
-  //no arg constructor 
-  public Visitor(){}
   public Visitor(String aEmail, String aName, String aPassword, long aMuseumUserId,
       MuseumSystem aMuseumSystem) {
     super(aEmail, aName, aPassword, aMuseumUserId);

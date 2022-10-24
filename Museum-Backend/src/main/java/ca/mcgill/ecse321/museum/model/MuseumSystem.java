@@ -36,7 +36,10 @@ public class MuseumSystem {
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
+
+  // no arg constructor
   public MuseumSystem(){}
+
   public MuseumSystem(Museum aMuseum, Manager aManager) {
     if (aMuseum == null || aMuseum.getMuseumSystem() != null) {
       throw new RuntimeException(

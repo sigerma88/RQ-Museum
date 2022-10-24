@@ -23,6 +23,7 @@ public abstract class MuseumUser {
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
+
   // No argument constructor
   public MuseumUser() {}
 

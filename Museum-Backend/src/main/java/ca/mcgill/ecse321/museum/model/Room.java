@@ -34,6 +34,7 @@ public class Room {
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
+
   // no arg constructor
   public Room() {}
 

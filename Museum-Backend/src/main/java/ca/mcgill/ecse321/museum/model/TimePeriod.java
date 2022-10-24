@@ -27,7 +27,6 @@ public class TimePeriod {
   // CONSTRUCTOR
   // ------------------------
 
-
   // no arg constructor
   public TimePeriod() {}
 
