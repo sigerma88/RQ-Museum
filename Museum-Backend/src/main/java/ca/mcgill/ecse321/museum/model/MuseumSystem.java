@@ -3,11 +3,13 @@
 
 package ca.mcgill.ecse321.museum.model;
 
+import javax.persistence.*;
 import java.util.*;
 import java.sql.Date;
 
 // line 94 "model.ump"
 // line 173 "model.ump"
+@Entity
 public class MuseumSystem {
 
   // ------------------------
@@ -58,11 +60,14 @@ public class MuseumSystem {
     return wasSet;
   }
 
+  @Id
+  @GeneratedValue
   public int getMuseumSystemId() {
     return museumSystemId;
   }
 
   /* Code from template association_GetOne */
+  @OneToOne(optional = false)
   public Museum getMuseum() {
     return museum;
   }
@@ -73,6 +78,7 @@ public class MuseumSystem {
   }
 
   /* Code from template association_GetMany */
+  @OneToMany
   public Room getRoom(int index) {
     Room aRoom = room.get(index);
     return aRoom;
@@ -99,6 +105,7 @@ public class MuseumSystem {
   }
 
   /* Code from template association_GetMany */
+  @OneToMany
   public TimePeriod getTimePeriod(int index) {
     TimePeriod aTimePeriod = timePeriod.get(index);
     return aTimePeriod;
@@ -125,6 +132,7 @@ public class MuseumSystem {
   }
 
   /* Code from template association_GetMany */
+  @OneToMany
   public Artwork getArtwork(int index) {
     Artwork aArtwork = artwork.get(index);
     return aArtwork;
@@ -151,6 +159,7 @@ public class MuseumSystem {
   }
 
   /* Code from template association_GetMany */
+  @OneToMany
   public Loan getLoan(int index) {
     Loan aLoan = loan.get(index);
     return aLoan;
@@ -177,6 +186,7 @@ public class MuseumSystem {
   }
 
   /* Code from template association_GetMany */
+  @OneToMany
   public Employee getEmployee(int index) {
     Employee aEmployee = employee.get(index);
     return aEmployee;
@@ -203,6 +213,7 @@ public class MuseumSystem {
   }
 
   /* Code from template association_GetOne */
+  @OneToOne
   public Manager getManager() {
     return manager;
   }
@@ -213,6 +224,7 @@ public class MuseumSystem {
   }
 
   /* Code from template association_GetMany */
+  @OneToMany
   public Schedule getSchedule(int index) {
     Schedule aSchedule = schedule.get(index);
     return aSchedule;
@@ -239,6 +251,7 @@ public class MuseumSystem {
   }
 
   /* Code from template association_GetMany */
+  @OneToMany
   public Visitor getVisitor(int index) {
     Visitor aVisitor = visitor.get(index);
     return aVisitor;
@@ -265,6 +278,7 @@ public class MuseumSystem {
   }
 
   /* Code from template association_GetMany */
+  @OneToMany
   public Ticket getTicket(int index) {
     Ticket aTicket = ticket.get(index);
     return aTicket;
@@ -291,6 +305,7 @@ public class MuseumSystem {
   }
 
   /* Code from template association_GetMany */
+  @OneToMany
   public ScheduleOfTimePeriod getScheduleOfTimePeriod(int index) {
     ScheduleOfTimePeriod aScheduleOfTimePeriod = scheduleOfTimePeriod.get(index);
     return aScheduleOfTimePeriod;
