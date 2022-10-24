@@ -33,9 +33,9 @@ public class Schedule {
   // CONSTRUCTOR
   // ------------------------
 
-  //no arg constructor
-  public Schedule(){}
-  
+  // no arg constructor
+  public Schedule() {}
+
   public Schedule(long aScheduleId, Employee aEmployee, Museum aMuseum,
       MuseumSystem aMuseumSystem) {
     scheduleId = aScheduleId;
@@ -57,12 +57,12 @@ public class Schedule {
   }
 
   public Schedule(long aScheduleId, String aEmailForEmployee, String aNameForEmployee,
-      String aPasswordForEmployee, long aEmployeeIdForEmployee,
+      String aPasswordForEmployee, long aMuseumUserIdForEmployee,
       MuseumSystem aMuseumSystemForEmployee, long aMuseumIdForMuseum, String aNameForMuseum,
       double aVisitFeeForMuseum, MuseumSystem aMuseumSystemForMuseum, MuseumSystem aMuseumSystem) {
     scheduleId = aScheduleId;
     employee = new Employee(aEmailForEmployee, aNameForEmployee, aPasswordForEmployee,
-        aEmployeeIdForEmployee, this, aMuseumSystemForEmployee);
+        aMuseumUserIdForEmployee, this, aMuseumSystemForEmployee);
     museum = new Museum(aMuseumIdForMuseum, aNameForMuseum, aVisitFeeForMuseum, this,
         aMuseumSystemForMuseum);
     boolean didAddMuseumSystem = setMuseumSystem(aMuseumSystem);

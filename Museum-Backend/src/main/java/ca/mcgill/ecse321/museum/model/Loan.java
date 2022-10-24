@@ -27,9 +27,10 @@ public class Loan {
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
-  
-  //no arg constructor
-  public Loan(){}
+
+  // no arg constructor
+  public Loan() {}
+
   public Loan(long aLoanId, boolean aRequestedAccepted, Visitor aVisitor, Artwork aArtwork,
       MuseumSystem aMuseumSystem) {
     loanId = aLoanId;

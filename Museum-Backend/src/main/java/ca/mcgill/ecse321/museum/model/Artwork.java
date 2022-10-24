@@ -8,9 +8,14 @@ import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.ManyToOne;
 
+<<<<<<< HEAD
 // line 59 "model.ump"
 // line 153 "model.ump"
 @Entity
+=======
+// line 57 "model.ump"
+// line 163 "model.ump"
+>>>>>>> issue32
 public class Artwork {
 
   // ------------------------

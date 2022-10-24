@@ -31,9 +31,9 @@ public class Museum {
   // CONSTRUCTOR
   // ------------------------
 
-  //no arg constructor
-  public Museum(){}
-  
+  // no arg constructor
+  public Museum() {}
+
   public Museum(long aMuseumId, String aName, double aVisitFee, Schedule aSchedule,
       MuseumSystem aMuseumSystem) {
     museumId = aMuseumId;
@@ -44,26 +44,22 @@ public class Museum {
           "Unable to create Museum due to aSchedule. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     schedule = aSchedule;
-    boolean didAddMuseumSystem = setMuseumSystem(aMuseumSystem);
-    if (!didAddMuseumSystem) {
+    if (aMuseumSystem == null || aMuseumSystem.getMuseum() != null) {
       throw new RuntimeException(
-          "Unable to create museum due to museumSystem. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+          "Unable to create Museum due to aMuseumSystem. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
+    museumSystem = aMuseumSystem;
   }
 
   public Museum(long aMuseumId, String aName, double aVisitFee, long aScheduleIdForSchedule,
       Employee aEmployeeForSchedule, MuseumSystem aMuseumSystemForSchedule,
-      MuseumSystem aMuseumSystem) {
+      Manager aManagerForMuseumSystem) {
     museumId = aMuseumId;
     name = aName;
     visitFee = aVisitFee;
     schedule =
         new Schedule(aScheduleIdForSchedule, aEmployeeForSchedule, this, aMuseumSystemForSchedule);
-    boolean didAddMuseumSystem = setMuseumSystem(aMuseumSystem);
-    if (!didAddMuseumSystem) {
-      throw new RuntimeException(
-          "Unable to create museum due to museumSystem. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
+    museumSystem = new MuseumSystem(this, aManagerForMuseumSystem);
   }
 
   // ------------------------
@@ -117,32 +113,6 @@ public class Museum {
     return museumSystem;
   }
 
-  /* Code from template association_SetOneToOptionalOne */
-  public boolean setMuseumSystem(MuseumSystem aNewMuseumSystem) {
-    boolean wasSet = false;
-    if (aNewMuseumSystem == null) {
-      // Unable to setMuseumSystem to null, as museum must always be associated to a museumSystem
-      return wasSet;
-    }
-
-    Museum existingMuseum = aNewMuseumSystem.getMuseum();
-    if (existingMuseum != null && !equals(existingMuseum)) {
-      // Unable to setMuseumSystem, the current museumSystem already has a museum, which would be
-      // orphaned if it were re-assigned
-      return wasSet;
-    }
-
-    MuseumSystem anOldMuseumSystem = museumSystem;
-    museumSystem = aNewMuseumSystem;
-    museumSystem.setMuseum(this);
-
-    if (anOldMuseumSystem != null) {
-      anOldMuseumSystem.setMuseum(null);
-    }
-    wasSet = true;
-    return wasSet;
-  }
-
   public void delete() {
     Schedule existingSchedule = schedule;
     schedule = null;
@@ -152,7 +122,7 @@ public class Museum {
     MuseumSystem existingMuseumSystem = museumSystem;
     museumSystem = null;
     if (existingMuseumSystem != null) {
-      existingMuseumSystem.setMuseum(null);
+      existingMuseumSystem.delete();
     }
   }
 

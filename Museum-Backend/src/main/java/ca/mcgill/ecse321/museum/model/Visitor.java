@@ -19,22 +19,18 @@ public class Visitor extends MuseumUser {
   // MEMBER VARIABLES
   // ------------------------
 
-  // Visitor Attributes
-  private long visitorId;
-
   // Visitor Associations
   private MuseumSystem museumSystem;
 
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
+  // no arg constructor
+  public Visitor() {}
 
-  //no arg constructor 
-  public Visitor(){}
-  public Visitor(String aEmail, String aName, String aPassword, long aVisitorId,
+  public Visitor(String aEmail, String aName, String aPassword, long aMuseumUserId,
       MuseumSystem aMuseumSystem) {
-    super(aEmail, aName, aPassword);
-    visitorId = aVisitorId;
+    super(aEmail, aName, aPassword, aMuseumUserId);
     boolean didAddMuseumSystem = setMuseumSystem(aMuseumSystem);
     if (!didAddMuseumSystem) {
       throw new RuntimeException(
@@ -45,21 +41,6 @@ public class Visitor extends MuseumUser {
   // ------------------------
   // INTERFACE
   // ------------------------
-
-  public boolean setVisitorId(long aVisitorId) {
-    boolean wasSet = false;
-    visitorId = aVisitorId;
-    wasSet = true;
-    return wasSet;
-  }
-
-  @GeneratedValue
-  @Id
-  public long getVisitorId() {
-    return visitorId;
-  }
-
-
   /* Code from template association_GetOne */
   @ManyToOne
   public MuseumSystem getMuseumSystem() {
@@ -92,12 +73,4 @@ public class Visitor extends MuseumUser {
     super.delete();
   }
 
-
-  public String toString() {
-    return super.toString() + "[" + "visitorId" + ":" + getVisitorId() + "]"
-        + System.getProperties().getProperty("line.separator") + "  " + "museumSystem = "
-        + (getMuseumSystem() != null
-            ? Integer.toHexString(System.identityHashCode(getMuseumSystem()))
-            : "null");
-  }
 }
