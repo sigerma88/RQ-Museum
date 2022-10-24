@@ -8,8 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-// line 77 "model.ump"
-// line 163 "model.ump"
+// line 75 "model.ump"
+// line 173 "model.ump"
 @Entity
 public class Room {
 
@@ -37,8 +37,9 @@ public class Room {
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
-//no arg constructor
-  public Room(){}
+  // no arg constructor
+  public Room() {}
+
   public Room(long aRoomId, String aRoomName, int aCurrentNumberOfArtwork, Museum aMuseum,
       MuseumSystem aMuseumSystem) {
     roomId = aRoomId;

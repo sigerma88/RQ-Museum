@@ -9,18 +9,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+<<<<<<< HEAD
 // line 18 "model.ump"
 // line 122 "model.ump"
 
 @Entity
+=======
+// line 19 "model.ump"
+// line 133 "model.ump"
+>>>>>>> issue32
 public class Visitor extends MuseumUser {
 
   // ------------------------
   // MEMBER VARIABLES
   // ------------------------
-
-  // Visitor Attributes
-  private long visitorId;
 
   // Visitor Associations
   private MuseumSystem museumSystem;
@@ -29,12 +31,15 @@ public class Visitor extends MuseumUser {
   // CONSTRUCTOR
   // ------------------------
 
+<<<<<<< HEAD
   //no arg constructor 
   public Visitor(){}
   public Visitor(String aEmail, String aName, String aPassword, long aVisitorId,
+=======
+  public Visitor(String aEmail, String aName, String aPassword, long aMuseumUserId,
+>>>>>>> issue32
       MuseumSystem aMuseumSystem) {
-    super(aEmail, aName, aPassword);
-    visitorId = aVisitorId;
+    super(aEmail, aName, aPassword, aMuseumUserId);
     boolean didAddMuseumSystem = setMuseumSystem(aMuseumSystem);
     if (!didAddMuseumSystem) {
       throw new RuntimeException(
@@ -45,6 +50,7 @@ public class Visitor extends MuseumUser {
   // ------------------------
   // INTERFACE
   // ------------------------
+<<<<<<< HEAD
 
   public boolean setVisitorId(long aVisitorId) {
     boolean wasSet = false;
@@ -60,6 +66,8 @@ public class Visitor extends MuseumUser {
   }
 
 
+=======
+>>>>>>> issue32
   /* Code from template association_GetOne */
   @ManyToOne
   public MuseumSystem getMuseumSystem() {
@@ -92,12 +100,4 @@ public class Visitor extends MuseumUser {
     super.delete();
   }
 
-
-  public String toString() {
-    return super.toString() + "[" + "visitorId" + ":" + getVisitorId() + "]"
-        + System.getProperties().getProperty("line.separator") + "  " + "museumSystem = "
-        + (getMuseumSystem() != null
-            ? Integer.toHexString(System.identityHashCode(getMuseumSystem()))
-            : "null");
-  }
 }

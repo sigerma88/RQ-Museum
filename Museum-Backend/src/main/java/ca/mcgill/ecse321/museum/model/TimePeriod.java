@@ -10,10 +10,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+<<<<<<< HEAD
 // line 87 "model.ump"
 // line 168 "model.ump"
 
 @Entity
+=======
+// line 85 "model.ump"
+// line 178 "model.ump"
+>>>>>>> issue32
 public class TimePeriod {
 
   // ------------------------

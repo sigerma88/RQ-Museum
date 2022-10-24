@@ -4,10 +4,9 @@
 package ca.mcgill.ecse321.museum.model;
 
 
-import javax.persistence.*;
-
-// line 38 "model.ump"
-// line 137 "model.ump"
+// line36 "model.ump"
+// line 118 "model.ump"
+// line 148 "model.ump"
 @Entity
 public class Loan {
 
