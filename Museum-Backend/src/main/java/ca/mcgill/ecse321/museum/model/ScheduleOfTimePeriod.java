@@ -76,7 +76,7 @@ public class ScheduleOfTimePeriod {
   }
 
   /* Code from template association_GetOne */
-  @ManyToOne(optional=false)
+  @ManyToOne(optional=false, fetch=FetchType.LAZY)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }

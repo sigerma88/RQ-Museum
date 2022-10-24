@@ -43,7 +43,7 @@ public class Manager extends MuseumUser {
   // INTERFACE
   // ------------------------
   /* Code from template association_GetOne */
-  @OneToOne(optional = false)
+  @OneToOne(optional = false, fetch = FetchType.LAZY)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }
