@@ -84,7 +84,7 @@ public class TimePeriod {
   }
 
   /* Code from template association_GetOne */
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }

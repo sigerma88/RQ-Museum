@@ -76,13 +76,13 @@ public class Ticket {
   }
 
   /* Code from template association_GetOne */
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne
   public Visitor getVisitor() {
     return visitor;
   }
 
   /* Code from template association_GetOne */
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }

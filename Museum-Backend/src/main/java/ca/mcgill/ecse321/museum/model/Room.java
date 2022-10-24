@@ -3,7 +3,6 @@
 
 package ca.mcgill.ecse321.museum.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -95,13 +94,13 @@ public class Room {
   }
 
   /* Code from template association_GetOne */
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne
   public Museum getMuseum() {
     return museum;
   }
 
   /* Code from template association_GetOne */
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }

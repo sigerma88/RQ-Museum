@@ -66,19 +66,19 @@ public class ScheduleOfTimePeriod {
   }
 
   /* Code from template association_GetOne */
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne
   public Schedule getSchedule() {
     return schedule;
   }
 
   /* Code from template association_GetOne */
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne
   public TimePeriod getTimePeriod() {
     return timePeriod;
   }
 
   /* Code from template association_GetOne */
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }
