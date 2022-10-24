@@ -5,8 +5,8 @@ package ca.mcgill.ecse321.museum.model;
 
 import java.sql.Date;
 
-// line 87 "model.ump"
-// line 189 "model.ump"
+// line 85 "model.ump"
+// line 178 "model.ump"
 public class TimePeriod {
 
   // ------------------------

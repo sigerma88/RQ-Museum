@@ -6,8 +6,9 @@ package ca.mcgill.ecse321.museum.model;
 import java.util.*;
 import java.sql.Date;
 
-// line 94 "model.ump"
-// line 194 "model.ump"
+// line 92 "model.ump"
+// line 109 "model.ump"
+// line 183 "model.ump"
 public class MuseumSystem {
 
   // ------------------------
@@ -31,12 +32,40 @@ public class MuseumSystem {
   // CONSTRUCTOR
   // ------------------------
 
-  public MuseumSystem() {
+  public MuseumSystem(Museum aMuseum, Manager aManager) {
+    if (aMuseum == null || aMuseum.getMuseumSystem() != null) {
+      throw new RuntimeException(
+          "Unable to create MuseumSystem due to aMuseum. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+    museum = aMuseum;
     room = new ArrayList<Room>();
     timePeriod = new ArrayList<TimePeriod>();
     artwork = new ArrayList<Artwork>();
     loan = new ArrayList<Loan>();
     employee = new ArrayList<Employee>();
+    if (aManager == null || aManager.getMuseumSystem() != null) {
+      throw new RuntimeException(
+          "Unable to create MuseumSystem due to aManager. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+    manager = aManager;
+    schedule = new ArrayList<Schedule>();
+    visitor = new ArrayList<Visitor>();
+    ticket = new ArrayList<Ticket>();
+    scheduleOfTimePeriod = new ArrayList<ScheduleOfTimePeriod>();
+  }
+
+  public MuseumSystem(long aMuseumIdForMuseum, String aNameForMuseum, double aVisitFeeForMuseum,
+      Schedule aScheduleForMuseum, String aEmailForManager, String aNameForManager,
+      String aPasswordForManager, long aMuseumUserIdForManager) {
+    museum = new Museum(aMuseumIdForMuseum, aNameForMuseum, aVisitFeeForMuseum, aScheduleForMuseum,
+        this);
+    room = new ArrayList<Room>();
+    timePeriod = new ArrayList<TimePeriod>();
+    artwork = new ArrayList<Artwork>();
+    loan = new ArrayList<Loan>();
+    employee = new ArrayList<Employee>();
+    manager = new Manager(aEmailForManager, aNameForManager, aPasswordForManager,
+        aMuseumUserIdForManager, this);
     schedule = new ArrayList<Schedule>();
     visitor = new ArrayList<Visitor>();
     ticket = new ArrayList<Ticket>();
@@ -49,11 +78,6 @@ public class MuseumSystem {
   /* Code from template association_GetOne */
   public Museum getMuseum() {
     return museum;
-  }
-
-  public boolean hasMuseum() {
-    boolean has = museum != null;
-    return has;
   }
 
   /* Code from template association_GetMany */
@@ -191,11 +215,6 @@ public class MuseumSystem {
     return manager;
   }
 
-  public boolean hasManager() {
-    boolean has = manager != null;
-    return has;
-  }
-
   /* Code from template association_GetMany */
   public Schedule getSchedule(int index) {
     Schedule aSchedule = schedule.get(index);
@@ -299,29 +318,6 @@ public class MuseumSystem {
   public int indexOfScheduleOfTimePeriod(ScheduleOfTimePeriod aScheduleOfTimePeriod) {
     int index = scheduleOfTimePeriod.indexOf(aScheduleOfTimePeriod);
     return index;
-  }
-
-  /* Code from template association_SetOptionalOneToOne */
-  public boolean setMuseum(Museum aNewMuseum) {
-    boolean wasSet = false;
-    if (museum != null && !museum.equals(aNewMuseum) && equals(museum.getMuseumSystem())) {
-      // Unable to setMuseum, as existing museum would become an orphan
-      return wasSet;
-    }
-
-    museum = aNewMuseum;
-    MuseumSystem anOldMuseumSystem = aNewMuseum != null ? aNewMuseum.getMuseumSystem() : null;
-
-    if (!this.equals(anOldMuseumSystem)) {
-      if (anOldMuseumSystem != null) {
-        anOldMuseumSystem.museum = null;
-      }
-      if (museum != null) {
-        museum.setMuseumSystem(this);
-      }
-    }
-    wasSet = true;
-    return wasSet;
   }
 
   /* Code from template association_MinimumNumberOfMethod */
@@ -617,9 +613,9 @@ public class MuseumSystem {
   }
 
   /* Code from template association_AddManyToOne */
-  public Employee addEmployee(String aEmail, String aName, String aPassword, long aEmployeeId,
+  public Employee addEmployee(String aEmail, String aName, String aPassword, long aMuseumUserId,
       Schedule aSchedule) {
-    return new Employee(aEmail, aName, aPassword, aEmployeeId, aSchedule, this);
+    return new Employee(aEmail, aName, aPassword, aMuseumUserId, aSchedule, this);
   }
 
   public boolean addEmployee(Employee aEmployee) {
@@ -681,29 +677,6 @@ public class MuseumSystem {
       wasAdded = addEmployeeAt(aEmployee, index);
     }
     return wasAdded;
-  }
-
-  /* Code from template association_SetOptionalOneToOne */
-  public boolean setManager(Manager aNewManager) {
-    boolean wasSet = false;
-    if (manager != null && !manager.equals(aNewManager) && equals(manager.getMuseumSystem())) {
-      // Unable to setManager, as existing manager would become an orphan
-      return wasSet;
-    }
-
-    manager = aNewManager;
-    MuseumSystem anOldMuseumSystem = aNewManager != null ? aNewManager.getMuseumSystem() : null;
-
-    if (!this.equals(anOldMuseumSystem)) {
-      if (anOldMuseumSystem != null) {
-        anOldMuseumSystem.manager = null;
-      }
-      if (manager != null) {
-        manager.setMuseumSystem(this);
-      }
-    }
-    wasSet = true;
-    return wasSet;
   }
 
   /* Code from template association_MinimumNumberOfMethod */
@@ -783,8 +756,8 @@ public class MuseumSystem {
   }
 
   /* Code from template association_AddManyToOne */
-  public Visitor addVisitor(String aEmail, String aName, String aPassword, long aVisitorId) {
-    return new Visitor(aEmail, aName, aPassword, aVisitorId, this);
+  public Visitor addVisitor(String aEmail, String aName, String aPassword, long aMuseumUserId) {
+    return new Visitor(aEmail, aName, aPassword, aMuseumUserId, this);
   }
 
   public boolean addVisitor(Visitor aVisitor) {
@@ -997,7 +970,6 @@ public class MuseumSystem {
     museum = null;
     if (existingMuseum != null) {
       existingMuseum.delete();
-      existingMuseum.setMuseumSystem(null);
     }
     while (room.size() > 0) {
       Room aRoom = room.get(room.size() - 1);
@@ -1033,7 +1005,6 @@ public class MuseumSystem {
     manager = null;
     if (existingManager != null) {
       existingManager.delete();
-      existingManager.setMuseumSystem(null);
     }
     while (schedule.size() > 0) {
       Schedule aSchedule = schedule.get(schedule.size() - 1);
