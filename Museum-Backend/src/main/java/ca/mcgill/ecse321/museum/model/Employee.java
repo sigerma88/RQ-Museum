@@ -4,8 +4,11 @@
 package ca.mcgill.ecse321.museum.model;
 
 
+import javax.persistence.*;
+
 // line 24 "model.ump"
 // line 138 "model.ump"
+@Entity
 public class Employee extends MuseumUser {
 
   // ------------------------
@@ -19,6 +22,9 @@ public class Employee extends MuseumUser {
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
+
+  //no arg constructor
+  public Employee(){}
 
   public Employee(String aEmail, String aName, String aPassword, long aMuseumUserId,
       Schedule aSchedule, MuseumSystem aMuseumSystem) {
@@ -52,11 +58,13 @@ public class Employee extends MuseumUser {
   // INTERFACE
   // ------------------------
   /* Code from template association_GetOne */
+  @OneToOne(optional = false, cascade = CascadeType.ALL)
   public Schedule getSchedule() {
     return schedule;
   }
 
   /* Code from template association_GetOne */
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }

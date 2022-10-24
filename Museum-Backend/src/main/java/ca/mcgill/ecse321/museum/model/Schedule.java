@@ -3,9 +3,12 @@
 
 package ca.mcgill.ecse321.museum.model;
 
+import javax.persistence.*;
+import org.hibernate.annotations.ManyToAny;
 
 // line 44 "model.ump"
 // line 153 "model.ump"
+@Entity
 public class Schedule {
 
   // ------------------------
@@ -23,6 +26,9 @@ public class Schedule {
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
+
+  // no arg constructor
+  public Schedule() {}
 
   public Schedule(long aScheduleId, Employee aEmployee, Museum aMuseum,
       MuseumSystem aMuseumSystem) {
@@ -71,21 +77,26 @@ public class Schedule {
     return wasSet;
   }
 
+  @GeneratedValue
+  @Id
   public long getScheduleId() {
     return scheduleId;
   }
 
   /* Code from template association_GetOne */
+  @OneToOne(optional = true)
   public Employee getEmployee() {
     return employee;
   }
 
   /* Code from template association_GetOne */
+  @OneToOne(optional = true)
   public Museum getMuseum() {
     return museum;
   }
 
   /* Code from template association_GetOne */
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }

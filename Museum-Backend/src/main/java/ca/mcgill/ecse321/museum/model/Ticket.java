@@ -4,9 +4,11 @@
 package ca.mcgill.ecse321.museum.model;
 
 import java.sql.Date;
+import javax.persistence.*;
 
 // line 2 "model.ump"
 // line 123 "model.ump"
+@Entity
 public class Ticket {
 
   // ------------------------
@@ -24,6 +26,9 @@ public class Ticket {
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
+
+  // no arg constructor
+  public Ticket() {}
 
   public Ticket(long aTicketId, Date aVisitDate, Visitor aVisitor, MuseumSystem aMuseumSystem) {
     ticketId = aTicketId;
@@ -57,6 +62,8 @@ public class Ticket {
     return wasSet;
   }
 
+  @GeneratedValue
+  @Id
   public long getTicketId() {
     return ticketId;
   }
@@ -66,11 +73,13 @@ public class Ticket {
   }
 
   /* Code from template association_GetOne */
+  @ManyToOne(optional=false)
   public Visitor getVisitor() {
     return visitor;
   }
 
   /* Code from template association_GetOne */
+  @ManyToOne(optional=false, fetch=FetchType.LAZY)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }

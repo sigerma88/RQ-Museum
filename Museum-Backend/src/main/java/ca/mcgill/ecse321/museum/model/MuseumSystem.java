@@ -7,8 +7,9 @@ import javax.persistence.*;
 import java.util.*;
 import java.sql.Date;
 
-// line 94 "model.ump"
-// line 173 "model.ump"
+// line 92 "model.ump"
+// line 109 "model.ump"
+// line 183 "model.ump"
 @Entity
 public class MuseumSystem {
 
@@ -35,6 +36,9 @@ public class MuseumSystem {
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
+
+  // no arg constructor
+  public MuseumSystem(){}
 
   public MuseumSystem(Museum aMuseum, Manager aManager) {
     if (aMuseum == null || aMuseum.getMuseumSystem() != null) {
@@ -94,7 +98,7 @@ public class MuseumSystem {
   }
 
   /* Code from template association_GetOne */
-  @OneToOne(optional = false)
+  @OneToOne(optional = false, cascade = CascadeType.ALL)
   public Museum getMuseum() {
     return museum;
   }
@@ -105,7 +109,7 @@ public class MuseumSystem {
     return aRoom;
   }
 
-  @OneToMany
+  @OneToMany(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   public List<Room> getRoom() {
     List<Room> newRoom = Collections.unmodifiableList(room);
     return newRoom;
@@ -132,7 +136,7 @@ public class MuseumSystem {
     return aTimePeriod;
   }
 
-  @OneToMany
+  @OneToMany(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   public List<TimePeriod> getTimePeriod() {
     List<TimePeriod> newTimePeriod = Collections.unmodifiableList(timePeriod);
     return newTimePeriod;
@@ -159,7 +163,7 @@ public class MuseumSystem {
     return aArtwork;
   }
 
-  @OneToMany
+  @OneToMany(opttional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   public List<Artwork> getArtwork() {
     List<Artwork> newArtwork = Collections.unmodifiableList(artwork);
     return newArtwork;
@@ -186,7 +190,7 @@ public class MuseumSystem {
     return aLoan;
   }
 
-  @OneToMany
+  @OneToMany(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   public List<Loan> getLoan() {
     List<Loan> newLoan = Collections.unmodifiableList(loan);
     return newLoan;
@@ -213,7 +217,7 @@ public class MuseumSystem {
     return aEmployee;
   }
 
-  @OneToMany
+  @OneToMany(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   public List<Employee> getEmployee() {
     List<Employee> newEmployee = Collections.unmodifiableList(employee);
     return newEmployee;
@@ -235,7 +239,7 @@ public class MuseumSystem {
   }
 
   /* Code from template association_GetOne */
-  @OneToOne
+  @OneToOne(optional = false, cascade = CascadeType.ALL)
   public Manager getManager() {
     return manager;
   }
@@ -246,7 +250,7 @@ public class MuseumSystem {
     return aSchedule;
   }
 
-  @OneToMany
+  @OneToMany(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   public List<Schedule> getSchedule() {
     List<Schedule> newSchedule = Collections.unmodifiableList(schedule);
     return newSchedule;
@@ -273,7 +277,7 @@ public class MuseumSystem {
     return aVisitor;
   }
 
-  @OneToMany
+  @OneToMany(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   public List<Visitor> getVisitor() {
     List<Visitor> newVisitor = Collections.unmodifiableList(visitor);
     return newVisitor;
@@ -300,7 +304,7 @@ public class MuseumSystem {
     return aTicket;
   }
 
-  @OneToMany
+  @OneToMany(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   public List<Ticket> getTicket() {
     List<Ticket> newTicket = Collections.unmodifiableList(ticket);
     return newTicket;
@@ -327,7 +331,7 @@ public class MuseumSystem {
     return aScheduleOfTimePeriod;
   }
 
-  @OneToMany
+  @OneToMany(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   public List<ScheduleOfTimePeriod> getScheduleOfTimePeriod() {
     List<ScheduleOfTimePeriod> newScheduleOfTimePeriod =
         Collections.unmodifiableList(scheduleOfTimePeriod);
