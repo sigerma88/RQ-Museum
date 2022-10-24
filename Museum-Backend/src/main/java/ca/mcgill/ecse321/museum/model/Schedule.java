@@ -27,9 +27,9 @@ public class Schedule {
   // CONSTRUCTOR
   // ------------------------
 
-  //no arg constructor
-  public Schedule(){}
-  
+  // no arg constructor
+  public Schedule() {}
+
   public Schedule(long aScheduleId, Employee aEmployee, Museum aMuseum,
       MuseumSystem aMuseumSystem) {
     scheduleId = aScheduleId;

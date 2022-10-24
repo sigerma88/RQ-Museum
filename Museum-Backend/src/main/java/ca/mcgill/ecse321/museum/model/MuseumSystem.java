@@ -37,7 +37,6 @@ public class MuseumSystem {
   // CONSTRUCTOR
   // ------------------------
   public MuseumSystem(){}
-
   public MuseumSystem(Museum aMuseum, Manager aManager) {
     if (aMuseum == null || aMuseum.getMuseumSystem() != null) {
       throw new RuntimeException(
@@ -65,6 +64,7 @@ public class MuseumSystem {
       String aPasswordForManager, long aMuseumUserIdForManager) {
     museum = new Museum(aMuseumIdForMuseum, aNameForMuseum, aVisitFeeForMuseum, aScheduleForMuseum,
         this);
+>>>>>>> issue32
     room = new ArrayList<Room>();
     timePeriod = new ArrayList<TimePeriod>();
     artwork = new ArrayList<Artwork>();

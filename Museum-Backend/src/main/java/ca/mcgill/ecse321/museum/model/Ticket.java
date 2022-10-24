@@ -27,9 +27,9 @@ public class Ticket {
   // CONSTRUCTOR
   // ------------------------
 
-  //no arg constructor
-  public Ticket(){}
-  
+  // no arg constructor
+  public Ticket() {}
+
   public Ticket(long aTicketId, Date aVisitDate, Visitor aVisitor, MuseumSystem aMuseumSystem) {
     ticketId = aTicketId;
     visitDate = aVisitDate;

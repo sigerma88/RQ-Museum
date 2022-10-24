@@ -26,8 +26,9 @@ public class ScheduleOfTimePeriod {
   // CONSTRUCTOR
   // ------------------------
 
-  //no arg constructor
-  public ScheduleOfTimePeriod(){}
+  // no arg constructor
+  public ScheduleOfTimePeriod() {}
+
   public ScheduleOfTimePeriod(long aScheduleOfTimePeriodId, Schedule aSchedule,
       TimePeriod aTimePeriod, MuseumSystem aMuseumSystem) {
     scheduleOfTimePeriodId = aScheduleOfTimePeriodId;

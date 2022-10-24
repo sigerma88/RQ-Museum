@@ -23,6 +23,8 @@ public abstract class MuseumUser {
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
+  // No argument constructor
+  public MuseumUser() {}
 
   public MuseumUser(){}
   public MuseumUser(String aEmail, String aName, String aPassword, long aMuseumUserId) {
