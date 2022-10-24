@@ -4,8 +4,8 @@
 package ca.mcgill.ecse321.museum.model;
 
 
-// line 70 "model.ump"
-// line 172 "model.ump"
+// line 68 "model.ump"
+// line 168 "model.ump"
 public class ScheduleOfTimePeriod {
 
   // ------------------------

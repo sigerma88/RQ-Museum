@@ -4,8 +4,8 @@
 package ca.mcgill.ecse321.museum.model;
 
 
-// line 46 "model.ump"
-// line 150 "model.ump"
+// line 44 "model.ump"
+// line 153 "model.ump"
 public class Schedule {
 
   // ------------------------
@@ -45,12 +45,12 @@ public class Schedule {
   }
 
   public Schedule(long aScheduleId, String aEmailForEmployee, String aNameForEmployee,
-      String aPasswordForEmployee, long aEmployeeIdForEmployee,
+      String aPasswordForEmployee, long aMuseumUserIdForEmployee,
       MuseumSystem aMuseumSystemForEmployee, long aMuseumIdForMuseum, String aNameForMuseum,
       double aVisitFeeForMuseum, MuseumSystem aMuseumSystemForMuseum, MuseumSystem aMuseumSystem) {
     scheduleId = aScheduleId;
     employee = new Employee(aEmailForEmployee, aNameForEmployee, aPasswordForEmployee,
-        aEmployeeIdForEmployee, this, aMuseumSystemForEmployee);
+        aMuseumUserIdForEmployee, this, aMuseumSystemForEmployee);
     museum = new Museum(aMuseumIdForMuseum, aNameForMuseum, aVisitFeeForMuseum, this,
         aMuseumSystemForMuseum);
     boolean didAddMuseumSystem = setMuseumSystem(aMuseumSystem);

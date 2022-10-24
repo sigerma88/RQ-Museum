@@ -5,7 +5,7 @@ package ca.mcgill.ecse321.museum.model;
 
 
 // line 10 "model.ump"
-// line 122 "model.ump"
+// line 128 "model.ump"
 public abstract class MuseumUser {
 
   // ------------------------
@@ -16,15 +16,17 @@ public abstract class MuseumUser {
   private String email;
   private String name;
   private String password;
+  private long museumUserId;
 
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
 
-  public MuseumUser(String aEmail, String aName, String aPassword) {
+  public MuseumUser(String aEmail, String aName, String aPassword, long aMuseumUserId) {
     email = aEmail;
     name = aName;
     password = aPassword;
+    museumUserId = aMuseumUserId;
   }
 
   // ------------------------
@@ -52,6 +54,13 @@ public abstract class MuseumUser {
     return wasSet;
   }
 
+  public boolean setMuseumUserId(long aMuseumUserId) {
+    boolean wasSet = false;
+    museumUserId = aMuseumUserId;
+    wasSet = true;
+    return wasSet;
+  }
+
   public String getEmail() {
     return email;
   }
@@ -64,11 +73,16 @@ public abstract class MuseumUser {
     return password;
   }
 
+  public long getMuseumUserId() {
+    return museumUserId;
+  }
+
   public void delete() {}
 
 
   public String toString() {
     return super.toString() + "[" + "email" + ":" + getEmail() + "," + "name" + ":" + getName()
-        + "," + "password" + ":" + getPassword() + "]";
+        + "," + "password" + ":" + getPassword() + "," + "museumUserId" + ":" + getMuseumUserId()
+        + "]";
   }
 }

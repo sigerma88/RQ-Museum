@@ -4,8 +4,9 @@
 package ca.mcgill.ecse321.museum.model;
 
 
-// line 38 "model.ump"
-// line 143 "model.ump"
+// line 36 "model.ump"
+// line 118 "model.ump"
+// line 148 "model.ump"
 public class Loan {
 
   // ------------------------
