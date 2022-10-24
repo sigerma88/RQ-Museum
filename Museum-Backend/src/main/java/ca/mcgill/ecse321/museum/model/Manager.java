@@ -3,13 +3,9 @@
 
 package ca.mcgill.ecse321.museum.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 
 // line 31 "model.ump"
-// line 138 "model.ump"
-@Entity
+// line 132 "model.ump"
 public class Manager extends MuseumUser {
 
   // ------------------------
@@ -17,8 +13,6 @@ public class Manager extends MuseumUser {
   // ------------------------
 
   // Manager Attributes
-  @Id
-  @GeneratedValue
   private long managerId;
 
   // Manager Associations

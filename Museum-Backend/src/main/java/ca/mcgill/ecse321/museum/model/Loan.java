@@ -3,13 +3,9 @@
 
 package ca.mcgill.ecse321.museum.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 
 // line 38 "model.ump"
-// line 143 "model.ump"
-@Entity
+// line 137 "model.ump"
 public class Loan {
 
   // ------------------------
@@ -17,8 +13,6 @@ public class Loan {
   // ------------------------
 
   // Loan Attributes
-  @Id
-  @GeneratedValue
   private long loanId;
   private boolean requestedAccepted;
 

@@ -3,13 +3,9 @@
 
 package ca.mcgill.ecse321.museum.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 
 // line 51 "model.ump"
-// line 155 "model.ump"
-@Entity
+// line 148 "model.ump"
 public class Museum {
 
   // ------------------------
@@ -17,8 +13,6 @@ public class Museum {
   // ------------------------
 
   // Museum Attributes
-  @Id
-  @GeneratedValue
   private long museumId;
   private String name;
   private double visitFee;

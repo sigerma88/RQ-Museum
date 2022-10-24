@@ -3,13 +3,9 @@
 
 package ca.mcgill.ecse321.museum.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 
 // line 77 "model.ump"
-// line 181 "model.ump"
-@Entity
+// line 163 "model.ump"
 public class Room {
 
   // ------------------------
@@ -25,8 +21,6 @@ public class Room {
   // ------------------------
 
   // Room Attributes
-  @Id
-  @GeneratedValue
   private long roomId;
   private String roomName;
   private int currentNumberOfArtwork;

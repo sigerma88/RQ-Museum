@@ -7,12 +7,15 @@ import java.util.*;
 import java.sql.Date;
 
 // line 94 "model.ump"
-// line 194 "model.ump"
+// line 173 "model.ump"
 public class MuseumSystem {
 
   // ------------------------
   // MEMBER VARIABLES
   // ------------------------
+
+  // MuseumSystem Attributes
+  private int museumSystemId;
 
   // MuseumSystem Associations
   private Museum museum;
@@ -31,7 +34,8 @@ public class MuseumSystem {
   // CONSTRUCTOR
   // ------------------------
 
-  public MuseumSystem() {
+  public MuseumSystem(int aMuseumSystemId) {
+    museumSystemId = aMuseumSystemId;
     room = new ArrayList<Room>();
     timePeriod = new ArrayList<TimePeriod>();
     artwork = new ArrayList<Artwork>();
@@ -46,6 +50,18 @@ public class MuseumSystem {
   // ------------------------
   // INTERFACE
   // ------------------------
+
+  public boolean setMuseumSystemId(int aMuseumSystemId) {
+    boolean wasSet = false;
+    museumSystemId = aMuseumSystemId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getMuseumSystemId() {
+    return museumSystemId;
+  }
+
   /* Code from template association_GetOne */
   public Museum getMuseum() {
     return museum;
@@ -1062,4 +1078,13 @@ public class MuseumSystem {
 
   }
 
+
+  public String toString() {
+    return super.toString() + "[" + "museumSystemId" + ":" + getMuseumSystemId() + "]"
+        + System.getProperties().getProperty("line.separator") + "  " + "museum = "
+        + (getMuseum() != null ? Integer.toHexString(System.identityHashCode(getMuseum())) : "null")
+        + System.getProperties().getProperty("line.separator") + "  " + "manager = "
+        + (getManager() != null ? Integer.toHexString(System.identityHashCode(getManager()))
+            : "null");
+  }
 }

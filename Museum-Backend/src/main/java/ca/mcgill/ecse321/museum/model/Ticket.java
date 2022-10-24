@@ -5,13 +5,8 @@ package ca.mcgill.ecse321.museum.model;
 
 import java.sql.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-
 // line 2 "model.ump"
-// line 115 "model.ump"
-@Entity
+// line 112 "model.ump"
 public class Ticket {
 
   // ------------------------
@@ -19,8 +14,6 @@ public class Ticket {
   // ------------------------
 
   // Ticket Attributes
-  @Id
-  @GeneratedValue
   private long ticketId;
   private Date visitDate;
 
