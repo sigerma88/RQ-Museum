@@ -3,17 +3,21 @@
 
 package ca.mcgill.ecse321.museum.model;
 
+import javax.persistence.*;
 import java.util.*;
 import java.sql.Date;
 
-// line 92 "model.ump"
-// line 109 "model.ump"
-// line 183 "model.ump"
+// line 94 "model.ump"
+// line 173 "model.ump"
+@Entity
 public class MuseumSystem {
 
   // ------------------------
   // MEMBER VARIABLES
   // ------------------------
+
+  // MuseumSystem Attributes
+  private int museumSystemId;
 
   // MuseumSystem Associations
   private Museum museum;
@@ -75,7 +79,22 @@ public class MuseumSystem {
   // ------------------------
   // INTERFACE
   // ------------------------
+
+  public boolean setMuseumSystemId(int aMuseumSystemId) {
+    boolean wasSet = false;
+    museumSystemId = aMuseumSystemId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  @Id
+  @GeneratedValue
+  public int getMuseumSystemId() {
+    return museumSystemId;
+  }
+
   /* Code from template association_GetOne */
+  @OneToOne(optional = false)
   public Museum getMuseum() {
     return museum;
   }
@@ -86,6 +105,7 @@ public class MuseumSystem {
     return aRoom;
   }
 
+  @OneToMany
   public List<Room> getRoom() {
     List<Room> newRoom = Collections.unmodifiableList(room);
     return newRoom;
@@ -112,6 +132,7 @@ public class MuseumSystem {
     return aTimePeriod;
   }
 
+  @OneToMany
   public List<TimePeriod> getTimePeriod() {
     List<TimePeriod> newTimePeriod = Collections.unmodifiableList(timePeriod);
     return newTimePeriod;
@@ -138,6 +159,7 @@ public class MuseumSystem {
     return aArtwork;
   }
 
+  @OneToMany
   public List<Artwork> getArtwork() {
     List<Artwork> newArtwork = Collections.unmodifiableList(artwork);
     return newArtwork;
@@ -164,6 +186,7 @@ public class MuseumSystem {
     return aLoan;
   }
 
+  @OneToMany
   public List<Loan> getLoan() {
     List<Loan> newLoan = Collections.unmodifiableList(loan);
     return newLoan;
@@ -190,6 +213,7 @@ public class MuseumSystem {
     return aEmployee;
   }
 
+  @OneToMany
   public List<Employee> getEmployee() {
     List<Employee> newEmployee = Collections.unmodifiableList(employee);
     return newEmployee;
@@ -211,6 +235,7 @@ public class MuseumSystem {
   }
 
   /* Code from template association_GetOne */
+  @OneToOne
   public Manager getManager() {
     return manager;
   }
@@ -221,6 +246,7 @@ public class MuseumSystem {
     return aSchedule;
   }
 
+  @OneToMany
   public List<Schedule> getSchedule() {
     List<Schedule> newSchedule = Collections.unmodifiableList(schedule);
     return newSchedule;
@@ -247,6 +273,7 @@ public class MuseumSystem {
     return aVisitor;
   }
 
+  @OneToMany
   public List<Visitor> getVisitor() {
     List<Visitor> newVisitor = Collections.unmodifiableList(visitor);
     return newVisitor;
@@ -273,6 +300,7 @@ public class MuseumSystem {
     return aTicket;
   }
 
+  @OneToMany
   public List<Ticket> getTicket() {
     List<Ticket> newTicket = Collections.unmodifiableList(ticket);
     return newTicket;
@@ -299,6 +327,7 @@ public class MuseumSystem {
     return aScheduleOfTimePeriod;
   }
 
+  @OneToMany
   public List<ScheduleOfTimePeriod> getScheduleOfTimePeriod() {
     List<ScheduleOfTimePeriod> newScheduleOfTimePeriod =
         Collections.unmodifiableList(scheduleOfTimePeriod);
@@ -1033,4 +1062,13 @@ public class MuseumSystem {
 
   }
 
+
+  public String toString() {
+    return super.toString() + "[" + "museumSystemId" + ":" + getMuseumSystemId() + "]"
+        + System.getProperties().getProperty("line.separator") + "  " + "museum = "
+        + (getMuseum() != null ? Integer.toHexString(System.identityHashCode(getMuseum())) : "null")
+        + System.getProperties().getProperty("line.separator") + "  " + "manager = "
+        + (getManager() != null ? Integer.toHexString(System.identityHashCode(getManager()))
+            : "null");
+  }
 }
