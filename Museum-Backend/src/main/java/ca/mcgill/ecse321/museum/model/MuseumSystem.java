@@ -64,7 +64,6 @@ public class MuseumSystem {
       String aPasswordForManager, long aMuseumUserIdForManager) {
     museum = new Museum(aMuseumIdForMuseum, aNameForMuseum, aVisitFeeForMuseum, aScheduleForMuseum,
         this);
->>>>>>> issue32
     room = new ArrayList<Room>();
     timePeriod = new ArrayList<TimePeriod>();
     artwork = new ArrayList<Artwork>();
