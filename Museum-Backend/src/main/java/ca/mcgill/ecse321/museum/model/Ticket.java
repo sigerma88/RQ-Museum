@@ -6,7 +6,7 @@ package ca.mcgill.ecse321.museum.model;
 import java.sql.Date;
 
 // line 2 "model.ump"
-// line 115 "model.ump"
+// line 123 "model.ump"
 public class Ticket {
 
   // ------------------------

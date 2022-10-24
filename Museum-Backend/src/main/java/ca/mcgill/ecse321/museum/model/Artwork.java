@@ -4,8 +4,8 @@
 package ca.mcgill.ecse321.museum.model;
 
 
-// line 59 "model.ump"
-// line 165 "model.ump"
+// line 57 "model.ump"
+// line 163 "model.ump"
 public class Artwork {
 
   // ------------------------

@@ -4,8 +4,8 @@
 package ca.mcgill.ecse321.museum.model;
 
 
-// line 77 "model.ump"
-// line 181 "model.ump"
+// line 75 "model.ump"
+// line 173 "model.ump"
 public class Room {
 
   // ------------------------
