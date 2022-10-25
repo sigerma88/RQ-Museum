@@ -109,7 +109,7 @@ public class MuseumSystem {
     return aRoom;
   }
 
-  @OneToMany(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   public List<Room> getRoom() {
     List<Room> newRoom = Collections.unmodifiableList(room);
     return newRoom;
@@ -136,7 +136,7 @@ public class MuseumSystem {
     return aTimePeriod;
   }
 
-  @OneToMany(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   public List<TimePeriod> getTimePeriod() {
     List<TimePeriod> newTimePeriod = Collections.unmodifiableList(timePeriod);
     return newTimePeriod;
@@ -163,7 +163,7 @@ public class MuseumSystem {
     return aArtwork;
   }
 
-  @OneToMany(opttional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   public List<Artwork> getArtwork() {
     List<Artwork> newArtwork = Collections.unmodifiableList(artwork);
     return newArtwork;
@@ -190,7 +190,7 @@ public class MuseumSystem {
     return aLoan;
   }
 
-  @OneToMany(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   public List<Loan> getLoan() {
     List<Loan> newLoan = Collections.unmodifiableList(loan);
     return newLoan;
@@ -217,7 +217,7 @@ public class MuseumSystem {
     return aEmployee;
   }
 
-  @OneToMany(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   public List<Employee> getEmployee() {
     List<Employee> newEmployee = Collections.unmodifiableList(employee);
     return newEmployee;
@@ -250,7 +250,7 @@ public class MuseumSystem {
     return aSchedule;
   }
 
-  @OneToMany(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   public List<Schedule> getSchedule() {
     List<Schedule> newSchedule = Collections.unmodifiableList(schedule);
     return newSchedule;
@@ -277,7 +277,7 @@ public class MuseumSystem {
     return aVisitor;
   }
 
-  @OneToMany(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   public List<Visitor> getVisitor() {
     List<Visitor> newVisitor = Collections.unmodifiableList(visitor);
     return newVisitor;
@@ -304,7 +304,7 @@ public class MuseumSystem {
     return aTicket;
   }
 
-  @OneToMany(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   public List<Ticket> getTicket() {
     List<Ticket> newTicket = Collections.unmodifiableList(ticket);
     return newTicket;
@@ -331,7 +331,7 @@ public class MuseumSystem {
     return aScheduleOfTimePeriod;
   }
 
-  @OneToMany(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   public List<ScheduleOfTimePeriod> getScheduleOfTimePeriod() {
     List<ScheduleOfTimePeriod> newScheduleOfTimePeriod =
         Collections.unmodifiableList(scheduleOfTimePeriod);

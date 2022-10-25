@@ -28,7 +28,6 @@ public abstract class MuseumUser {
   // No argument constructor
   public MuseumUser() {}
 
-  public MuseumUser(){}
   public MuseumUser(String aEmail, String aName, String aPassword, long aMuseumUserId) {
     email = aEmail;
     name = aName;

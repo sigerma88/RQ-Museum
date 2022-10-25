@@ -3,7 +3,7 @@
 
 package ca.mcgill.ecse321.museum.model;
 
-import javax.persistence.*
+import javax.persistence.*;
 
 // line 49 "model.ump"
 // line 158 "model.ump"
