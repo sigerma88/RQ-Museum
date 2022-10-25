@@ -7,6 +7,7 @@ import javax.persistence.*;
 
 // line 10 "model.ump"
 // line 128 "model.ump"
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Entity
 public abstract class MuseumUser {
 
