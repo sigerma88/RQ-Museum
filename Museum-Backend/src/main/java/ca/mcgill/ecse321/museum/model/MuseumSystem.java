@@ -103,6 +103,16 @@ public class MuseumSystem {
     return museum;
   }
 
+  /**
+   * Setter for Museum
+   *
+   * @param museum - Museum object to be set
+   * @author Siger
+   */
+  public void setMuseum(Museum museum) {
+    this.museum = museum;
+  }
+
   /* Code from template association_GetMany */
   public Room getRoom(int index) {
     Room aRoom = room.get(index);
@@ -113,6 +123,16 @@ public class MuseumSystem {
   public List<Room> getRoom() {
     List<Room> newRoom = Collections.unmodifiableList(room);
     return newRoom;
+  }
+
+  /**
+   * Setter for Room
+   *
+   * @param room - List of Room objects to be set
+   * @author Siger
+   */
+  public void setRoom(List<Room> room) {
+    this.room = room;
   }
 
   public int numberOfRoom() {
@@ -142,6 +162,15 @@ public class MuseumSystem {
     return newTimePeriod;
   }
 
+  /**
+   * Setter for TimePeriod
+   *
+   * @param timePeriod - List of TimePeriod objects to be set
+   */
+  public void setTimePeriod(List<TimePeriod> timePeriod) {
+    this.timePeriod = timePeriod;
+  }
+
   public int numberOfTimePeriod() {
     int number = timePeriod.size();
     return number;
@@ -167,6 +196,16 @@ public class MuseumSystem {
   public List<Artwork> getArtwork() {
     List<Artwork> newArtwork = Collections.unmodifiableList(artwork);
     return newArtwork;
+  }
+
+  /**
+   * Setter for Artwork
+   * 
+   * @param artwork - List of Artwork object to be set
+   * @author Siger
+   */
+  public void setArtwork(List<Artwork> artwork) {
+    this.artwork = artwork;
   }
 
   public int numberOfArtwork() {
@@ -196,6 +235,16 @@ public class MuseumSystem {
     return newLoan;
   }
 
+  /**
+   * Setter for Loan
+   *
+   * @param loan - List of Loan objects to be set
+   * @author Siger
+   */
+  public void setLoan(List<Loan> loan) {
+    this.loan = loan;
+  }
+
   public int numberOfLoan() {
     int number = loan.size();
     return number;
@@ -223,6 +272,16 @@ public class MuseumSystem {
     return newEmployee;
   }
 
+  /**
+   * Setter for Employee
+   *
+   * @param employee - List of Employee objects to be set
+   * @author Siger
+   */
+  public void setEmployee(List<Employee> employee) {
+    this.employee = employee;
+  }
+
   public int numberOfEmployee() {
     int number = employee.size();
     return number;
@@ -244,6 +303,16 @@ public class MuseumSystem {
     return manager;
   }
 
+  /**
+   * Setter for Manager
+   *
+   * @param manager - Manager object to be set
+   * @author Siger
+   */
+  public void setManager(Manager manager) {
+    this.manager = manager;
+  }
+
   /* Code from template association_GetMany */
   public Schedule getSchedule(int index) {
     Schedule aSchedule = schedule.get(index);
@@ -254,6 +323,16 @@ public class MuseumSystem {
   public List<Schedule> getSchedule() {
     List<Schedule> newSchedule = Collections.unmodifiableList(schedule);
     return newSchedule;
+  }
+
+  /**
+   * Setter for Schedule
+   *
+   * @param schedule - List of Schedule objects to be set
+   * @author Siger
+   */
+  public void setSchedule(List<Schedule> schedule) {
+    this.schedule = schedule;
   }
 
   public int numberOfSchedule() {
@@ -283,6 +362,16 @@ public class MuseumSystem {
     return newVisitor;
   }
 
+  /**
+   * Setter for Visitor
+   *
+   * @param visitor - List of Visitor objects to be set
+   * @author Siger
+   */
+  public void setVisitor(List<Visitor> visitor) {
+    this.visitor = visitor;
+  }
+
   public int numberOfVisitor() {
     int number = visitor.size();
     return number;
@@ -308,6 +397,16 @@ public class MuseumSystem {
   public List<Ticket> getTicket() {
     List<Ticket> newTicket = Collections.unmodifiableList(ticket);
     return newTicket;
+  }
+
+  /**
+   * Setter for Ticket
+   *
+   * @param ticket - List of Ticket objects to be set
+   * @author Siger
+   */
+  public void setTicket(List<Ticket> ticket) {
+    this.ticket = ticket;
   }
 
   public int numberOfTicket() {
@@ -336,6 +435,16 @@ public class MuseumSystem {
     List<ScheduleOfTimePeriod> newScheduleOfTimePeriod =
         Collections.unmodifiableList(scheduleOfTimePeriod);
     return newScheduleOfTimePeriod;
+  }
+
+  /**
+   * Setter for ScheduleOfTimePeriod
+   *
+   * @param scheduleOfTimePeriod - List of ScheduleOfTimePeriod objects to be set
+   * @author Siger
+   */
+  public void setScheduleOfTimePeriod(List<ScheduleOfTimePeriod> scheduleOfTimePeriod) {
+    this.scheduleOfTimePeriod = scheduleOfTimePeriod;
   }
 
   public int numberOfScheduleOfTimePeriod() {
