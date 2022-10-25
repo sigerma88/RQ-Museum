@@ -102,10 +102,31 @@ public class Museum {
     return schedule;
   }
 
+
+  /**
+   * Setter for Schedule
+   * 
+   * @param schedule - Schedule object to be set
+   * @author Siger
+   */
+  public void setSchedule(Schedule schedule) {
+    this.schedule = schedule;
+  }
+
   /* Code from template association_GetOne */
   @OneToOne(optional = false, fetch = FetchType.LAZY)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
+  }
+
+  /**
+   * Setter for MuseumSystem
+   *
+   * @param museumSystem - MuseumSystem object to be set
+   * @author Siger
+   */
+  public void setMuseumSystem(MuseumSystem museumSystem) {
+    this.museumSystem = museumSystem;
   }
 
   public void delete() {

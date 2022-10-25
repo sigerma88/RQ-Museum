@@ -63,6 +63,16 @@ public class Employee extends MuseumUser {
     return schedule;
   }
 
+  /**
+   * Setter got Schedule
+   *
+   * @param schedule - Schedule object to be set
+   * @author Siger
+   */
+  public void setSchedule(Schedule schedule) {
+    this.schedule = schedule;
+  }
+
   /* Code from template association_GetOne */
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   public MuseumSystem getMuseumSystem() {

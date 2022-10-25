@@ -49,6 +49,16 @@ public class Manager extends MuseumUser {
     return museumSystem;
   }
 
+  /**
+   * Setter for MuseumSystem
+   *
+   * @param museumSystem - MuseumSystem object to be set
+   * @author Siger
+   */
+  public void setMuseumSystem(MuseumSystem museumSystem) {
+    this.museumSystem = museumSystem;
+  }
+
   public void delete() {
     MuseumSystem existingMuseumSystem = museumSystem;
     museumSystem = null;

@@ -89,10 +89,30 @@ public class Schedule {
     return employee;
   }
 
+  /**
+   * Setter for employee
+   * 
+   * @param employee - Employee object to be set
+   * @author Siger
+   */
+  public void setEmployee(Employee employee) {
+    this.employee = employee;
+  }
+
   /* Code from template association_GetOne */
   @OneToOne(optional = true)
   public Museum getMuseum() {
     return museum;
+  }
+
+  /**
+   * Setter for museum
+   * 
+   * @param museum - Museum object to be set
+   * @author Siger
+   */
+  public void setMuseum(Museum museum) {
+    this.museum = museum;
   }
 
   /* Code from template association_GetOne */
