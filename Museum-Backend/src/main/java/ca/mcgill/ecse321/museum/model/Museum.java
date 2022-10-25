@@ -3,7 +3,7 @@
 
 package ca.mcgill.ecse321.museum.model;
 
-import javax.persistence.*
+import javax.persistence.*;
 
 // line 49 "model.ump"
 // line 158 "model.ump"
@@ -48,8 +48,7 @@ public class Museum {
   }
 
   public Museum(long aMuseumId, String aName, double aVisitFee, long aScheduleIdForSchedule,
-      Employee aEmployeeForSchedule, MuseumSystem aMuseumSystemForSchedule,
-      Manager aManagerForMuseumSystem) {
+      Employee aEmployeeForSchedule, MuseumSystem aMuseumSystemForSchedule, Manager aManagerForMuseumSystem) {
     museumId = aMuseumId;
     name = aName;
     visitFee = aVisitFee;
@@ -135,3 +134,4 @@ public class Museum {
             : "null");
   }
 }
+
