@@ -3,17 +3,16 @@
 
 package ca.mcgill.ecse321.museum.model;
 
+import javax.persistence.*;
 
-// line 18 "model.ump"
-// line 127 "model.ump"
+// line 19 "model.ump"
+// line 133 "model.ump"
+@Entity
 public class Visitor extends MuseumUser {
 
   // ------------------------
   // MEMBER VARIABLES
   // ------------------------
-
-  // Visitor Attributes
-  private long visitorId;
 
   // Visitor Associations
   private MuseumSystem museumSystem;
@@ -22,10 +21,12 @@ public class Visitor extends MuseumUser {
   // CONSTRUCTOR
   // ------------------------
 
-  public Visitor(String aEmail, String aName, String aPassword, long aVisitorId,
+  // no arg constructor
+  public Visitor() {}
+
+  public Visitor(String aEmail, String aName, String aPassword, long aMuseumUserId,
       MuseumSystem aMuseumSystem) {
-    super(aEmail, aName, aPassword);
-    visitorId = aVisitorId;
+    super(aEmail, aName, aPassword, aMuseumUserId);
     boolean didAddMuseumSystem = setMuseumSystem(aMuseumSystem);
     if (!didAddMuseumSystem) {
       throw new RuntimeException(
@@ -36,19 +37,8 @@ public class Visitor extends MuseumUser {
   // ------------------------
   // INTERFACE
   // ------------------------
-
-  public boolean setVisitorId(long aVisitorId) {
-    boolean wasSet = false;
-    visitorId = aVisitorId;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public long getVisitorId() {
-    return visitorId;
-  }
-
   /* Code from template association_GetOne */
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }
@@ -79,12 +69,4 @@ public class Visitor extends MuseumUser {
     super.delete();
   }
 
-
-  public String toString() {
-    return super.toString() + "[" + "visitorId" + ":" + getVisitorId() + "]"
-        + System.getProperties().getProperty("line.separator") + "  " + "museumSystem = "
-        + (getMuseumSystem() != null
-            ? Integer.toHexString(System.identityHashCode(getMuseumSystem()))
-            : "null");
-  }
 }

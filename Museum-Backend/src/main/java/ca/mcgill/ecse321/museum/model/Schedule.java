@@ -3,9 +3,12 @@
 
 package ca.mcgill.ecse321.museum.model;
 
+import javax.persistence.*;
+import org.hibernate.annotations.ManyToAny;
 
-// line 46 "model.ump"
-// line 150 "model.ump"
+// line 44 "model.ump"
+// line 153 "model.ump"
+@Entity
 public class Schedule {
 
   // ------------------------
@@ -23,6 +26,9 @@ public class Schedule {
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
+
+  // no arg constructor
+  public Schedule() {}
 
   public Schedule(long aScheduleId, Employee aEmployee, Museum aMuseum,
       MuseumSystem aMuseumSystem) {
@@ -45,12 +51,12 @@ public class Schedule {
   }
 
   public Schedule(long aScheduleId, String aEmailForEmployee, String aNameForEmployee,
-      String aPasswordForEmployee, long aEmployeeIdForEmployee,
+      String aPasswordForEmployee, long aMuseumUserIdForEmployee,
       MuseumSystem aMuseumSystemForEmployee, long aMuseumIdForMuseum, String aNameForMuseum,
       double aVisitFeeForMuseum, MuseumSystem aMuseumSystemForMuseum, MuseumSystem aMuseumSystem) {
     scheduleId = aScheduleId;
     employee = new Employee(aEmailForEmployee, aNameForEmployee, aPasswordForEmployee,
-        aEmployeeIdForEmployee, this, aMuseumSystemForEmployee);
+        aMuseumUserIdForEmployee, this, aMuseumSystemForEmployee);
     museum = new Museum(aMuseumIdForMuseum, aNameForMuseum, aVisitFeeForMuseum, this,
         aMuseumSystemForMuseum);
     boolean didAddMuseumSystem = setMuseumSystem(aMuseumSystem);
@@ -71,21 +77,26 @@ public class Schedule {
     return wasSet;
   }
 
+  @GeneratedValue
+  @Id
   public long getScheduleId() {
     return scheduleId;
   }
 
   /* Code from template association_GetOne */
+  @OneToOne(optional = true)
   public Employee getEmployee() {
     return employee;
   }
 
   /* Code from template association_GetOne */
+  @OneToOne(optional = true)
   public Museum getMuseum() {
     return museum;
   }
 
   /* Code from template association_GetOne */
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }

@@ -3,9 +3,11 @@
 
 package ca.mcgill.ecse321.museum.model;
 
+import javax.persistence.*;
 
-// line 77 "model.ump"
-// line 181 "model.ump"
+// line 75 "model.ump"
+// line 173 "model.ump"
+@Entity
 public class Room {
 
   // ------------------------
@@ -32,6 +34,9 @@ public class Room {
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
+
+  // no arg constructor
+  public Room() {}
 
   public Room(long aRoomId, String aRoomName, int aCurrentNumberOfArtwork, Museum aMuseum,
       MuseumSystem aMuseumSystem) {
@@ -74,6 +79,8 @@ public class Room {
     return wasSet;
   }
 
+  @GeneratedValue
+  @Id
   public long getRoomId() {
     return roomId;
   }
@@ -87,11 +94,13 @@ public class Room {
   }
 
   /* Code from template association_GetOne */
+  @ManyToOne(optional = false)
   public Museum getMuseum() {
     return museum;
   }
 
   /* Code from template association_GetOne */
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }

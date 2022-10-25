@@ -4,9 +4,11 @@
 package ca.mcgill.ecse321.museum.model;
 
 import java.sql.Date;
+import javax.persistence.*;
 
-// line 87 "model.ump"
-// line 189 "model.ump"
+// line 85 "model.ump"
+// line 178 "model.ump"
+@Entity
 public class TimePeriod {
 
   // ------------------------
@@ -24,6 +26,9 @@ public class TimePeriod {
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
+
+  // no arg constructor
+  public TimePeriod() {}
 
   public TimePeriod(long aTimePeriodId, Date aStartDate, Date aEndDate,
       MuseumSystem aMuseumSystem) {
@@ -62,6 +67,8 @@ public class TimePeriod {
     return wasSet;
   }
 
+  @GeneratedValue
+  @Id
   public long getTimePeriodId() {
     return timePeriodId;
   }
@@ -75,6 +82,7 @@ public class TimePeriod {
   }
 
   /* Code from template association_GetOne */
+  @ManyToOne(optional=false, fetch=FetchType.LAZY)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }

@@ -3,9 +3,11 @@
 
 package ca.mcgill.ecse321.museum.model;
 
+import javax.persistence.*;
 
-// line 70 "model.ump"
-// line 172 "model.ump"
+// line 68 "model.ump"
+// line 168 "model.ump"
+@Entity
 public class ScheduleOfTimePeriod {
 
   // ------------------------
@@ -23,6 +25,9 @@ public class ScheduleOfTimePeriod {
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
+
+  // no arg constructor
+  public ScheduleOfTimePeriod() {}
 
   public ScheduleOfTimePeriod(long aScheduleOfTimePeriodId, Schedule aSchedule,
       TimePeriod aTimePeriod, MuseumSystem aMuseumSystem) {
@@ -53,21 +58,26 @@ public class ScheduleOfTimePeriod {
     return wasSet;
   }
 
+  @GeneratedValue
+  @Id
   public long getScheduleOfTimePeriodId() {
     return scheduleOfTimePeriodId;
   }
 
   /* Code from template association_GetOne */
+  @ManyToOne(optional=false)
   public Schedule getSchedule() {
     return schedule;
   }
 
   /* Code from template association_GetOne */
+  @ManyToOne(optional=false)
   public TimePeriod getTimePeriod() {
     return timePeriod;
   }
 
   /* Code from template association_GetOne */
+  @ManyToOne(optional=false, fetch=FetchType.LAZY)
   public MuseumSystem getMuseumSystem() {
     return museumSystem;
   }
