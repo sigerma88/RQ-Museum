@@ -3,17 +3,12 @@
 
 package ca.mcgill.ecse321.museum.model;
 
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 
-<<<<<<< HEAD
-import javax.persistence.*;
-
-// line 31 "model.ump"
-// line 132 "model.ump"
-@Entity
-=======
 // line 30 "model.ump"
 // line 143 "model.ump"
->>>>>>> issue32
+@Entity
 public class Manager extends MuseumUser {
 
   // ------------------------
@@ -27,13 +22,7 @@ public class Manager extends MuseumUser {
   // CONSTRUCTOR
   // ------------------------
 
-<<<<<<< HEAD
-  //no arg constructor
-  public Manager(){}
-  public Manager(String aEmail, String aName, String aPassword, long aManagerId,
-=======
   public Manager(String aEmail, String aName, String aPassword, long aMuseumUserId,
->>>>>>> issue32
       MuseumSystem aMuseumSystem) {
     super(aEmail, aName, aPassword, aMuseumUserId);
     if (aMuseumSystem == null || aMuseumSystem.getManager() != null) {
@@ -52,23 +41,6 @@ public class Manager extends MuseumUser {
   // ------------------------
   // INTERFACE
   // ------------------------
-<<<<<<< HEAD
-
-  public boolean setManagerId(long aManagerId) {
-    boolean wasSet = false;
-    managerId = aManagerId;
-    wasSet = true;
-    return wasSet;
-  }
-
-  @Id
-  @GeneratedValue
-  public long getManagerId() {
-    return managerId;
-  }
-
-=======
->>>>>>> issue32
   /* Code from template association_GetOne */
   @OneToOne(optional = false)
   public MuseumSystem getMuseumSystem() {

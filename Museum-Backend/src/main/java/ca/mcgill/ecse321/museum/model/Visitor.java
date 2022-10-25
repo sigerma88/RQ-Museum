@@ -9,15 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-<<<<<<< HEAD
-// line 18 "model.ump"
-// line 122 "model.ump"
-
-@Entity
-=======
 // line 19 "model.ump"
 // line 133 "model.ump"
->>>>>>> issue32
+@Entity
 public class Visitor extends MuseumUser {
 
   // ------------------------
@@ -31,13 +25,7 @@ public class Visitor extends MuseumUser {
   // CONSTRUCTOR
   // ------------------------
 
-<<<<<<< HEAD
-  //no arg constructor 
-  public Visitor(){}
-  public Visitor(String aEmail, String aName, String aPassword, long aVisitorId,
-=======
   public Visitor(String aEmail, String aName, String aPassword, long aMuseumUserId,
->>>>>>> issue32
       MuseumSystem aMuseumSystem) {
     super(aEmail, aName, aPassword, aMuseumUserId);
     boolean didAddMuseumSystem = setMuseumSystem(aMuseumSystem);
@@ -50,24 +38,6 @@ public class Visitor extends MuseumUser {
   // ------------------------
   // INTERFACE
   // ------------------------
-<<<<<<< HEAD
-
-  public boolean setVisitorId(long aVisitorId) {
-    boolean wasSet = false;
-    visitorId = aVisitorId;
-    wasSet = true;
-    return wasSet;
-  }
-
-  @GeneratedValue
-  @Id
-  public long getVisitorId() {
-    return visitorId;
-  }
-
-
-=======
->>>>>>> issue32
   /* Code from template association_GetOne */
   @ManyToOne
   public MuseumSystem getMuseumSystem() {

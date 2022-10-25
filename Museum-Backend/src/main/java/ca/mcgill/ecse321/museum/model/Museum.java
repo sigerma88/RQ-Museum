@@ -3,13 +3,10 @@
 
 package ca.mcgill.ecse321.museum.model;
 
-import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-// line49 "model.ump"
-// line 158 "model.ump"
-
-@Entity
 public class Museum {
 
   // ------------------------
@@ -25,11 +22,10 @@ public class Museum {
   private Schedule schedule;
   private MuseumSystem museumSystem;
 
-  // -----------
+  // ------------------------
+  // CONSTRUCTOR
+  // ------------------------
 
-
-
-  
   public Museum(long aMuseumId, String aName, double aVisitFee, Schedule aSchedule,
       MuseumSystem aMuseumSystem) {
     museumId = aMuseumId;
@@ -49,13 +45,13 @@ public class Museum {
 
   public Museum(long aMuseumId, String aName, double aVisitFee, long aScheduleIdForSchedule,
       Employee aEmployeeForSchedule, MuseumSystem aMuseumSystemForSchedule,
-      Manager aManagerForMuseumSystem) {
+      long aMuseumSystemIdForMuseumSystem, Manager aManagerForMuseumSystem) {
     museumId = aMuseumId;
     name = aName;
     visitFee = aVisitFee;
     schedule =
         new Schedule(aScheduleIdForSchedule, aEmployeeForSchedule, this, aMuseumSystemForSchedule);
-    museumSystem = new MuseumSystem(this, aManagerForMuseumSystem);
+    museumSystem = new MuseumSystem(aMuseumSystemIdForMuseumSystem, this, aManagerForMuseumSystem);
   }
 
   // ------------------------
@@ -94,11 +90,10 @@ public class Museum {
   }
 
   public double getVisitFee() {
-   
+    return visitFee;
+  }
 
-
-
-  
+  /* Code from template association_GetOne */
   @OneToOne(optional = false)
   public Schedule getSchedule() {
     return schedule;
@@ -136,3 +131,4 @@ public class Museum {
             : "null");
   }
 }
+

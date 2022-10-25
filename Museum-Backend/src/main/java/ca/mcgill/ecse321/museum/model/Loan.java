@@ -3,6 +3,11 @@
 
 package ca.mcgill.ecse321.museum.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 // line36 "model.ump"
 // line 118 "model.ump"
@@ -23,12 +28,13 @@ public class Loan {
   private Artwork artwork;
   private MuseumSystem museumSystem;
 
-  // ------------------------
-  // CONSTRUCTOR
-  // ------------------------
-  
-  //no arg constructor
-  public Loan(){}
+
+
+  // no arg cons t
+
+
+  public Loan() {}
+
   public Loan(long aLoanId, boolean aRequestedAccepted, Visitor aVisitor, Artwork aArtwork,
       MuseumSystem aMuseumSystem) {
     loanId = aLoanId;
@@ -77,6 +83,7 @@ public class Loan {
   }
 
   /* Code from template association_GetOne */
+
   @ManyToOne(optional = false)
   public Visitor getVisitor() {
     return visitor;
