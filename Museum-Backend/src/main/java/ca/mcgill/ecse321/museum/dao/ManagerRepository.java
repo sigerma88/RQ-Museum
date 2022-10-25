@@ -3,11 +3,12 @@ import org.springframework.data.repository.CrudRepository;
 import ca.mcgill.ecse321.museum.model.Manager;
 
 /**
- * Author : VZ
  * This is the repository for the Manager class
+ * 
+ * @author VZ
  */
 public interface ManagerRepository extends CrudRepository<Manager, Long>{
 
-	Manager findManagerByMuseumUserId(Long museumUserId);
+  Manager findManagerByMuseumUserId(Long museumUserId);
 
 }

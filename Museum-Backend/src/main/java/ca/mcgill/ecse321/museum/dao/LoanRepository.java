@@ -5,7 +5,12 @@ import org.springframework.data.repository.CrudRepository;
 
 /**
  * Crud Repository functionality given by Spring for Loan Model
+ * 
+ * @author Kieyan
+ * @author Siger
  */
 public interface LoanRepository extends CrudRepository<Loan, Long> {
+
+  Loan findLoanByLoanId(Long loanId);
 
 }
