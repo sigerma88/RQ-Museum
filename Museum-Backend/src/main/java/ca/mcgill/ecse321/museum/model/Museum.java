@@ -48,14 +48,13 @@ public class Museum {
   }
 
   public Museum(long aMuseumId, String aName, double aVisitFee, long aScheduleIdForSchedule,
-      Employee aEmployeeForSchedule, MuseumSystem aMuseumSystemForSchedule,
-      long aMuseumSystemIdForMuseumSystem, Manager aManagerForMuseumSystem) {
+      Employee aEmployeeForSchedule, MuseumSystem aMuseumSystemForSchedule, Manager aManagerForMuseumSystem) {
     museumId = aMuseumId;
     name = aName;
     visitFee = aVisitFee;
     schedule =
         new Schedule(aScheduleIdForSchedule, aEmployeeForSchedule, this, aMuseumSystemForSchedule);
-    museumSystem = new MuseumSystem(aMuseumSystemIdForMuseumSystem, this, aManagerForMuseumSystem);
+    museumSystem = new MuseumSystem(this, aManagerForMuseumSystem);
   }
 
   // ------------------------
