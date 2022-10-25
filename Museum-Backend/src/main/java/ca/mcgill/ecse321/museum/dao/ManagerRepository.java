@@ -8,6 +8,6 @@ import ca.mcgill.ecse321.museum.model.Manager;
  */
 public interface ManagerRepository extends CrudRepository<Manager, Long>{
 
-	Manager findTicketByManagerId(Long managerId);
+	Manager findManagerByMuseumUserId(Long museumUserId);
 
 }

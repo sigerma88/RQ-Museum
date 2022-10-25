@@ -9,6 +9,6 @@ import ca.mcgill.ecse321.museum.model.Employee;
 
 public interface EmployeeRepository extends CrudRepository<Employee, Long>{
 
-	Employee findEmployeebyEmployeeId(Long employeeId);
+	Employee findEmployeeByMuseumUserId(Long museumUserId);
 
 }
