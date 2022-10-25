@@ -6,6 +6,7 @@ package ca.mcgill.ecse321.museum.model;
 import java.sql.Date;
 import javax.persistence.*;
 
+
 // line 2 "model.ump"
 // line 123 "model.ump"
 @Entity
