@@ -1,11 +1,12 @@
-package dao;
+package ca.mcgill.ecse321.museum.dao;
 
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import java.sql.Date;
-
+import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.museum.dao.TicketRepository;
 import ca.mcgill.ecse321.museum.model.Ticket;
@@ -25,7 +26,7 @@ public class TicketRepositoryTests {
     public void testPersistandLoadTicket() {
         //create object
 
-        Date visitDate = Date.valueOf("2020-01-01")
+        Date visitDate = Date.valueOf("2020-01-01");
         Ticket ticket = new Ticket();
         ticket.setVisitDate(visitDate);
 
