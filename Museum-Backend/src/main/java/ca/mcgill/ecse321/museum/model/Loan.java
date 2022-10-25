@@ -79,6 +79,7 @@ public class Loan {
   }
 
   /* Code from template association_GetOne */
+
   @ManyToOne(optional = false)
   public Visitor getVisitor() {
     return visitor;
