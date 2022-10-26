@@ -31,7 +31,7 @@ public class ScheduleRepositoryTests {
   }
 
   @Test
-  public void testPersistandLoadSchedule() {
+  public void testPersistAndLoadSchedule() {
     //create Schedule
     Schedule schedule = new Schedule();
 
@@ -47,7 +47,7 @@ public class ScheduleRepositoryTests {
   }
 
     @Test
-    public void testPersistandLoadScheduleForMuseum() {
+    public void testPersistAndLoadScheduleForMuseum() {
     //create Schedule
     Schedule schedule = new Schedule();
 
@@ -83,7 +83,7 @@ public class ScheduleRepositoryTests {
   }
 
   @Test
-  public void testPersistandLoadScheduleForEmployee() {
+  public void testPersistAndLoadScheduleForEmployee() {
     //create Schedule
     Schedule schedule = new Schedule();
 

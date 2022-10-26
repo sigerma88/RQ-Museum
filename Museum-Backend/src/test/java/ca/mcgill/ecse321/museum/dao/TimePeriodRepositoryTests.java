@@ -23,7 +23,7 @@ public class TimePeriodRepositoryTests {
   }
 
   @Test
-  public void testPersistandLoadTimePeriod() {
+  public void testPersistAndLoadTimePeriod() {
     //create TimePeriod
     Timestamp startDate = Timestamp.valueOf("2022-10-28 08:30:00.0");
     Timestamp endDate = Timestamp.valueOf("2022-10-28 17:35:00.0");
