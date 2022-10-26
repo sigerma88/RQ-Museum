@@ -20,27 +20,12 @@ public class TimePeriod {
   private Date startDate;
   private Date endDate;
 
-  // TimePeriod Associations
-  private MuseumSystem museumSystem;
-
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
 
   // no arg constructor
   public TimePeriod() {}
-
-  public TimePeriod(long aTimePeriodId, Date aStartDate, Date aEndDate,
-      MuseumSystem aMuseumSystem) {
-    timePeriodId = aTimePeriodId;
-    startDate = aStartDate;
-    endDate = aEndDate;
-    boolean didAddMuseumSystem = setMuseumSystem(aMuseumSystem);
-    if (!didAddMuseumSystem) {
-      throw new RuntimeException(
-          "Unable to create timePeriod due to museumSystem. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-  }
 
   // ------------------------
   // INTERFACE
@@ -73,45 +58,15 @@ public class TimePeriod {
     return timePeriodId;
   }
 
+  @Column(nullable = false)
   public Date getStartDate() {
     return startDate;
   }
 
+  @Column(nullable = false)
   public Date getEndDate() {
     return endDate;
   }
-
-  /* Code from template association_GetOne */
-  @ManyToOne(optional=false, fetch=FetchType.LAZY)
-  public MuseumSystem getMuseumSystem() {
-    return museumSystem;
-  }
-
-  /* Code from template association_SetOneToMany */
-  public boolean setMuseumSystem(MuseumSystem aMuseumSystem) {
-    boolean wasSet = false;
-    if (aMuseumSystem == null) {
-      return wasSet;
-    }
-
-    MuseumSystem existingMuseumSystem = museumSystem;
-    museumSystem = aMuseumSystem;
-    if (existingMuseumSystem != null && !existingMuseumSystem.equals(aMuseumSystem)) {
-      existingMuseumSystem.removeTimePeriod(this);
-    }
-    museumSystem.addTimePeriod(this);
-    wasSet = true;
-    return wasSet;
-  }
-
-  public void delete() {
-    MuseumSystem placeholderMuseumSystem = museumSystem;
-    this.museumSystem = null;
-    if (placeholderMuseumSystem != null) {
-      placeholderMuseumSystem.removeTimePeriod(this);
-    }
-  }
-
 
   public String toString() {
     return super.toString() + "[" + "timePeriodId" + ":" + getTimePeriodId() + "]"
@@ -124,9 +79,6 @@ public class TimePeriod {
         + (getEndDate() != null
             ? !getEndDate().equals(this) ? getEndDate().toString().replaceAll("  ", "    ") : "this"
             : "null")
-        + System.getProperties().getProperty("line.separator") + "  " + "museumSystem = "
-        + (getMuseumSystem() != null
-            ? Integer.toHexString(System.identityHashCode(getMuseumSystem()))
-            : "null");
+        + System.getProperties().getProperty("line.separator");
   }
 }

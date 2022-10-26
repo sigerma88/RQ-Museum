@@ -24,7 +24,6 @@ public class Artwork {
 
   // Artwork Associations
   private Room room;
-  private MuseumSystem museumSystem;
 
   // ------------------------
   // CONSTRUCTOR
@@ -32,25 +31,6 @@ public class Artwork {
 
   // no arg constructor
   public Artwork() {}
-
-  public Artwork(long aArtworkId, String aName, String aArtist, boolean aIsAvailableForLoan,
-      double aLoanFee, String aImage, Room aRoom, MuseumSystem aMuseumSystem) {
-    artworkId = aArtworkId;
-    name = aName;
-    artist = aArtist;
-    isAvailableForLoan = aIsAvailableForLoan;
-    loanFee = aLoanFee;
-    image = aImage;
-    if (!setRoom(aRoom)) {
-      throw new RuntimeException(
-          "Unable to create Artwork due to aRoom. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-    boolean didAddMuseumSystem = setMuseumSystem(aMuseumSystem);
-    if (!didAddMuseumSystem) {
-      throw new RuntimeException(
-          "Unable to create artwork due to museumSystem. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-  }
 
   // ------------------------
   // INTERFACE
@@ -104,36 +84,36 @@ public class Artwork {
     return artworkId;
   }
 
+  @Column(nullable = false)
   public String getName() {
     return name;
   }
 
+  @Column(nullable = false)
   public String getArtist() {
     return artist;
   }
 
+  @Column(nullable = false)
   public boolean getIsAvailableForLoan() {
     return isAvailableForLoan;
   }
 
+  @Column(nullable = true)
   public double getLoanFee() {
     return loanFee;
   }
 
+  @Column(nullable = false)
   public String getImage() {
     return image;
   }
 
   /* Code from template association_GetOne */
-  @ManyToOne(optional = true)
+  @ManyToOne()
+  @JoinColumn(name = "room_id", referencedColumnName = "roomId", nullable = true)
   public Room getRoom() {
     return room;
-  }
-
-  /* Code from template association_GetOne */
-  @ManyToOne(optional = false, fetch = FetchType.LAZY)
-  public MuseumSystem getMuseumSystem() {
-    return museumSystem;
   }
 
   /* Code from template association_SetUnidirectionalOne */
@@ -146,32 +126,6 @@ public class Artwork {
     return wasSet;
   }
 
-  /* Code from template association_SetOneToMany */
-  public boolean setMuseumSystem(MuseumSystem aMuseumSystem) {
-    boolean wasSet = false;
-    if (aMuseumSystem == null) {
-      return wasSet;
-    }
-
-    MuseumSystem existingMuseumSystem = museumSystem;
-    museumSystem = aMuseumSystem;
-    if (existingMuseumSystem != null && !existingMuseumSystem.equals(aMuseumSystem)) {
-      existingMuseumSystem.removeArtwork(this);
-    }
-    museumSystem.addArtwork(this);
-    wasSet = true;
-    return wasSet;
-  }
-
-  public void delete() {
-    room = null;
-    MuseumSystem placeholderMuseumSystem = museumSystem;
-    this.museumSystem = null;
-    if (placeholderMuseumSystem != null) {
-      placeholderMuseumSystem.removeArtwork(this);
-    }
-  }
-
 
   public String toString() {
     return super.toString() + "[" + "artworkId" + ":" + getArtworkId() + "," + "name" + ":"
@@ -179,9 +133,6 @@ public class Artwork {
         + getIsAvailableForLoan() + "," + "loanFee" + ":" + getLoanFee() + "," + "image" + ":"
         + getImage() + "]" + System.getProperties().getProperty("line.separator") + "  " + "room = "
         + (getRoom() != null ? Integer.toHexString(System.identityHashCode(getRoom())) : "null")
-        + System.getProperties().getProperty("line.separator") + "  " + "museumSystem = "
-        + (getMuseumSystem() != null
-            ? Integer.toHexString(System.identityHashCode(getMuseumSystem()))
-            : "null");
+        + System.getProperties().getProperty("line.separator");
   }
 }

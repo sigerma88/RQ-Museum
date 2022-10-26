@@ -67,14 +67,17 @@ public abstract class MuseumUser {
     return wasSet;
   }
 
+  @Column(unique = true, nullable = false)
   public String getEmail() {
     return email;
   }
 
+  @Column(nullable = false)
   public String getName() {
     return name;
   }
 
+  @Column(nullable = false)
   public String getPassword() {
     return password;
   }

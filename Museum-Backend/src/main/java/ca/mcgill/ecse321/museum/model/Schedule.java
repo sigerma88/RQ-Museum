@@ -21,7 +21,6 @@ public class Schedule {
   // Schedule Associations
   private Employee employee;
   private Museum museum;
-  private MuseumSystem museumSystem;
 
   // ------------------------
   // CONSTRUCTOR
@@ -29,42 +28,6 @@ public class Schedule {
 
   // no arg constructor
   public Schedule() {}
-
-  public Schedule(long aScheduleId, Employee aEmployee, Museum aMuseum,
-      MuseumSystem aMuseumSystem) {
-    scheduleId = aScheduleId;
-    if (aEmployee == null || aEmployee.getSchedule() != null) {
-      throw new RuntimeException(
-          "Unable to create Schedule due to aEmployee. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-    employee = aEmployee;
-    if (aMuseum == null || aMuseum.getSchedule() != null) {
-      throw new RuntimeException(
-          "Unable to create Schedule due to aMuseum. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-    museum = aMuseum;
-    boolean didAddMuseumSystem = setMuseumSystem(aMuseumSystem);
-    if (!didAddMuseumSystem) {
-      throw new RuntimeException(
-          "Unable to create schedule due to museumSystem. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-  }
-
-  public Schedule(long aScheduleId, String aEmailForEmployee, String aNameForEmployee,
-      String aPasswordForEmployee, long aMuseumUserIdForEmployee,
-      MuseumSystem aMuseumSystemForEmployee, long aMuseumIdForMuseum, String aNameForMuseum,
-      double aVisitFeeForMuseum, MuseumSystem aMuseumSystemForMuseum, MuseumSystem aMuseumSystem) {
-    scheduleId = aScheduleId;
-    employee = new Employee(aEmailForEmployee, aNameForEmployee, aPasswordForEmployee,
-        aMuseumUserIdForEmployee, this, aMuseumSystemForEmployee);
-    museum = new Museum(aMuseumIdForMuseum, aNameForMuseum, aVisitFeeForMuseum, this,
-        aMuseumSystemForMuseum);
-    boolean didAddMuseumSystem = setMuseumSystem(aMuseumSystem);
-    if (!didAddMuseumSystem) {
-      throw new RuntimeException(
-          "Unable to create schedule due to museumSystem. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-  }
 
   // ------------------------
   // INTERFACE
@@ -84,7 +47,7 @@ public class Schedule {
   }
 
   /* Code from template association_GetOne */
-  @OneToOne(optional = true)
+  @OneToOne(mappedBy = "schedule")
   public Employee getEmployee() {
     return employee;
   }
@@ -100,7 +63,7 @@ public class Schedule {
   }
 
   /* Code from template association_GetOne */
-  @OneToOne(optional = true)
+  @OneToOne(mappedBy = "schedule")
   public Museum getMuseum() {
     return museum;
   }
@@ -115,48 +78,6 @@ public class Schedule {
     this.museum = museum;
   }
 
-  /* Code from template association_GetOne */
-  @ManyToOne(optional = false, fetch = FetchType.LAZY)
-  public MuseumSystem getMuseumSystem() {
-    return museumSystem;
-  }
-
-  /* Code from template association_SetOneToMany */
-  public boolean setMuseumSystem(MuseumSystem aMuseumSystem) {
-    boolean wasSet = false;
-    if (aMuseumSystem == null) {
-      return wasSet;
-    }
-
-    MuseumSystem existingMuseumSystem = museumSystem;
-    museumSystem = aMuseumSystem;
-    if (existingMuseumSystem != null && !existingMuseumSystem.equals(aMuseumSystem)) {
-      existingMuseumSystem.removeSchedule(this);
-    }
-    museumSystem.addSchedule(this);
-    wasSet = true;
-    return wasSet;
-  }
-
-  public void delete() {
-    Employee existingEmployee = employee;
-    employee = null;
-    if (existingEmployee != null) {
-      existingEmployee.delete();
-    }
-    Museum existingMuseum = museum;
-    museum = null;
-    if (existingMuseum != null) {
-      existingMuseum.delete();
-    }
-    MuseumSystem placeholderMuseumSystem = museumSystem;
-    this.museumSystem = null;
-    if (placeholderMuseumSystem != null) {
-      placeholderMuseumSystem.removeSchedule(this);
-    }
-  }
-
-
   public String toString() {
     return super.toString() + "[" + "scheduleId" + ":" + getScheduleId() + "]"
         + System.getProperties().getProperty("line.separator") + "  " + "employee = "
@@ -164,9 +85,6 @@ public class Schedule {
             : "null")
         + System.getProperties().getProperty("line.separator") + "  " + "museum = "
         + (getMuseum() != null ? Integer.toHexString(System.identityHashCode(getMuseum())) : "null")
-        + System.getProperties().getProperty("line.separator") + "  " + "museumSystem = "
-        + (getMuseumSystem() != null
-            ? Integer.toHexString(System.identityHashCode(getMuseumSystem()))
-            : "null");
+        + System.getProperties().getProperty("line.separator");
   }
 }

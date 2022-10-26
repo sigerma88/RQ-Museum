@@ -17,12 +17,11 @@ public class Loan {
 
   // Loan Attributes
   private long loanId;
-  private boolean requestedAccepted;
+  private boolean requestAccepted;
 
   // Loan Associations
   private Visitor visitor;
   private Artwork artwork;
-  private MuseumSystem museumSystem;
 
   // ------------------------
   // CONSTRUCTOR
@@ -30,25 +29,6 @@ public class Loan {
 
   // no arg constructor
   public Loan() {}
-
-  public Loan(long aLoanId, boolean aRequestedAccepted, Visitor aVisitor, Artwork aArtwork,
-      MuseumSystem aMuseumSystem) {
-    loanId = aLoanId;
-    requestedAccepted = aRequestedAccepted;
-    if (!setVisitor(aVisitor)) {
-      throw new RuntimeException(
-          "Unable to create Loan due to aVisitor. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-    if (!setArtwork(aArtwork)) {
-      throw new RuntimeException(
-          "Unable to create Loan due to aArtwork. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-    boolean didAddMuseumSystem = setMuseumSystem(aMuseumSystem);
-    if (!didAddMuseumSystem) {
-      throw new RuntimeException(
-          "Unable to create loan due to museumSystem. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-  }
 
   // ------------------------
   // INTERFACE
@@ -61,9 +41,9 @@ public class Loan {
     return wasSet;
   }
 
-  public boolean setRequestedAccepted(boolean aRequestedAccepted) {
+  public boolean setRequestAccepted(boolean aRequestAccepted) {
     boolean wasSet = false;
-    requestedAccepted = aRequestedAccepted;
+    requestAccepted = aRequestAccepted;
     wasSet = true;
     return wasSet;
   }
@@ -74,27 +54,23 @@ public class Loan {
     return loanId;
   }
 
-  public boolean getRequestedAccepted() {
-    return requestedAccepted;
+  @Column(nullable = false)
+  public boolean getRequestAccepted() {
+    return requestAccepted;
   }
 
   /* Code from template association_GetOne */
-
-  @ManyToOne(optional = false)
+  @ManyToOne()
+  @JoinColumn(name = "visitor_id", referencedColumnName = "museumUserId", nullable = false)
   public Visitor getVisitor() {
     return visitor;
   }
 
   /* Code from template association_GetOne */
-  @OneToOne(optional = false)
+  @OneToOne()
+  @JoinColumn(name = "artwork_id", referencedColumnName = "artworkId", nullable = false)
   public Artwork getArtwork() {
     return artwork;
-  }
-
-  /* Code from template association_GetOne */
-  @ManyToOne(optional = false, fetch = FetchType.LAZY)
-  public MuseumSystem getMuseumSystem() {
-    return museumSystem;
   }
 
   /* Code from template association_SetUnidirectionalOne */
@@ -117,46 +93,15 @@ public class Loan {
     return wasSet;
   }
 
-  /* Code from template association_SetOneToMany */
-  public boolean setMuseumSystem(MuseumSystem aMuseumSystem) {
-    boolean wasSet = false;
-    if (aMuseumSystem == null) {
-      return wasSet;
-    }
-
-    MuseumSystem existingMuseumSystem = museumSystem;
-    museumSystem = aMuseumSystem;
-    if (existingMuseumSystem != null && !existingMuseumSystem.equals(aMuseumSystem)) {
-      existingMuseumSystem.removeLoan(this);
-    }
-    museumSystem.addLoan(this);
-    wasSet = true;
-    return wasSet;
-  }
-
-  public void delete() {
-    visitor = null;
-    artwork = null;
-    MuseumSystem placeholderMuseumSystem = museumSystem;
-    this.museumSystem = null;
-    if (placeholderMuseumSystem != null) {
-      placeholderMuseumSystem.removeLoan(this);
-    }
-  }
-
-
   public String toString() {
-    return super.toString() + "[" + "loanId" + ":" + getLoanId() + "," + "requestedAccepted" + ":"
-        + getRequestedAccepted() + "]" + System.getProperties().getProperty("line.separator") + "  "
+    return super.toString() + "[" + "loanId" + ":" + getLoanId() + "," + "requestAccepted" + ":"
+        + getRequestAccepted() + "]" + System.getProperties().getProperty("line.separator") + "  "
         + "visitor = "
         + (getVisitor() != null ? Integer.toHexString(System.identityHashCode(getVisitor()))
             : "null")
         + System.getProperties().getProperty("line.separator") + "  " + "artwork = "
         + (getArtwork() != null ? Integer.toHexString(System.identityHashCode(getArtwork()))
             : "null")
-        + System.getProperties().getProperty("line.separator") + "  " + "museumSystem = "
-        + (getMuseumSystem() != null
-            ? Integer.toHexString(System.identityHashCode(getMuseumSystem()))
-            : "null");
+        + System.getProperties().getProperty("line.separator");
   }
 }

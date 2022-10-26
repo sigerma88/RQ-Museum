@@ -20,7 +20,6 @@ public class ScheduleOfTimePeriod {
   // ScheduleOfTimePeriod Associations
   private Schedule schedule;
   private TimePeriod timePeriod;
-  private MuseumSystem museumSystem;
 
   // ------------------------
   // CONSTRUCTOR
@@ -28,24 +27,6 @@ public class ScheduleOfTimePeriod {
 
   // no arg constructor
   public ScheduleOfTimePeriod() {}
-
-  public ScheduleOfTimePeriod(long aScheduleOfTimePeriodId, Schedule aSchedule,
-      TimePeriod aTimePeriod, MuseumSystem aMuseumSystem) {
-    scheduleOfTimePeriodId = aScheduleOfTimePeriodId;
-    if (!setSchedule(aSchedule)) {
-      throw new RuntimeException(
-          "Unable to create ScheduleOfTimePeriod due to aSchedule. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-    if (!setTimePeriod(aTimePeriod)) {
-      throw new RuntimeException(
-          "Unable to create ScheduleOfTimePeriod due to aTimePeriod. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-    boolean didAddMuseumSystem = setMuseumSystem(aMuseumSystem);
-    if (!didAddMuseumSystem) {
-      throw new RuntimeException(
-          "Unable to create scheduleOfTimePeriod due to museumSystem. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-  }
 
   // ------------------------
   // INTERFACE
@@ -65,21 +46,17 @@ public class ScheduleOfTimePeriod {
   }
 
   /* Code from template association_GetOne */
-  @ManyToOne(optional=false)
+  @ManyToOne()
+  @JoinColumn(name="schedule_id", referencedColumnName = "scheduleId", nullable = false)
   public Schedule getSchedule() {
     return schedule;
   }
 
   /* Code from template association_GetOne */
-  @ManyToOne(optional=false)
+  @ManyToOne()
+  @JoinColumn(name="time_period_id", referencedColumnName = "timePeriodId", nullable = false)
   public TimePeriod getTimePeriod() {
     return timePeriod;
-  }
-
-  /* Code from template association_GetOne */
-  @ManyToOne(optional=false, fetch=FetchType.LAZY)
-  public MuseumSystem getMuseumSystem() {
-    return museumSystem;
   }
 
   /* Code from template association_SetUnidirectionalOne */
@@ -102,34 +79,6 @@ public class ScheduleOfTimePeriod {
     return wasSet;
   }
 
-  /* Code from template association_SetOneToMany */
-  public boolean setMuseumSystem(MuseumSystem aMuseumSystem) {
-    boolean wasSet = false;
-    if (aMuseumSystem == null) {
-      return wasSet;
-    }
-
-    MuseumSystem existingMuseumSystem = museumSystem;
-    museumSystem = aMuseumSystem;
-    if (existingMuseumSystem != null && !existingMuseumSystem.equals(aMuseumSystem)) {
-      existingMuseumSystem.removeScheduleOfTimePeriod(this);
-    }
-    museumSystem.addScheduleOfTimePeriod(this);
-    wasSet = true;
-    return wasSet;
-  }
-
-  public void delete() {
-    schedule = null;
-    timePeriod = null;
-    MuseumSystem placeholderMuseumSystem = museumSystem;
-    this.museumSystem = null;
-    if (placeholderMuseumSystem != null) {
-      placeholderMuseumSystem.removeScheduleOfTimePeriod(this);
-    }
-  }
-
-
   public String toString() {
     return super.toString() + "[" + "scheduleOfTimePeriodId" + ":" + getScheduleOfTimePeriodId()
         + "]" + System.getProperties().getProperty("line.separator") + "  " + "schedule = "
@@ -138,9 +87,6 @@ public class ScheduleOfTimePeriod {
         + System.getProperties().getProperty("line.separator") + "  " + "timePeriod = "
         + (getTimePeriod() != null ? Integer.toHexString(System.identityHashCode(getTimePeriod()))
             : "null")
-        + System.getProperties().getProperty("line.separator") + "  " + "museumSystem = "
-        + (getMuseumSystem() != null
-            ? Integer.toHexString(System.identityHashCode(getMuseumSystem()))
-            : "null");
+        + System.getProperties().getProperty("line.separator");
   }
 }

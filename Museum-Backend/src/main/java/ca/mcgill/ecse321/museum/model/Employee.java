@@ -17,7 +17,6 @@ public class Employee extends MuseumUser {
 
   // Employee Associations
   private Schedule schedule;
-  private MuseumSystem museumSystem;
 
   // ------------------------
   // CONSTRUCTOR
@@ -26,39 +25,12 @@ public class Employee extends MuseumUser {
   //no arg constructor
   public Employee(){}
 
-  public Employee(String aEmail, String aName, String aPassword, long aMuseumUserId,
-      Schedule aSchedule, MuseumSystem aMuseumSystem) {
-    super(aEmail, aName, aPassword, aMuseumUserId);
-    if (aSchedule == null || aSchedule.getEmployee() != null) {
-      throw new RuntimeException(
-          "Unable to create Employee due to aSchedule. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-    schedule = aSchedule;
-    boolean didAddMuseumSystem = setMuseumSystem(aMuseumSystem);
-    if (!didAddMuseumSystem) {
-      throw new RuntimeException(
-          "Unable to create employee due to museumSystem. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-  }
-
-  public Employee(String aEmail, String aName, String aPassword, long aMuseumUserId,
-      long aScheduleIdForSchedule, Museum aMuseumForSchedule, MuseumSystem aMuseumSystemForSchedule,
-      MuseumSystem aMuseumSystem) {
-    super(aEmail, aName, aPassword, aMuseumUserId);
-    schedule =
-        new Schedule(aScheduleIdForSchedule, this, aMuseumForSchedule, aMuseumSystemForSchedule);
-    boolean didAddMuseumSystem = setMuseumSystem(aMuseumSystem);
-    if (!didAddMuseumSystem) {
-      throw new RuntimeException(
-          "Unable to create employee due to museumSystem. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-  }
-
   // ------------------------
   // INTERFACE
   // ------------------------
   /* Code from template association_GetOne */
-  @OneToOne(optional = false, cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "schedule_id", referencedColumnName = "scheduleId", nullable = false)
   public Schedule getSchedule() {
     return schedule;
   }
@@ -71,43 +43,6 @@ public class Employee extends MuseumUser {
    */
   public void setSchedule(Schedule schedule) {
     this.schedule = schedule;
-  }
-
-  /* Code from template association_GetOne */
-  @ManyToOne(optional = false, fetch = FetchType.LAZY)
-  public MuseumSystem getMuseumSystem() {
-    return museumSystem;
-  }
-
-  /* Code from template association_SetOneToMany */
-  public boolean setMuseumSystem(MuseumSystem aMuseumSystem) {
-    boolean wasSet = false;
-    if (aMuseumSystem == null) {
-      return wasSet;
-    }
-
-    MuseumSystem existingMuseumSystem = museumSystem;
-    museumSystem = aMuseumSystem;
-    if (existingMuseumSystem != null && !existingMuseumSystem.equals(aMuseumSystem)) {
-      existingMuseumSystem.removeEmployee(this);
-    }
-    museumSystem.addEmployee(this);
-    wasSet = true;
-    return wasSet;
-  }
-
-  public void delete() {
-    Schedule existingSchedule = schedule;
-    schedule = null;
-    if (existingSchedule != null) {
-      existingSchedule.delete();
-    }
-    MuseumSystem placeholderMuseumSystem = museumSystem;
-    this.museumSystem = null;
-    if (placeholderMuseumSystem != null) {
-      placeholderMuseumSystem.removeEmployee(this);
-    }
-    super.delete();
   }
 
 }

@@ -21,7 +21,6 @@ public class Ticket {
 
   // Ticket Associations
   private Visitor visitor;
-  private MuseumSystem museumSystem;
 
   // ------------------------
   // CONSTRUCTOR
@@ -29,20 +28,6 @@ public class Ticket {
 
   // no arg constructor
   public Ticket() {}
-
-  public Ticket(long aTicketId, Date aVisitDate, Visitor aVisitor, MuseumSystem aMuseumSystem) {
-    ticketId = aTicketId;
-    visitDate = aVisitDate;
-    if (!setVisitor(aVisitor)) {
-      throw new RuntimeException(
-          "Unable to create Ticket due to aVisitor. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-    boolean didAddMuseumSystem = setMuseumSystem(aMuseumSystem);
-    if (!didAddMuseumSystem) {
-      throw new RuntimeException(
-          "Unable to create ticket due to museumSystem. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-  }
 
   // ------------------------
   // INTERFACE
@@ -68,20 +53,16 @@ public class Ticket {
     return ticketId;
   }
 
+  @Column(nullable = false)
   public Date getVisitDate() {
     return visitDate;
   }
 
   /* Code from template association_GetOne */
-  @ManyToOne(optional=false)
+  @ManyToOne()
+  @JoinColumn(name="visitor_id", referencedColumnName = "museumUserId", nullable = false)
   public Visitor getVisitor() {
     return visitor;
-  }
-
-  /* Code from template association_GetOne */
-  @ManyToOne(optional=false, fetch=FetchType.LAZY)
-  public MuseumSystem getMuseumSystem() {
-    return museumSystem;
   }
 
   /* Code from template association_SetUnidirectionalOne */
@@ -94,33 +75,6 @@ public class Ticket {
     return wasSet;
   }
 
-  /* Code from template association_SetOneToMany */
-  public boolean setMuseumSystem(MuseumSystem aMuseumSystem) {
-    boolean wasSet = false;
-    if (aMuseumSystem == null) {
-      return wasSet;
-    }
-
-    MuseumSystem existingMuseumSystem = museumSystem;
-    museumSystem = aMuseumSystem;
-    if (existingMuseumSystem != null && !existingMuseumSystem.equals(aMuseumSystem)) {
-      existingMuseumSystem.removeTicket(this);
-    }
-    museumSystem.addTicket(this);
-    wasSet = true;
-    return wasSet;
-  }
-
-  public void delete() {
-    visitor = null;
-    MuseumSystem placeholderMuseumSystem = museumSystem;
-    this.museumSystem = null;
-    if (placeholderMuseumSystem != null) {
-      placeholderMuseumSystem.removeTicket(this);
-    }
-  }
-
-
   public String toString() {
     return super.toString() + "[" + "ticketId" + ":" + getTicketId() + "]"
         + System.getProperties().getProperty("line.separator") + "  " + "visitDate" + "="
@@ -131,9 +85,6 @@ public class Ticket {
         + System.getProperties().getProperty("line.separator") + "  " + "visitor = "
         + (getVisitor() != null ? Integer.toHexString(System.identityHashCode(getVisitor()))
             : "null")
-        + System.getProperties().getProperty("line.separator") + "  " + "museumSystem = "
-        + (getMuseumSystem() != null
-            ? Integer.toHexString(System.identityHashCode(getMuseumSystem()))
-            : "null");
+        + System.getProperties().getProperty("line.separator");
   }
 }

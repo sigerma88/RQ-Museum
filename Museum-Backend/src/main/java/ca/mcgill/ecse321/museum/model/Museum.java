@@ -21,7 +21,6 @@ public class Museum {
 
   // Museum Associations
   private Schedule schedule;
-  private MuseumSystem museumSystem;
 
   // ------------------------
   // CONSTRUCTOR
@@ -29,33 +28,6 @@ public class Museum {
 
   // no arg constructor
   public Museum() {}
-
-  public Museum(long aMuseumId, String aName, double aVisitFee, Schedule aSchedule,
-      MuseumSystem aMuseumSystem) {
-    museumId = aMuseumId;
-    name = aName;
-    visitFee = aVisitFee;
-    if (aSchedule == null || aSchedule.getMuseum() != null) {
-      throw new RuntimeException(
-          "Unable to create Museum due to aSchedule. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-    schedule = aSchedule;
-    if (aMuseumSystem == null || aMuseumSystem.getMuseum() != null) {
-      throw new RuntimeException(
-          "Unable to create Museum due to aMuseumSystem. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-    museumSystem = aMuseumSystem;
-  }
-
-  public Museum(long aMuseumId, String aName, double aVisitFee, long aScheduleIdForSchedule,
-      Employee aEmployeeForSchedule, MuseumSystem aMuseumSystemForSchedule, Manager aManagerForMuseumSystem) {
-    museumId = aMuseumId;
-    name = aName;
-    visitFee = aVisitFee;
-    schedule =
-        new Schedule(aScheduleIdForSchedule, aEmployeeForSchedule, this, aMuseumSystemForSchedule);
-    museumSystem = new MuseumSystem(this, aManagerForMuseumSystem);
-  }
 
   // ------------------------
   // INTERFACE
@@ -88,16 +60,19 @@ public class Museum {
     return museumId;
   }
 
+  @Column(nullable = false)
   public String getName() {
     return name;
   }
 
+  @Column(nullable = false)
   public double getVisitFee() {
     return visitFee;
   }
 
   /* Code from template association_GetOne */
-  @OneToOne(optional = false, cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "schedule_id", referencedColumnName = "scheduleId", nullable = false)
   public Schedule getSchedule() {
     return schedule;
   }
@@ -113,46 +88,13 @@ public class Museum {
     this.schedule = schedule;
   }
 
-  /* Code from template association_GetOne */
-  @OneToOne(optional = false, fetch = FetchType.LAZY)
-  public MuseumSystem getMuseumSystem() {
-    return museumSystem;
-  }
-
-  /**
-   * Setter for MuseumSystem
-   *
-   * @param museumSystem - MuseumSystem object to be set
-   * @author Siger
-   */
-  public void setMuseumSystem(MuseumSystem museumSystem) {
-    this.museumSystem = museumSystem;
-  }
-
-  public void delete() {
-    Schedule existingSchedule = schedule;
-    schedule = null;
-    if (existingSchedule != null) {
-      existingSchedule.delete();
-    }
-    MuseumSystem existingMuseumSystem = museumSystem;
-    museumSystem = null;
-    if (existingMuseumSystem != null) {
-      existingMuseumSystem.delete();
-    }
-  }
-
-
   public String toString() {
     return super.toString() + "[" + "museumId" + ":" + getMuseumId() + "," + "name" + ":"
         + getName() + "," + "visitFee" + ":" + getVisitFee() + "]"
         + System.getProperties().getProperty("line.separator") + "  " + "schedule = "
         + (getSchedule() != null ? Integer.toHexString(System.identityHashCode(getSchedule()))
             : "null")
-        + System.getProperties().getProperty("line.separator") + "  " + "museumSystem = "
-        + (getMuseumSystem() != null
-            ? Integer.toHexString(System.identityHashCode(getMuseumSystem()))
-            : "null");
+        + System.getProperties().getProperty("line.separator");
   }
 }
 
