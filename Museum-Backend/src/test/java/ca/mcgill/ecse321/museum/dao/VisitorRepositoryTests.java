@@ -1,14 +1,14 @@
 package ca.mcgill.ecse321.museum.dao;
 
-import ca.mcgill.ecse321.museum.dao.VisitorRepository;
 import ca.mcgill.ecse321.museum.model.Visitor;
-import org.junit.Test;
+import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
- * Written by Kieyan
+ * @author Kieyan
  * Visitor Repository test class
  * Here we test the visitor repository interface by saving a loan into the database, querying for it,
  * and then checking if the results are consistent
@@ -17,7 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class VisitorRepositoryTests {
 
     @Autowired
-    private VisitorRepository visitorRepository;
+    VisitorRepository visitorRepository;
 
     @AfterEach
     public void clearDatabase() {
@@ -40,11 +40,13 @@ public class VisitorRepositoryTests {
         long id = visitor.getMuseumUserId();
 
         // Read object from database
-        Visitor visitorRead = visitorRepository.findVisitorByMuseumUserId(id);
+        Visitor visitorFromDB = visitorRepository.findVisitorByMuseumUserId(id);
 
         // Assert that object has correct attributes
-        // ASSERT EQUALS IS NOT WORKING
-
+        Assert.assertEquals(visitor.getName(), visitorFromDB.getName()); // test name
+        Assert.assertEquals(visitor.getEmail(), visitorFromDB.getEmail()); // test name
+        Assert.assertEquals(visitor.getPassword(), visitorFromDB.getPassword()); // test name
+        Assert.assertEquals(visitor.getMuseumUserId(), visitorFromDB.getMuseumUserId()); // test name
 
     }
 
