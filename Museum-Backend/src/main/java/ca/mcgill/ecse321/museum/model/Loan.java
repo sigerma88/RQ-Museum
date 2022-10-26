@@ -27,26 +27,11 @@ public class Loan {
   // CONSTRUCTOR
   // ------------------------
 
-  // no arg constructor
   public Loan() {}
 
   // ------------------------
   // INTERFACE
   // ------------------------
-
-  public boolean setLoanId(long aLoanId) {
-    boolean wasSet = false;
-    loanId = aLoanId;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setRequestAccepted(boolean aRequestAccepted) {
-    boolean wasSet = false;
-    requestAccepted = aRequestAccepted;
-    wasSet = true;
-    return wasSet;
-  }
 
   @Id
   @GeneratedValue
@@ -73,6 +58,20 @@ public class Loan {
     return artwork;
   }
 
+  public boolean setLoanId(long aLoanId) {
+    boolean wasSet = false;
+    loanId = aLoanId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setRequestAccepted(boolean aRequestAccepted) {
+    boolean wasSet = false;
+    requestAccepted = aRequestAccepted;
+    wasSet = true;
+    return wasSet;
+  }
+
   /* Code from template association_SetUnidirectionalOne */
   public boolean setVisitor(Visitor aNewVisitor) {
     boolean wasSet = false;
@@ -91,17 +90,5 @@ public class Loan {
       wasSet = true;
     }
     return wasSet;
-  }
-
-  public String toString() {
-    return super.toString() + "[" + "loanId" + ":" + getLoanId() + "," + "requestAccepted" + ":"
-        + getRequestAccepted() + "]" + System.getProperties().getProperty("line.separator") + "  "
-        + "visitor = "
-        + (getVisitor() != null ? Integer.toHexString(System.identityHashCode(getVisitor()))
-            : "null")
-        + System.getProperties().getProperty("line.separator") + "  " + "artwork = "
-        + (getArtwork() != null ? Integer.toHexString(System.identityHashCode(getArtwork()))
-            : "null")
-        + System.getProperties().getProperty("line.separator");
   }
 }

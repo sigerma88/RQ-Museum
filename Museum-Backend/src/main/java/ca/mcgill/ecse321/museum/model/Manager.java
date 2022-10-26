@@ -16,7 +16,6 @@ public class Manager extends MuseumUser {
   // CONSTRUCTOR
   // ------------------------
 
-  //no arg constructor
   public Manager(){}
 
 }

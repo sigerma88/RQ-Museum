@@ -26,19 +26,11 @@ public class Schedule {
   // CONSTRUCTOR
   // ------------------------
 
-  // no arg constructor
   public Schedule() {}
 
   // ------------------------
   // INTERFACE
   // ------------------------
-
-  public boolean setScheduleId(long aScheduleId) {
-    boolean wasSet = false;
-    scheduleId = aScheduleId;
-    wasSet = true;
-    return wasSet;
-  }
 
   @GeneratedValue
   @Id
@@ -52,6 +44,19 @@ public class Schedule {
     return employee;
   }
 
+  /* Code from template association_GetOne */
+  @OneToOne(mappedBy = "schedule")
+  public Museum getMuseum() {
+    return museum;
+  }
+
+  public boolean setScheduleId(long aScheduleId) {
+    boolean wasSet = false;
+    scheduleId = aScheduleId;
+    wasSet = true;
+    return wasSet;
+  }
+
   /**
    * Setter for employee
    * 
@@ -62,12 +67,6 @@ public class Schedule {
     this.employee = employee;
   }
 
-  /* Code from template association_GetOne */
-  @OneToOne(mappedBy = "schedule")
-  public Museum getMuseum() {
-    return museum;
-  }
-
   /**
    * Setter for museum
    * 
@@ -76,15 +75,5 @@ public class Schedule {
    */
   public void setMuseum(Museum museum) {
     this.museum = museum;
-  }
-
-  public String toString() {
-    return super.toString() + "[" + "scheduleId" + ":" + getScheduleId() + "]"
-        + System.getProperties().getProperty("line.separator") + "  " + "employee = "
-        + (getEmployee() != null ? Integer.toHexString(System.identityHashCode(getEmployee()))
-            : "null")
-        + System.getProperties().getProperty("line.separator") + "  " + "museum = "
-        + (getMuseum() != null ? Integer.toHexString(System.identityHashCode(getMuseum())) : "null")
-        + System.getProperties().getProperty("line.separator");
   }
 }

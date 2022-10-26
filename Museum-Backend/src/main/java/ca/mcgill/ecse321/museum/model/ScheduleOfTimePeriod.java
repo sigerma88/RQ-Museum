@@ -27,19 +27,11 @@ public class ScheduleOfTimePeriod {
   // CONSTRUCTOR
   // ------------------------
 
-  // no arg constructor
   public ScheduleOfTimePeriod() {}
 
   // ------------------------
   // INTERFACE
   // ------------------------
-
-  public boolean setScheduleOfTimePeriodId(long aScheduleOfTimePeriodId) {
-    boolean wasSet = false;
-    scheduleOfTimePeriodId = aScheduleOfTimePeriodId;
-    wasSet = true;
-    return wasSet;
-  }
 
   @GeneratedValue
   @Id
@@ -61,6 +53,13 @@ public class ScheduleOfTimePeriod {
     return timePeriod;
   }
 
+  public boolean setScheduleOfTimePeriodId(long aScheduleOfTimePeriodId) {
+    boolean wasSet = false;
+    scheduleOfTimePeriodId = aScheduleOfTimePeriodId;
+    wasSet = true;
+    return wasSet;
+  }
+
   /* Code from template association_SetUnidirectionalOne */
   public boolean setSchedule(Schedule aNewSchedule) {
     boolean wasSet = false;
@@ -79,16 +78,5 @@ public class ScheduleOfTimePeriod {
       wasSet = true;
     }
     return wasSet;
-  }
-
-  public String toString() {
-    return super.toString() + "[" + "scheduleOfTimePeriodId" + ":" + getScheduleOfTimePeriodId()
-        + "]" + System.getProperties().getProperty("line.separator") + "  " + "schedule = "
-        + (getSchedule() != null ? Integer.toHexString(System.identityHashCode(getSchedule()))
-            : "null")
-        + System.getProperties().getProperty("line.separator") + "  " + "timePeriod = "
-        + (getTimePeriod() != null ? Integer.toHexString(System.identityHashCode(getTimePeriod()))
-            : "null")
-        + System.getProperties().getProperty("line.separator");
   }
 }

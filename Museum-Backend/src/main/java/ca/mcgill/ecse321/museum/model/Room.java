@@ -28,40 +28,11 @@ public class Room {
   // CONSTRUCTOR
   // ------------------------
 
-  // no arg constructor
   public Room() {}
 
   // ------------------------
   // INTERFACE
   // ------------------------
-
-  public boolean setRoomId(long aRoomId) {
-    boolean wasSet = false;
-    roomId = aRoomId;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setRoomName(String aRoomName) {
-    boolean wasSet = false;
-    roomName = aRoomName;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setCurrentNumberOfArtwork(int aCurrentNumberOfArtwork) {
-    boolean wasSet = false;
-    currentNumberOfArtwork = aCurrentNumberOfArtwork;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setRoomType(RoomType aRoomType) {
-    boolean wasSet = false;
-    roomType = aRoomType;
-    wasSet = true;
-    return wasSet;
-  }
 
   @GeneratedValue
   @Id
@@ -91,6 +62,34 @@ public class Room {
     return museum;
   }
 
+  public boolean setRoomId(long aRoomId) {
+    boolean wasSet = false;
+    roomId = aRoomId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setRoomName(String aRoomName) {
+    boolean wasSet = false;
+    roomName = aRoomName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setCurrentNumberOfArtwork(int aCurrentNumberOfArtwork) {
+    boolean wasSet = false;
+    currentNumberOfArtwork = aCurrentNumberOfArtwork;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setRoomType(RoomType aRoomType) {
+    boolean wasSet = false;
+    roomType = aRoomType;
+    wasSet = true;
+    return wasSet;
+  }
+
   /* Code from template association_SetUnidirectionalOne */
   public boolean setMuseum(Museum aNewMuseum) {
     boolean wasSet = false;
@@ -99,13 +98,5 @@ public class Room {
       wasSet = true;
     }
     return wasSet;
-  }
-
-  public String toString() {
-    return super.toString() + "[" + "roomId" + ":" + getRoomId() + "," + "roomName" + ":"
-        + getRoomName() + "," + "currentNumberOfArtwork" + ":" + getCurrentNumberOfArtwork() + "]"
-        + System.getProperties().getProperty("line.separator") + "  " + "museum = "
-        + (getMuseum() != null ? Integer.toHexString(System.identityHashCode(getMuseum())) : "null")
-        + System.getProperties().getProperty("line.separator");
   }
 }

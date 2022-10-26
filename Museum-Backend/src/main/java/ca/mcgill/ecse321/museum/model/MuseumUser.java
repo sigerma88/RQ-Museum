@@ -27,19 +27,32 @@ public abstract class MuseumUser {
   // CONSTRUCTOR
   // ------------------------
 
-  // No argument constructor
   public MuseumUser() {}
-
-  public MuseumUser(String aEmail, String aName, String aPassword, long aMuseumUserId) {
-    email = aEmail;
-    name = aName;
-    password = aPassword;
-    museumUserId = aMuseumUserId;
-  }
 
   // ------------------------
   // INTERFACE
   // ------------------------
+
+  @Column(unique = true, nullable = false)
+  public String getEmail() {
+    return email;
+  }
+
+  @Column(nullable = false)
+  public String getName() {
+    return name;
+  }
+
+  @Column(nullable = false)
+  public String getPassword() {
+    return password;
+  }
+
+  @Id
+  @GeneratedValue()
+  public long getMuseumUserId() {
+    return museumUserId;
+  }
 
   public boolean setEmail(String aEmail) {
     boolean wasSet = false;
@@ -67,35 +80,5 @@ public abstract class MuseumUser {
     museumUserId = aMuseumUserId;
     wasSet = true;
     return wasSet;
-  }
-
-  @Column(unique = true, nullable = false)
-  public String getEmail() {
-    return email;
-  }
-
-  @Column(nullable = false)
-  public String getName() {
-    return name;
-  }
-
-  @Column(nullable = false)
-  public String getPassword() {
-    return password;
-  }
-
-  @Id
-  @GeneratedValue()
-  public long getMuseumUserId() {
-    return museumUserId;
-  }
-
-  public void delete() {}
-
-
-  public String toString() {
-    return super.toString() + "[" + "email" + ":" + getEmail() + "," + "name" + ":" + getName()
-        + "," + "password" + ":" + getPassword() + "," + "museumUserId" + ":" + getMuseumUserId()
-        + "]";
   }
 }

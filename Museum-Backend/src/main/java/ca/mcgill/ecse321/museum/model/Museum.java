@@ -27,33 +27,11 @@ public class Museum {
   // CONSTRUCTOR
   // ------------------------
 
-  // no arg constructor
   public Museum() {}
 
   // ------------------------
   // INTERFACE
   // ------------------------
-
-  public boolean setMuseumId(long aMuseumId) {
-    boolean wasSet = false;
-    museumId = aMuseumId;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setName(String aName) {
-    boolean wasSet = false;
-    name = aName;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setVisitFee(double aVisitFee) {
-    boolean wasSet = false;
-    visitFee = aVisitFee;
-    wasSet = true;
-    return wasSet;
-  }
 
   @Id
   @GeneratedValue
@@ -78,6 +56,26 @@ public class Museum {
     return schedule;
   }
 
+  public boolean setMuseumId(long aMuseumId) {
+    boolean wasSet = false;
+    museumId = aMuseumId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setName(String aName) {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setVisitFee(double aVisitFee) {
+    boolean wasSet = false;
+    visitFee = aVisitFee;
+    wasSet = true;
+    return wasSet;
+  }
 
   /**
    * Setter for Schedule
@@ -87,15 +85,6 @@ public class Museum {
    */
   public void setSchedule(Schedule schedule) {
     this.schedule = schedule;
-  }
-
-  public String toString() {
-    return super.toString() + "[" + "museumId" + ":" + getMuseumId() + "," + "name" + ":"
-        + getName() + "," + "visitFee" + ":" + getVisitFee() + "]"
-        + System.getProperties().getProperty("line.separator") + "  " + "schedule = "
-        + (getSchedule() != null ? Integer.toHexString(System.identityHashCode(getSchedule()))
-            : "null")
-        + System.getProperties().getProperty("line.separator");
   }
 }
 

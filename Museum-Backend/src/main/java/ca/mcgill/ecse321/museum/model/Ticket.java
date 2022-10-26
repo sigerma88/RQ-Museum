@@ -27,26 +27,11 @@ public class Ticket {
   // CONSTRUCTOR
   // ------------------------
 
-  // no arg constructor
   public Ticket() {}
 
   // ------------------------
   // INTERFACE
   // ------------------------
-
-  public boolean setTicketId(long aTicketId) {
-    boolean wasSet = false;
-    ticketId = aTicketId;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setVisitDate(Date aVisitDate) {
-    boolean wasSet = false;
-    visitDate = aVisitDate;
-    wasSet = true;
-    return wasSet;
-  }
 
   @GeneratedValue
   @Id
@@ -66,6 +51,20 @@ public class Ticket {
     return visitor;
   }
 
+  public boolean setTicketId(long aTicketId) {
+    boolean wasSet = false;
+    ticketId = aTicketId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setVisitDate(Date aVisitDate) {
+    boolean wasSet = false;
+    visitDate = aVisitDate;
+    wasSet = true;
+    return wasSet;
+  }
+
   /* Code from template association_SetUnidirectionalOne */
   public boolean setVisitor(Visitor aNewVisitor) {
     boolean wasSet = false;
@@ -74,18 +73,5 @@ public class Ticket {
       wasSet = true;
     }
     return wasSet;
-  }
-
-  public String toString() {
-    return super.toString() + "[" + "ticketId" + ":" + getTicketId() + "]"
-        + System.getProperties().getProperty("line.separator") + "  " + "visitDate" + "="
-        + (getVisitDate() != null
-            ? !getVisitDate().equals(this) ? getVisitDate().toString().replaceAll("  ", "    ")
-                : "this"
-            : "null")
-        + System.getProperties().getProperty("line.separator") + "  " + "visitor = "
-        + (getVisitor() != null ? Integer.toHexString(System.identityHashCode(getVisitor()))
-            : "null")
-        + System.getProperties().getProperty("line.separator");
   }
 }

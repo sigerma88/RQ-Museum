@@ -25,12 +25,27 @@ public class TimePeriod {
   // CONSTRUCTOR
   // ------------------------
 
-  // no arg constructor
   public TimePeriod() {}
 
   // ------------------------
   // INTERFACE
   // ------------------------
+
+  @GeneratedValue
+  @Id
+  public long getTimePeriodId() {
+    return timePeriodId;
+  }
+
+  @Column(nullable = false)
+  public Date getStartDate() {
+    return startDate;
+  }
+
+  @Column(nullable = false)
+  public Date getEndDate() {
+    return endDate;
+  }
 
   public boolean setTimePeriodId(long aTimePeriodId) {
     boolean wasSet = false;
@@ -51,35 +66,5 @@ public class TimePeriod {
     endDate = aEndDate;
     wasSet = true;
     return wasSet;
-  }
-
-  @GeneratedValue
-  @Id
-  public long getTimePeriodId() {
-    return timePeriodId;
-  }
-
-  @Column(nullable = false)
-  public Date getStartDate() {
-    return startDate;
-  }
-
-  @Column(nullable = false)
-  public Date getEndDate() {
-    return endDate;
-  }
-
-  public String toString() {
-    return super.toString() + "[" + "timePeriodId" + ":" + getTimePeriodId() + "]"
-        + System.getProperties().getProperty("line.separator") + "  " + "startDate" + "="
-        + (getStartDate() != null
-            ? !getStartDate().equals(this) ? getStartDate().toString().replaceAll("  ", "    ")
-                : "this"
-            : "null")
-        + System.getProperties().getProperty("line.separator") + "  " + "endDate" + "="
-        + (getEndDate() != null
-            ? !getEndDate().equals(this) ? getEndDate().toString().replaceAll("  ", "    ") : "this"
-            : "null")
-        + System.getProperties().getProperty("line.separator");
   }
 }

@@ -16,7 +16,6 @@ public class Visitor extends MuseumUser {
   // CONSTRUCTOR
   // ------------------------
 
-  // no arg constructor
   public Visitor() {}
 
 }

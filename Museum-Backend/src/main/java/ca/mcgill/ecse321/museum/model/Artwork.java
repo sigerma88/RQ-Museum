@@ -30,12 +30,49 @@ public class Artwork {
   // CONSTRUCTOR
   // ------------------------
 
-  // no arg constructor
   public Artwork() {}
 
   // ------------------------
   // INTERFACE
   // ------------------------
+
+  @Id
+  @GeneratedValue
+  public long getArtworkId() {
+    return artworkId;
+  }
+
+  @Column(nullable = false)
+  public String getName() {
+    return name;
+  }
+
+  @Column(nullable = false)
+  public String getArtist() {
+    return artist;
+  }
+
+  @Column(nullable = false)
+  public boolean getIsAvailableForLoan() {
+    return isAvailableForLoan;
+  }
+
+  @Column(nullable = true)
+  public double getLoanFee() {
+    return loanFee;
+  }
+
+  @Column(nullable = false)
+  public String getImage() {
+    return image;
+  }
+
+  /* Code from template association_GetOne */
+  @ManyToOne()
+  @JoinColumn(name = "room_id", referencedColumnName = "roomId", nullable = true)
+  public Room getRoom() {
+    return room;
+  }
 
   public boolean setArtworkId(long aArtworkId) {
     boolean wasSet = false;
@@ -79,44 +116,6 @@ public class Artwork {
     return wasSet;
   }
 
-  @Id
-  @GeneratedValue
-  public long getArtworkId() {
-    return artworkId;
-  }
-
-  @Column(nullable = false)
-  public String getName() {
-    return name;
-  }
-
-  @Column(nullable = false)
-  public String getArtist() {
-    return artist;
-  }
-
-  @Column(nullable = false)
-  public boolean getIsAvailableForLoan() {
-    return isAvailableForLoan;
-  }
-
-  @Column(nullable = true)
-  public double getLoanFee() {
-    return loanFee;
-  }
-
-  @Column(nullable = false)
-  public String getImage() {
-    return image;
-  }
-
-  /* Code from template association_GetOne */
-  @ManyToOne()
-  @JoinColumn(name = "room_id", referencedColumnName = "roomId", nullable = true)
-  public Room getRoom() {
-    return room;
-  }
-
   /* Code from template association_SetUnidirectionalOne */
   public boolean setRoom(Room aNewRoom) {
     boolean wasSet = false;
@@ -125,15 +124,5 @@ public class Artwork {
       wasSet = true;
     }
     return wasSet;
-  }
-
-
-  public String toString() {
-    return super.toString() + "[" + "artworkId" + ":" + getArtworkId() + "," + "name" + ":"
-        + getName() + "," + "artist" + ":" + getArtist() + "," + "isAvailableForLoan" + ":"
-        + getIsAvailableForLoan() + "," + "loanFee" + ":" + getLoanFee() + "," + "image" + ":"
-        + getImage() + "]" + System.getProperties().getProperty("line.separator") + "  " + "room = "
-        + (getRoom() != null ? Integer.toHexString(System.identityHashCode(getRoom())) : "null")
-        + System.getProperties().getProperty("line.separator");
   }
 }

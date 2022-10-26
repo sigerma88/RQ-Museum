@@ -27,12 +27,12 @@ public class Employee extends MuseumUser {
   // CONSTRUCTOR
   // ------------------------
 
-  //no arg constructor
   public Employee(){}
 
   // ------------------------
   // INTERFACE
   // ------------------------
+
   /* Code from template association_GetOne */
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "schedule_id", referencedColumnName = "scheduleId", nullable = false)
