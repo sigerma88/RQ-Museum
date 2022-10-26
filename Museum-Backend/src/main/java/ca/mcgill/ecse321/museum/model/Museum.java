@@ -50,7 +50,7 @@ public class Museum {
   }
 
   /* Code from template association_GetOne */
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "schedule_id", referencedColumnName = "scheduleId", nullable = false)
   public Schedule getSchedule() {
     return schedule;
