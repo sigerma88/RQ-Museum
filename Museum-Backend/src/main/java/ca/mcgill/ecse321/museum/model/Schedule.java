@@ -18,10 +18,6 @@ public class Schedule {
   // Schedule Attributes
   private long scheduleId;
 
-  // Schedule Associations
-  private Employee employee;
-  private Museum museum;
-
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
@@ -38,42 +34,10 @@ public class Schedule {
     return scheduleId;
   }
 
-  /* Code from template association_GetOne */
-  @OneToOne(mappedBy = "schedule")
-  public Employee getEmployee() {
-    return employee;
-  }
-
-  /* Code from template association_GetOne */
-  @OneToOne(mappedBy = "schedule")
-  public Museum getMuseum() {
-    return museum;
-  }
-
   public boolean setScheduleId(long aScheduleId) {
     boolean wasSet = false;
     scheduleId = aScheduleId;
     wasSet = true;
     return wasSet;
-  }
-
-  /**
-   * Setter for employee
-   * 
-   * @param employee - Employee object to be set
-   * @author Siger
-   */
-  public void setEmployee(Employee employee) {
-    this.employee = employee;
-  }
-
-  /**
-   * Setter for museum
-   * 
-   * @param museum - Museum object to be set
-   * @author Siger
-   */
-  public void setMuseum(Museum museum) {
-    this.museum = museum;
   }
 }
