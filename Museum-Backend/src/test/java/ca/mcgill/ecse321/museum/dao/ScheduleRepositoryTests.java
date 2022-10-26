@@ -12,6 +12,13 @@ import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Employee;
 
+/**
+ * Test the persistence layer for the ScheduleRepository. Testing reading and writing of 
+ * objects, attributes and references to the database.
+ * Also tested museum and employee references owning a schedule.
+ * 
+ * @author Siger
+ */
 @SpringBootTest
 public class ScheduleRepositoryTests {
   @Autowired
@@ -30,6 +37,11 @@ public class ScheduleRepositoryTests {
     scheduleRepository.deleteAll();
   }
 
+  /**
+   * Test that a schedule can be persisted and loaded from the database.
+   * 
+   * @author Siger
+   */
   @Test
   public void testPersistAndLoadSchedule() {
     //create Schedule
@@ -42,12 +54,18 @@ public class ScheduleRepositoryTests {
     //read Schedule from database
     schedule = scheduleRepository.findScheduleByScheduleId(scheduleId);
 
-    //assert that Schedule has correct attributes
+    //assert that Schedule exists in database
     assertNotNull(schedule);
   }
 
-    @Test
-    public void testPersistAndLoadScheduleForMuseum() {
+  /**
+   * Test that a schedule can be persisted and loaded from the database.
+   * Also test that a museum can own a schedule.
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testPersistAndLoadScheduleForMuseum() {
     //create Schedule
     Schedule schedule = new Schedule();
 
@@ -70,18 +88,25 @@ public class ScheduleRepositoryTests {
     //read Schedule from database
     Schedule repoSchedule = scheduleRepository.findScheduleByScheduleId(scheduleId);
 
-    //assert that object has correct attributes
+    //assert that Museum has correct attributes
     assertNotNull(museum);
     assertEquals(museumId, museum.getMuseumId());
     assertEquals(name, museum.getName());
     assertEquals(visitFee, museum.getVisitFee());
 
+    //assert that Museum has correct Schedule
     assertNotNull(museum.getSchedule());
     assertNotNull(repoSchedule);
     assertEquals(scheduleId, schedule.getScheduleId());
     assertEquals(scheduleId, repoSchedule.getScheduleId());
   }
 
+  /**
+   * Test that a schedule can be persisted and loaded from the database.
+   * Also test that an employee can own a schedule.
+   * 
+   * @author Siger
+   */
   @Test
   public void testPersistAndLoadScheduleForEmployee() {
     //create Schedule
@@ -108,13 +133,14 @@ public class ScheduleRepositoryTests {
     //read Schedule from database
     Schedule repoSchedule = scheduleRepository.findScheduleByScheduleId(scheduleId);
 
-    //assert that object has correct attributes
+    //assert that Employee exists in database
     assertNotNull(employee);
     assertEquals(employeeId, employee.getMuseumUserId());
     assertEquals(email, employee.getEmail());
     assertEquals(name, employee.getName());
     assertEquals(password, employee.getPassword());
 
+    //assert that Employee has correct Schedule
     assertNotNull(employee.getSchedule());
     assertNotNull(repoSchedule);
     assertEquals(scheduleId, schedule.getScheduleId());

@@ -14,6 +14,13 @@ import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.TimePeriod;
 import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
 
+/**
+ * Test the persistence layer for the ScheduleOfTimePeriodRepository. Testing reading and writing of
+ * objects, attributes and references to the database.
+ * ScheduleOfTimePeriodRepository is associated with Schedule and TimePeriod.
+ * 
+ * @author Siger
+ */
 @SpringBootTest
 public class ScheduleOfTimePeriodRepositoryTests {
   @Autowired
@@ -60,15 +67,15 @@ public class ScheduleOfTimePeriodRepositoryTests {
     timePeriodTwo = timePeriodRepository.save(timePeriodTwo);
     
     //create 3 ScheduleOfTimePeriod
-    ScheduleOfTimePeriod scheduleOfTimePeriodOne = new ScheduleOfTimePeriod();
+    ScheduleOfTimePeriod scheduleOfTimePeriodOne = new ScheduleOfTimePeriod(); //scheduleOne, timePeriodOne
     scheduleOfTimePeriodOne.setSchedule(scheduleOne);
     scheduleOfTimePeriodOne.setTimePeriod(timePeriodOne);
 
-    ScheduleOfTimePeriod scheduleOfTimePeriodTwo = new ScheduleOfTimePeriod();
+    ScheduleOfTimePeriod scheduleOfTimePeriodTwo = new ScheduleOfTimePeriod(); //scheduleTwo, timePeriodOne
     scheduleOfTimePeriodTwo.setSchedule(scheduleTwo);
     scheduleOfTimePeriodTwo.setTimePeriod(timePeriodOne);
 
-    ScheduleOfTimePeriod scheduleOfTimePeriodThree = new ScheduleOfTimePeriod();
+    ScheduleOfTimePeriod scheduleOfTimePeriodThree = new ScheduleOfTimePeriod(); //scheduleOne, timePeriodTwo
     scheduleOfTimePeriodThree.setSchedule(scheduleOne);
     scheduleOfTimePeriodThree.setTimePeriod(timePeriodTwo);
 
@@ -102,12 +109,12 @@ public class ScheduleOfTimePeriodRepositoryTests {
     timePeriodOne = timePeriodRepository.findTimePeriodByTimePeriodId(timePeriodOneIdFromFirst);
     timePeriodTwo = timePeriodRepository.findTimePeriodByTimePeriodId(timePeriodTwoIdFromThird);
 
-    //assert that scheduleOfTimePeriod are not null
+    //assert that scheduleOfTimePeriod exist in database
     assertNotNull(scheduleOfTimePeriodOne);
     assertNotNull(scheduleOfTimePeriodTwo);
     assertNotNull(scheduleOfTimePeriodThree);
 
-    //assert that schedule are not null
+    //assert that schedule exist in database
     assertNotNull(scheduleOne);
     assertNotNull(scheduleTwo);
 
@@ -116,7 +123,7 @@ public class ScheduleOfTimePeriodRepositoryTests {
     assertEquals(scheduleOneIdFromThird, scheduleOne.getScheduleId());
     assertEquals(scheduleTwoIdFromSecond, scheduleTwo.getScheduleId());
 
-    //assert that timePeriod are not null
+    //assert that timePeriod exist in database
     assertNotNull(timePeriodOne);
     assertNotNull(timePeriodTwo);
 

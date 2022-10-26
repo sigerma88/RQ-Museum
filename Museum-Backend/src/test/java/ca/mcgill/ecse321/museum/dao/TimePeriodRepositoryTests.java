@@ -12,6 +12,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.museum.model.TimePeriod;
 
+/**
+ * Test the persistence layer for the TimePeriodRepository. Testing reading and writing of 
+ * objects, attributes and references to the database.
+ * 
+ * @author Siger
+ */
 @SpringBootTest
 public class TimePeriodRepositoryTests {
   @Autowired
@@ -38,7 +44,7 @@ public class TimePeriodRepositoryTests {
     //read TimePeriod from database
     timePeriod = timePeriodRepository.findTimePeriodByTimePeriodId(timePeriodId);
 
-    //assert that TimePeriod has correct attributes
+    //assert that TimePeriod exists in database
     assertNotNull(timePeriod);
   }
 
