@@ -3,50 +3,78 @@ package ca.mcgill.ecse321.museum.dao;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.sql.Date;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.museum.dao.TicketRepository;
 import ca.mcgill.ecse321.museum.model.Ticket;
+import ca.mcgill.ecse321.museum.model.Visitor;
+
+/**
+ * Test class for the TicketRepository
+ * @author VZ
+ * 
+ * Since the Ticket class has a unidirectional association with the Visitor class, we must create
+ * both a ticket object and a visitor object in order to test the TicketRepository.
+ */
 
 @SpringBootTest
 public class TicketRepositoryTests {
-
     @Autowired
     private TicketRepository ticketRepository;
+    @Autowired
+    private VisitorRepository visitorRepository;
 
     @AfterEach
     public void clearDatabase() {
         ticketRepository.deleteAll();
+        visitorRepository.deleteAll();
     }
     
     @Test
     public void testPersistandLoadTicket() {
-        //create object
+
+        //1.create object
+
+        //create ticket and attribute
         Ticket ticket = new Ticket();
         Date visitDate = Date.valueOf("2020-01-01");
+        //set attribute of ticket
         ticket.setVisitDate(visitDate);
 
-        //save object
+        //create visitor and attribute
+        Visitor visitor = new Visitor();
+        String visitorName = "jdsilv2";
+        String visitorEmail = "sigmamale@pog.com";
+        String visitorPassword = "123";
+
+        //set attribute of visitor
+        visitor.setName(visitorName);
+        visitor.setEmail(visitorEmail);
+        visitor.setPassword(visitorPassword);
+
+        //2.save object
+        //save visitor object to database
+        visitor = visitorRepository.save(visitor);
+        //set association between ticket and visitor object then save ticket object to database
+        ticket.setVisitor(visitor);
         ticket = ticketRepository.save(ticket);
         long id = ticket.getTicketId();
 
-        //read object from database
+        //3.read object from database
         ticket = ticketRepository.findTicketByTicketId(id);
 
-        //assert that object has correct attributes
+        //4.assert that object has correct attributes
         assertNotNull(ticket);
         assertEquals(id, ticket.getTicketId());
-
-/**
- * HAVING TROUBLE IMPORTING JUNIT FOR ASSERTIONS, maybe spring 2.7.4 
- * isn't compatible with our JUnit4?
- */
-
-        
-
+        assertEquals(visitDate, ticket.getVisitDate());
+        assertNotNull(visitor);
+        assertEquals(visitorName, visitor.getName());
+        assertEquals(visitorEmail, visitor.getEmail());
+        assertEquals(visitorPassword, visitor.getPassword());
 
         
     }
