@@ -22,9 +22,6 @@ public class MuseumRepositoryTests {
     @Autowired
     ScheduleRepository scheduleRepository;
 
-    @Autowired
-    EmployeeRepository employeeRepository;
-
     @AfterEach
     public void clearDatabase() {
         museumRepository.deleteAll();
@@ -42,7 +39,6 @@ public class MuseumRepositoryTests {
         museum.setSchedule(schedule);
 
         // Save object
-        scheduleRepository.save(schedule);
         museumRepository.save(museum);
         long id = museum.getMuseumId();
 
