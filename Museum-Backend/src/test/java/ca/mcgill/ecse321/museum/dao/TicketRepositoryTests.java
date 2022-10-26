@@ -5,11 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.sql.Date;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import ca.mcgill.ecse321.museum.dao.TicketRepository;
 import ca.mcgill.ecse321.museum.model.Ticket;
 import ca.mcgill.ecse321.museum.model.Visitor;
 
@@ -62,21 +59,22 @@ public class TicketRepositoryTests {
         //set association between ticket and visitor object then save ticket object to database
         ticket.setVisitor(visitor);
         ticket = ticketRepository.save(ticket);
-        long id = ticket.getTicketId();
+        long ticketId = ticket.getTicketId();
+        long visitorId = ticket.getVisitor().getMuseumUserId();
 
         //3.read object from database
-        ticket = ticketRepository.findTicketByTicketId(id);
+        ticket = ticketRepository.findTicketByTicketId(ticketId);
 
         //4.assert that object has correct attributes
         assertNotNull(ticket);
-        assertEquals(id, ticket.getTicketId());
+        assertEquals(ticketId, ticket.getTicketId());
         assertEquals(visitDate, ticket.getVisitDate());
-        assertNotNull(visitor);
-        assertEquals(visitorName, visitor.getName());
-        assertEquals(visitorEmail, visitor.getEmail());
-        assertEquals(visitorPassword, visitor.getPassword());
 
-        
+        assertNotNull(ticket.getVisitor());
+        assertEquals(visitorId, ticket.getVisitor().getMuseumUserId());
+        assertEquals(visitorName, ticket.getVisitor().getName());
+        assertEquals(visitorEmail, ticket.getVisitor().getEmail());
+        assertEquals(visitorPassword, ticket.getVisitor().getPassword());
     }
     
 }

@@ -47,9 +47,3 @@ jar {
     attributes "Main-Class": "$mainClassName"
   }
 }
-
-//Use this snippet to see longer stack traces and help with debugging tests
-
-// testLogging {
-// 	exceptionFormat "full"
-// }
