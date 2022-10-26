@@ -3,7 +3,6 @@ package ca.mcgill.ecse321.museum.dao;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +20,15 @@ public class ScheduleRepositoryTests {
     @Autowired
     private MuseumRepository museumRepository;
 
-    
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
-    // @AfterEach
-    // public void clearDatabase() {
-    //   if(museumRepository != null) {
-    //     museumRepository.deleteAll();
-    //   } else {
-    //     scheduleRepository.deleteAll();
-    //   }
-    // }
+    @AfterEach
+    public void clearDatabase() {
+      museumRepository.deleteAll();
+      employeeRepository.deleteAll();
+      scheduleRepository.deleteAll();
+    }
 
     @Test
     public void testPersistandLoadSchedule() {
@@ -53,7 +51,6 @@ public class ScheduleRepositoryTests {
 
         //create Schedule
         Schedule schedule = new Schedule();
-        System.out.println("Schedule ID memory object initially: " + schedule.getScheduleId());
 
         //create Museum associated with Schedule
         String name = "Rougon-Macquart";
@@ -62,24 +59,17 @@ public class ScheduleRepositoryTests {
         museum.setName(name);
         museum.setVisitFee(visitFee);
         museum.setSchedule(schedule);
-        System.out.println("Museum ID memory object initially: " + museum.getMuseumId());
 
         //save Museum
         museum = museumRepository.save(museum);
         long museumId = museum.getMuseumId();
         long scheduleId = museum.getSchedule().getScheduleId();
-        System.out.println("Schedule ID memory object after save: " + schedule.getScheduleId());
-        System.out.println("Museum ID memory object after save: " + museum.getMuseumId());
 
         //read Museum from database
         museum = museumRepository.findMuseumByMuseumId(museumId);
-        System.out.println("Museum ID databse object after load: " + museum.getMuseumId());
-        System.out.println("Schedule ID database object after load: " + museum.getSchedule().getScheduleId());
 
         //read Schedule from database
         Schedule repoSchedule = scheduleRepository.findScheduleByScheduleId(scheduleId);
-        System.out.println("Schedule ID database object after load: " + repoSchedule.getScheduleId());
-        System.out.println("Schedule ID memory object after load: " + schedule.getScheduleId());
 
         //assert that object has correct attributes
         assertNotNull(museum);
@@ -88,6 +78,46 @@ public class ScheduleRepositoryTests {
         assertEquals(visitFee, museum.getVisitFee());
 
         assertNotNull(museum.getSchedule());
+        assertNotNull(repoSchedule);
+        assertEquals(scheduleId, schedule.getScheduleId());
+        assertEquals(scheduleId, repoSchedule.getScheduleId());
+    }
+
+    @Test
+    public void testPersistandLoadScheduleForEmployee() {
+
+        //create Schedule
+        Schedule schedule = new Schedule();
+
+        //create Employee associated with Schedule
+        String email = "emile.zola@Assommoir.fr";
+        String name = "Émile Zola";
+        String password = "Gervaise";
+        Employee employee = new Employee();
+        employee.setEmail(email);
+        employee.setName(name);
+        employee.setPassword(password);
+        employee.setSchedule(schedule);
+
+        //save Employee
+        employee = employeeRepository.save(employee);
+        long employeeId = employee.getMuseumUserId();
+        long scheduleId = employee.getSchedule().getScheduleId();
+
+        //read Employee from database
+        employee = employeeRepository.findEmployeeByMuseumUserId(employeeId);
+
+        //read Schedule from database
+        Schedule repoSchedule = scheduleRepository.findScheduleByScheduleId(scheduleId);
+
+        //assert that object has correct attributes
+        assertNotNull(employee);
+        assertEquals(employeeId, employee.getMuseumUserId());
+        assertEquals(email, employee.getEmail());
+        assertEquals(name, employee.getName());
+        assertEquals(password, employee.getPassword());
+
+        assertNotNull(employee.getSchedule());
         assertNotNull(repoSchedule);
         assertEquals(scheduleId, schedule.getScheduleId());
         assertEquals(scheduleId, repoSchedule.getScheduleId());
