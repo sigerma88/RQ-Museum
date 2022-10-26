@@ -1,6 +1,6 @@
 package ca.mcgill.ecse321.museum.model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import javax.persistence.*;
 
 /**
@@ -18,8 +18,8 @@ public class TimePeriod {
 
   // TimePeriod Attributes
   private long timePeriodId;
-  private Date startDate;
-  private Date endDate;
+  private Timestamp startDate;
+  private Timestamp endDate;
 
   // ------------------------
   // CONSTRUCTOR
@@ -37,13 +37,13 @@ public class TimePeriod {
     return timePeriodId;
   }
 
-  @Column(nullable = false)
-  public Date getStartDate() {
+  @Column(nullable = false, columnDefinition= "TIMESTAMP WITH TIME ZONE")
+  public Timestamp getStartDate() {
     return startDate;
   }
 
-  @Column(nullable = false)
-  public Date getEndDate() {
+  @Column(nullable = false, columnDefinition= "TIMESTAMP WITH TIME ZONE")
+  public Timestamp getEndDate() {
     return endDate;
   }
 
@@ -54,14 +54,14 @@ public class TimePeriod {
     return wasSet;
   }
 
-  public boolean setStartDate(Date aStartDate) {
+  public boolean setStartDate(Timestamp aStartDate) {
     boolean wasSet = false;
     startDate = aStartDate;
     wasSet = true;
     return wasSet;
   }
 
-  public boolean setEndDate(Date aEndDate) {
+  public boolean setEndDate(Timestamp aEndDate) {
     boolean wasSet = false;
     endDate = aEndDate;
     wasSet = true;
