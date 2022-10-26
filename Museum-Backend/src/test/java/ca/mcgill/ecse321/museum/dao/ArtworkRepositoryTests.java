@@ -1,6 +1,5 @@
-package ca.mcgill.ecse321.museum.repository;
+package ca.mcgill.ecse321.museum.dao;
 
-import ca.mcgill.ecse321.museum.dao.*;
 import ca.mcgill.ecse321.museum.model.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.transaction.Transactional;
 
 import java.util.List;
 
@@ -36,7 +34,8 @@ public class ArtworkRepositoryTests {
         museumRepository.deleteAll();
     }
 
-    public void compareUniqueArtwork(Artwork artwork, String artworkName, String artist, boolean isAvailableForLoan, double loanFee, String image, Room room) {
+    public void compareUniqueArtwork(Artwork artwork, String artworkName, String artist,
+                                     boolean isAvailableForLoan, double loanFee, String image, Room room) {
         assertNotNull(artwork);
         assertEquals(artworkName, artwork.getName());
         assertEquals(artist, artwork.getArtist());
@@ -79,7 +78,7 @@ public class ArtworkRepositoryTests {
         artwork.setImage(image);
         artwork.setRoom(room);
 
-//        Searching when artworks have distinct properties
+        // Searching when artworks have distinct properties
 
         Artwork savedArtwork = artworkRepository.save(artwork);
 
@@ -88,11 +87,13 @@ public class ArtworkRepositoryTests {
 
         artwork = null;
         artwork = artworkRepository.findArtworkByName(savedArtwork.getName()).get(0);
-        compareUniqueArtwork(artwork, artworkName, artist, isAvailableForLoan, loanFee, image, room);
+        compareUniqueArtwork(artwork, artworkName, artist, isAvailableForLoan, loanFee, image,
+                room);
 
         artwork = null;
         artwork = artworkRepository.findArtworkByArtist(savedArtwork.getArtist()).get(0);
-        compareUniqueArtwork(artwork, artworkName, artist, isAvailableForLoan, loanFee, image, room);
+        compareUniqueArtwork(artwork, artworkName, artist, isAvailableForLoan, loanFee, image,
+                room);
     }
 
     @Test
