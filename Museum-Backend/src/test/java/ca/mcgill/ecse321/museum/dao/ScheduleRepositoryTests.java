@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.Museum;
+import ca.mcgill.ecse321.museum.model.Employee;
 
 @SpringBootTest
 public class ScheduleRepositoryTests {
@@ -20,14 +21,16 @@ public class ScheduleRepositoryTests {
     @Autowired
     private MuseumRepository museumRepository;
 
-    @AfterEach
-    public void clearDatabase() {
-      if(museumRepository != null) {
-        museumRepository.deleteAll();
-      } else {
-        scheduleRepository.deleteAll();
-      }
-    }
+    
+
+    // @AfterEach
+    // public void clearDatabase() {
+    //   if(museumRepository != null) {
+    //     museumRepository.deleteAll();
+    //   } else {
+    //     scheduleRepository.deleteAll();
+    //   }
+    // }
 
     @Test
     public void testPersistandLoadSchedule() {
@@ -45,34 +48,48 @@ public class ScheduleRepositoryTests {
         assertNotNull(schedule);
     }
 
-    @Test
-    public void testPersistandLoadScheduleForMuseum() {
+      @Test
+      public void testPersistandLoadScheduleForMuseum() {
 
-      //create Schedule
-      Schedule schedule = new Schedule();
-      
-      //save Schedule
-      // scheduleRepository.save(schedule);
-      // long scheduleId = schedule.getScheduleId();
+        //create Schedule
+        Schedule schedule = new Schedule();
+        System.out.println("Schedule ID memory object initially: " + schedule.getScheduleId());
 
-      //create Museum associated with Schedule
-      Museum museum = new Museum();
-      museum.setName("Rougon-Macquart");
-      museum.setVisitFee(6.99);
-      museum.setSchedule(schedule);
+        //create Museum associated with Schedule
+        String name = "Rougon-Macquart";
+        double visitFee = 6.99;
+        Museum museum = new Museum();
+        museum.setName(name);
+        museum.setVisitFee(visitFee);
+        museum.setSchedule(schedule);
+        System.out.println("Museum ID memory object initially: " + museum.getMuseumId());
 
-      //save Museum
-      museumRepository.save(museum);
-      long museumId = museum.getMuseumId();
-      long scheduleId = museum.getSchedule().getScheduleId();
+        //save Museum
+        museum = museumRepository.save(museum);
+        long museumId = museum.getMuseumId();
+        long scheduleId = museum.getSchedule().getScheduleId();
+        System.out.println("Schedule ID memory object after save: " + schedule.getScheduleId());
+        System.out.println("Museum ID memory object after save: " + museum.getMuseumId());
 
-      //read object from database
-      schedule = scheduleRepository.findScheduleByScheduleId(scheduleId);
-      museum = museumRepository.findMuseumByMuseumId(museumId);
+        //read Museum from database
+        museum = museumRepository.findMuseumByMuseumId(museumId);
+        System.out.println("Museum ID databse object after load: " + museum.getMuseumId());
+        System.out.println("Schedule ID database object after load: " + museum.getSchedule().getScheduleId());
 
-      //assert that object has correct attributes
-      assertNotNull(schedule);
-      assertNotNull(museum);
-      assertEquals(schedule, museum.getSchedule());
-  }
+        //read Schedule from database
+        Schedule repoSchedule = scheduleRepository.findScheduleByScheduleId(scheduleId);
+        System.out.println("Schedule ID database object after load: " + repoSchedule.getScheduleId());
+        System.out.println("Schedule ID memory object after load: " + schedule.getScheduleId());
+
+        //assert that object has correct attributes
+        assertNotNull(museum);
+        assertEquals(museumId, museum.getMuseumId());
+        assertEquals(name, museum.getName());
+        assertEquals(visitFee, museum.getVisitFee());
+
+        assertNotNull(museum.getSchedule());
+        assertNotNull(repoSchedule);
+        assertEquals(scheduleId, schedule.getScheduleId());
+        assertEquals(scheduleId, repoSchedule.getScheduleId());
+    }
 }
