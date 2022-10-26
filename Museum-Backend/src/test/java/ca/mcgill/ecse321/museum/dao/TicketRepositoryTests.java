@@ -25,9 +25,8 @@ public class TicketRepositoryTests {
     @Test
     public void testPersistandLoadTicket() {
         //create object
-
-        Date visitDate = Date.valueOf("2020-01-01");
         Ticket ticket = new Ticket();
+        Date visitDate = Date.valueOf("2020-01-01");
         ticket.setVisitDate(visitDate);
 
         //save object
