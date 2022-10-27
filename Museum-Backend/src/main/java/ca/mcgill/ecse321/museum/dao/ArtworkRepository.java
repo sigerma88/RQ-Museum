@@ -7,15 +7,17 @@ import java.util.List;
 
 /**
  * Repository for Artwork class
- * 
+ *
  * @author Zahra
+ * @author Kevin
  */
 public interface ArtworkRepository extends CrudRepository<Artwork, Long> {
 
-  Artwork findArtworkByArtworkId(Long artworkId);
-  List<Artwork> findArtworkByName(String name);
-  List<Artwork> findArtworkByArtist(String artist);
+    Artwork findArtworkByArtworkId(Long artworkId);
 
+    List<Artwork> findArtworkByName(String name);
+
+    List<Artwork> findArtworkByArtist(String artist);
 
 
 }
