@@ -1,7 +1,6 @@
 package ca.mcgill.ecse321.museum.dao;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
@@ -20,44 +19,41 @@ import ca.mcgill.ecse321.museum.model.Manager;
  */
 @SpringBootTest
 public class ManagerRepositoryTests {
-    @Autowired
-    private ManagerRepository managerRepository;
+  @Autowired
+  private ManagerRepository managerRepository;
 
-    @AfterEach
-    public void clearDatabase() {
-        managerRepository.deleteAll();
-    }
+  @AfterEach
+  public void clearDatabase() {
+    managerRepository.deleteAll();
+  }
 
-    @Test
-    public void testPersistAndLoadManager() {
-        
-        //create manager 
-        Manager manager = new Manager();
-        String name = "Jeremy";
-        String email = "aEmail";
-        String password = "aPassword";
+  @Test
+  public void testPersistAndLoadManager() {
+    //create manager 
+    Manager manager = new Manager();
+    String name = "Jeremy";
+    String email = "aEmail";
+    String password = "aPassword";
 
+    manager.setName(name);
+    manager.setEmail(email);
+    manager.setPassword(password);
 
+    //save manager
+    manager = managerRepository.save(manager);
+    long id = manager.getMuseumUserId();
 
-        manager.setName(name);
-        manager.setEmail(email);
-        manager.setPassword(password);
+    //reset manager
+    manager = null;
 
-        //save manager
-        manager = managerRepository.save(manager);
-        long id = manager.getMuseumUserId();
+    //read manager from database
+    manager = managerRepository.findManagerByMuseumUserId(id);
 
-        //reset manager
-        manager = null;
-
-        //read manager from database
-        manager = managerRepository.findManagerByMuseumUserId(id);
-
-        //assert that manager has correct attributes
-        assertNotNull(manager);
-        assertEquals(id, manager.getMuseumUserId());
-        assertEquals(name, manager.getName());
-        assertEquals(email, manager.getEmail());
-        assertEquals(password, manager.getPassword());
-    }
+    //assert that manager has correct attributes
+    assertNotNull(manager);
+    assertEquals(id, manager.getMuseumUserId());
+    assertEquals(name, manager.getName());
+    assertEquals(email, manager.getEmail());
+    assertEquals(password, manager.getPassword());
+  }
 }
