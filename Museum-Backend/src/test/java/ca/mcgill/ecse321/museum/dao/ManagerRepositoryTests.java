@@ -12,9 +12,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ca.mcgill.ecse321.museum.model.Manager;
 
 
-/** Test the persistence layer for the ManagerRepository. Testing reading and writing of 
- *  objects, attributes and references to the database.
- *  @author Eric
+/**
+ * Test the persistence layer for the ManagerRepository. Testing reading and writing of 
+ * objects, attributes and references to the database.
+ * 
+ * @author Eric
  */
 @SpringBootTest
 public class ManagerRepositoryTests {
