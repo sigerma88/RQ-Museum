@@ -29,13 +29,17 @@ public class EmployeeRepositoryTests {
     }
 
     @Test
-    public void testPersistandLoadEmployee() {
+    public void testPersistAndLoadEmployee() {
         
         //create employee
         Employee employee = new Employee();
-        employee.setName("Broseph");
-        employee.setEmail("aEmail");
-        employee.setPassword("aPassword");
+        String name = "Broseph";
+        String email = "aEmail";
+        String password = "aPassword";
+
+        employee.setName(name);
+        employee.setEmail(email);
+        employee.setPassword(password);
 
         //create schedule
         Schedule schedule = new Schedule();
@@ -56,8 +60,8 @@ public class EmployeeRepositoryTests {
         //assert that employee has correct attributes
         assertNotNull(employee);
         assertEquals(id, employee.getMuseumUserId());
-        assertEquals("Broseph", employee.getName());
-        assertEquals("aEmail", employee.getEmail());
-        assertEquals("aPassword", employee.getPassword());
+        assertEquals(name, employee.getName());
+        assertEquals(email, employee.getEmail());
+        assertEquals(password, employee.getPassword());
     }
 }

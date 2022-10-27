@@ -29,13 +29,19 @@ public class ManagerRepositoryTests {
     }
 
     @Test
-    public void testPersistandLoadManager() {
+    public void testPersistAndLoadManager() {
         
         //create manager 
         Manager manager = new Manager();
-        manager.setName("Jeremy");
-        manager.setEmail("aEmail");
-        manager.setPassword("aPassword");
+        String name = "Jeremy";
+        String email = "aEmail";
+        String password = "aPassword";
+
+
+
+        manager.setName(name);
+        manager.setEmail(email);
+        manager.setPassword(password);
 
         //save manager
         manager = managerRepository.save(manager);
@@ -50,8 +56,8 @@ public class ManagerRepositoryTests {
         //assert that manager has correct attributes
         assertNotNull(manager);
         assertEquals(id, manager.getMuseumUserId());
-        assertEquals("Jeremy", manager.getName());
-        assertEquals("aEmail", manager.getEmail());
-        assertEquals("aPassword", manager.getPassword());
+        assertEquals(name, manager.getName());
+        assertEquals(email, manager.getEmail());
+        assertEquals(password, manager.getPassword());
     }
 }
