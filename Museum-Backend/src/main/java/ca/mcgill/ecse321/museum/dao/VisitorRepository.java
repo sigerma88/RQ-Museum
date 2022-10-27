@@ -8,6 +8,6 @@ import ca.mcgill.ecse321.museum.model.Visitor;
  */
 public interface VisitorRepository extends CrudRepository<Visitor, Long>{
 
-	Visitor findVisitorByMuseumUserId(Long museumUserId);
+  Visitor findVisitorByMuseumUserId(Long museumUserId);
 
 }
