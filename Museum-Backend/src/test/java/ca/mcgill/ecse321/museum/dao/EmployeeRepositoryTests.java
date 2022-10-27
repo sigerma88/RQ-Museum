@@ -25,7 +25,7 @@ public class EmployeeRepositoryTests {
 
     @AfterEach
     public void clearDatabase() {
-        //employeeRepository.deleteAll();
+        employeeRepository.deleteAll();
     }
 
     @Test
