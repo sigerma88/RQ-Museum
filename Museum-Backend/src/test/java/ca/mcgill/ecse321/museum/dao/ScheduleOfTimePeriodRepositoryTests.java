@@ -136,6 +136,12 @@ public class ScheduleOfTimePeriodRepositoryTests {
     assertNotNull(timePeriodTwo);
 
     //assert that timePeriod are right
+    assertEquals(timePeriodOne.getStartDate(), startDateOne);
+    assertEquals(timePeriodOne.getEndDate(), endDateOne);
+    assertEquals(timePeriodTwo.getStartDate(), startDateTwo);
+    assertEquals(timePeriodTwo.getEndDate(), endDateTwo);
+
+    //assert that timePeriod are right
     assertEquals(timePeriodOneIdFromFirst, timePeriodOne.getTimePeriodId());
     assertEquals(timePeriodOneIdFromSecond, timePeriodOne.getTimePeriodId());
     assertEquals(timePeriodTwoIdFromThird, timePeriodTwo.getTimePeriodId());
