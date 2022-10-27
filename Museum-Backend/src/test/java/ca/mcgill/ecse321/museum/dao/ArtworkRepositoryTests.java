@@ -50,9 +50,10 @@ public class ArtworkRepositoryTests {
      * @param image              - The expected url of the image of the artwork
      * @param room               - The expected room of the artwork
      */
-    public void compareUniqueArtwork(Artwork artwork, String artworkName, String artist,
+    public void compareUniqueArtwork(Artwork artwork, long artworkId, String artworkName, String artist,
                                      boolean isAvailableForLoan, double loanFee, String image, Room room) {
         assertNotNull(artwork);
+        assertEquals(artworkId, artwork.getArtworkId());
         assertEquals(artworkName, artwork.getName());
         assertEquals(artist, artwork.getArtist());
         assertEquals(isAvailableForLoan, artwork.getIsAvailableForLoan());
@@ -99,6 +100,7 @@ public class ArtworkRepositoryTests {
         artwork.setImage(image);
         artwork.setRoom(room);
         Artwork savedArtwork = artworkRepository.save(artwork);
+        long artworkId = artwork.getArtworkId();
 
         // Comparing the artwork stored in the database with the artwork created
 
@@ -109,13 +111,13 @@ public class ArtworkRepositoryTests {
         // Test by retrieving with the artwork its name
         artwork = null;
         artwork = artworkRepository.findArtworkByName(savedArtwork.getName()).get(0);
-        compareUniqueArtwork(artwork, artworkName, artist, isAvailableForLoan, loanFee, image,
+        compareUniqueArtwork(artwork, artworkId, artworkName, artist, isAvailableForLoan, loanFee, image,
                 room);
 
         // Test by retrieving by its artist
         artwork = null;
         artwork = artworkRepository.findArtworkByArtist(savedArtwork.getArtist()).get(0);
-        compareUniqueArtwork(artwork, artworkName, artist, isAvailableForLoan, loanFee, image,
+        compareUniqueArtwork(artwork, artworkId, artworkName, artist, isAvailableForLoan, loanFee, image,
                 room);
     }
 
