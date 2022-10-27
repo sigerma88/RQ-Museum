@@ -10,9 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.museum.model.Manager;
-import ca.mcgill.ecse321.museum.model.Museum;
-import ca.mcgill.ecse321.museum.model.MuseumSystem;
-import ca.mcgill.ecse321.museum.model.Schedule;
 
 
 /** Test the persistence layer for the ManagerRepository. Testing reading and writing of 

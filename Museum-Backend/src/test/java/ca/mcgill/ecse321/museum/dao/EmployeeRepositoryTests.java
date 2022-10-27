@@ -13,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.museum.model.Employee;
-import ca.mcgill.ecse321.museum.model.Museum;
-import ca.mcgill.ecse321.museum.model.MuseumSystem;
 import ca.mcgill.ecse321.museum.model.Schedule;
 
 /** Test the persistence layer for the EmployeeRepository. Testing reading and writing of 
@@ -28,7 +26,7 @@ public class EmployeeRepositoryTests {
 
     @AfterEach
     public void clearDatabase() {
-        employeeRepository.deleteAll();
+        //employeeRepository.deleteAll();
     }
 
     @Test
