@@ -10,53 +10,51 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- * @author Kieyan
  * Museum Repository test class
  * Here we test the museum repository interface by saving a museum into the database, querying for it,
  * and then checking if the results are consistent
+ * 
+ * @author Kieyan
  */
 @SpringBootTest
 public class MuseumRepositoryTests {
+  @Autowired
+  MuseumRepository museumRepository;
 
-    @Autowired
-    MuseumRepository museumRepository;
-    @Autowired
-    ScheduleRepository scheduleRepository;
+  @Autowired
+  ScheduleRepository scheduleRepository;
 
-    @AfterEach
-    public void clearDatabase() {
-        museumRepository.deleteAll();
-        scheduleRepository.deleteAll();
-    }
+  @AfterEach
+  public void clearDatabase() {
+    museumRepository.deleteAll();
+    scheduleRepository.deleteAll();
+  }
 
-    @Test
-    public void testPersistAndLoadMuseum() {
+  @Test
+  public void testPersistAndLoadMuseum() {
+    // Create objects
+    String name = "The Louvre";
+    double visitFee = 19.99;
+    Schedule schedule = new Schedule();
+    Museum museum = new Museum();
+    museum.setName(name);
+    museum.setVisitFee(visitFee);
+    museum.setSchedule(schedule);
 
-        // Create objects
-        String name = "The Louvre";
-        double visitFee = 19.99;
-        Schedule schedule = new Schedule();
-        Museum museum = new Museum();
-        museum.setName(name);
-        museum.setVisitFee(visitFee);
-        museum.setSchedule(schedule);
+    // Save object
+    museumRepository.save(museum);
+    long id = museum.getMuseumId();
 
-        // Save object
-        museumRepository.save(museum);
-        long id = museum.getMuseumId();
+    // Read object from database
+    Museum museumFromDB = museumRepository.findMuseumByMuseumId(id);
 
-        // Read object from database
-        Museum museumFromDB = museumRepository.findMuseumByMuseumId(id);
+    // Assert that museumFromDB is not NULL
+    assertNotNull(museumFromDB);
 
-        // Assert that museumFromDB is not NULL
-        assertNotNull(museumFromDB);
-
-        // Assert that object has correct attributes
-        assertEquals(name, museumFromDB.getName()); // test name
-        assertEquals(museum.getMuseumId(), museumFromDB.getMuseumId()); // test id
-        assertEquals(schedule.getScheduleId(), museumFromDB.getSchedule().getScheduleId()); // test schedule
-        assertEquals(visitFee, museumFromDB.getVisitFee()); // test visit fee
-
-    }
-
+    // Assert that object has correct attributes
+    assertEquals(name, museumFromDB.getName()); // test name
+    assertEquals(museum.getMuseumId(), museumFromDB.getMuseumId()); // test id
+    assertEquals(schedule.getScheduleId(), museumFromDB.getSchedule().getScheduleId()); // test schedule
+    assertEquals(visitFee, museumFromDB.getVisitFee()); // test visit fee
+  }
 }

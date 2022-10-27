@@ -50,5 +50,4 @@ public class TimePeriodRepositoryTests {
     //assert that TimePeriod exists in database
     assertNotNull(timePeriod);
   }
-
 }

@@ -17,64 +17,62 @@ import ca.mcgill.ecse321.museum.model.Visitor;
  * Since the Ticket class has a unidirectional association with the Visitor class, we must create
  * both a ticket object and a visitor object in order to test the TicketRepository.
  */
-
 @SpringBootTest
 public class TicketRepositoryTests {
-    @Autowired
-    private TicketRepository ticketRepository;
-    @Autowired
-    private VisitorRepository visitorRepository;
+  @Autowired
+  private TicketRepository ticketRepository;
 
-    @AfterEach
-    public void clearDatabase() {
-        ticketRepository.deleteAll();
-        visitorRepository.deleteAll();
-    }
-    
-    @Test
-    public void testPersistandLoadTicket() {
+  @Autowired
+  private VisitorRepository visitorRepository;
 
-        //1.create object
+  @AfterEach
+  public void clearDatabase() {
+      ticketRepository.deleteAll();
+      visitorRepository.deleteAll();
+  }
 
-        //create ticket and attribute
-        Ticket ticket = new Ticket();
-        Date visitDate = Date.valueOf("2020-01-01");
-        //set attribute of ticket
-        ticket.setVisitDate(visitDate);
+  @Test
+  public void testPersistandLoadTicket() {
+    //1.create object
 
-        //create visitor and attribute
-        Visitor visitor = new Visitor();
-        String visitorName = "jdsilv2";
-        String visitorEmail = "sigmamale@pog.com";
-        String visitorPassword = "123";
+    //create ticket and attribute
+    Ticket ticket = new Ticket();
+    Date visitDate = Date.valueOf("2020-01-01");
+    //set attribute of ticket
+    ticket.setVisitDate(visitDate);
 
-        //set attribute of visitor
-        visitor.setName(visitorName);
-        visitor.setEmail(visitorEmail);
-        visitor.setPassword(visitorPassword);
+    //create visitor and attribute
+    Visitor visitor = new Visitor();
+    String visitorName = "jdsilv2";
+    String visitorEmail = "sigmamale@pog.com";
+    String visitorPassword = "123";
 
-        //2.save object
-        //save visitor object to database
-        visitor = visitorRepository.save(visitor);
-        //set association between ticket and visitor object then save ticket object to database
-        ticket.setVisitor(visitor);
-        ticket = ticketRepository.save(ticket);
-        long ticketId = ticket.getTicketId();
-        long visitorId = ticket.getVisitor().getMuseumUserId();
+    //set attribute of visitor
+    visitor.setName(visitorName);
+    visitor.setEmail(visitorEmail);
+    visitor.setPassword(visitorPassword);
 
-        //3.read object from database
-        ticket = ticketRepository.findTicketByTicketId(ticketId);
+    //2.save object
+    //save visitor object to database
+    visitor = visitorRepository.save(visitor);
+    //set association between ticket and visitor object then save ticket object to database
+    ticket.setVisitor(visitor);
+    ticket = ticketRepository.save(ticket);
+    long ticketId = ticket.getTicketId();
+    long visitorId = ticket.getVisitor().getMuseumUserId();
 
-        //4.assert that object has correct attributes
-        assertNotNull(ticket);
-        assertEquals(ticketId, ticket.getTicketId());
-        assertEquals(visitDate, ticket.getVisitDate());
+    //3.read object from database
+    ticket = ticketRepository.findTicketByTicketId(ticketId);
 
-        assertNotNull(ticket.getVisitor());
-        assertEquals(visitorId, ticket.getVisitor().getMuseumUserId());
-        assertEquals(visitorName, ticket.getVisitor().getName());
-        assertEquals(visitorEmail, ticket.getVisitor().getEmail());
-        assertEquals(visitorPassword, ticket.getVisitor().getPassword());
-    }
-    
+    //4.assert that object has correct attributes
+    assertNotNull(ticket);
+    assertEquals(ticketId, ticket.getTicketId());
+    assertEquals(visitDate, ticket.getVisitDate());
+
+    assertNotNull(ticket.getVisitor());
+    assertEquals(visitorId, ticket.getVisitor().getMuseumUserId());
+    assertEquals(visitorName, ticket.getVisitor().getName());
+    assertEquals(visitorEmail, ticket.getVisitor().getEmail());
+    assertEquals(visitorPassword, ticket.getVisitor().getPassword());
+  }
 }
