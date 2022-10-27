@@ -37,12 +37,12 @@ public class TimePeriod {
     return timePeriodId;
   }
 
-  @Column(nullable = false, columnDefinition= "TIMESTAMP WITH TIME ZONE")
+  @Column(nullable = false, columnDefinition= "TIMESTAMP")
   public Timestamp getStartDate() {
     return startDate;
   }
 
-  @Column(nullable = false, columnDefinition= "TIMESTAMP WITH TIME ZONE")
+  @Column(nullable = false, columnDefinition= "TIMESTAMP")
   public Timestamp getEndDate() {
     return endDate;
   }
