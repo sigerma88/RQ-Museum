@@ -17,9 +17,11 @@ import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.MuseumSystem;
 import ca.mcgill.ecse321.museum.model.Schedule;
 
-/** Test the persistence layer for the EmployeeRepository. Testing reading and writing of 
- *  objects, attributes and references to the database.
- *  @author Eric
+/**
+ * Test the persistence layer for the EmployeeRepository. Testing reading and writing of 
+ * objects, attributes and references to the database.
+ * 
+ * @author Eric
  */
 @SpringBootTest
 public class EmployeeRepositoryTests {
