@@ -18,11 +18,13 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-web'
   runtimeOnly 'org.postgresql:postgresql'
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
-  testImplementation 'junit:junit:4.12'
 }
 
 tasks.named('test') {
   useJUnitPlatform()
+  testLogging {
+    exceptionFormat "full"
+  }
 }
 
 task stage () {
