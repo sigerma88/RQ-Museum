@@ -100,6 +100,7 @@ public class ScheduleOfTimePeriodRepositoryTests {
     //reset
     scheduleOfTimePeriodOne = null;
     scheduleOfTimePeriodTwo = null;
+    scheduleOfTimePeriodThree = null;
     scheduleOne = null;
     scheduleTwo = null;
     timePeriodOne = null;
@@ -108,6 +109,7 @@ public class ScheduleOfTimePeriodRepositoryTests {
     //read ScheduleOfTimePeriod from database
     scheduleOfTimePeriodOne = scheduleOfTimePeriodRepository.findScheduleOfTimePeriodByScheduleOfTimePeriodId(scheduleOfTimePeriodOneId);
     scheduleOfTimePeriodTwo = scheduleOfTimePeriodRepository.findScheduleOfTimePeriodByScheduleOfTimePeriodId(scheduleOfTimePeriodTwoId);
+    scheduleOfTimePeriodThree = scheduleOfTimePeriodRepository.findScheduleOfTimePeriodByScheduleOfTimePeriodId(scheduleOfTimePeriodThreeId);
 
     //read Schedule from database
     scheduleOne = scheduleRepository.findScheduleByScheduleId(scheduleOneIdFromFirst);
