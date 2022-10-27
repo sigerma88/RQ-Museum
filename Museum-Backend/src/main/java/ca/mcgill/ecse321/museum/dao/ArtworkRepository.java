@@ -13,11 +13,11 @@ import java.util.List;
  */
 public interface ArtworkRepository extends CrudRepository<Artwork, Long> {
 
-    Artwork findArtworkByArtworkId(Long artworkId);
+  Artwork findArtworkByArtworkId(Long artworkId);
 
-    List<Artwork> findArtworkByName(String name);
+  List<Artwork> findArtworkByName(String name);
 
-    List<Artwork> findArtworkByArtist(String artist);
+  List<Artwork> findArtworkByArtist(String artist);
 
 
 }
