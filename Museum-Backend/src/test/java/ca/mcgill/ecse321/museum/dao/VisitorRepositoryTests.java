@@ -6,6 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * @author Kieyan
@@ -41,6 +42,9 @@ public class VisitorRepositoryTests {
 
         // Read object from database
         Visitor visitorFromDB = visitorRepository.findVisitorByMuseumUserId(id);
+
+        // Assert that visitorFromDB is not NULL
+        assertNotNull(visitorFromDB);
 
         // Assert that object has correct attributes
         assertEquals(name, visitorFromDB.getName()); // test name
