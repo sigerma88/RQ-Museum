@@ -51,6 +51,9 @@ public class ScheduleRepositoryTests {
     scheduleRepository.save(schedule);
     long scheduleId = schedule.getScheduleId();
 
+    //reset
+    schedule = null;
+
     //read Schedule from database
     schedule = scheduleRepository.findScheduleByScheduleId(scheduleId);
 
@@ -81,6 +84,9 @@ public class ScheduleRepositoryTests {
     museum = museumRepository.save(museum);
     long museumId = museum.getMuseumId();
     long scheduleId = museum.getSchedule().getScheduleId();
+
+    //reset
+    museum = null;
 
     //read Museum from database
     museum = museumRepository.findMuseumByMuseumId(museumId);
@@ -126,6 +132,9 @@ public class ScheduleRepositoryTests {
     employee = employeeRepository.save(employee);
     long employeeId = employee.getMuseumUserId();
     long scheduleId = employee.getSchedule().getScheduleId();
+
+    //reset
+    employee = null;
 
     //read Employee from database
     employee = employeeRepository.findEmployeeByMuseumUserId(employeeId);

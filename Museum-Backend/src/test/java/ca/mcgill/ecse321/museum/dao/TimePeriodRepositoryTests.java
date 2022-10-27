@@ -41,6 +41,9 @@ public class TimePeriodRepositoryTests {
     timePeriodRepository.save(timePeriod);
     long timePeriodId = timePeriod.getTimePeriodId();
 
+    //reset
+    timePeriod = null;
+
     //read TimePeriod from database
     timePeriod = timePeriodRepository.findTimePeriodByTimePeriodId(timePeriodId);
 

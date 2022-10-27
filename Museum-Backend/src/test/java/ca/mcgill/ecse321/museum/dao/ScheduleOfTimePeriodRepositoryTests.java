@@ -97,6 +97,14 @@ public class ScheduleOfTimePeriodRepositoryTests {
     long scheduleOneIdFromThird = scheduleOfTimePeriodThree.getSchedule().getScheduleId();
     long timePeriodTwoIdFromThird = scheduleOfTimePeriodThree.getTimePeriod().getTimePeriodId();
 
+    //reset
+    scheduleOfTimePeriodOne = null;
+    scheduleOfTimePeriodTwo = null;
+    scheduleOne = null;
+    scheduleTwo = null;
+    timePeriodOne = null;
+    timePeriodTwo = null;
+
     //read ScheduleOfTimePeriod from database
     scheduleOfTimePeriodOne = scheduleOfTimePeriodRepository.findScheduleOfTimePeriodByScheduleOfTimePeriodId(scheduleOfTimePeriodOneId);
     scheduleOfTimePeriodTwo = scheduleOfTimePeriodRepository.findScheduleOfTimePeriodByScheduleOfTimePeriodId(scheduleOfTimePeriodTwoId);
