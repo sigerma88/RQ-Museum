@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author KL
  */
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class ArtworkRepositoryTests {
     @Autowired
