@@ -28,7 +28,7 @@ We are 6 McGill University students in the ECSE department.
 |     Victor Zhao      |    TBA     |  U2  |           19             |            0             |            0            |          0           |
 |     Zahra Landou     |    TBA     |  U2  |           18             |            0             |            0            |          0           |
 |      Eric Joung      |    TBA     |  U2  |           16             |            0             |            0            |          0           |
-| Kieyan Mamiche Afara |    TBA     |  U3  |            0             |            0             |            0            |          0           |
+| Kieyan Mamiche Afara |    TBA     |  U3  |           18             |            0             |            0            |          0           |
 |      Kevin Luo       |    TBA     |  U2  |           26             |            0             |            0            |          0           |
 
 ## Deliverable Reports
@@ -44,7 +44,7 @@ Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/De
 |     Victor Zhao      | Requirements, use-case diagram/FR8 scenario, UML diagram, setup for database, CRUD repos, JPA annotations, persistence tests for Room and Ticket. |       19        |
 |     Zahra Landou     | Requirements, use-case diagram and scenario for FR7, UML diagram, CRUD repos, persistence testing for Loan. |       18        |
 |      Eric Joung      | Requirements, use-case diagram and scenario for FR3, UML diagram, persistence testing for Manager and Employee. |       16        |
-| Kieyan Mamiche Afara | Lorem ipsum dolor sit amet, consectetur adipiscing elit, |       0        |
+| Kieyan Mamiche Afara | Requirements, use-case diagram and scenario for FR10, UML diagram, persistence testing for Museum and Visitor |       18        |
 |      Kevin Luo       | Requirements, use-case diagram and scenario for FR1, UML diagram, Umple, testing artwork repository, worked on the museum system repository but we decided to remove at the end. |      26        |
 
 ### Deliverable 2
