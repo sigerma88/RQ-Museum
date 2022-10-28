@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.museum.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,108 +12,98 @@ import ca.mcgill.ecse321.museum.model.Loan;
 import ca.mcgill.ecse321.museum.model.Visitor;
 
 /**
- * Test class for the LoanRepository
- * Loan class has an unidirectional association 
- * with Artwork and Visitor classes.  Hence, we must create an 
- * instance of Artwork and Visitor to test LoanRepository.
- *  @author Zahra Landou
- * 
+ * Test the persistence layer for the LoanRepository. Testing reading and writing of
+ * objects, attributes and references to the database.
+ * LoanRepository is associated with Artwork and Visitor.
+ *
+ * @author Zahra
  */
-
 @SpringBootTest
 public class LoanRepositoryTests {
+  @Autowired
+  private LoanRepository loanRepository;
 
-    @Autowired
-    private LoanRepository loanRepository;
-    @Autowired
-    private ArtworkRepository artworkRepository;
-    @Autowired
-    private VisitorRepository visitorRepository;
+  @Autowired
+  private ArtworkRepository artworkRepository;
 
-    @AfterEach
-    public void clearDatabase() {
-        loanRepository.deleteAll();
-        artworkRepository.deleteAll();
-        visitorRepository.deleteAll();
-    }
+  @Autowired
+  private VisitorRepository visitorRepository;
 
-    @Test
-    public void testPersistAndLoadLoan() {
+  @AfterEach
+  public void clearDatabase() {
+    loanRepository.deleteAll();
+    artworkRepository.deleteAll();
+    visitorRepository.deleteAll();
+  }
 
-      // create loan
-      Loan loan = new Loan();
-      loan.setRequestAccepted(true);
-    
-      //create artwork and attributes
-      Artwork monalisa = new Artwork();
-      String artworkName = "Mona";
-      String artistName = "Léo";
-      Double loanfee = 1200.00;
-      String image = "sourire";
+  @Test
+  public void testPersistAndLoadLoan() {
+    // create loan
+    Loan loan = new Loan();
+    Boolean isRequestAccepted = true;
+    loan.setRequestAccepted(isRequestAccepted);
 
+    //create artwork
+    Artwork monalisa = new Artwork();
+    String artworkName = "Mona";
+    String artistName = "Léo";
+    Double loanFee = 1200.00;
+    String image = "smile";
+    Boolean isAvailableForLoan = true;
 
-      //set attributes for artwork
-      monalisa.setArtist(artistName);
-      monalisa.setName(artworkName);
-      monalisa.setLoanFee(loanfee);
-      monalisa.setIsAvailableForLoan(true);
-      monalisa.setImage(image);
+    //set attributes for artwork
+    monalisa.setArtist(artistName);
+    monalisa.setName(artworkName);
+    monalisa.setLoanFee(loanFee);
+    monalisa.setIsAvailableForLoan(isAvailableForLoan);
+    monalisa.setImage(image);
 
-      //create visitor and attributes
-       String visitorName = "Bob";
-       String visitorEmail = "bob@mail.com";
-       String visitorPassword = "LaJoconde";
-       Visitor visitor1 = new Visitor();
+    //create visitor
+    String visitorName = "Bob";
+    String visitorEmail = "bob@mail.com";
+    String visitorPassword = "LaJoconde";
+    Visitor visitor = new Visitor();
 
-       //set attributes for visitor
-       visitor1.setName(visitorName);
-       visitor1.setEmail(visitorEmail);
-       visitor1.setPassword(visitorPassword);
+    //set attributes for visitor
+    visitor.setName(visitorName);
+    visitor.setEmail(visitorEmail);
+    visitor.setPassword(visitorPassword);
 
-       //set associations
-       loan.setArtwork(monalisa);
-      loan.setVisitor(visitor1);
+    //set associations
+    loan.setArtwork(monalisa);
+    loan.setVisitor(visitor);
 
-      //save objects
-      monalisa = artworkRepository.save(monalisa);
-      visitor1 = visitorRepository.save(visitor1);
-      loan = loanRepository.save(loan);
+    //save artwork, visitor and loan
+    monalisa = artworkRepository.save(monalisa);
+    visitor = visitorRepository.save(visitor);
+    loan = loanRepository.save(loan);
 
-      //get objects' ID
-      long loanId = loan.getLoanId();
-      long artworkId = monalisa.getArtworkId();
-      long visitorId = visitor1.getMuseumUserId();
-      
-      //reset
-      loan = null;
-      visitor1 = null;
-       monalisa = null;
-      
+    //get loan, artwork and visitor Id
+    long loanId = loan.getLoanId();
+    long artworkId = monalisa.getArtworkId();
+    long visitorId = visitor.getMuseumUserId();
 
-      // read loan from database
-      loan = loanRepository.findLoanByLoanId(loanId);
-      visitor1 = visitorRepository.findVisitorByMuseumUserId(visitorId);
-      monalisa = artworkRepository.findArtworkByArtworkId(artworkId);
+    //reset
+    loan = null;
+    visitor = null;
+    monalisa = null;
 
-     // assert that  loan has  correct attributes
-      assertNotNull(loan);
-      assertEquals(loanId, loan.getLoanId());
-      assertEquals(true, loan.getRequestAccepted());
-       
-      //verify attributes for visitor
-      assertNotNull(loan.getVisitor());
-      assertEquals(visitorId,loan.getVisitor().getMuseumUserId());
-      assertEquals(visitorName, loan.getVisitor().getName());
-      assertEquals(visitorEmail, loan.getVisitor().getEmail());
+    //read loan, artwork and visitor from database
+    loan = loanRepository.findLoanByLoanId(loanId);
+    monalisa = artworkRepository.findArtworkByArtworkId(artworkId);
+    visitor = visitorRepository.findVisitorByMuseumUserId(visitorId);
 
-      //verify attributes for artwork
-      assertNotNull(loan.getArtwork());
-      assertEquals(artworkId, loan.getArtwork().getArtworkId());
-      assertEquals(artworkName, loan.getArtwork().getName());
-      assertEquals(true,loan.getArtwork().getIsAvailableForLoan());
+    // assert that loan exist in database and has correct attributes
+    assertNotNull(loan);
+    assertEquals(loanId, loan.getLoanId());
+    assertEquals(isRequestAccepted, loan.getRequestAccepted());
 
+    //assert that loan has correct associations
+    assertNotNull(loan.getVisitor());
+    assertEquals(visitorId, loan.getVisitor().getMuseumUserId());
 
-
-    }
-
+    //assert that loan has correct associations
+    assertNotNull(loan.getArtwork());
+    assertEquals(artworkId, loan.getArtwork().getArtworkId());
+  }
 }
