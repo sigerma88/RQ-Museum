@@ -2,10 +2,12 @@ package ca.mcgill.ecse321.museum.dao;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
 import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.model.RoomType;
@@ -24,10 +26,10 @@ import ca.mcgill.ecse321.museum.model.Schedule;
 public class RoomRepositoryTests {
   @Autowired
   private RoomRepository roomRepository;
+
   @Autowired
   private MuseumRepository museumRepository;
-  @Autowired
-  private TicketRepository ticketRepository;
+
   @Autowired
   private ScheduleRepository scheduleRepository;
 
@@ -35,7 +37,6 @@ public class RoomRepositoryTests {
   public void clearDatabase() {
     roomRepository.deleteAll();
     museumRepository.deleteAll();
-    ticketRepository.deleteAll();
     scheduleRepository.deleteAll();
   }
 

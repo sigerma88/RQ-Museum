@@ -1,9 +1,10 @@
 package ca.mcgill.ecse321.museum.dao;
 
-import org.springframework.data.repository.CrudRepository;
-import ca.mcgill.ecse321.museum.model.Artwork;
-
 import java.util.List;
+
+import org.springframework.data.repository.CrudRepository;
+
+import ca.mcgill.ecse321.museum.model.Artwork;
 
 /**
  * Repository for Artwork class

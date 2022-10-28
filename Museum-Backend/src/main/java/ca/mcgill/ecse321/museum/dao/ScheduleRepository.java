@@ -1,7 +1,8 @@
 package ca.mcgill.ecse321.museum.dao;
 
-import ca.mcgill.ecse321.museum.model.Schedule;
 import org.springframework.data.repository.CrudRepository;
+
+import ca.mcgill.ecse321.museum.model.Schedule;
 
 /**
  * Crud Repository functionality given by Spring for Schedule Model

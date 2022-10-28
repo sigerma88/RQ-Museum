@@ -1,15 +1,21 @@
 package ca.mcgill.ecse321.museum.dao;
 
-import ca.mcgill.ecse321.museum.model.*;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import ca.mcgill.ecse321.museum.model.Schedule;
+import ca.mcgill.ecse321.museum.model.Museum;
+import ca.mcgill.ecse321.museum.model.Room;
+import ca.mcgill.ecse321.museum.model.Artwork;
+import ca.mcgill.ecse321.museum.model.Schedule;
+import ca.mcgill.ecse321.museum.model.RoomType;
 
 /**
  * Testing the persistence layer for the ArtworkRepository. Testing the items stored in the database are the same as the items created.
