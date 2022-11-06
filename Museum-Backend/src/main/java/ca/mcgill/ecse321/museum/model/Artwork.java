@@ -27,6 +27,7 @@ public class Artwork {
   private boolean isAvailableForLoan;
   private double loanFee;
   private String image;
+  private boolean isOnLoan;
 
   // Artwork Associations
   private Room room;
@@ -70,6 +71,11 @@ public class Artwork {
   @Column(nullable = false)
   public String getImage() {
     return image;
+  }
+
+  @Column(nullable = false)
+  public boolean getIsOnLoan(){
+    return isOnLoan;
   }
 
   /* Code from template association_GetOne */
@@ -117,6 +123,13 @@ public class Artwork {
   public boolean setImage(String aImage) {
     boolean wasSet = false;
     image = aImage;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setIsOnLoan(boolean aIsOnLoan){
+    boolean wasSet = false;
+    isOnLoan = aIsOnLoan;
     wasSet = true;
     return wasSet;
   }
