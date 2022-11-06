@@ -23,7 +23,7 @@ public class Loan {
 
   // Loan Attributes
   private long loanId;
-  private boolean requestAccepted;
+  private Boolean requestAccepted;
 
   // Loan Associations
   private Visitor visitor;
@@ -46,7 +46,7 @@ public class Loan {
   }
 
   @Column(nullable = false)
-  public boolean getRequestAccepted() {
+  public Boolean getRequestAccepted() {
     return requestAccepted;
   }
 

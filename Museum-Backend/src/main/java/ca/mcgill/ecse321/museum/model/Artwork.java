@@ -24,10 +24,10 @@ public class Artwork {
   private long artworkId;
   private String name;
   private String artist;
-  private boolean isAvailableForLoan;
+  private Boolean isAvailableForLoan;
   private double loanFee;
   private String image;
-  private boolean isOnLoan;
+  private Boolean isOnLoan;
 
   // Artwork Associations
   private Room room;
@@ -59,7 +59,7 @@ public class Artwork {
   }
 
   @Column(nullable = false)
-  public boolean getIsAvailableForLoan() {
+  public Boolean getIsAvailableForLoan() {
     return isAvailableForLoan;
   }
 
@@ -74,7 +74,7 @@ public class Artwork {
   }
 
   @Column(nullable = false)
-  public boolean getIsOnLoan(){
+  public Boolean getIsOnLoan(){
     return isOnLoan;
   }
 
