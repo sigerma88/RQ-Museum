@@ -33,7 +33,8 @@ public class EmployeeService {
      * @param employee
      * @return
      */
-    public Schedule getEmployeeSchedule(Employee employee) {
+    public Schedule getEmployeeSchedule(long employeeId) {
+        Employee employee = employeeRepository.findEmployeeByMuseumUserId(employeeId);
         Schedule schedule = employee.getSchedule();
         return schedule;
     }
