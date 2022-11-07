@@ -16,21 +16,7 @@ public class LoanRestController {
     @GetMapping(value = { "/loan{LoanId}", "/loan{LoanId}/" })
     public LoanDto getLoanById(@PathVariable("LoanId") Long loanId) {
 	    Loan loan = LoanService.getLoanById(loanId);
-        LoanDto loanDto = convertToDto(loan);
-        return loanDto;
-    }
-
-
-
-
-
-    private LoanDto convertToDto(Loan loan) {
-        if (loan == null) {
-            throw new IllegalArgumentException("There is no such Loan!");
-        }
-        VisitorDto visitorDto = convertToDto(loan.getVisitor());
-        ArtworkDto artworkDto = convertToDto(loan.getArtwork());
-        LoanDto loanDto = new LoanDto(loan.getRequestAccepted(), visitorDto, artworkDto);
+        LoanDto loanDto = DtoUtility.convertToDto(loan);
         return loanDto;
     }
 

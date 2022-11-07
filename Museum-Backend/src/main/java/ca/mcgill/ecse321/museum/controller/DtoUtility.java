@@ -1,9 +1,13 @@
 package ca.mcgill.ecse321.museum.controller;
 
 import ca.mcgill.ecse321.museum.model.Employee;
+import ca.mcgill.ecse321.museum.model.Loan;
 import ca.mcgill.ecse321.museum.model.Schedule;
+import ca.mcgill.ecse321.museum.dto.ArtworkDto;
 import ca.mcgill.ecse321.museum.dto.EmployeeDto;
+import ca.mcgill.ecse321.museum.dto.LoanDto;
 import ca.mcgill.ecse321.museum.dto.ScheduleDto;
+import ca.mcgill.ecse321.museum.dto.VisitorDto;
 
 public class DtoUtility {
   /**
@@ -33,5 +37,15 @@ public class DtoUtility {
     }
     ScheduleDto scheduleDto = convertToDto(employee.getSchedule());
     return new EmployeeDto(employee.getMuseumUserId(), employee.getEmail(), employee.getName(), employee.getPassword(), scheduleDto);
+  }
+
+  static LoanDto convertToDto(Loan loan) {
+    if (loan == null) {
+        throw new IllegalArgumentException("There is no such Loan!");
+    }
+    VisitorDto visitorDto = convertToDto(loan.getVisitor());
+    ArtworkDto artworkDto = convertToDto(loan.getArtwork());
+    LoanDto loanDto = new LoanDto(loan.getRequestAccepted(), visitorDto, artworkDto);
+    return loanDto;
   }
 }
