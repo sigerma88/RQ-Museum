@@ -57,7 +57,7 @@ public class Museum {
 
   /* Code from template association_GetOne */
   @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "schedule_id", referencedColumnName = "scheduleId", nullable = false)
+  @JoinColumn(name = "schedule_id", referencedColumnName = "scheduleId", nullable = false, unique = true)
   public Schedule getSchedule() {
     return schedule;
   }

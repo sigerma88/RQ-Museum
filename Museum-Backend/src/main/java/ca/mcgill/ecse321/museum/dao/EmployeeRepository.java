@@ -14,4 +14,5 @@ public interface EmployeeRepository extends CrudRepository<Employee, Long>{
 
   Employee findEmployeeByMuseumUserId(Long museumUserId);
 
+  void deleteEmployeeByMuseumUserId(Long museumUserId);
 }
