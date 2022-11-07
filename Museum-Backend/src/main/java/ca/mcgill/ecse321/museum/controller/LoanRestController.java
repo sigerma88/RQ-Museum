@@ -3,8 +3,10 @@ package ca.mcgill.ecse321.museum.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import ca.mcgill.ecse321.museum.dto.ArtworkDto;
 import ca.mcgill.ecse321.museum.dto.LoanDto;
 import ca.mcgill.ecse321.museum.dto.VisitorDto;
+import ca.mcgill.ecse321.museum.model.Artwork;
 import ca.mcgill.ecse321.museum.model.Loan;
 import ca.mcgill.ecse321.museum.model.Visitor;
 import ca.mcgill.ecse321.museum.service.LoanService;
@@ -36,6 +38,10 @@ public class LoanRestController {
         if (visitor == null) {
             throw new IllegalArgumentException("There is no such Visitor!");
         }
+        /**
+         * TODO
+         * Modify the arguments passed in the VisitorDto constructor to properly construct the VisitorDto
+         */
         VisitorDto visitorDto = new VisitorDto();
         return visitorDto;
     }
@@ -44,7 +50,11 @@ public class LoanRestController {
         if (artwork == null) {
             throw new IllegalArgumentException("There is no such Artwork!");
         }
-        ArtworkDto artworkDto = new ArtWorkDto();
+        /**
+         * TODO
+         * Modify the arguments passed in the ArtworkDto constructor to properly construct the ArtworkDto
+         */
+        ArtworkDto artworkDto = new ArtworkDto();
         return artworkDto;
     }
 
