@@ -4,7 +4,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import ca.mcgill.ecse321.museum.dto.LoanDto;
+import ca.mcgill.ecse321.museum.dto.VisitorDto;
 import ca.mcgill.ecse321.museum.model.Loan;
+import ca.mcgill.ecse321.museum.model.Visitor;
+import ca.mcgill.ecse321.museum.service.LoanService;
 
 public class LoanRestController {
 
