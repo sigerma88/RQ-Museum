@@ -16,11 +16,16 @@ public class EmployeeDto {
   public EmployeeDto() {
   }
 
-  public EmployeeDto(String email, String name, String password, ScheduleDto schedule) {
+  public EmployeeDto(Long museumUserId, String email, String name, String password, ScheduleDto schedule) {
+    this.museumUserId = museumUserId;
     this.email = email;
     this.name = name;
     this.password = password;
     this.schedule = schedule;
+  }
+
+  public void setMuseumUserId(Long museumUserId) {
+    this.museumUserId = museumUserId;
   }
 
   public Long getMuseumUserId() {

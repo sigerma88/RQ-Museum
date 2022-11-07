@@ -12,6 +12,14 @@ public class ScheduleDto {
   public ScheduleDto() {
   }
 
+  public ScheduleDto(Long scheduleId) {
+    this.scheduleId = scheduleId;
+  }
+
+  public void setSheduleId(Long scheduleId) {
+    this.scheduleId = scheduleId;
+  }
+
   public Long getScheduleId() {
     return scheduleId;
   }
