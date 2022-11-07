@@ -9,6 +9,7 @@ public class EmployeeDto {
     private String name;
     private String password;
 
+    //association
     private Schedule schedule;
 
     public EmployeeDto() {

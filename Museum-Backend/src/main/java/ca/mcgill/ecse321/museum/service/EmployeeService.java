@@ -46,12 +46,15 @@ public class EmployeeService {
      * @return
      */
     public Employee addEmployeeTimePeriod(Employee employee, TimePeriod timePeriod) {
+
         Schedule employeeSchedule = employee.getSchedule(); //get the schedule of the employee
-        ScheduleOfTimePeriod scheduleOfTimePeriod = new ScheduleOfTimePeriod(); //create a new scheduleOfTimePeriod
-        //Create add in the new timePeriod and associate it to the Employee's schedule
-        scheduleOfTimePeriod.setTimePeriod(timePeriod); 
-        scheduleOfTimePeriod.setSchedule(employeeSchedule);
-        
+        ScheduleOfTimePeriod scheduleOfTimePeriod = new ScheduleOfTimePeriod(); //create a new schedule of time period
+        scheduleOfTimePeriod.setTimePeriod(timePeriod); //set the time period of the schedule of time period
+        scheduleOfTimePeriod.setSchedule(employeeSchedule); //set the schedule of the schedule of time period
+
+        scheduleOfTimePeriodRepository.save(scheduleOfTimePeriod); //save the schedule of time period
+        scheduleRepository.save(employeeSchedule); //save the schedule
+
         return employeeRepository.save(employee);
     }
 
@@ -63,83 +66,16 @@ public class EmployeeService {
      */
     public Employee deleteEmployeeTimePeriod(Employee employee, TimePeriod timePeriod) { 
         /**
-         * 1. Find the employee's schedule first and then find all timePeriods associated with it.
-         * 2. Then loop through the list of timePeriods and find the one that matches the 
-         * timePeriod passed in.
-         * 3. Then delete that timePeriod from the employee's schedule by
-         * deleting the scheduleOfTimePeriod object that associates the timePeriod to the schedule.
+         * 1. Find the employee's schedule first and then delete the ScheduleOfTimePeriod that associates with
+         * the TimePeriod that we want to delete.
          */
-
         Schedule employeeSchedule = employee.getSchedule(); 
-        List <TimePeriod> employeeTimePeriods = getTimePeriodsBySchedule(employeeSchedule);
+        if(scheduleOfTimePeriodRepository.findScheduleOfTimePeriodByTimePeriod(timePeriod) == null) {
+            throw new IllegalArgumentException("Time period does not exist in employee's schedule");
+        }
         
-        for (TimePeriod tp : employeeTimePeriods) {
-            if (tp.equals(timePeriod)) {
-                List<ScheduleOfTimePeriod> employeeScheduleOfTimePeriods = getScheduleOfTimePeriodsByTimePeriod(timePeriod);
-                
-                for (ScheduleOfTimePeriod sotp: employeeScheduleOfTimePeriods) {
-                    if (timePeriod == sotp.getTimePeriod() && employeeSchedule == sotp.getSchedule()) {
-                        scheduleOfTimePeriodRepository.delete(sotp);
-                        return employeeRepository.save(employee);
-                    }
-                }
-            }
-        } 
-
-        throw new IllegalArgumentException("Time period does not exist in employee's schedule");
+        scheduleOfTimePeriodRepository.deleteScheduleOfTimePeriodByScheduleAndTimePeriod(employeeSchedule, timePeriod);
+        return employeeRepository.save(employee);
     }
-
-    /**
-     * Helper method that gets the list of time periods from a schedule that uses 
-     * the helper method getScheduleOfTimePeriodsBySchedule
-     * @param schedule
-     * @return
-     */
-    public List<TimePeriod> getTimePeriodsBySchedule(Schedule schedule) {
-        //get all ScheduleOfTimePeriods with schedule
-        List<ScheduleOfTimePeriod> listOfScheduleOfTimePeriods = getScheduleOfTimePeriodsBySchedule(schedule);
-        List<TimePeriod> listOfTimePeriods = new ArrayList<TimePeriod>();
-
-        for (ScheduleOfTimePeriod scheduleOfTimePeriod : listOfScheduleOfTimePeriods) {
-            listOfTimePeriods.add(scheduleOfTimePeriod.getTimePeriod());
-        }
-        return listOfTimePeriods;
-        }
-
-    /**
-     * Helper method to find all SOTP with a given schedule. 
-     * @author VZ
-     * @param schedule
-     * @return
-     */
-    public List<ScheduleOfTimePeriod> getScheduleOfTimePeriodsBySchedule (Schedule schedule) {
-        List<ScheduleOfTimePeriod> listOfScheduleOfTimePeriods = new ArrayList<ScheduleOfTimePeriod>();
-        
-        for(ScheduleOfTimePeriod scheduleOfTimePeriod : scheduleOfTimePeriodRepository.findAll()) {
-            if(scheduleOfTimePeriod.getSchedule().equals(schedule)) {
-                listOfScheduleOfTimePeriods.add(scheduleOfTimePeriod);
-            }
-        }
-
-        return listOfScheduleOfTimePeriods;
-    }
-
-    /**
-     * Method to get all SOTP with given time period
-     * @author VZ
-     * @param timePeriod
-     * @return
-     */
-    public List<ScheduleOfTimePeriod> getScheduleOfTimePeriodsByTimePeriod (TimePeriod timePeriod) {
-        List<ScheduleOfTimePeriod> listOfScheduleOfTimePeriods = new ArrayList<ScheduleOfTimePeriod>();
-        for(ScheduleOfTimePeriod scheduleOfTimePeriod : scheduleOfTimePeriodRepository.findAll()) {
-            if(scheduleOfTimePeriod.getTimePeriod().equals(timePeriod)) {
-                listOfScheduleOfTimePeriods.add(scheduleOfTimePeriod);
-            }
-        }
-        return listOfScheduleOfTimePeriods;
-    }
-
     
-
 }
