@@ -45,5 +45,4 @@ public class LoanRestController {
         return artworkDto;
     }
 
-    // for the convertToDto methods, did you just follow the tutorial and overload the methods?
 }
