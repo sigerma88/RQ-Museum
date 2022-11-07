@@ -41,18 +41,6 @@ public class EmployeeService {
   }
 
   /**
-   * Method to get an employee by their id
-   * 
-   * @param id - long
-   * @return employee
-   * @author Siger
-   */
-  @Transactional
-  public Employee getEmployeeByMuseumUserId(long id) {
-    return employeeRepository.findEmployeeByMuseumUserId(id);
-  }
-
-  /**
    * Method to delete an employee from the database by their id
    * Allows the manager to delete an employee
    * 
