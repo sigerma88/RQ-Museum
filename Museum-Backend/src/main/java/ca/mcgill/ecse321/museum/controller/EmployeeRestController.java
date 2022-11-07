@@ -36,7 +36,7 @@ public class EmployeeRestController {
     try {
       List<EmployeeDto> employeeDtos = new ArrayList<>();
       for (Employee employee : service.getAllEmployees()) {
-        employeeDtos.add(convertToDto(employee));
+        employeeDtos.add(DtoUtility.convertToDto(employee));
       }
       return ResponseEntity.ok(employeeDtos);
     } catch (Exception e) {
@@ -66,34 +66,5 @@ public class EmployeeRestController {
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
-  }
-
-  /**
-   * Method to convert a schedule to a DTO
-   * 
-   * @param schedule - Schedule
-   * @return schedule DTO
-   * @author Siger
-   */
-  private  ScheduleDto convertToDto(Schedule schedule) {
-    if (schedule == null) {
-      throw new IllegalArgumentException("There is no such schedule");
-    }
-    return new ScheduleDto(schedule.getScheduleId());
-  }
-
-  /**
-   * Method to convert an employee to a DTO
-   * 
-   * @param employee - Employee
-   * @return employee DTO
-   * @author Siger
-   */
-  private EmployeeDto convertToDto(Employee employee) {
-    if (employee == null) {
-      throw new IllegalArgumentException("There is no such employee");
-    }
-    ScheduleDto scheduleDto = convertToDto(employee.getSchedule());
-    return new EmployeeDto(employee.getMuseumUserId(), employee.getEmail(), employee.getName(), employee.getPassword(), scheduleDto);
   }
 }
