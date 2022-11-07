@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.museum.model.Employee;
@@ -30,12 +32,17 @@ public class EmployeeRestController {
    * @author Siger
    */
   @GetMapping(value = { "/employees", "/employees/" })
-  public List<EmployeeDto> getAllEmployees() {
-    List<EmployeeDto> employeeDtos = new ArrayList<>();
-    for (Employee employee : service.getAllEmployees()) {
-      employeeDtos.add(convertToDto(employee));
+  public ResponseEntity<?> getAllEmployees() {
+    try {
+      List<EmployeeDto> employeeDtos = new ArrayList<>();
+      for (Employee employee : service.getAllEmployees()) {
+        employeeDtos.add(convertToDto(employee));
+      }
+      return ResponseEntity.ok(employeeDtos);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
     }
-    return employeeDtos;
+    
   }
 
   /**
@@ -46,8 +53,19 @@ public class EmployeeRestController {
    * @author Siger
    */
   @DeleteMapping(value = { "/employee/{id}", "/employee/{id}/" })
-  public boolean deleteEmployee(long id) {
-    return service.deleteEmployee(id);
+  public ResponseEntity<?> deleteEmployee(@PathVariable("id") long id) {
+    try {
+      // Check if employee exists
+      if (service.getEmployeeByMuseumUserId(id) == null) {
+        return ResponseEntity.badRequest().body("Employee does not exist");
+      }
+
+      // Delete employee
+      service.deleteEmployee(id);
+      return ResponseEntity.ok("Employee deleted");
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
   }
 
   /**
@@ -61,7 +79,7 @@ public class EmployeeRestController {
     if (schedule == null) {
       throw new IllegalArgumentException("There is no such schedule");
     }
-    return new ScheduleDto();
+    return new ScheduleDto(schedule.getScheduleId());
   }
 
   /**
@@ -76,6 +94,6 @@ public class EmployeeRestController {
       throw new IllegalArgumentException("There is no such employee");
     }
     ScheduleDto scheduleDto = convertToDto(employee.getSchedule());
-    return new EmployeeDto(employee.getEmail(), employee.getName(), employee.getPassword(), scheduleDto);
+    return new EmployeeDto(employee.getMuseumUserId(), employee.getEmail(), employee.getName(), employee.getPassword(), scheduleDto);
   }
 }
