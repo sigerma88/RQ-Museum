@@ -52,9 +52,10 @@ public class ArtworkRepositoryTests {
    * @param loanFee            - The expected loan fee of the artwork
    * @param image              - The expected url of the image of the artwork
    * @param room               - The expected room of the artwork
+   * @param isOnLoan           - The expected loan status of the artwork
    */
   public void compareUniqueArtwork(Artwork artwork, long artworkId, String artworkName, String artist,
-                                   boolean isAvailableForLoan, double loanFee, String image, Room room) {
+                                   boolean isAvailableForLoan, double loanFee, String image, Room room, boolean isOnLoan) {
     assertNotNull(artwork);
     assertEquals(artworkId, artwork.getArtworkId());
     assertEquals(artworkName, artwork.getName());
@@ -63,6 +64,7 @@ public class ArtworkRepositoryTests {
     assertEquals(loanFee, artwork.getLoanFee());
     assertEquals(image, artwork.getImage());
     assertEquals(room.getRoomId(), artwork.getRoom().getRoomId());
+    assertEquals(isOnLoan, artwork.getIsOnLoan());
   }
 
   /**
@@ -75,6 +77,7 @@ public class ArtworkRepositoryTests {
     String artworkName = "The Art";
     String artist = "Kevin";
     boolean isAvailableForLoan = true;
+    boolean isOnLoan = false;
     double loanFee = 12.5;
     String image = "https://source.unsplash.com/C54OKB99iuw";
     Schedule schedule = new Schedule();
@@ -99,6 +102,7 @@ public class ArtworkRepositoryTests {
     artwork.setName(artworkName);
     artwork.setArtist(artist);
     artwork.setIsAvailableForLoan(isAvailableForLoan);
+    artwork.setIsOnLoan(isOnLoan);
     artwork.setLoanFee(loanFee);
     artwork.setImage(image);
     artwork.setRoom(room);
@@ -111,19 +115,19 @@ public class ArtworkRepositoryTests {
     artwork = null;
     artwork = artworkRepository.findArtworkByArtworkId(savedArtwork.getArtworkId());
     compareUniqueArtwork(artwork, artworkId, artworkName, artist, isAvailableForLoan, loanFee, image,
-            room);
+            room, isOnLoan);
 
     // Test by retrieving with the artwork name
     artwork = null;
     artwork = artworkRepository.findArtworkByName(savedArtwork.getName()).get(0);
     compareUniqueArtwork(artwork, artworkId, artworkName, artist, isAvailableForLoan, loanFee, image,
-            room);
+            room, isOnLoan);
 
     // Test by retrieving by its artist
     artwork = null;
     artwork = artworkRepository.findArtworkByArtist(savedArtwork.getArtist()).get(0);
     compareUniqueArtwork(artwork, artworkId, artworkName, artist, isAvailableForLoan, loanFee, image,
-            room);
+            room, isOnLoan);
   }
 
   /**
@@ -135,6 +139,7 @@ public class ArtworkRepositoryTests {
     String artworkName = "The Art";
     String artist = "Kevin";
     boolean isAvailableForLoan = true;
+    boolean isOnLoan = false;
     double loanFee = 12.5;
     String image = "https://source.unsplash.com/C54OKB99iuw";
 
@@ -143,6 +148,7 @@ public class ArtworkRepositoryTests {
     artwork.setName(artworkName);
     artwork.setArtist(artist);
     artwork.setIsAvailableForLoan(isAvailableForLoan);
+    artwork.setIsOnLoan(isOnLoan);
     artwork.setLoanFee(loanFee);
     artwork.setImage(image);
 
@@ -151,6 +157,7 @@ public class ArtworkRepositoryTests {
     commonPropertyArtwork.setName(artworkName);
     commonPropertyArtwork.setArtist(artist);
     commonPropertyArtwork.setIsAvailableForLoan(isAvailableForLoan);
+    commonPropertyArtwork.setIsOnLoan(isOnLoan);
     commonPropertyArtwork.setLoanFee(loanFee);
     commonPropertyArtwork.setImage(image);
 
