@@ -35,6 +35,10 @@ public class EmployeeService {
      */
     public Schedule getEmployeeSchedule(long employeeId) {
         Employee employee = employeeRepository.findEmployeeByMuseumUserId(employeeId);
+        if (employee == null) {
+            throw new IllegalArgumentException("There is no such employee");
+        }
+        
         Schedule schedule = employee.getSchedule();
         return schedule;
     }
