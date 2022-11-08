@@ -1,7 +1,5 @@
 package ca.mcgill.ecse321.museum.dto;
 
-import ca.mcgill.ecse321.museum.model.Loan;
-
 public class VisitorDto {
     private Long userId;
     private String email;
@@ -32,9 +30,9 @@ public class VisitorDto {
         this.name = name;
     }
 
-    public String getPassword() {
-        return password;
-    }
+    // public String getPassword() {
+    // return password;
+    // }
 
     public void setPassword(String password) {
         this.password = password;
