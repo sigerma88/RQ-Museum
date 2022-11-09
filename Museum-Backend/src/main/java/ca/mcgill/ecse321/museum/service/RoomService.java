@@ -9,6 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * @author kianmamicheafara
+ * Room service is a class where we can perform services on the room class
+ */
+
 @Service
 public class RoomService {
 
@@ -21,7 +26,7 @@ public class RoomService {
 
         // The room is not in the DB so capacity is 0
         if (roomOptional.isPresent() == false){
-            return 0;
+            return -1;
         }
         Room room = roomOptional.get();
         RoomType roomType = room.getRoomType();

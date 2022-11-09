@@ -33,6 +33,18 @@ public class ArtworkDto {
         this.isOnLoan = isOnLoan;
     }
 
+    // Constructor with every attribute including associations
+    public ArtworkDto(long artworkId, String name, String artist, boolean isAvailableForLoan, double loanFee, String image, boolean isOnLoan, Room room) {
+        this.artworkId = artworkId;
+        this.name = name;
+        this.artist = artist;
+        this.isAvailableForLoan = isAvailableForLoan;
+        this.loanFee = loanFee;
+        this.image = image;
+        this.isOnLoan = isOnLoan;
+        this.room = room;
+    }
+
     // Getters for ArtworkDTO
     public long getArtworkId() {
         return artworkId;

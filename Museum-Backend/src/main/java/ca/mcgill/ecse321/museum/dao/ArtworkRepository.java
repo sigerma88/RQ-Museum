@@ -21,4 +21,6 @@ public interface ArtworkRepository extends CrudRepository<Artwork, Long> {
   List<Artwork> findArtworkByArtist(String artist);
 
 
+
+
 }
