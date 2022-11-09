@@ -3,9 +3,11 @@ package ca.mcgill.ecse321.museum.controller;
 import ca.mcgill.ecse321.museum.dto.TicketDto;
 import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Schedule;
+import ca.mcgill.ecse321.museum.model.Visitor;
 import ca.mcgill.ecse321.museum.dto.EmployeeDto;
 import ca.mcgill.ecse321.museum.dto.ScheduleDto;
 import ca.mcgill.ecse321.museum.model.Ticket;
+import ca.mcgill.ecse321.museum.dto.VisitorDto;
 
 public class DtoUtility {
   /**
@@ -34,7 +36,28 @@ public class DtoUtility {
       throw new IllegalArgumentException("There is no such employee");
     }
     ScheduleDto scheduleDto = convertToDto(employee.getSchedule());
-    return new EmployeeDto(employee.getMuseumUserId(), employee.getEmail(), employee.getName(), employee.getPassword(), scheduleDto);
+    return new EmployeeDto(employee.getMuseumUserId(), employee.getEmail(), employee.getName(),
+            employee.getPassword(), scheduleDto);
+  }
+
+  /**
+   * Method to convert an visitor to a DTO
+   *
+   * @param visitor - Visitor
+   * @return visitor DTO
+   * @author Kevin
+   */
+  static VisitorDto convertToDto(Visitor visitor) {
+    if (visitor == null) {
+      throw new IllegalArgumentException("There is no such employee");
+    }
+
+    VisitorDto visitorDto = new VisitorDto();
+    visitorDto.setEmail(visitor.getEmail());
+    visitorDto.setName(visitor.getName());
+    visitorDto.setPassword(visitor.getPassword());
+    visitorDto.setUserId(visitor.getMuseumUserId());
+    return visitorDto;
   }
 
 /*
