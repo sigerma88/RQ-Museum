@@ -27,13 +27,4 @@ public class ArtworkRestController {
   }*/
 
 
-  private ArtworkDto convertToDto(Artwork a) {
-
-    if (a == null) throw new IllegalArgumentException("There is no such Artwork");
-    ArtworkDto artworkDto = new ArtworkDto(a.getName(), a.getArtist(), a.getIsAvailableForLoan(), a.getLoanFee(), a.getImage());
-
-    return artworkDto;
-
-  }
-
 }
