@@ -1,7 +1,10 @@
 package ca.mcgill.ecse321.museum.controller;
 
+import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
+import ca.mcgill.ecse321.museum.dao.MuseumRepository;
+import ca.mcgill.ecse321.museum.dao.RoomRepository;
 import ca.mcgill.ecse321.museum.dto.ArtworkDto;
-import ca.mcgill.ecse321.museum.model.Artwork;
+import ca.mcgill.ecse321.museum.model.*;
 import ca.mcgill.ecse321.museum.service.ArtworkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +26,15 @@ public class ArtworkRestController {
 
     @Autowired
     ArtworkService artworkService;
+
+    @Autowired
+    ArtworkRepository artworkRepository;
+
+    @Autowired
+    RoomRepository roomRepository;
+
+    @Autowired
+    MuseumRepository museumRepository;
 
     // Getting artwork status - FR7
     // Returns a status string of 4 options: loan/on display/in storage

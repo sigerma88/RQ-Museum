@@ -108,6 +108,15 @@ public class ArtworkService {
 
         // Update room of artwork
         if (roomService.getRoomCapacity(roomId) > 0){
+            // Reduce amount of artwork in old room
+            Room oldRoom = artwork.getRoom();
+            if (oldRoom != null){
+                oldRoom.setCurrentNumberOfArtwork(oldRoom.getCurrentNumberOfArtwork()-1);
+                roomRepository.save(oldRoom);
+            }
+
+            // increase amount of artwork in new room
+            room.setCurrentNumberOfArtwork(room.getCurrentNumberOfArtwork()+1);
             artwork.setRoom(room);
             artworkRepository.save(artwork);
 
