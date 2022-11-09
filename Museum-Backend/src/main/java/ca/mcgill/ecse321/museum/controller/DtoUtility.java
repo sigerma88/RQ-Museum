@@ -1,14 +1,16 @@
 package ca.mcgill.ecse321.museum.controller;
 
+import ca.mcgill.ecse321.museum.dto.TicketDto;
 import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.dto.EmployeeDto;
 import ca.mcgill.ecse321.museum.dto.ScheduleDto;
+import ca.mcgill.ecse321.museum.model.Ticket;
 
 public class DtoUtility {
   /**
    * Method to convert a schedule to a DTO
-   * 
+   *
    * @param schedule - Schedule
    * @return schedule DTO
    * @author Siger
@@ -22,7 +24,7 @@ public class DtoUtility {
 
   /**
    * Method to convert an employee to a DTO
-   * 
+   *
    * @param employee - Employee
    * @return employee DTO
    * @author Siger
@@ -34,4 +36,22 @@ public class DtoUtility {
     ScheduleDto scheduleDto = convertToDto(employee.getSchedule());
     return new EmployeeDto(employee.getMuseumUserId(), employee.getEmail(), employee.getName(), employee.getPassword(), scheduleDto);
   }
+
+/*
+  /**
+   * Method to convert a ticket to a DTO
+   *
+   * @param ticket - Ticket
+   * @return ticket DTO
+   * @author Zahra
+
+  static TicketDto convertToDto(Ticket ticket) {
+    if (ticket == null) {
+      throw new IllegalArgumentException("There is no such ticket");
+    }
+
+    return new TicketDto(ticket.getTicketId(), ticket.getVisitDate());
+  }
+*/
+
 }
