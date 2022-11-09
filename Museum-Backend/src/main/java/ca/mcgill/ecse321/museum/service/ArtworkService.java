@@ -54,7 +54,6 @@ public class ArtworkService {
   }
 
   public double getArtworkLoanFee(Artwork artwork) {
-
     return artwork.getLoanFee();
   }
 
