@@ -22,10 +22,10 @@ public class EmployeeRepositoryTests {
   @Autowired
   private EmployeeRepository employeeRepository;
 
-  // @AfterEach
-  // public void clearDatabase() {
-  //   employeeRepository.deleteAll();
-  // }
+  @AfterEach
+  public void clearDatabase() {
+    employeeRepository.deleteAll();
+  }
 
   @Test
   public void testPersistAndLoadEmployee() {
