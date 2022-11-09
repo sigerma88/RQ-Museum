@@ -50,6 +50,11 @@ public class EmployeeService {
    */
   @Transactional
   public boolean deleteEmployee(long id) {
+    Employee employee = employeeRepository.findEmployeeByMuseumUserId(id);
+    if (employee == null) {
+      throw new IllegalArgumentException("Employee does not exist");
+    }
+
     // Delete employee
     employeeRepository.deleteEmployeeByMuseumUserId(id);
 
