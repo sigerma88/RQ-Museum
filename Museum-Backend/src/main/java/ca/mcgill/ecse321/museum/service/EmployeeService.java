@@ -8,13 +8,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
+import ca.mcgill.ecse321.museum.dao.ScheduleOfTimePeriodRepository;
 import ca.mcgill.ecse321.museum.model.Employee;
 
 @Service
 public class EmployeeService {
 
   @Autowired
-  EmployeeRepository employeeRepository;  
+  EmployeeRepository employeeRepository;
+
+  @Autowired
+  ScheduleOfTimePeriodRepository scheduleOfTimePeriodRepository;
 
   /**
    * Method to get an employee by their id
@@ -54,6 +58,9 @@ public class EmployeeService {
     if (employee == null) {
       throw new IllegalArgumentException("Employee does not exist");
     }
+
+    // Delete scheduleOfTimePeriods
+    scheduleOfTimePeriodRepository.deleteScheduleOfTimePeriodBySchedule(employee.getSchedule());
 
     // Delete employee
     employeeRepository.deleteEmployeeByMuseumUserId(id);
