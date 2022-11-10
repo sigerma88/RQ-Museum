@@ -1,8 +1,10 @@
 package ca.mcgill.ecse321.museum.service;
 
 import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
+import ca.mcgill.ecse321.museum.dao.LoanRepository;
 import ca.mcgill.ecse321.museum.dao.RoomRepository;
 import ca.mcgill.ecse321.museum.model.Artwork;
+import ca.mcgill.ecse321.museum.model.Loan;
 import ca.mcgill.ecse321.museum.model.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,48 @@ public class ArtworkService {
 
   @Autowired
   RoomRepository roomRepository;
+
+  @Autowired
+  LoanRepository loanRepository;
+
+  /**
+   * Method to create an artwork
+   * 
+   * @param name - name of the artwork
+   * @param artist - artist of the artwork
+   * @param isAvailableForLoan - availability of the artwork
+   * @param loanFee - loan fee of the artwork
+   * @param image - image of the artwork
+   * @param isOnLoan - loan status of the artwork
+   * @param room - room of the artwork
+   * @return artwork
+   * @author Siger
+   */
+  @Transactional
+  public Artwork createArtwork(String name, String artist, Boolean isAvailableForLoan, Double loanFee, String image, Boolean isOnLoan, Room room) {
+    Artwork artwork = new Artwork();
+    artwork.setName(name);
+    artwork.setArtist(artist);
+    artwork.setIsAvailableForLoan(isAvailableForLoan);
+    artwork.setLoanFee(loanFee);
+    artwork.setImage(image);
+    artwork.setIsOnLoan(isOnLoan);
+    artwork.setRoom(room);
+    artworkRepository.save(artwork);
+    return artwork;
+  }
+
+  /**
+   * Method to get artwork by id
+   * 
+   * @param artworkId - id of the artwork
+   * @return artwork
+   * @author Siger
+   */
+  @Transactional
+  public Artwork getArtwork(Long artworkId) {
+    return artworkRepository.findArtworkByArtworkId(artworkId);
+  }
 
   /**
    * Method to get a list of all artworks in the database
@@ -57,6 +101,76 @@ public class ArtworkService {
     return artwork.getLoanFee();
   }
 
+  /**
+   * Method to edit an artwork's information and image
+   * 
+   * @param artworkId - ID of artwork to be edited
+   * @param name - name of the artwork
+   * @param artist - artist of the artwork
+   * @param image - image of the artwork
+   * @return artwork
+   * @author Siger
+   */
+  @Transactional
+  public Artwork editArtworkInfo(Long artworkId, String name, String artist, String image) {
+    Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
+    if (artwork == null) {
+      throw new IllegalArgumentException("Artwork does not exist");
+    }
+
+    if (name != null) artwork.setName(name);
+    if (artist != null) artwork.setArtist(artist);
+    if (image != null) artwork.setImage(image);
+    return artworkRepository.save(artwork);
+  }
+
+  /**
+   * Method to edit an artwork's loan availability and loan fee
+   * 
+   * @param artworkId - ID of artwork to be edited
+   * @param isAvailableForLoan - availability of the artwork
+   * @param loanFee - loan fee of the artwork
+   * @return artwork
+   * @author Siger
+   */
+  @Transactional
+  public Artwork editArtworkLoan(Long artworkId, Boolean isAvailableForLoan, Double loanFee) {
+    Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
+    if (artwork == null) {
+      throw new IllegalArgumentException("Artwork does not exist");
+    }
+
+    if (isAvailableForLoan != null) artwork.setIsAvailableForLoan(isAvailableForLoan);
+    artwork.setLoanFee(loanFee);
+    return artworkRepository.save(artwork);
+  }
+
+  /**
+   * Method to delete an artwork
+   * 
+   * @param artworkId - ID of artwork to be deleted
+   * @return if the artwork was deleted (success)
+   * @author Siger
+   */
+  @Transactional
+  public boolean deleteArtwork(Long artworkId) {
+    Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
+    if (artwork == null) {
+      throw new IllegalArgumentException("Artwork does not exist");
+    }
+
+    // Delete loan if artwork is on loan
+    Loan loan = loanRepository.findLoanByArtwork(artwork);
+    if (loan != null) {
+      loanRepository.deleteLoanByArtwork(artwork);
+    }
+
+    // Delete artwork
+    artworkRepository.deleteArtworkByArtworkId(artworkId);
+
+    // Check if artwork was deleted
+    return getArtwork(artworkId) == null;
+  }
 
   /**
    * Method to convert an Iterable to a List

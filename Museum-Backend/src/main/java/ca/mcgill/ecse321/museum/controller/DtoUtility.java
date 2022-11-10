@@ -45,13 +45,9 @@ public class DtoUtility {
    * @author Zahra
    */
   static ArtworkDto convertToDto(Artwork artwork) {
-
     if (artwork == null) {
       throw new IllegalArgumentException("There is no such artwork");
     }
-    ArtworkDto artworkDto = new ArtworkDto(artwork.getArtworkId(), artwork.getName(), artwork.getArtist(), artwork.getIsAvailableForLoan(), artwork.getLoanFee(), artwork.getImage(), artwork.getIsOnLoan());
-
-    return artworkDto;
-
+    return new ArtworkDto(artwork.getArtworkId(), artwork.getName(), artwork.getArtist(), artwork.getIsAvailableForLoan(), artwork.getLoanFee(), artwork.getImage(), artwork.getIsOnLoan());
   }
 }

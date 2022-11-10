@@ -11,6 +11,7 @@ import ca.mcgill.ecse321.museum.model.Artwork;
  *
  * @author Zahra
  * @author Kevin
+ * @author Siger
  */
 public interface ArtworkRepository extends CrudRepository<Artwork, Long> {
 
@@ -20,5 +21,6 @@ public interface ArtworkRepository extends CrudRepository<Artwork, Long> {
 
   List<Artwork> findArtworkByArtist(String artist);
 
+  void deleteArtworkByArtworkId(Long artworkId);
 
 }
