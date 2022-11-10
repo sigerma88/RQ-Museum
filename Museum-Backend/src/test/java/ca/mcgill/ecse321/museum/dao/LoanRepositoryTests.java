@@ -51,6 +51,7 @@ public class LoanRepositoryTests {
     Double loanFee = 1200.00;
     String image = "smile";
     Boolean isAvailableForLoan = true;
+    Boolean isOnLoan = false;
 
     //set attributes for artwork
     monalisa.setArtist(artistName);
@@ -58,6 +59,7 @@ public class LoanRepositoryTests {
     monalisa.setLoanFee(loanFee);
     monalisa.setIsAvailableForLoan(isAvailableForLoan);
     monalisa.setImage(image);
+    monalisa.setIsOnLoan(isOnLoan);
 
     //create visitor
     String visitorName = "Bob";
