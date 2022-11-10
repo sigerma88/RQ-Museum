@@ -1,27 +1,80 @@
 package ca.mcgill.ecse321.museum.service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
+import ca.mcgill.ecse321.museum.dao.ManagerRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
+import ca.mcgill.ecse321.museum.model.Employee;
+import ca.mcgill.ecse321.museum.model.Manager;
 import ca.mcgill.ecse321.museum.model.MuseumUser;
+import ca.mcgill.ecse321.museum.model.Visitor;
 
+@Service
 public class AuthenticationService {
     @Autowired
     private VisitorRepository visitorRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
+    @Autowired
+    private ManagerRepository managerRepository;
 
     @Transactional
-    public boolean authenticateUser(String email, String password) throws Exception {
+    public boolean authenticateUser(HttpServletRequest request, String email, String password)
+            throws Exception {
         if (email == null || password == null) {
             new Exception("Email and password must be filled when logging in.");
         }
 
-        MuseumUser visitor = visitorRepository.findVisitorByEmail(email);
-        if (visitor == null) {
-            throw new Exception("Email does not exist on our system.");
+        Visitor visitor = visitorRepository.findVisitorByEmail(email);
+        Manager manager = managerRepository.findManagerByEmail(email);
+        Employee employee = employeeRepository.findEmployeeByEmail(email);
+
+        if (visitor != null) {
+            if (visitor.getPassword().equals(password)) {
+                HttpSession session = request.getSession(true);
+                session.setAttribute("email", email);
+                session.setAttribute("role", "visitor");
+                System.out.println(session);
+                return true;
+            } else {
+                throw new Exception("Incorrect password.");
+            }
+        } else if (manager != null) {
+            if (manager.getPassword().equals(password)) {
+                HttpSession session = request.getSession(true);
+                session.setAttribute("email", email);
+                session.setAttribute("role", "manager");
+                return true;
+            } else {
+                throw new Exception("Incorrect password.");
+            }
+        } else if (employee != null) {
+            if (employee.getPassword().equals(password)) {
+                HttpSession session = request.getSession(true);
+                session.setAttribute("email", email);
+                session.setAttribute("role", "employee");
+                return true;
+            } else {
+                throw new Exception("Incorrect password.");
+            }
         }
 
-        String visitorPassword = visitor.getPassword();
-        return visitorPassword.equals(password);
+        throw new Exception("No account with the email " + email + " exists.");
+    }
+
+    @Transactional
+    public boolean logout(HttpServletRequest request) throws Exception {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            throw new Exception("No session exists.");
+        }
+
+        session.invalidate();
+        return true;
     }
 
 }
