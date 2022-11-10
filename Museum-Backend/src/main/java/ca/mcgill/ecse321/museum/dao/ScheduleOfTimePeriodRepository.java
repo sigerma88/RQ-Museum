@@ -23,7 +23,7 @@ public interface ScheduleOfTimePeriodRepository extends CrudRepository<ScheduleO
   
   List<ScheduleOfTimePeriod> findScheduleOfTimePeriodBySchedule(Schedule schedule);
 
-  ScheduleOfTimePeriod findScheduleOfTimePeriodByTimePeriodAndSchedule(TimePeriod timePeriod, Schedule schedule);
+  ScheduleOfTimePeriod findScheduleOfTimePeriodByScheduleAndTimePeriod(Schedule schedule, TimePeriod timePeriod);
 
   void deleteScheduleOfTimePeriodByScheduleAndTimePeriod(Schedule schedule, TimePeriod timePeriod);
   

@@ -108,6 +108,10 @@ public class EmployeeService {
     }
 
     Schedule employeeSchedule = employee.getSchedule(); // get the schedule of the employee
+    if(employeeSchedule == null) {
+      throw new IllegalArgumentException("Employee has no schedule");
+    }
+    
     ScheduleOfTimePeriod scheduleOfTimePeriod = new ScheduleOfTimePeriod(); // create a new schedule of time period
     scheduleOfTimePeriod.setTimePeriod(timePeriod); // set the time period of the schedule of time period
     scheduleOfTimePeriod.setSchedule(employeeSchedule); // set the schedule of the schedule of time period
@@ -134,10 +138,18 @@ public class EmployeeService {
      * the TimePeriod that we want to remove from the employee's schedule.
      */
     Employee employee = employeeRepository.findEmployeeByMuseumUserId(employeeId);
+    if (employee == null) {
+      throw new IllegalArgumentException("There is no such employee");
+    }
     TimePeriod timePeriod = timePeriodRepository.findTimePeriodByTimePeriodId(timePeriodId);
-
+    if (timePeriod == null) {
+      throw new IllegalArgumentException("There is no such time period");
+    }
     Schedule employeeSchedule = employee.getSchedule();
-    if (scheduleOfTimePeriodRepository.findScheduleOfTimePeriodByTimePeriod(timePeriod) == null) {
+    if (employeeSchedule == null) {
+      throw new IllegalArgumentException("Employee has empty schedule");
+    }
+    if (scheduleOfTimePeriodRepository.findScheduleOfTimePeriodByScheduleAndTimePeriod(employeeSchedule, timePeriod) == null) {
       throw new IllegalArgumentException("Time period does not exist in employee's schedule");
     }
 
