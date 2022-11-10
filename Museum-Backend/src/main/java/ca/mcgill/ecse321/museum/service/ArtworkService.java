@@ -80,9 +80,11 @@ public class ArtworkService {
         Iterator<Artwork> artworkIterator = artworkIterable.iterator();
         while(artworkIterator.hasNext()){
             Artwork currentArtwork = artworkIterator.next();
-            if(currentArtwork.getRoom().getRoomId() == roomId){
-                // increment counter to se how many artworks in room
-                count++;
+            if (currentArtwork.getRoom() != null){
+                if(currentArtwork.getRoom().getRoomId() == roomId){
+                    // increment counter to se how many artworks in room
+                    count++;
+                }
             }
         }
         return count;
@@ -106,7 +108,7 @@ public class ArtworkService {
         }
         Room room = roomOptional.get();
 
-        // Update room of artwork
+        // Update room of artwork if the room has capacity
         if (roomService.getRoomCapacity(roomId) > 0){
             // Reduce amount of artwork in old room
             Room oldRoom = artwork.getRoom();
