@@ -4,6 +4,7 @@ package ca.mcgill.ecse321.museum.dto;
  * Artwork DTO
  *
  * @author Zahra
+ * @author Siger
  */
 public class ArtworkDto {
 
@@ -14,11 +15,12 @@ public class ArtworkDto {
   private double loanFee;
   private String image;
   private Boolean isOnLoan;
+  private RoomDto room;
 
   public ArtworkDto() {
   }
 
-  public ArtworkDto(Long artworkId, String name, String artist, Boolean isAvailableForLoan, double loanFee, String image, Boolean isOnLoan) {
+  public ArtworkDto(Long artworkId, String name, String artist, Boolean isAvailableForLoan, double loanFee, String image, Boolean isOnLoan, RoomDto room) {
     this.artworkId = artworkId;
     this.name = name;
     this.artist = artist;
@@ -26,18 +28,23 @@ public class ArtworkDto {
     this.loanFee = loanFee;
     this.image = image;
     this.isOnLoan = isOnLoan;
+    this.room = room;
+  }
+
+  public long getArtworkId() {
+    return artworkId;
   }
 
   public String getName() {
     return name;
   }
 
-  public boolean getIsAvailableForLoan() {
-    return isAvailableForLoan;
-  }
-
   public String getArtist() {
     return artist;
+  }
+
+  public boolean getIsAvailableForLoan() {
+    return isAvailableForLoan;
   }
 
   public double getLoanFee() {
@@ -52,8 +59,8 @@ public class ArtworkDto {
     return isOnLoan;
   }
 
-  public long getArtworkId() {
-    return artworkId;
+  public RoomDto getRoom() {
+    return room;
   }
 
   public void setArtworkId(long artworkId) {
@@ -82,5 +89,9 @@ public class ArtworkDto {
 
   public void setIsOnLoan(Boolean onLoan) {
     isOnLoan = onLoan;
+  }
+
+  public void setRoom(RoomDto room) {
+    this.room = room;
   }
 }
