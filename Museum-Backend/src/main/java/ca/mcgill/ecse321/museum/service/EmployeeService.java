@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
 import ca.mcgill.ecse321.museum.dao.ScheduleOfTimePeriodRepository;
 import ca.mcgill.ecse321.museum.model.Employee;
+import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
 
 @Service
 public class EmployeeService {
@@ -60,7 +61,10 @@ public class EmployeeService {
     }
 
     // Delete scheduleOfTimePeriods
-    scheduleOfTimePeriodRepository.deleteScheduleOfTimePeriodBySchedule(employee.getSchedule());
+    ScheduleOfTimePeriod scheduleOfTimePeriod = scheduleOfTimePeriodRepository.findScheduleOfTimePeriodBySchedule(employee.getSchedule());
+    if (scheduleOfTimePeriod != null) {
+      scheduleOfTimePeriodRepository.deleteScheduleOfTimePeriodBySchedule(employee.getSchedule());
+    }
 
     // Delete employee
     employeeRepository.deleteEmployeeByMuseumUserId(id);

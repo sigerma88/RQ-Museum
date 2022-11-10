@@ -15,6 +15,8 @@ public interface ScheduleOfTimePeriodRepository extends CrudRepository<ScheduleO
 
   ScheduleOfTimePeriod findScheduleOfTimePeriodByScheduleOfTimePeriodId(Long scheduleOfTimePeriodId);
 
+  ScheduleOfTimePeriod findScheduleOfTimePeriodBySchedule(Schedule schedule);
+
   void deleteScheduleOfTimePeriodBySchedule(Schedule schedule);
 
 }
