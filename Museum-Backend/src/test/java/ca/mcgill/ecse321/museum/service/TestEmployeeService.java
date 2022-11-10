@@ -30,6 +30,11 @@ import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.TimePeriod;
 import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
 
+/**
+ * This is the test class for the EmployeeService class
+ * 
+ * @author Siger
+ */
 @ExtendWith(MockitoExtension.class)
 public class TestEmployeeService {
 
@@ -69,6 +74,13 @@ public class TestEmployeeService {
 
   private static final long SCHEDULE_OF_TIME_PERIOD_ID = 1;
 
+  /**
+   * This method sets up the mock objects
+   * There is an employee with an empty schedule and an employee with a non empty schedule.
+   * A non empty schedule has a schedule of time period with a time period.
+   * 
+   * @author Siger
+   */
   @BeforeEach
   public void setMockOutput() {
     Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
@@ -176,6 +188,11 @@ public class TestEmployeeService {
     lenient().when(employeeRepository.saveAll(any(Iterable.class))).thenAnswer(returnParameterAsAnswer);
   }
 
+  /**
+   * Test method for getting an employee by id.
+   * 
+   * @author Siger
+   */
   @Test
   public void testGetEmployee() {
     Employee employee = employeeService.getEmployee(EMPLOYEE_ID);
@@ -186,16 +203,31 @@ public class TestEmployeeService {
     assertEquals(SCHEDULE_ID, employee.getSchedule().getScheduleId());
   }
 
+  /**
+   * Test method for getting an employee by id when the employee does not exist.
+   * 
+   * @author Siger
+   */
   @Test
   public void testGetEmployeeNonExisting() {
     assertNull(employeeService.getEmployee(NONE_EXISTING_EMPLOYEE_ID));
   }
 
+  /**
+   * Test method for getting all employees.
+   * 
+   * @author Siger
+   */
   @Test
   public void testGetAllEmployees() {
     assertEquals(2, employeeService.getAllEmployees().size());
   }
 
+  /**
+   * Test method for deleting an employee by id when the employee has an empty schedule.
+   * 
+   * @author Siger
+   */
   @Test
   public void testDeleteEmployeeWithEmptySchedule() {
     try {
@@ -205,6 +237,11 @@ public class TestEmployeeService {
     }
   }
 
+  /**
+   * Test method for deleting an employee by id when the employee has a non empty schedule.
+   * 
+   * @author Siger
+   */
   @Test
   public void testDeleteEmployeeWithNonEmptySchedule() {
     try {
@@ -214,6 +251,11 @@ public class TestEmployeeService {
     }
   }
 
+  /**
+   * Test method for deleting an employee by id when the employee does not exist.
+   * 
+   * @author Siger
+   */
   @Test
   public void testDeleteEmployeeNonExisting() {
     String error = null;
