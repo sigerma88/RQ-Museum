@@ -42,7 +42,6 @@ public class EmployeeRestController {
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
-    
   }
 
   /**
@@ -55,12 +54,6 @@ public class EmployeeRestController {
   @DeleteMapping(value = { "/employee/{id}", "/employee/{id}/" })
   public ResponseEntity<?> deleteEmployee(@PathVariable("id") long id) {
     try {
-      // Check if employee exists
-      if (service.getEmployee(id) == null) {
-        return ResponseEntity.badRequest().body("Employee does not exist");
-      }
-
-      // Delete employee
       service.deleteEmployee(id);
       return ResponseEntity.ok("Employee deleted");
     } catch (Exception e) {
