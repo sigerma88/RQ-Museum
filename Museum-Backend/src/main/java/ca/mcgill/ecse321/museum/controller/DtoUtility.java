@@ -1,10 +1,14 @@
 package ca.mcgill.ecse321.museum.controller;
 
-import ca.mcgill.ecse321.museum.dto.ArtworkDto;
 import ca.mcgill.ecse321.museum.model.Artwork;
 import ca.mcgill.ecse321.museum.model.Employee;
+import ca.mcgill.ecse321.museum.model.Museum;
+import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.model.Schedule;
+import ca.mcgill.ecse321.museum.dto.ArtworkDto;
 import ca.mcgill.ecse321.museum.dto.EmployeeDto;
+import ca.mcgill.ecse321.museum.dto.MuseumDto;
+import ca.mcgill.ecse321.museum.dto.RoomDto;
 import ca.mcgill.ecse321.museum.dto.ScheduleDto;
 
 public class DtoUtility {
@@ -43,11 +47,43 @@ public class DtoUtility {
    * @param artwork - Artwork
    * @return artwork DTO
    * @author Zahra
+   * @author Siger
    */
   static ArtworkDto convertToDto(Artwork artwork) {
     if (artwork == null) {
       throw new IllegalArgumentException("There is no such artwork");
     }
-    return new ArtworkDto(artwork.getArtworkId(), artwork.getName(), artwork.getArtist(), artwork.getIsAvailableForLoan(), artwork.getLoanFee(), artwork.getImage(), artwork.getIsOnLoan());
+    RoomDto roomDto = convertToDto(artwork.getRoom());
+    return new ArtworkDto(artwork.getArtworkId(), artwork.getName(), artwork.getArtist(), artwork.getIsAvailableForLoan(), artwork.getLoanFee(), artwork.getImage(), artwork.getIsOnLoan(), roomDto);
+  }
+
+  /**
+   * Method to convert a room to DTO
+   * 
+   * @param room - Room
+   * @return room DTO
+   * @author Siger
+   */
+  static RoomDto convertToDto(Room room) {
+    if (room == null) {
+      throw new IllegalArgumentException("There is no such room");
+    }
+    MuseumDto museumDto = convertToDto(room.getMuseum());
+    return new RoomDto(room.getRoomId(), room.getRoomName(), room.getRoomType(), room.getCurrentNumberOfArtwork(), museumDto);
+  }
+
+  /**
+   * Method to convert a museum to DTO
+   * 
+   * @param museum - Museum
+   * @return museum DTO
+   * @author Siger
+   */
+  static MuseumDto convertToDto(Museum museum) {
+    if (museum == null) {
+      throw new IllegalArgumentException("There is no such museum");
+    }
+    ScheduleDto scheduleDto = convertToDto(museum.getSchedule());
+    return new MuseumDto(museum.getMuseumId(), museum.getName(), museum.getVisitFee(), scheduleDto);
   }
 }

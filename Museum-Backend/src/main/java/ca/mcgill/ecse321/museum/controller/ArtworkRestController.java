@@ -8,8 +8,12 @@ import ca.mcgill.ecse321.museum.service.ArtworkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -26,14 +30,14 @@ public class ArtworkRestController {
   /**
    * RESTful API to create an artwork
    * 
-   * @param artworkDto - ArtworkDto
+   * @param artwork - Artwork
    * @return created artwork
    * @author Siger
    */
   @PostMapping(value = { "/artwork", "/artwork/" }, produces = "application/json")
-  public ResponseEntity<?> createArtwork(@RequestBody ArtworkDto artworkDto) {
+  public ResponseEntity<?> createArtwork(@RequestBody Artwork artwork) {
     try {
-      Artwork result = artworkService.createArtwork(artworkDto.getArtworkName(), artworkDto.getArtistName(), artworkDto.getIsAvailableForLoan(), artworkDto.getLoanFee(), artworkDto.getImage(), artworkDto.getIsOnLoan(), artworkDto.getRoom());
+      Artwork result = artworkService.createArtwork(artwork.getName(), artwork.getArtist(), artwork.getIsAvailableForLoan(), artwork.getLoanFee(), artwork.getImage(), artwork.getIsOnLoan(), artwork.getRoom());
       return ResponseEntity.ok(DtoUtility.convertToDto(result));
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());

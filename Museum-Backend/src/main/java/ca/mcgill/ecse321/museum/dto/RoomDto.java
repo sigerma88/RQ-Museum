@@ -12,7 +12,7 @@ public class RoomDto {
   private Long roomId;
   private String roomName;
   private RoomType roomType;
-  private Integer currentNumberOfArtworks;
+  private Integer currentNumberOfArtwork;
   private MuseumDto museum;
 
   public RoomDto() {
@@ -22,7 +22,7 @@ public class RoomDto {
     this.roomId = roomId;
     this.roomName = roomName;
     this.roomType = roomType;
-    this.currentNumberOfArtworks = currentNumberOfArtworks;
+    this.currentNumberOfArtwork = currentNumberOfArtwork;
     this.museum = museum;
   }
 
@@ -50,12 +50,12 @@ public class RoomDto {
     this.roomType = roomType;
   }
 
-  public Integer getCurrentNumberOfArtworks() {
-    return currentNumberOfArtworks;
+  public Integer getCurrentNumberOfArtwork() {
+    return currentNumberOfArtwork;
   }
 
-  public void setCurrentNumberOfArtworks(Integer currentNumberOfArtworks) {
-    this.currentNumberOfArtworks = currentNumberOfArtworks;
+  public void setCurrentNumberOfArtwork(Integer currentNumberOfArtworks) {
+    this.currentNumberOfArtwork = currentNumberOfArtwork;
   }
 
   public MuseumDto getMuseum() {
