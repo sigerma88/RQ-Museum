@@ -41,7 +41,7 @@ public class DtoUtility {
   }
 
   /**
-   * Method to convert an visitor to a DTO
+   * Method to convert a visitor to a DTO
    *
    * @param visitor - Visitor
    * @return visitor DTO
@@ -60,21 +60,21 @@ public class DtoUtility {
     return visitorDto;
   }
 
-/*
+
   /**
    * Method to convert a ticket to a DTO
    *
    * @param ticket - Ticket
    * @return ticket DTO
    * @author Zahra
-
+   */
   static TicketDto convertToDto(Ticket ticket) {
     if (ticket == null) {
       throw new IllegalArgumentException("There is no such ticket");
     }
-
-    return new TicketDto(ticket.getTicketId(), ticket.getVisitDate());
+    VisitorDto visitorDto = convertToDto(ticket.getVisitor());
+    return new TicketDto(ticket.getTicketId(), ticket.getVisitDate(), visitorDto);
   }
-*/
+
 
 }

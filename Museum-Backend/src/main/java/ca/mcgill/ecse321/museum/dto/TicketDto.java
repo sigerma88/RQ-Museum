@@ -13,24 +13,24 @@ public class TicketDto {
 
   private long ticketId;
   private Date visitSDate;
-  private Visitor visitor;
+  private VisitorDto visitor;
 
   public TicketDto() {
 
   }
 
-  public TicketDto(long ticketId, Date visitSDate, Visitor visitor) {
+  public TicketDto(long ticketId, Date visitSDate, VisitorDto visitor) {
     this.ticketId = ticketId;
     this.visitSDate = visitSDate;
     this.visitor = visitor;
 
   }
 
-  public Visitor getVisitor() {
+  public VisitorDto getVisitor() {
     return visitor;
   }
 
-  public void setVisitor(Visitor visitor) {
+  public void setVisitor(VisitorDto visitor) {
     this.visitor = visitor;
   }
 
