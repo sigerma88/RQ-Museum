@@ -21,6 +21,8 @@ import ca.mcgill.ecse321.museum.model.Schedule;
 public class EmployeeRepositoryTests {
   @Autowired
   private EmployeeRepository employeeRepository;
+  @Autowired
+  private ScheduleRepository scheduleRepository;
 
   @AfterEach
   public void clearDatabase() {
@@ -43,6 +45,7 @@ public class EmployeeRepositoryTests {
     Schedule schedule = new Schedule();
 
     //associate employee to schedule
+
     employee.setSchedule(schedule);
 
     //save employee

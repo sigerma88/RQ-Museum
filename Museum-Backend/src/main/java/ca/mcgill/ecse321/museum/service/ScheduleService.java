@@ -26,14 +26,6 @@ public class ScheduleService {
         return schedule;
 
     }
-
-    public Schedule editSchedule(long scheduleId) {
-        Schedule schedule = scheduleRepository.findScheduleByScheduleId(scheduleId);
-        ScheduleOfTimePeriod scheduleOfTimePeriod = new ScheduleOfTimePeriod();
-        
-        
-        return schedule;
-    }
     //DELETE
     @Transactional
     public void deleteSchedule(long scheduleId) {

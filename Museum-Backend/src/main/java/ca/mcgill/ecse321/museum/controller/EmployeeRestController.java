@@ -10,29 +10,55 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.dto.EmployeeDto;
 import ca.mcgill.ecse321.museum.dto.ScheduleDto;
+import ca.mcgill.ecse321.museum.dto.TimePeriodDto;
 import ca.mcgill.ecse321.museum.service.EmployeeService;
-
 
 @CrossOrigin(origins = "*")
 @RestController
 public class EmployeeRestController {
 
-	@Autowired
-	private EmployeeService service;
+  @Autowired
+  private EmployeeService service;
 
+  /**
+   * RESTful api get an employee's schedule
+   * @author VZ
+   * @param id
+   * @return
+   */
 
-@GetMapping(value = { "/schedule/{id}"})
-public ScheduleDto getSchedule(@PathVariable("id") long id) {
+  @GetMapping(value = { "employee/schedule/{id}" })
+  public ScheduleDto getSchedule(@PathVariable("id") long id) {
 
-	return DtoUtility.convertToDto(service.getEmployeeSchedule(id));
+    return DtoUtility.convertToDto(service.getEmployeeSchedule(id));
 
-}
+  }
+  /** 
+   * RESTful api to get an employees shifts
+   */
+
+   
+  /**
+   * RESTful api to get an employee
+   * @author VZ
+   * @param id
+   * @return
+   */
+  @GetMapping(value = { "employee/{id}" })
+  public EmployeeDto getEmployee(@PathVariable("id") long id) {
+    return DtoUtility.convertToDto(service.getEmployee(id));
+
+  }
+
+  @PostMapping(value = { "employee/{id}/schedule" })
+
 
 
   /**
@@ -52,7 +78,7 @@ public ScheduleDto getSchedule(@PathVariable("id") long id) {
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
-    
+
   }
 
   /**
