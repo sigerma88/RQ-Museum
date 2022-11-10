@@ -4,7 +4,9 @@ import ca.mcgill.ecse321.museum.dto.ArtworkDto;
 import ca.mcgill.ecse321.museum.model.Artwork;
 import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.service.ArtworkService;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +22,40 @@ public class ArtworkRestController {
 
   @Autowired
   private ArtworkService artworkService;
+
+  /**
+   * RESTful API to create an artwork
+   * 
+   * @param artworkDto - ArtworkDto
+   * @return created artwork
+   * @author Siger
+   */
+  @PostMapping(value = { "/artwork", "/artwork/" }, produces = "application/json")
+  public ResponseEntity<?> createArtwork(@RequestBody ArtworkDto artworkDto) {
+    try {
+      Artwork result = artworkService.createArtwork(artworkDto.getArtworkName(), artworkDto.getArtistName(), artworkDto.getIsAvailableForLoan(), artworkDto.getLoanFee(), artworkDto.getImage(), artworkDto.getIsOnLoan(), artworkDto.getRoom());
+      return ResponseEntity.ok(DtoUtility.convertToDto(result));
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+
+  /**
+   * RESTful API to get an artwork by its id
+   * 
+   * @param id - long
+   * @return artwork with the given id
+   * @author Siger
+   */
+  @GetMapping(value = { "/artwork/{id}", "/artwork/{id}/" })
+  public ResponseEntity<?> getArtworkById(@PathVariable("id") long id) {
+    try {
+      Artwork artwork = artworkService.getArtwork(id);
+      return ResponseEntity.ok(DtoUtility.convertToDto(artwork));
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
 
   @GetMapping(value = {"/artworks", "/artworks/"})
   public List<ArtworkDto> getAllArtworks() {
@@ -50,5 +86,55 @@ public class ArtworkRestController {
     return artworkInRoomDtos;
   }
 
+  /**
+   * RESTful API to edit an artwork's information
+   * 
+   * @param artworkDto - ArtworkDto
+   * @return edited artwork
+   * @author Siger
+   */
+  @PutMapping(value = { "/artwork", "/artwork/" }, produces = "application/json")
+  public ResponseEntity<?> editArtworkInfo(@RequestBody ArtworkDto artworkDto) {
+    try {
+      Artwork result = artworkService.editArtworkInfo(artworkDto.getArtworkId(), artworkDto.getName(), artworkDto.getArtist(), artworkDto.getImage());
+      return ResponseEntity.ok(DtoUtility.convertToDto(result));
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
 
+  /**
+   * RESTful API to edit an artwork's loan availability and loan fee
+   * 
+   * @param artworkDto - ArtworkDto
+   * @return edited artwork
+   * @author Siger
+   */
+  @PutMapping(value = { "/artwork/loanInfo", "/artwork/loanInfo/" }, produces = "application/json")
+  public ResponseEntity<?> editArtworkLoanInfo(@RequestBody ArtworkDto artworkDto) {
+    try {
+      Artwork result = artworkService.editArtworkLoan(artworkDto.getArtworkId(), artworkDto.getIsAvailableForLoan(), artworkDto.getLoanFee());
+      return ResponseEntity.ok(DtoUtility.convertToDto(result));
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+
+  /**
+   * RESTful API to delete an artwork
+   * 
+   * @param id - long
+   * @return if the artwork was deleted (success)
+   * @author Siger
+   */
+  @DeleteMapping(value = { "/artwork/{id}", "/artwork/{id}/" })
+  public ResponseEntity<?> deleteArtwork(@PathVariable("id") long id) {
+    try {
+      // Delete the artwork
+      artworkService.deleteArtwork(id);
+      return ResponseEntity.ok("Artwork deleted");
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
 }
