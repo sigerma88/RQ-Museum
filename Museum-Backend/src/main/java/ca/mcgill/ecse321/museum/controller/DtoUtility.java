@@ -1,8 +1,10 @@
 package ca.mcgill.ecse321.museum.controller;
 
 import ca.mcgill.ecse321.museum.model.Employee;
+import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.dto.EmployeeDto;
+import ca.mcgill.ecse321.museum.dto.MuseumDto;
 import ca.mcgill.ecse321.museum.dto.ScheduleDto;
 
 public class DtoUtility {
@@ -34,4 +36,21 @@ public class DtoUtility {
     ScheduleDto scheduleDto = convertToDto(employee.getSchedule());
     return new EmployeeDto(employee.getMuseumUserId(), employee.getEmail(), employee.getName(), employee.getPassword(), scheduleDto);
   }
+
+  /**
+   * Method to convert a museum to a DTO
+   * @author VZ
+   * @param museum
+   * @return
+   */
+  static MuseumDto convertToDto(Museum museum) {
+    if(museum == null) {
+      throw new IllegalArgumentException("There is no such museum");
+    }
+
+    ScheduleDto scheduleDto = convertToDto(museum.getSchedule());
+    return new MuseumDto(museum.getMuseumId(), museum.getName(), museum.getVisitFee(), scheduleDto);
+  
+  }
+  
 }
