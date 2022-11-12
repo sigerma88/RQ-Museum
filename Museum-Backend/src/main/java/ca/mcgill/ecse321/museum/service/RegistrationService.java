@@ -74,13 +74,24 @@ public class RegistrationService {
     return visitor;
   }
 
+  /*
+   * 
+   */
+  public Employee getEmployeePersonalInformation(long museumUserId) throws Exception {
+    Employee employee = employeeRepository.findEmployeeByMuseumUserId(museumUserId);
+    if (employee == null) {
+      throw new Exception("Account was not found in out system. ");
+    }
+    return employee;
+  }
+
 
   /*
    * 
    */
 
   @Transactional
-  public Visitor editInformation(long visitorId, String email, String newPassword,
+  public Visitor editVisitorInformation(long visitorId, String email, String newPassword,
       String oldPassword, String name) throws Exception {
     Visitor visitor = visitorRepository.findVisitorByMuseumUserId(visitorId);
 

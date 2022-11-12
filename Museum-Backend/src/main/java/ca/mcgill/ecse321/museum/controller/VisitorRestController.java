@@ -88,8 +88,8 @@ public class VisitorRestController {
     }
 
     @PutMapping(value = "/edit/{id}", produces = "application/json")
-    public ResponseEntity<?> editInformation(HttpServletRequest request, @PathVariable long id,
-            @RequestBody Map<String, String> updatedCredential) {
+    public ResponseEntity<?> editVisitorInformation(HttpServletRequest request,
+            @PathVariable long id, @RequestBody Map<String, String> updatedCredential) {
         try {
             HttpSession session = request.getSession();
             if (!AuthenticationUtility.isLoggedIn(session)) {
@@ -100,7 +100,7 @@ public class VisitorRestController {
             }
 
             MuseumUserDto visitorDto =
-                    DtoUtility.convertToDto(registrationService.editInformation(id,
+                    DtoUtility.convertToDto(registrationService.editVisitorInformation(id,
                             updatedCredential.get("email"), updatedCredential.get("oldPassword"),
                             updatedCredential.get("newPassword"), updatedCredential.get("name")));
             return new ResponseEntity<>(visitorDto, HttpStatus.OK);

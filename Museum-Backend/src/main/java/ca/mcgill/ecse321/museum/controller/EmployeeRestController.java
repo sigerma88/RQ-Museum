@@ -77,6 +77,28 @@ public class EmployeeRestController {
     }
   }
 
+  @GetMapping(value = {"/{id}", "/{id}/"}, produces = "application/json")
+  public ResponseEntity<?> getEmployee(HttpServletRequest request, @PathVariable("id") long id) {
+    try {
+      HttpSession session = request.getSession();
+      if (!AuthenticationUtility.isLoggedIn(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
+      } else if (!AuthenticationUtility.isStaffMember(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body("You are not authorized to view this page");
+      }
+
+      if (!AuthenticationUtility.checkUserId(session, id)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body("You can only view your own information");
+      }
+
+      return ResponseEntity.ok(DtoUtility.convertToDto(service.getEmployee(id)));
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+
   @PostMapping(value = "/register", produces = "application/json")
   public ResponseEntity<?> register(HttpServletRequest request, @RequestBody Employee employee) {
     try {
@@ -97,8 +119,8 @@ public class EmployeeRestController {
   }
 
   @PostMapping(value = "/edit/{id}", produces = "application/json")
-  public ResponseEntity<?> editInformation(HttpServletRequest request, @PathVariable long id,
-      @RequestBody Map<String, String> updatedEmployeeCredential) {
+  public ResponseEntity<?> editEmployeeInformation(HttpServletRequest request,
+      @PathVariable long id, @RequestBody Map<String, String> updatedEmployeeCredential) {
     try {
       HttpSession session = request.getSession();
 
