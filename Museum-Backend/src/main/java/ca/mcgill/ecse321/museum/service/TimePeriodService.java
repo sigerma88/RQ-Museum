@@ -114,6 +114,7 @@ public class TimePeriodService {
      * @param schedule
      * @return
      */
+
     public List<TimePeriod> getTimePeriodsOfSchedule(Schedule schedule) {
 
         List<ScheduleOfTimePeriod> scheduleOfTimePeriods = scheduleOfTimePeriodRepository

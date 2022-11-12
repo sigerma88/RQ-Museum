@@ -122,7 +122,7 @@ public class MuseumService {
    * @param museumId
    * @return
    */
-
+  @Transactional
   public List<TimePeriod> getMuseumTimePeriods(long museumId) {
     Museum museum = museumRepository.findMuseumByMuseumId(museumId);
     if (museum == null) {

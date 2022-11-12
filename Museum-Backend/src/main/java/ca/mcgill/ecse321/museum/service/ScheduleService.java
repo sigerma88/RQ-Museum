@@ -4,7 +4,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
 import ca.mcgill.ecse321.museum.model.Schedule;
-import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
+
 
 public class ScheduleService {
 
@@ -19,6 +19,7 @@ public class ScheduleService {
      * @param scheduleId
      * @return
      */
+    @Transactional
     public Schedule getSchedule(long scheduleId) {
         return scheduleRepository.findScheduleByScheduleId(scheduleId);
     }
