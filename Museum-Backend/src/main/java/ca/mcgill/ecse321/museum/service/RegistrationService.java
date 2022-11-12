@@ -21,6 +21,10 @@ public class RegistrationService {
   @Autowired
   private EmployeeRepository employeeRepository;
 
+  /*
+   * 
+   */
+
   @Transactional
   public Visitor createVisitor(String email, String password, String name) throws Exception {
     if (email == null || password == null || name == null) {
@@ -55,6 +59,11 @@ public class RegistrationService {
     return visitor;
   }
 
+
+  /*
+   * 
+   */
+
   @Transactional
   public Visitor getVisitorPersonalInformation(long museumUserId) throws Exception {
     Visitor visitor = visitorRepository.findVisitorByMuseumUserId(museumUserId);
@@ -64,6 +73,11 @@ public class RegistrationService {
     }
     return visitor;
   }
+
+
+  /*
+   * 
+   */
 
   @Transactional
   public Visitor editInformation(long visitorId, String email, String newPassword,
@@ -111,7 +125,13 @@ public class RegistrationService {
     return visitor;
   }
 
+
+  /*
+   * 
+   */
+
   public Employee registerEmployee(String name) throws Exception {
+
     if (name == null) {
       throw new Exception("Name must be filled");
     }
@@ -135,6 +155,10 @@ public class RegistrationService {
   }
 
 
+  /*
+   * 
+   */
+
   public boolean passwordValidityChecker(String password) {
     String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
     Pattern pattern = Pattern.compile(passwordPattern);
@@ -143,6 +167,11 @@ public class RegistrationService {
 
   }
 
+
+  /*
+   * 
+   */
+
   public boolean emailValidityChecker(String email) {
     String expectedPattern = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
 
@@ -150,6 +179,11 @@ public class RegistrationService {
     Matcher emailMatcher = pattern.matcher(email);
     return emailMatcher.matches();
   }
+
+
+  /*
+   * 
+   */
 
   public String passwordGenerator() {
     final char[] lowercase = "abcdefghijklmnopqrstuvwxyz".toCharArray();
@@ -179,6 +213,10 @@ public class RegistrationService {
 
     return employeePassword;
   }
+
+  /*
+   * 
+   */
 
   public int getRandomNumber(int min, int max) {
     return (int) ((Math.random() * (max - min)) + min);

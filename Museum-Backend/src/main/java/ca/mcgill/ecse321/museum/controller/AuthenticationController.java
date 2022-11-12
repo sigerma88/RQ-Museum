@@ -1,6 +1,8 @@
 package ca.mcgill.ecse321.museum.controller;
 
+import java.util.Collections;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ca.mcgill.ecse321.museum.controller.utilities.AuthenticationUtility;
 import ca.mcgill.ecse321.museum.dto.MuseumUserDto;
+import ca.mcgill.ecse321.museum.model.Employee;
+import ca.mcgill.ecse321.museum.model.Manager;
 import ca.mcgill.ecse321.museum.model.MuseumUser;
 import ca.mcgill.ecse321.museum.model.Visitor;
 import ca.mcgill.ecse321.museum.service.AuthenticationService;
@@ -25,19 +30,42 @@ public class AuthenticationController {
     public ResponseEntity<?> login(HttpServletRequest request,
             @RequestBody MuseumUserDto museumUser) {
         try {
-            authenticationService.authenticateUser(request, museumUser.getEmail(),
-                    museumUser.getPassword());
+            HttpSession session = request.getSession(true);
+            System.out.println(session.getAttribute("user_id"));
+            // double check cuz might not work when multiple session
+            // if (AuthenticationUtility.isLoggedIn(session)) {
+            // throw new Exception("Cannot login when already logged in.");
+            // }
+
+            MuseumUser userAuthentication = authenticationService
+                    .authenticateUser(museumUser.getEmail(), museumUser.getPassword());
+            if (userAuthentication.getClass().equals(Visitor.class)) {
+                session.setAttribute("user_id", userAuthentication.getMuseumUserId());
+                session.setAttribute("user_type", "visitor");
+            } else if (userAuthentication.getClass().equals(Manager.class)) {
+                session.setAttribute("user_id", userAuthentication.getMuseumUserId());
+                session.setAttribute("user_type", "manager");
+            } else if (userAuthentication.getClass().equals(Employee.class)) {
+                session.setAttribute("user_id", userAuthentication.getMuseumUserId());
+                session.setAttribute("user_type", "employee");
+            }
+
             return new ResponseEntity<>("logged in", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
+
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
         try {
-            authenticationService.logout(request);
-            return new ResponseEntity<>("logged out", HttpStatus.OK);
+            HttpSession session = request.getSession();
+            if (!AuthenticationUtility.isLoggedIn(session)) {
+                authenticationService.logout(request);
+                return new ResponseEntity<>("logged out", HttpStatus.OK);
+            }
+            return new ResponseEntity<>("Cannot logout when not logged in", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

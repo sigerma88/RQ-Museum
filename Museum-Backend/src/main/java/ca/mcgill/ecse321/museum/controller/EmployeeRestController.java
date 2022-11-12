@@ -2,8 +2,8 @@ package ca.mcgill.ecse321.museum.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.museum.model.Employee;
-import ca.mcgill.ecse321.museum.model.Schedule;
+import ca.mcgill.ecse321.museum.controller.utilities.AuthenticationUtility;
 import ca.mcgill.ecse321.museum.dto.EmployeeDto;
-import ca.mcgill.ecse321.museum.dto.MuseumUserDto;
-import ca.mcgill.ecse321.museum.dto.ScheduleDto;
 import ca.mcgill.ecse321.museum.service.EmployeeService;
 import ca.mcgill.ecse321.museum.service.RegistrationService;
 
@@ -79,8 +77,16 @@ public class EmployeeRestController {
   }
 
   @PostMapping(value = "/register", produces = "application/json")
-  public ResponseEntity<?> register(@RequestBody Employee employee) {
+  public ResponseEntity<?> register(HttpServletRequest request, @RequestBody Employee employee) {
     try {
+      HttpSession session = request.getSession();
+
+      if (!AuthenticationUtility.isLoggedIn(session)) {
+        return ResponseEntity.badRequest().body("You must be logged in to register an employee");
+      } else if (!AuthenticationUtility.isManager(session)) {
+        return ResponseEntity.badRequest().body("You must be a manager to register an employee");
+      }
+
       EmployeeDto employeeDto =
           DtoUtility.convertToDto(registrationService.registerEmployee(employee.getName()));
       return new ResponseEntity<>(employeeDto, HttpStatus.OK);

@@ -23,8 +23,7 @@ public class AuthenticationService {
     private ManagerRepository managerRepository;
 
     @Transactional
-    public boolean authenticateUser(HttpServletRequest request, String email, String password)
-            throws Exception {
+    public MuseumUser authenticateUser(String email, String password) throws Exception {
         if (email == null || password == null) {
             new Exception("Email and password must be filled when logging in.");
         }
@@ -35,29 +34,19 @@ public class AuthenticationService {
 
         if (visitor != null) {
             if (visitor.getPassword().equals(password)) {
-                HttpSession session = request.getSession(true);
-                session.setAttribute("email", email);
-                session.setAttribute("role", "visitor");
-                System.out.println(session);
-                return true;
+                return visitor;
             } else {
                 throw new Exception("Incorrect password.");
             }
         } else if (manager != null) {
             if (manager.getPassword().equals(password)) {
-                HttpSession session = request.getSession(true);
-                session.setAttribute("email", email);
-                session.setAttribute("role", "manager");
-                return true;
+                return manager;
             } else {
                 throw new Exception("Incorrect password.");
             }
         } else if (employee != null) {
             if (employee.getPassword().equals(password)) {
-                HttpSession session = request.getSession(true);
-                session.setAttribute("email", email);
-                session.setAttribute("role", "employee");
-                return true;
+                return employee;
             } else {
                 throw new Exception("Incorrect password.");
             }
@@ -69,12 +58,8 @@ public class AuthenticationService {
     @Transactional
     public boolean logout(HttpServletRequest request) throws Exception {
         HttpSession session = request.getSession(false);
-        if (session == null) {
-            throw new Exception("No session exists.");
-        }
 
         session.invalidate();
         return true;
     }
-
 }
