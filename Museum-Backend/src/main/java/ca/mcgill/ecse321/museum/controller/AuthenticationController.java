@@ -48,10 +48,9 @@ public class AuthenticationController {
                 session.setAttribute("user_id", userAuthentication.getMuseumUserId());
                 session.setAttribute("role", "employee");
             }
-
-            return new ResponseEntity<>("logged in", HttpStatus.OK);
+            return ResponseEntity.ok("logged in");
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -63,11 +62,11 @@ public class AuthenticationController {
             if (!AuthenticationUtility.isLoggedIn(session)
                     && AuthenticationUtility.isMuseumUser(session)) {
                 authenticationService.logout(request);
-                return new ResponseEntity<>("logged out", HttpStatus.OK);
+                return ResponseEntity.ok("logged out");
             }
             return new ResponseEntity<>("Cannot logout when not logged in", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

@@ -44,7 +44,7 @@ public class VisitorRestController {
             HttpSession session = request.getSession();
 
             if (!AuthenticationUtility.isLoggedIn(session)) {
-                throw new Exception("Cannot create account when logged in.");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
             }
 
             MuseumUserDto visitorDto = DtoUtility.convertToDto(registrationService
@@ -54,10 +54,10 @@ public class VisitorRestController {
                 session.setAttribute("user_id", visitorDto.getUserId());
                 session.setAttribute("user_type", "visitor");
             }
+            return ResponseEntity.ok(visitorDto);
 
-            return new ResponseEntity<>(visitorDto, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -69,16 +69,19 @@ public class VisitorRestController {
         try {
             HttpSession session = request.getSession();
             if (!AuthenticationUtility.isLoggedIn(session)) {
-                return new ResponseEntity<>("You are not logged in", HttpStatus.BAD_REQUEST);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("You are not logged in.");
+
             } else if (!AuthenticationUtility.checkUserId(session, id)) {
-                return new ResponseEntity<>("Not allowed to edit this account",
-                        HttpStatus.BAD_REQUEST);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("You can only view your own information");
+
             }
 
             MuseumUserDto visitorDto =
                     DtoUtility.convertToDto(registrationService.getVisitorPersonalInformation(id));
+            return ResponseEntity.ok(visitorDto);
 
-            return new ResponseEntity<>(visitorDto, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -92,16 +95,17 @@ public class VisitorRestController {
             if (!AuthenticationUtility.isLoggedIn(session)) {
                 return new ResponseEntity<>("You are not logged in", HttpStatus.BAD_REQUEST);
             } else if (!AuthenticationUtility.checkUserId(session, id)) {
-                return new ResponseEntity<>("Not allowed to edit this account",
-                        HttpStatus.BAD_REQUEST);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Not allowed to edit this account");
             }
 
-            MuseumUserDto visitor = DtoUtility.convertToDto(registrationService.editInformation(id,
-                    updatedCredential.get("email"), updatedCredential.get("oldPassword"),
-                    updatedCredential.get("newPassword"), updatedCredential.get("name")));
-            return new ResponseEntity<>(visitor, HttpStatus.OK);
+            MuseumUserDto visitorDto =
+                    DtoUtility.convertToDto(registrationService.editInformation(id,
+                            updatedCredential.get("email"), updatedCredential.get("oldPassword"),
+                            updatedCredential.get("newPassword"), updatedCredential.get("name")));
+            return new ResponseEntity<>(visitorDto, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

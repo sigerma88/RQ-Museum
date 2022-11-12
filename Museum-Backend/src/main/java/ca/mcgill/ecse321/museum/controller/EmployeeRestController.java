@@ -83,16 +83,16 @@ public class EmployeeRestController {
       HttpSession session = request.getSession();
 
       if (!AuthenticationUtility.isLoggedIn(session)) {
-        return ResponseEntity.badRequest().body("You must be logged in to register an employee");
+        return ResponseEntity.status(401).body("You must be logged in to register an employee");
       } else if (!AuthenticationUtility.isManager(session)) {
-        return ResponseEntity.badRequest().body("You must be a manager to register an employee");
+        return ResponseEntity.status(401).body("You must be a manager to register an employee");
       }
 
       EmployeeDto employeeDto =
           DtoUtility.convertToDto(registrationService.registerEmployee(employee.getName()));
-      return new ResponseEntity<>(employeeDto, HttpStatus.OK);
+      return ResponseEntity.ok(employeeDto);
     } catch (Exception e) {
-      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+      return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
 
@@ -103,22 +103,22 @@ public class EmployeeRestController {
       HttpSession session = request.getSession();
 
       if (!AuthenticationUtility.isLoggedIn(session)) {
-        return ResponseEntity.badRequest().body("You must be logged in to edit an employee");
+        return ResponseEntity.status(401).body("You must be logged in to edit an employee");
       } else if (!AuthenticationUtility.isStaffMember(session)) {
-        return ResponseEntity.badRequest().body("You must be a staff member to edit an employee");
+        return ResponseEntity.status(401).body("You must be a staff member to edit an employee");
       }
 
       if (!AuthenticationUtility.checkUserId(session, id)) {
-        return ResponseEntity.badRequest().body("You can only edit your own information");
+        return ResponseEntity.status(401).body("You can only edit your own information");
       }
 
       EmployeeDto employeeDto =
           DtoUtility.convertToDto(registrationService.editEmployeeInformation(id,
               updatedEmployeeCredential.get("oldPassword"),
               updatedEmployeeCredential.get("newPassword")));
-      return new ResponseEntity<>(employeeDto, HttpStatus.OK);
+      return ResponseEntity.ok(employeeDto);
     } catch (Exception e) {
-      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+      return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
 }
