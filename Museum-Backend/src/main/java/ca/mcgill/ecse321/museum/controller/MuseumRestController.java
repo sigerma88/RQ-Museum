@@ -33,7 +33,7 @@ public class MuseumRestController {
    * @param id
    * @return
    */
-  @GetMapping(value = { "/museum/{id}, /museum/{id}/" })
+  @GetMapping(value = { "/museum/{id}", "/museum/{id}/" })
   public MuseumDto getMuseum(@PathVariable("id") long id) {
     return DtoUtility.convertToDto(museumService.getMuseum(id));
   }
@@ -47,7 +47,7 @@ public class MuseumRestController {
    * @param scheduleDto
    * @return
    */
-  @PostMapping(value = { "/museum/app, /museum/app/" })
+  @PostMapping(value = { "/museum/app", "/museum/app/" })
   public ResponseEntity<?> createMuseum(
       @RequestParam(name = "name") String name,
       @RequestParam(name = "visitFee") double visitFee,
@@ -70,7 +70,7 @@ public class MuseumRestController {
    * @param scheduleDto
    * @return
    */
-  @PostMapping(value = { "/museum/{id}/app, /museum/{id}/app/" })
+  @PostMapping(value = { "/museum/{id}/app", "/museum/{id}/app/" })
   public ResponseEntity<?> editMuseum(
       @PathVariable("id") long id,
       @RequestParam(name = "name") String name,

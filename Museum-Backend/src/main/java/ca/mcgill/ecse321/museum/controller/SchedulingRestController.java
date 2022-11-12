@@ -42,7 +42,7 @@ public class SchedulingRestController {
      * @param id
      * @return
      */
-    @GetMapping(value = { "/employee/schedule/{id}, /employee/schedule/{id}/" })
+    @GetMapping(value = { "/employee/schedule/{id}", "/employee/schedule/{id}/" })
     public ScheduleDto getScheduleByEmployee(@PathVariable("id") long id) {
 
         return DtoUtility.convertToDto(employeeService.getEmployeeSchedule(id));
@@ -56,7 +56,7 @@ public class SchedulingRestController {
      * @param id
      * @return
      */
-    @GetMapping(value = { "/employee/shifts/{id}, /employee/shifts/{id}/" })
+    @GetMapping(value = { "/employee/shifts/{id}", "/employee/shifts/{id}/" })
     public List<TimePeriodDto> getAllShiftsByEmployee(@PathVariable("id") long id) {
 
         List<TimePeriodDto> timePeriodDtos = new ArrayList<TimePeriodDto>();
@@ -72,7 +72,7 @@ public class SchedulingRestController {
      * @param id
      * @return
      */
-    @GetMapping(value = { "/museum/schedule/{id}, /museum/schedule/{id}/" })
+    @GetMapping(value = { "/museum/schedule/{id}", "/museum/schedule/{id}/" })
     public ScheduleDto getScheduleByMuseum(@PathVariable("id") long id) {
 
         return DtoUtility.convertToDto(museumService.getMuseumSchedule(id));
@@ -86,7 +86,7 @@ public class SchedulingRestController {
      * @param id
      * @return
      */
-    @GetMapping(value = { "/museum/shifts/{id}, /museum/shifts/{id}/" })
+    @GetMapping(value = { "/museum/shifts/{id}", "/museum/shifts/{id}/" })
     public List<TimePeriodDto> getAllShiftsByMuseum(@PathVariable("id") long id) {
 
         List<TimePeriodDto> timePeriodDtos = new ArrayList<TimePeriodDto>();
@@ -105,7 +105,7 @@ public class SchedulingRestController {
      * @return
      */
 
-    @PostMapping(value = { "/shift/create, /shift/create/" })
+    @PostMapping(value = { "/shift/create", "/shift/create/" })
     public ResponseEntity<?> createTimePeriod(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "yyyy/MM/dd hh:mm") Timestamp startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "yyyy/MM/dd hh:mm") Timestamp endDate) {
@@ -124,7 +124,7 @@ public class SchedulingRestController {
      * @param id
      * @return
      */
-    @DeleteMapping(value = { "/shift/{id}, /shift/{id}/" })
+    @DeleteMapping(value = { "/shift/{id}", "/shift/{id}/" })
     public ResponseEntity<?> deleteTimePeriod(@PathVariable("id") long id) {
         if (timePeriodService.getTimePeriod(id) == null) {
             return new ResponseEntity<>("Cannot delete null time period", HttpStatus.BAD_REQUEST);
@@ -141,7 +141,7 @@ public class SchedulingRestController {
      * @param endDate
      * @return
      */
-    @PostMapping(value = { "/shift/edit, /shift/edit/" })
+    @PostMapping(value = { "/shift/edit", "/shift/edit/" })
     public ResponseEntity<?> editTimePeriod(@PathVariable("id") long id,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "yyyy/MM/dd hh:mm") Timestamp startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "yyyy/MM/dd hh:mm") Timestamp endDate) {
@@ -163,7 +163,7 @@ public class SchedulingRestController {
      * @param timePeriodDto
      * @return
      */
-    @PostMapping(value = { "/employee/{employeeId}/shift/{tpId}, /employee/{employeeId}/shift/{tpId}/" })
+    @PostMapping(value = { "/employee/{employeeId}/shift/{tpId}", "/employee/{employeeId}/shift/{tpId}/" })
     public ResponseEntity<?> addTimePeriodToEmployeeSchedule(
             @PathVariable("employeeId") long employeeId,
             @PathVariable("tpId") long tpId) {
@@ -183,7 +183,7 @@ public class SchedulingRestController {
      * @param tpId
      * @return
      */
-    @DeleteMapping(value = {"/employee/{employeeId}/shift/{tpId}, /employee/{employeeId}/shift/{tpId}/"})
+    @DeleteMapping(value = {"/employee/{employeeId}/shift/{tpId}", "/employee/{employeeId}/shift/{tpId}/"})
     public ResponseEntity<?> deleteTimePeriodFromEmployeeSchedule(
             @PathVariable("employeeId") long employeeId,
             @PathVariable("tpId") long tpId) {
@@ -200,7 +200,7 @@ public class SchedulingRestController {
      * @param tpId
      * @return
      */
-    @PostMapping(value = { "/museum/{museumId}/shift/{tpId}, /museum/{museumId}/shift/{tpId}/" })
+    @PostMapping(value = { "/museum/{museumId}/shift/{tpId}", "/museum/{museumId}/shift/{tpId}/" })
     public ResponseEntity<?> addTimePeriodToMuseumSchedule(
             @PathVariable("museumId") long museumId,
             @PathVariable("tpId") long tpId) {
@@ -220,7 +220,7 @@ public class SchedulingRestController {
      * @param tpId
      * @return
      */
-    @DeleteMapping(value = { "/museum/{museumId}/shift/{tpId}, /museum/{museumId}/shift/{tpId}/" })
+    @DeleteMapping(value = { "/museum/{museumId}/shift/{tpId}", "/museum/{museumId}/shift/{tpId}/" })
     public ResponseEntity<?> removeTimePeriodFromMuseumSchedule(
             @PathVariable("museumId") long museumId,
             @PathVariable("tpId") long tpId) {
