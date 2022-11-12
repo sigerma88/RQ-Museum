@@ -10,10 +10,19 @@ public class ScheduleService {
 
     @Autowired
     private ScheduleRepository scheduleRepository;
-    @Autowired
-    private ScheduleOfTimePeriod scheduleOfTimePeriod;
 
-    
+    //GET
+
+    /**
+     * Method to get a schedule
+     * @author VZ
+     * @param scheduleId
+     * @return
+     */
+    public Schedule getSchedule(long scheduleId) {
+        return scheduleRepository.findScheduleByScheduleId(scheduleId);
+    }
+
     //CREATE
     /**
      * @author VZ

@@ -1,10 +1,10 @@
 package ca.mcgill.ecse321.museum.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.event.TransactionalEventListener;
-
 import ca.mcgill.ecse321.museum.dao.MuseumRepository;
 import ca.mcgill.ecse321.museum.dao.ScheduleOfTimePeriodRepository;
 import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
@@ -25,10 +25,9 @@ public class MuseumService {
   private ScheduleOfTimePeriodRepository scheduleOfTimePeriodRepository;
   @Autowired 
   private TimePeriodRepository timePeriodRepository;
-
-  @Autowired
-  private ScheduleService scheduleService;
-
+  @Autowired 
+  private TimePeriodService timePeriodService;
+  
   /**
    * Method to view a museum
    * 
@@ -36,6 +35,7 @@ public class MuseumService {
    * @param museumId - museum id
    * @return museum
    */
+
   @Transactional
   public Museum getMuseum(long museumId) {
     return museumRepository.findMuseumByMuseumId(museumId);
@@ -115,26 +115,25 @@ public class MuseumService {
     }
     return schedule;
   }
+  
   /**
-   * Method to set a schedule to a museum
+   * Method to get all of museum's shifts
    * @author VZ
    * @param museumId
-   * @param scheduleId
    * @return
    */
-  @Transactional
-  public Museum setMuseumSchedule(long museumId, long scheduleId) {
+
+  public List<TimePeriod> getMuseumTimePeriods(long museumId) {
     Museum museum = museumRepository.findMuseumByMuseumId(museumId);
     if (museum == null) {
       throw new IllegalArgumentException("Museum doesn't exist!");
     }
-    Schedule schedule = scheduleRepository.findScheduleByScheduleId(scheduleId);
+    Schedule schedule = museum.getSchedule();
     if (schedule == null) {
       throw new IllegalArgumentException("Schedule doesn't exist!");
     }
-    museum.setSchedule(schedule);
-    
-    return museumRepository.save(museum);
+    List<TimePeriod> timePeriods = timePeriodService.getTimePeriodsOfSchedule(schedule);
+    return timePeriods;
   }
 
   /**
@@ -162,7 +161,7 @@ public class MuseumService {
     scheduleOfTimePeriod.setTimePeriod(timePeriod);
     scheduleOfTimePeriod.setSchedule(schedule);
     scheduleOfTimePeriodRepository.save(scheduleOfTimePeriod);
-
+    scheduleRepository.save(schedule);
     return museumRepository.save(museum);
   }
 

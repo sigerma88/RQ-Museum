@@ -20,10 +20,24 @@ public class TimePeriodService {
     private TimePeriodRepository timePeriodRepository;
     @Autowired
     private ScheduleOfTimePeriodRepository scheduleOfTimePeriodRepository;
-    
-    //CREATE 
+
+    // GET
+    /**
+     * Method to get a time period from database
+     * 
+     * @author VZ
+     * @param timePeriodId - id of time period
+     * @return
+     */
+    @Transactional
+    public TimePeriod getTimePeriod(long timePeriodId) {
+        return timePeriodRepository.findTimePeriodByTimePeriodId(timePeriodId);
+    }
+
+    // CREATE
     /**
      * Create a TimePeriod and save to database
+     * 
      * @author VZ
      * @param startDate
      * @param endDate
@@ -32,14 +46,14 @@ public class TimePeriodService {
     @Transactional
     public TimePeriod createTimePeriod(Timestamp startDate, Timestamp endDate) {
 
-        //input validation
-        if(startDate == null || endDate == null) {
+        // input validation
+        if (startDate == null || endDate == null) {
             throw new IllegalArgumentException("Start date and end date cannot be null");
         }
-        if(startDate.after(endDate)) {
+        if (startDate.after(endDate)) {
             throw new IllegalArgumentException("Start date cannot be after end date");
         }
-        //create TimePeriod
+        // create TimePeriod
         TimePeriod timePeriod = new TimePeriod();
 
         timePeriod.setStartDate(startDate);
@@ -48,10 +62,11 @@ public class TimePeriodService {
         return timePeriod;
     }
 
-    //DELETE 
+    // DELETE
 
     /**
      * Delete a TimePeriod from database by ID
+     * 
      * @author VZ
      * @param timePeriodId
      */
@@ -61,9 +76,10 @@ public class TimePeriodService {
         timePeriodRepository.deleteById(timePeriodId);
     }
 
-    //EDIT
+    // EDIT
     /**
      * Edit a TimePeriod by ID and save to database
+     * 
      * @author VZ
      * @param timePeriodId
      * @param startDate
@@ -72,42 +88,43 @@ public class TimePeriodService {
      */
     @Transactional
     public TimePeriod editTimePeriod(long timePeriodId, Timestamp startDate, Timestamp endDate) {
-        //input validation
-        if(startDate == null || endDate == null) {
+        // input validation
+        if (startDate == null || endDate == null) {
             throw new IllegalArgumentException("Start date and end date cannot be null");
         }
-        if(startDate.after(endDate)) {
+        if (startDate.after(endDate)) {
             throw new IllegalArgumentException("Start date cannot be after end date");
         }
-        //find TimePeriod
+        // find TimePeriod
         TimePeriod timePeriod = timePeriodRepository.findTimePeriodByTimePeriodId(timePeriodId);
-        if(timePeriod == null) {
+        if (timePeriod == null) {
             throw new IllegalArgumentException("TimePeriod does not exist");
         }
-        //edit TimePeriod
+        // edit TimePeriod
         timePeriod.setStartDate(startDate);
         timePeriod.setEndDate(endDate);
         timePeriodRepository.save(timePeriod);
         return timePeriod;
     }
 
-      /**
-   * Helper method to get the time periods of a schedule
-   * @author VZ
-   * @param schedule
-   * @return
-   */
+    /**
+     * Helper method to get the time periods of a schedule
+     * 
+     * @author VZ
+     * @param schedule
+     * @return
+     */
+    public List<TimePeriod> getTimePeriodsOfSchedule(Schedule schedule) {
 
-  public List<TimePeriod> getTimePeriodsOfSchedule (Schedule schedule) {
+        List<ScheduleOfTimePeriod> scheduleOfTimePeriods = scheduleOfTimePeriodRepository
+                .findScheduleOfTimePeriodBySchedule(schedule);
 
-    List<ScheduleOfTimePeriod> scheduleOfTimePeriods = scheduleOfTimePeriodRepository.findScheduleOfTimePeriodBySchedule(schedule);
+        List<TimePeriod> timePeriods = new ArrayList<TimePeriod>();
+        for (ScheduleOfTimePeriod scheduleOfTimePeriod : scheduleOfTimePeriods) {
+            timePeriods.add(scheduleOfTimePeriod.getTimePeriod());
+        }
 
-    List<TimePeriod> timePeriods = new ArrayList<TimePeriod>();
-    for (ScheduleOfTimePeriod scheduleOfTimePeriod : scheduleOfTimePeriods) {
-      timePeriods.add(scheduleOfTimePeriod.getTimePeriod());
+        return timePeriods;
     }
-
-    return timePeriods;
-  }
 
 }

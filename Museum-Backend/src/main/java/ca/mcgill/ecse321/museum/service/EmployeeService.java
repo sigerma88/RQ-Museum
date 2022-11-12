@@ -47,7 +47,6 @@ public class EmployeeService {
 
   /**
    * Method to view an employee's schedule
-   * 
    * @author VZ
    * @param employeeId - id of employee
    * @return
@@ -65,6 +64,13 @@ public class EmployeeService {
     }
     return schedule;
   }
+  
+  /**
+   * Method to get all of employee's shifts
+   * @author VZ
+   * @param employeeId
+   * @return
+   */
 
   @Transactional
   public List<TimePeriod> getEmployeeTimePeriods(long employeeId) {
@@ -88,7 +94,6 @@ public class EmployeeService {
   /**
    * Method to add a time period to employee's schedule, in other words
    * give more work to an employee.
-   * 
    * @author VZ
    * @param employee
    * @param timeperiod
@@ -96,7 +101,7 @@ public class EmployeeService {
    */
   
   @Transactional
-  public Employee addEmployeeTimePeriod(long employeeId, long timePeriodId) {
+  public Employee addEmployeeTimePeriodAssociation(long employeeId, long timePeriodId) {
     
     Employee employee = employeeRepository.findEmployeeByMuseumUserId(employeeId);
     TimePeriod timePeriod = timePeriodRepository.findTimePeriodByTimePeriodId(timePeriodId);

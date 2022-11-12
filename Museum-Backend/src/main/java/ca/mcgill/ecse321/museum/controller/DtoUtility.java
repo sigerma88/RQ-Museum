@@ -3,9 +3,11 @@ package ca.mcgill.ecse321.museum.controller;
 import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Schedule;
+import ca.mcgill.ecse321.museum.model.TimePeriod;
 import ca.mcgill.ecse321.museum.dto.EmployeeDto;
 import ca.mcgill.ecse321.museum.dto.MuseumDto;
 import ca.mcgill.ecse321.museum.dto.ScheduleDto;
+import ca.mcgill.ecse321.museum.dto.TimePeriodDto;
 
 public class DtoUtility {
   /**
@@ -51,6 +53,13 @@ public class DtoUtility {
     ScheduleDto scheduleDto = convertToDto(museum.getSchedule());
     return new MuseumDto(museum.getMuseumId(), museum.getName(), museum.getVisitFee(), scheduleDto);
   
+  }
+
+  static TimePeriodDto convertToDto(TimePeriod timePeriod) {
+    if(timePeriod == null) {
+      throw new IllegalArgumentException("There is no such time period");
+    }
+    return new TimePeriodDto(timePeriod.getTimePeriodId(), timePeriod.getStartDate(), timePeriod.getEndDate());
   }
   
 }
