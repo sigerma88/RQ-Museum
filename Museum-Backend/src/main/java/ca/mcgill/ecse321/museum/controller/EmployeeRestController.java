@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.museum.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +90,32 @@ public class EmployeeRestController {
 
       EmployeeDto employeeDto =
           DtoUtility.convertToDto(registrationService.registerEmployee(employee.getName()));
+      return new ResponseEntity<>(employeeDto, HttpStatus.OK);
+    } catch (Exception e) {
+      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @PostMapping(value = "/edit/{id}", produces = "application/json")
+  public ResponseEntity<?> editInformation(HttpServletRequest request, @PathVariable long id,
+      @RequestBody Map<String, String> updatedEmployeeCredential) {
+    try {
+      HttpSession session = request.getSession();
+
+      if (!AuthenticationUtility.isLoggedIn(session)) {
+        return ResponseEntity.badRequest().body("You must be logged in to edit an employee");
+      } else if (!AuthenticationUtility.isStaffMember(session)) {
+        return ResponseEntity.badRequest().body("You must be a staff member to edit an employee");
+      }
+
+      if (!AuthenticationUtility.checkUserId(session, id)) {
+        return ResponseEntity.badRequest().body("You can only edit your own information");
+      }
+
+      EmployeeDto employeeDto =
+          DtoUtility.convertToDto(registrationService.editEmployeeInformation(id,
+              updatedEmployeeCredential.get("oldPassword"),
+              updatedEmployeeCredential.get("newPassword")));
       return new ResponseEntity<>(employeeDto, HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

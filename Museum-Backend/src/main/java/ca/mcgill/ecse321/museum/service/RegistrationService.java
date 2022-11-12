@@ -154,6 +154,32 @@ public class RegistrationService {
     return employee;
   }
 
+  /** */
+
+  public Employee editEmployeeInformation(long employeeId, String oldPassword, String newPassword)
+      throws Exception {
+    Employee employee = employeeRepository.findEmployeeByMuseumUserId(employeeId);
+
+    if (employee == null) {
+      throw new Exception("Employee not found");
+    }
+
+    String currentPassword = employee.getPassword();
+    if (!currentPassword.equals(oldPassword)) {
+      throw new Exception("Old password incorrect");
+    }
+
+    if (passwordValidityChecker(newPassword)) {
+      employee.setPassword(newPassword);
+    } else {
+      throw new Exception(
+          "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special character. ");
+    }
+
+    employeeRepository.save(employee);
+    return employee;
+  }
+
 
   /*
    * 

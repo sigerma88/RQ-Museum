@@ -31,7 +31,6 @@ public class AuthenticationController {
             @RequestBody MuseumUserDto museumUser) {
         try {
             HttpSession session = request.getSession(true);
-            System.out.println(session.getAttribute("user_id"));
             // double check cuz might not work when multiple session
             // if (AuthenticationUtility.isLoggedIn(session)) {
             // throw new Exception("Cannot login when already logged in.");
@@ -41,13 +40,13 @@ public class AuthenticationController {
                     .authenticateUser(museumUser.getEmail(), museumUser.getPassword());
             if (userAuthentication.getClass().equals(Visitor.class)) {
                 session.setAttribute("user_id", userAuthentication.getMuseumUserId());
-                session.setAttribute("user_type", "visitor");
+                session.setAttribute("role", "visitor");
             } else if (userAuthentication.getClass().equals(Manager.class)) {
                 session.setAttribute("user_id", userAuthentication.getMuseumUserId());
-                session.setAttribute("user_type", "manager");
+                session.setAttribute("role", "manager");
             } else if (userAuthentication.getClass().equals(Employee.class)) {
                 session.setAttribute("user_id", userAuthentication.getMuseumUserId());
-                session.setAttribute("user_type", "employee");
+                session.setAttribute("role", "employee");
             }
 
             return new ResponseEntity<>("logged in", HttpStatus.OK);
@@ -61,7 +60,8 @@ public class AuthenticationController {
     public ResponseEntity<?> logout(HttpServletRequest request) {
         try {
             HttpSession session = request.getSession();
-            if (!AuthenticationUtility.isLoggedIn(session)) {
+            if (!AuthenticationUtility.isLoggedIn(session)
+                    && AuthenticationUtility.isMuseumUser(session)) {
                 authenticationService.logout(request);
                 return new ResponseEntity<>("logged out", HttpStatus.OK);
             }

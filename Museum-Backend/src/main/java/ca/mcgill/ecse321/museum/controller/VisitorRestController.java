@@ -70,8 +70,8 @@ public class VisitorRestController {
             HttpSession session = request.getSession();
             if (!AuthenticationUtility.isLoggedIn(session)) {
                 return new ResponseEntity<>("You are not logged in", HttpStatus.BAD_REQUEST);
-            } else if ((long) session.getAttribute("user_id") != id) {
-                return new ResponseEntity<>("Not allowed to view this account",
+            } else if (!AuthenticationUtility.checkUserId(session, id)) {
+                return new ResponseEntity<>("Not allowed to edit this account",
                         HttpStatus.BAD_REQUEST);
             }
 
@@ -91,7 +91,7 @@ public class VisitorRestController {
             HttpSession session = request.getSession();
             if (!AuthenticationUtility.isLoggedIn(session)) {
                 return new ResponseEntity<>("You are not logged in", HttpStatus.BAD_REQUEST);
-            } else if ((long) session.getAttribute("user_id") != id) {
+            } else if (!AuthenticationUtility.checkUserId(session, id)) {
                 return new ResponseEntity<>("Not allowed to edit this account",
                         HttpStatus.BAD_REQUEST);
             }
