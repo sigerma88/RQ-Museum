@@ -321,8 +321,6 @@ public class TestMuseumService {
             error = e.getMessage();
         }
         assertNotNull(museum);
-        assertEquals("Name cannot be null!", error);
-
+        assertEquals("Name cannot be empty!", error);
     }
-
 }

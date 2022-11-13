@@ -22,27 +22,47 @@ public class EmployeeService {
 
   @Autowired
   private EmployeeRepository employeeRepository;
+
   @Autowired
   private ScheduleRepository scheduleRepository;
+
   @Autowired
   private ScheduleOfTimePeriodRepository scheduleOfTimePeriodRepository;
+
   @Autowired
   private TimePeriodRepository timePeriodRepository;
-  
+
   @Autowired 
   private TimePeriodService timePeriodService;
 
-
   /**
-   * Method to view an employee
+   * Method to view an employee and get them by their id
    * 
-   * @author VZ & SM
+   * @author VZ
+   * @author SM
    * @param employeeId - employee id
    * @return employee
    */
   @Transactional
-  public Employee getEmployee(long employeeId) {
+  public Employee getEmployee(Long employeeId) {
+    // Error handling
+    if (employeeId == null) {
+      throw new IllegalArgumentException("Employee id cannot be null");
+    }
+
     return employeeRepository.findEmployeeByMuseumUserId(employeeId);
+  }
+
+  /**
+   * Method to get all the employees in the database
+   * Allows the manager to view the list of employees
+   * 
+   * @return List of all employees
+   * @author Siger
+   */
+  @Transactional
+  public List<Employee> getAllEmployees() {
+    return toList(employeeRepository.findAll());
   }
 
   /**
@@ -163,6 +183,35 @@ public class EmployeeService {
   }
 
   /**
+   * Method to delete an employee from the database by their id
+   * Allows the manager to delete an employee
+   * 
+   * @param id - Long
+   * @return if the employee was deleted (success)
+   * @author Siger
+   */
+  @Transactional
+  public boolean deleteEmployee(Long id) {
+    // Check if the employee exists and error handling
+    Employee employee = employeeRepository.findEmployeeByMuseumUserId(id);
+    if (employee == null) {
+      throw new IllegalArgumentException("Employee does not exist");
+    }
+
+    // Delete scheduleOfTimePeriods
+    List<ScheduleOfTimePeriod> scheduleOfTimePeriods = scheduleOfTimePeriodRepository.findScheduleOfTimePeriodBySchedule(employee.getSchedule());
+    if (scheduleOfTimePeriods != null  && !scheduleOfTimePeriods.isEmpty()) {
+      scheduleOfTimePeriodRepository.deleteScheduleOfTimePeriodBySchedule(employee.getSchedule());
+    }
+
+    // Delete employee
+    employeeRepository.deleteEmployeeByMuseumUserId(id);
+
+    // Check if employee was deleted
+    return getEmployee(id) == null;
+  }
+
+  /**
    * Method to convert an Iterable to a List
    * 
    * @param iterable - Iterable
@@ -175,34 +224,5 @@ public class EmployeeService {
       resultList.add(t);
     }
     return resultList;
-  }
-
-  /**
-   * Method to get all the employees in the database
-   * Allows the manager to view the list of employees
-   * 
-   * @return List of all employees
-   * @author Siger
-   */
-  @Transactional
-  public List<Employee> getAllEmployees() {
-    return toList(employeeRepository.findAll());
-  }
-
-  /**
-   * Method to delete an employee from the database by their id
-   * Allows the manager to delete an employee
-   * 
-   * @param id - long
-   * @return if the employee was deleted (success)
-   * @author Siger
-   */
-  @Transactional
-  public boolean deleteEmployee(long id) {
-    // Delete employee
-    employeeRepository.deleteEmployeeByMuseumUserId(id);
-
-    // Check if employee was deleted
-    return getEmployee(id) == null;
   }
 }

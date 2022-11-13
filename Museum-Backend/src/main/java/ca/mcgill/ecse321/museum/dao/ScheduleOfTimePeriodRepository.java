@@ -18,7 +18,9 @@ import ca.mcgill.ecse321.museum.model.TimePeriod;
 public interface ScheduleOfTimePeriodRepository extends CrudRepository<ScheduleOfTimePeriod, Long> {
 
   ScheduleOfTimePeriod findScheduleOfTimePeriodByScheduleOfTimePeriodId(Long scheduleOfTimePeriodId);
-  
+
+  void deleteScheduleOfTimePeriodBySchedule(Schedule schedule);
+
   List<ScheduleOfTimePeriod> findScheduleOfTimePeriodByTimePeriod(TimePeriod timePeriod);
   
   List<ScheduleOfTimePeriod> findScheduleOfTimePeriodBySchedule(Schedule schedule);
@@ -26,9 +28,4 @@ public interface ScheduleOfTimePeriodRepository extends CrudRepository<ScheduleO
   ScheduleOfTimePeriod findScheduleOfTimePeriodByScheduleAndTimePeriod(Schedule schedule, TimePeriod timePeriod);
 
   void deleteScheduleOfTimePeriodByScheduleAndTimePeriod(Schedule schedule, TimePeriod timePeriod);
-  
-
-
-  
-
 }
