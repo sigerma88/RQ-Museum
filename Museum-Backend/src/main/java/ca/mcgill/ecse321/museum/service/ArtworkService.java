@@ -1,17 +1,18 @@
 package ca.mcgill.ecse321.museum.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
 import ca.mcgill.ecse321.museum.dao.LoanRepository;
 import ca.mcgill.ecse321.museum.dao.RoomRepository;
 import ca.mcgill.ecse321.museum.model.Artwork;
 import ca.mcgill.ecse321.museum.model.Loan;
 import ca.mcgill.ecse321.museum.model.Room;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class ArtworkService {
@@ -24,6 +25,9 @@ public class ArtworkService {
 
   @Autowired
   LoanRepository loanRepository;
+
+  @Autowired
+  RoomService roomService;
 
   /**
    * Method to create an artwork
@@ -69,9 +73,7 @@ public class ArtworkService {
       throw new IllegalArgumentException("Room cannot be null if artwork is not on loan");
     } else if (isOnLoan == false && room != null) {
       // Update room artwork count
-      // TODO: Check if room is full, so use the method in RoomService
-      room.setCurrentNumberOfArtwork(room.getCurrentNumberOfArtwork() + 1);
-      roomRepository.save(room);
+      roomService.changeCurrentNumberOfArtwork(room.getRoomId(), room.getCurrentNumberOfArtwork() + 1);
     } else {
       throw new IllegalArgumentException("Artwork must be either on loan or not on loan");
     }
