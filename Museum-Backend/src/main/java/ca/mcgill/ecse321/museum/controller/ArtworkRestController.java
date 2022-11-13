@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -34,7 +33,13 @@ public class ArtworkRestController {
   /**
    * RESTful API to create an artwork
    * 
-   * @param artworkDto - Artwork
+   * @param name - name of the artwork
+   * @param artist - artist of the artwork
+   * @param isAvailableForLoan - availability of the artwork for loans
+   * @param loanFee - loan fee of the artwork
+   * @param image - image of the artwork
+   * @param isOnLoan - loan status of the artwork
+   * @param roomId - id of the room of the artwork
    * @return created artwork
    * @author Siger
    */
