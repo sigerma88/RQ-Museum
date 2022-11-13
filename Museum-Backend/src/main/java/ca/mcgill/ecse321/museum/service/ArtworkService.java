@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ArtworkService {
@@ -48,13 +50,42 @@ public class ArtworkService {
     return artworksInRoom;
   }
 
+  /**
+   * Method to get all artworks with their
+   * corresponding availability for loan
+   *
+   * @return artworksWithAvailability
+   * @author Zahra
+   */
+  @Transactional
+  public Map<String, String> getArtworkwithAvailabilityForLoan() {
+    Map<String, String> artworksWithAvailability = new HashMap<>();
 
-  public boolean getArtworkAvailabilityForLoan(Artwork artwork) {
-    return artwork.getIsAvailableForLoan();
+    for (Artwork artwork : getAllArtworks()) {
+      if (artwork.getIsAvailableForLoan() == true) {
+        artworksWithAvailability.put(artwork.getName(), "Available");
+      } else if (artwork.getIsAvailableForLoan() == false) {
+        artworksWithAvailability.put(artwork.getName(), "Unavailable");
+      }
+
+    }
+    return artworksWithAvailability;
   }
 
-  public double getArtworkLoanFee(Artwork artwork) {
-    return artwork.getLoanFee();
+
+  /**
+   * Method to
+   *
+   * @return
+   * @author Zahra
+   */
+  @Transactional
+  public Map<String, Double> getArtworkWithLoanFee() {
+    Map<String, Double> artworksWithLoanFee = new HashMap<>();
+    for (Artwork artwork : getAllArtworks()) {
+      artworksWithLoanFee.put(artwork.getName(), artwork.getLoanFee());
+    }
+    return artworksWithLoanFee;
   }
 
 
