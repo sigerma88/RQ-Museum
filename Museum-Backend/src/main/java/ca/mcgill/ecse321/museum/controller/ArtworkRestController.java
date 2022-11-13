@@ -4,6 +4,7 @@ import ca.mcgill.ecse321.museum.dto.ArtworkDto;
 import ca.mcgill.ecse321.museum.model.Artwork;
 import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.service.ArtworkService;
+import ca.mcgill.ecse321.museum.service.RoomService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -27,17 +29,20 @@ public class ArtworkRestController {
   @Autowired
   private ArtworkService artworkService;
 
+  @Autowired
+  private RoomService roomService;
+
   /**
    * RESTful API to create an artwork
    * 
-   * @param artwork - Artwork
+   * @param artworkDto - Artwork
    * @return created artwork
    * @author Siger
    */
   @PostMapping(value = { "/artwork", "/artwork/" }, produces = "application/json")
-  public ResponseEntity<?> createArtwork(@RequestBody Artwork artwork) {
+  public ResponseEntity<?> createArtwork(@RequestBody ArtworkDto artworkDto) {
     try {
-      Artwork result = artworkService.createArtwork(artwork.getName(), artwork.getArtist(), artwork.getIsAvailableForLoan(), artwork.getLoanFee(), artwork.getImage(), artwork.getIsOnLoan(), artwork.getRoom());
+      Artwork result = artworkService.createArtwork(artworkDto.getName(), artworkDto.getArtist(), artworkDto.getIsAvailableForLoan(), artworkDto.getLoanFee(), artworkDto.getImage(), artworkDto.getIsOnLoan(), roomService.getRoomById(artworkDto.getRoom().getRoomId()));
       return ResponseEntity.ok(DtoUtility.convertToDto(result));
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
@@ -47,14 +52,14 @@ public class ArtworkRestController {
   /**
    * RESTful API to get an artwork by its id
    * 
-   * @param id - long
+   * @param artworkId - long
    * @return artwork with the given id
    * @author Siger
    */
-  @GetMapping(value = { "/artwork/{id}", "/artwork/{id}/" })
-  public ResponseEntity<?> getArtworkById(@PathVariable("id") long id) {
+  @GetMapping(value = { "/artwork/{artworkId}", "/artwork/{artworkId}/" })
+  public ResponseEntity<?> getArtworkById(@PathVariable("artworkId") long artworkId) {
     try {
-      Artwork artwork = artworkService.getArtwork(id);
+      Artwork artwork = artworkService.getArtwork(artworkId);
       return ResponseEntity.ok(DtoUtility.convertToDto(artwork));
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
@@ -93,14 +98,17 @@ public class ArtworkRestController {
   /**
    * RESTful API to edit an artwork's information
    * 
-   * @param artworkDto - ArtworkDto
+   * @param artworkId - id of artwork to be edited
+   * @param name - new name of artwork
+   * @param artist - new artist of artwork
+   * @param image - new image of artwork
    * @return edited artwork
    * @author Siger
    */
-  @PutMapping(value = { "/artwork", "/artwork/" }, produces = "application/json")
-  public ResponseEntity<?> editArtworkInfo(@RequestBody ArtworkDto artworkDto) {
+  @PutMapping(value = { "/artwork/{artworkId}", "/artwork/{artworkId}/" }, produces = "application/json")
+  public ResponseEntity<?> editArtworkInfo(@PathVariable("artworkId") Long artworkId, @RequestParam(name = "name") String name, @RequestParam(name = "artist") String artist, @RequestParam(name = "image") String image) {
     try {
-      Artwork result = artworkService.editArtworkInfo(artworkDto.getArtworkId(), artworkDto.getName(), artworkDto.getArtist(), artworkDto.getImage());
+      Artwork result = artworkService.editArtworkInfo(artworkId, name, artist, image);
       return ResponseEntity.ok(DtoUtility.convertToDto(result));
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
@@ -110,14 +118,16 @@ public class ArtworkRestController {
   /**
    * RESTful API to edit an artwork's loan availability and loan fee
    * 
-   * @param artworkDto - ArtworkDto
+   * @param artworkId - id of artwork to be edited
+   * @param isAvailableForLoan - new availability of artwork
+   * @param loanFee - new loan fee of artwork
    * @return edited artwork
    * @author Siger
    */
-  @PutMapping(value = { "/artwork/loanInfo", "/artwork/loanInfo/" }, produces = "application/json")
-  public ResponseEntity<?> editArtworkLoanInfo(@RequestBody ArtworkDto artworkDto) {
+  @PutMapping(value = { "/artwork/loanInfo/{artworkId}", "/artwork/loanInfo/{artworkId}/" }, produces = "application/json")
+  public ResponseEntity<?> editArtworkLoanInfo(@PathVariable("artworkId") Long artworkId, @RequestParam(name = "isAvailableForLoan") boolean isAvailableForLoan, @RequestParam(name = "loanFee") double loanFee) {
     try {
-      Artwork result = artworkService.editArtworkLoan(artworkDto.getArtworkId(), artworkDto.getIsAvailableForLoan(), artworkDto.getLoanFee());
+      Artwork result = artworkService.editArtworkLoan(artworkId, isAvailableForLoan, loanFee);
       return ResponseEntity.ok(DtoUtility.convertToDto(result));
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
@@ -127,15 +137,15 @@ public class ArtworkRestController {
   /**
    * RESTful API to delete an artwork
    * 
-   * @param id - long
+   * @param artworkId - long
    * @return if the artwork was deleted (success)
    * @author Siger
    */
-  @DeleteMapping(value = { "/artwork/{id}", "/artwork/{id}/" })
-  public ResponseEntity<?> deleteArtwork(@PathVariable("id") long id) {
+  @DeleteMapping(value = { "/artwork/{artworkId}", "/artwork/{artworkId}/" })
+  public ResponseEntity<?> deleteArtwork(@PathVariable("artworkId") Long artworkId) {
     try {
       // Delete the artwork
-      artworkService.deleteArtwork(id);
+      artworkService.deleteArtwork(artworkId);
       return ResponseEntity.ok("Artwork deleted");
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
