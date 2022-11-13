@@ -61,7 +61,7 @@ public class DtoUtility {
    */
   static LoanDto convertToDto(Loan loan) {
     if (loan == null) {
-        throw new IllegalArgumentException("There is no such Loan!");
+        throw new IllegalArgumentException("There is no such Loan");
     }
     VisitorDto visitorDto = convertToDto(loan.getVisitor());
     ArtworkDto artworkDto = convertToDto(loan.getArtwork());

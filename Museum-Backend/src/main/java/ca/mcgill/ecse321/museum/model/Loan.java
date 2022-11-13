@@ -45,7 +45,7 @@ public class Loan {
     return loanId;
   }
 
-  @Column(nullable = false)
+  @Column(nullable = true)
   public Boolean getRequestAccepted() {
     return requestAccepted;
   }
