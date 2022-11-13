@@ -45,6 +45,9 @@ public class RoomRestController {
     try {
       // Get museum
       Museum museum = museumService.getMuseum(museumId);
+      if (museum == null) {
+        return ResponseEntity.badRequest().body("Museum with id " + museumId + " does not exist");
+      }
 
       // Create room
       Room result = roomService.createRoom(roomName, roomType, museum);
@@ -102,6 +105,9 @@ public class RoomRestController {
     try {
       // Get museum
       Museum museum = museumService.getMuseum(museumId);
+      if (museum == null) {
+        return ResponseEntity.badRequest().body("Museum with id " + museumId + " does not exist");
+      }
 
       // Get rooms
       List<RoomDto> roomDtos = new ArrayList<>();
@@ -131,6 +137,9 @@ public class RoomRestController {
       Museum museum = null;
       if (museumId != null) {
         museum = museumService.getMuseum(museumId);
+        if (museum == null) {
+          return ResponseEntity.badRequest().body("Museum with id " + museumId + " does not exist");
+        }
       }
 
       // Update room

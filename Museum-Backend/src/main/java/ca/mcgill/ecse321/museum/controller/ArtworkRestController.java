@@ -50,6 +50,9 @@ public class ArtworkRestController {
       Room room = null;
       if (roomId != null) {
         room = roomService.getRoomById(roomId);
+        if (room == null) {
+          return ResponseEntity.badRequest().body("Room with id " + roomId + " does not exist");
+        }
       }
 
       // Create artwork

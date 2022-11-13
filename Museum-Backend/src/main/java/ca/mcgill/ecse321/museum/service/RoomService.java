@@ -120,7 +120,7 @@ public class RoomService {
       throw new IllegalArgumentException("Room does not exist");
     }
 
-    if ((roomName == null && roomName.trim().length() == 0) && roomType == null && museum == null) {
+    if ((roomName == null || roomName.trim().length() == 0) && roomType == null && museum == null) {
       throw new IllegalArgumentException("Nothing to edit, all fields are empty");
     }
 
