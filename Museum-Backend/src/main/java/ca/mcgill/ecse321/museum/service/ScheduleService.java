@@ -1,13 +1,15 @@
 package ca.mcgill.ecse321.museum.service;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
 import ca.mcgill.ecse321.museum.model.Schedule;
 
 
+@Service
 public class ScheduleService {
-
     @Autowired
     private ScheduleRepository scheduleRepository;
 
