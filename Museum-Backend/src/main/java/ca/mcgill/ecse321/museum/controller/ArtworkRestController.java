@@ -33,18 +33,22 @@ public class ArtworkRestController {
   /**
    * RESTful API to create an artwork
    * 
-   * @param name - name of the artwork
-   * @param artist - artist of the artwork
+   * @param name               - name of the artwork
+   * @param artist             - artist of the artwork
    * @param isAvailableForLoan - availability of the artwork for loans
-   * @param loanFee - loan fee of the artwork
-   * @param image - image of the artwork
-   * @param isOnLoan - loan status of the artwork
-   * @param roomId - id of the room of the artwork
+   * @param loanFee            - loan fee of the artwork
+   * @param image              - image of the artwork
+   * @param isOnLoan           - loan status of the artwork
+   * @param roomId             - id of the room of the artwork
    * @return created artwork
    * @author Siger
    */
   @PostMapping(value = { "/artwork", "/artwork/" }, produces = "application/json")
-  public ResponseEntity<?> createArtwork(@RequestParam(name = "name") String name, @RequestParam(name = "artist") String artist, @RequestParam(name = "isAvailableForLoan") Boolean isAvailableForLoan, @RequestParam(name = "loanFee", required = false) Double loanFee, @RequestParam(name = "image") String image, @RequestParam(name = "isOnLoan") Boolean isOnLoan, @RequestParam(name = "roomId", required = false) Long roomId) {
+  public ResponseEntity<?> createArtwork(@RequestParam(name = "name") String name,
+      @RequestParam(name = "artist") String artist,
+      @RequestParam(name = "isAvailableForLoan") Boolean isAvailableForLoan,
+      @RequestParam(name = "loanFee", required = false) Double loanFee, @RequestParam(name = "image") String image,
+      @RequestParam(name = "isOnLoan") Boolean isOnLoan, @RequestParam(name = "roomId", required = false) Long roomId) {
     try {
       // Get room
       Room room = null;
@@ -80,7 +84,7 @@ public class ArtworkRestController {
     }
   }
 
-  @GetMapping(value = {"/artworks", "/artworks/"})
+  @GetMapping(value = { "/artworks", "/artworks/" })
   public List<ArtworkDto> getAllArtworks() {
     List<ArtworkDto> artworkDtos = new ArrayList<ArtworkDto>();
 
@@ -94,7 +98,7 @@ public class ArtworkRestController {
     return artworkDtos;
   }
 
-  @GetMapping(value = {"/artworks/{room}", "/artworks/{room}/"})
+  @GetMapping(value = { "/artworks/{room}", "/artworks/{room}/" })
   public List<ArtworkDto> getAllArtworksByRoom(@PathVariable("room") Room room) {
     List<ArtworkDto> artworkInRoomDtos = new ArrayList<ArtworkDto>();
     List<Artwork> artworksInRoom = artworkService.getAllArtworksByRoom(room);
@@ -113,14 +117,17 @@ public class ArtworkRestController {
    * RESTful API to edit an artwork's information
    * 
    * @param artworkId - id of artwork to be edited
-   * @param name - new name of artwork
-   * @param artist - new artist of artwork
-   * @param image - new image of artwork
+   * @param name      - new name of artwork
+   * @param artist    - new artist of artwork
+   * @param image     - new image of artwork
    * @return edited artwork
    * @author Siger
    */
   @PutMapping(value = { "/artwork/{artworkId}", "/artwork/{artworkId}/" }, produces = "application/json")
-  public ResponseEntity<?> editArtworkInfo(@PathVariable("artworkId") Long artworkId, @RequestParam(name = "name", required = false) String name, @RequestParam(name = "artist", required = false) String artist, @RequestParam(name = "image", required = false) String image) {
+  public ResponseEntity<?> editArtworkInfo(@PathVariable("artworkId") Long artworkId,
+      @RequestParam(name = "name", required = false) String name,
+      @RequestParam(name = "artist", required = false) String artist,
+      @RequestParam(name = "image", required = false) String image) {
     try {
       Artwork result = artworkService.editArtworkInfo(artworkId, name, artist, image);
       return ResponseEntity.ok(DtoUtility.convertToDto(result));
@@ -132,14 +139,17 @@ public class ArtworkRestController {
   /**
    * RESTful API to edit an artwork's loan availability and loan fee
    * 
-   * @param artworkId - id of artwork to be edited
+   * @param artworkId          - id of artwork to be edited
    * @param isAvailableForLoan - new availability of artwork
-   * @param loanFee - new loan fee of artwork
+   * @param loanFee            - new loan fee of artwork
    * @return edited artwork
    * @author Siger
    */
-  @PutMapping(value = { "/artwork/loanInfo/{artworkId}", "/artwork/loanInfo/{artworkId}/" }, produces = "application/json")
-  public ResponseEntity<?> editArtworkLoanInfo(@PathVariable("artworkId") Long artworkId, @RequestParam(name = "isAvailableForLoan") boolean isAvailableForLoan, @RequestParam(name = "loanFee", required = false) Double loanFee) {
+  @PutMapping(value = { "/artwork/loanInfo/{artworkId}",
+      "/artwork/loanInfo/{artworkId}/" }, produces = "application/json")
+  public ResponseEntity<?> editArtworkLoanInfo(@PathVariable("artworkId") Long artworkId,
+      @RequestParam(name = "isAvailableForLoan") boolean isAvailableForLoan,
+      @RequestParam(name = "loanFee", required = false) Double loanFee) {
     try {
       Artwork result = artworkService.editArtworkLoan(artworkId, isAvailableForLoan, loanFee);
       return ResponseEntity.ok(DtoUtility.convertToDto(result));

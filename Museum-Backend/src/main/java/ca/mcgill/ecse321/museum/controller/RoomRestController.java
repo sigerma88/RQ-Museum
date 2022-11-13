@@ -41,7 +41,8 @@ public class RoomRestController {
    * @author Siger
    */
   @PostMapping(value = { "/room", "/room/" }, produces = "application/json")
-  public ResponseEntity<?> createRoom(@RequestParam(name = "roomName") String roomName, @RequestParam(name = "roomType") RoomType roomType, @RequestParam(name = "museumId") Long museumId) {
+  public ResponseEntity<?> createRoom(@RequestParam(name = "roomName") String roomName,
+      @RequestParam(name = "roomType") RoomType roomType, @RequestParam(name = "museumId") Long museumId) {
     try {
       // Get museum
       Museum museum = museumService.getMuseum(museumId);
@@ -131,7 +132,10 @@ public class RoomRestController {
    * @author Siger
    */
   @PutMapping(value = { "/room/{roomId}", "/room/{roomId}/" }, produces = "application/json")
-  public ResponseEntity<?> editRoom(@PathVariable("roomId") Long roomId, @RequestParam(name = "roomName", required = false) String roomName, @RequestParam(name = "roomType", required = false) RoomType roomType, @RequestParam(name = "museumId", required = false) Long museumId) {
+  public ResponseEntity<?> editRoom(@PathVariable("roomId") Long roomId,
+      @RequestParam(name = "roomName", required = false) String roomName,
+      @RequestParam(name = "roomType", required = false) RoomType roomType,
+      @RequestParam(name = "museumId", required = false) Long museumId) {
     try {
       // Get museum
       Museum museum = null;

@@ -64,6 +64,7 @@ public class MuseumRestController {
 
   /**
    * API to edit the museum
+   * 
    * @param id
    * @param name
    * @param visitFee

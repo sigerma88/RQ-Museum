@@ -1,10 +1,11 @@
 package ca.mcgill.ecse321.museum.service;
 
 import java.util.ArrayList;
-import java.sql.Timestamp;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -52,6 +53,9 @@ public class TestRoomService {
   private ScheduleRepository scheduleRepository;
 
   @InjectMocks
+  private MuseumService museumService;
+
+  @InjectMocks
   private RoomService roomService;
 
   private static final Long FIRST_ROOM_ID = 0L;
@@ -68,7 +72,7 @@ public class TestRoomService {
 
   private static final Long ARTWORK_ID = 0L;
   private static final String ARTWORK_NAME = "La Joconde";
-  private static final String ARTWORK_AUTHOR = "Leonardo Da Vinci";
+  private static final String ARTWORK_ARTIST = "Leonardo Da Vinci";
   private static final Boolean ARTWORK_IS_AVAILABLE_FOR_LOAN = true;
   private static final Double ARTWORK_LOAN_FEE = 100.0;
   private static final String ARTWORK_IMAGE = "image";
@@ -80,9 +84,12 @@ public class TestRoomService {
 
   private static final Long SCHEDULE_ID = 0L;
 
+  private static final Long INVALID_ID = -1L;
+
   /**
    * This method sets up the mock objects
-   * There are three rooms in the museum, one is a small room, one is a large room and one is a storage room
+   * There are three rooms in the museum, one is a small room, one is a large room
+   * and one is a storage room
    * 
    * @author Siger
    */
@@ -92,8 +99,8 @@ public class TestRoomService {
       return invocation.getArgument(0);
     };
 
-    lenient().when(roomRepository.findRoomByRoomId(anyLong())).thenAnswer( (InvocationOnMock invocation) -> {
-      if(invocation.getArgument(0).equals(FIRST_ROOM_ID)) {
+    lenient().when(roomRepository.findRoomByRoomId(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
+      if (invocation.getArgument(0).equals(FIRST_ROOM_ID)) {
         // Create museum and its schedule
         Museum museum = new Museum();
         museum.setMuseumId(MUSEUM_ID);
@@ -144,6 +151,96 @@ public class TestRoomService {
         room.setRoomType(THIRD_ROOM_TYPE);
         room.setMuseum(museum);
         return room;
+      } else {
+        return null;
+      }
+    });
+
+    lenient().when(roomRepository.findAll()).thenAnswer((InvocationOnMock invocation) -> {
+      // Create museum and its schedule
+      Museum museum = new Museum();
+      museum.setMuseumId(MUSEUM_ID);
+      museum.setName(MUSEUM_NAME);
+      museum.setVisitFee(MUSEUM_VISIT_FEE);
+      Schedule schedule = new Schedule();
+      schedule.setScheduleId(SCHEDULE_ID);
+      museum.setSchedule(schedule);
+
+      // Create rooms
+      Room room1 = new Room();
+      room1.setRoomId(FIRST_ROOM_ID);
+      room1.setRoomName(FIRST_ROOM_NAME);
+      room1.setRoomType(FIRST_ROOM_TYPE);
+      room1.setMuseum(museum);
+
+      Room room2 = new Room();
+      room2.setRoomId(SECOND_ROOM_ID);
+      room2.setRoomName(SECOND_ROOM_NAME);
+      room2.setRoomType(SECOND_ROOM_TYPE);
+      room2.setMuseum(museum);
+
+      Room room3 = new Room();
+      room3.setRoomId(THIRD_ROOM_ID);
+      room3.setRoomName(THIRD_ROOM_NAME);
+      room3.setRoomType(THIRD_ROOM_TYPE);
+      room3.setMuseum(museum);
+
+      List<Room> rooms = new ArrayList<Room>();
+      rooms.add(room1);
+      rooms.add(room2);
+      rooms.add(room3);
+
+      return rooms;
+    });
+
+    lenient().when(roomRepository.findRoomByMuseum(any(Museum.class))).thenAnswer((InvocationOnMock invocation) -> {
+      // Create museum and its schedule
+      Museum museum = new Museum();
+      museum.setMuseumId(MUSEUM_ID);
+      museum.setName(MUSEUM_NAME);
+      museum.setVisitFee(MUSEUM_VISIT_FEE);
+      Schedule schedule = new Schedule();
+      schedule.setScheduleId(SCHEDULE_ID);
+      museum.setSchedule(schedule);
+
+      // Create rooms
+      Room room1 = new Room();
+      room1.setRoomId(FIRST_ROOM_ID);
+      room1.setRoomName(FIRST_ROOM_NAME);
+      room1.setRoomType(FIRST_ROOM_TYPE);
+      room1.setMuseum(museum);
+
+      Room room2 = new Room();
+      room2.setRoomId(SECOND_ROOM_ID);
+      room2.setRoomName(SECOND_ROOM_NAME);
+      room2.setRoomType(SECOND_ROOM_TYPE);
+      room2.setMuseum(museum);
+
+      Room room3 = new Room();
+      room3.setRoomId(THIRD_ROOM_ID);
+      room3.setRoomName(THIRD_ROOM_NAME);
+      room3.setRoomType(THIRD_ROOM_TYPE);
+      room3.setMuseum(museum);
+
+      List<Room> rooms = new ArrayList<Room>();
+      rooms.add(room1);
+      rooms.add(room2);
+      rooms.add(room3);
+
+      return rooms;
+    });
+
+    lenient().when(museumRepository.findMuseumByMuseumId(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
+      if (invocation.getArgument(0).equals(MUSEUM_ID)) {
+        // Create museum and its schedule
+        Museum museum = new Museum();
+        museum.setMuseumId(MUSEUM_ID);
+        museum.setName(MUSEUM_NAME);
+        museum.setVisitFee(MUSEUM_VISIT_FEE);
+        Schedule schedule = new Schedule();
+        schedule.setScheduleId(SCHEDULE_ID);
+        museum.setSchedule(schedule);
+        return museum;
       } else {
         return null;
       }
@@ -357,38 +454,22 @@ public class TestRoomService {
    */
   @Test
   public void testGetRoomById() {
-    // Create the museum and its schedule
-    Schedule schedule = new Schedule();
-    schedule.setScheduleId(SCHEDULE_ID);
-    Museum museum = new Museum();
-    museum.setMuseumId(MUSEUM_ID);
-    museum.setName(MUSEUM_NAME);
-    museum.setVisitFee(MUSEUM_VISIT_FEE);
-    museum.setSchedule(schedule);
-    museum = museumRepository.save(museum);
-
-    // Create the room
-    Room room = null;
-    try {
-      room = roomService.createRoom(FIRST_ROOM_NAME, FIRST_ROOM_TYPE, museum);
-    } catch (IllegalArgumentException e) {
-      fail();
-    }
-
     // Get the room by its id
-    Room storedRoom = null;
+    Room firstRoom = null;
+    Room secondRoom = null;
+    Room thirdRoom = null;
     try {
-      storedRoom = roomService.getRoomById(room.getRoomId());
+      firstRoom = roomService.getRoomById(FIRST_ROOM_ID);
+      secondRoom = roomService.getRoomById(SECOND_ROOM_ID);
+      thirdRoom = roomService.getRoomById(THIRD_ROOM_ID);
     } catch (IllegalArgumentException e) {
       fail();
     }
 
-    // Check that the room's attributes are correct
-    assertEquals(room.getRoomId(), storedRoom.getRoomId());
-    assertEquals(room.getRoomName(), storedRoom.getRoomName());
-    assertEquals(room.getRoomType(), storedRoom.getRoomType());
-    assertEquals(room.getCurrentNumberOfArtwork(), storedRoom.getCurrentNumberOfArtwork());
-    assertEquals(room.getMuseum().getMuseumId(), storedRoom.getMuseum().getMuseumId());
+    // Check that the rooms are correct
+    assertEquals(FIRST_ROOM_ID, firstRoom.getRoomId());
+    assertEquals(SECOND_ROOM_ID, secondRoom.getRoomId());
+    assertEquals(THIRD_ROOM_ID, thirdRoom.getRoomId());
   }
 
   /**
@@ -406,6 +487,407 @@ public class TestRoomService {
       // Check that an error occurred
       assertNull(room);
       assertEquals("Room id cannot be empty", e.getMessage());
+    }
+  }
+
+  /**
+   * This method tests getting a room by its id with an invalid id
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testGetRoomByIdInvalidId() {
+    Room room = null;
+    try {
+      room = roomService.getRoomById(INVALID_ID);
+    } catch (IllegalArgumentException e) {
+      fail();
+    }
+
+    // Check that the room is null
+    assertNull(room);
+  }
+
+  /**
+   * This method tests getting all the rooms
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testGetAllRooms() {
+    // Get all the rooms
+    List<Room> rooms = null;
+    try {
+      rooms = roomService.getAllRooms();
+    } catch (IllegalArgumentException e) {
+      fail();
+    }
+
+    // Check that the rooms are correct
+    assertEquals(3, rooms.size());
+    assertEquals(FIRST_ROOM_ID, rooms.get(0).getRoomId());
+    assertEquals(SECOND_ROOM_ID, rooms.get(1).getRoomId());
+    assertEquals(THIRD_ROOM_ID, rooms.get(2).getRoomId());
+  }
+
+  /**
+   * This method tests getting all the rooms in a museum
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testGetAllRoomsInMuseum() {
+    // Get the museum
+    Museum museum = null;
+    try {
+      museum = museumService.getMuseum(MUSEUM_ID);
+    } catch (IllegalArgumentException e) {
+      fail();
+    }
+
+    // Get all the rooms in the museum
+    List<Room> rooms = null;
+    try {
+      rooms = roomService.getAllRoomsByMuseum(museum);
+    } catch (IllegalArgumentException e) {
+      fail();
+    }
+
+    // Check that the rooms are correct
+    assertEquals(3, rooms.size());
+    assertEquals(FIRST_ROOM_ID, rooms.get(0).getRoomId());
+    assertEquals(SECOND_ROOM_ID, rooms.get(1).getRoomId());
+    assertEquals(THIRD_ROOM_ID, rooms.get(2).getRoomId());
+  }
+
+  /**
+   * This method tests getting all the rooms in a museum with a null museum
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testGetAllRoomsInMuseumNullMuseum() {
+    // Get all the rooms in the museum
+    List<Room> rooms = null;
+    try {
+      rooms = roomService.getAllRoomsByMuseum(null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertNull(rooms);
+      assertEquals("Museum cannot be empty", e.getMessage());
+    }
+  }
+
+  /**
+   * This method tests changing the current number of artworks in a room
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testChangeCurrentNumberOfArtwork() {
+    // Change the current number of artworks in the room
+    Room room = null;
+    try {
+      room = roomService.changeCurrentNumberOfArtwork(FIRST_ROOM_ID, 5);
+    } catch (IllegalArgumentException e) {
+      fail();
+    }
+
+    // Check that the room was changed
+    assertEquals(5, room.getCurrentNumberOfArtwork());
+  }
+
+  /**
+   * This method tests changing the current number of artworks in a room with a
+   * null id
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testChangeCurrentNumberOfArtworkNullId() {
+    // Change the current number of artworks in the room
+    Room room = null;
+    try {
+      room = roomService.changeCurrentNumberOfArtwork(null, 5);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertNull(room);
+      assertEquals("Room does not exist", e.getMessage());
+    }
+  }
+
+  /**
+   * This method tests changing the current number of artworks in a room with an
+   * invalid id
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testChangeCurrentNumberOfArtworkInvalidId() {
+    // Change the current number of artworks in the room
+    Room room = null;
+    try {
+      room = roomService.changeCurrentNumberOfArtwork(INVALID_ID, 5);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertNull(room);
+      assertEquals("Room does not exist", e.getMessage());
+    }
+  }
+
+  /**
+   * This method tests changing the current number of artworks in a room with a
+   * null number
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testChangeCurrentNumberOfArtworkNullNumber() {
+    // Change the current number of artworks in the room
+    Room room = null;
+    try {
+      room = roomService.changeCurrentNumberOfArtwork(FIRST_ROOM_ID, null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertNull(room);
+      assertEquals("Current number of artworks cannot be empty", e.getMessage());
+    }
+  }
+
+  /**
+   * This method tests changing the current number of artworks in a room with a
+   * negative number
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testChangeCurrentNumberOfArtworkNegativeNumber() {
+    // Change the current number of artworks in the room
+    Room room = null;
+    try {
+      room = roomService.changeCurrentNumberOfArtwork(FIRST_ROOM_ID, -5);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertNull(room);
+      assertEquals("Current number of artworks cannot be negative", e.getMessage());
+    }
+  }
+
+  /**
+   * This method tests changing the current number of artworks in a room with a
+   * number greater than the maximum number of artworks for a small room
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testChangeCurrentNumberOfArtworkGreaterThanMaxSmallRoom() {
+    // Change the current number of artworks in the room
+    Room room = null;
+    try {
+      room = roomService.changeCurrentNumberOfArtwork(FIRST_ROOM_ID, 50000);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertNull(room);
+      assertEquals("Current number of artworks 50000 cannot be greater than the maximum number of artworks 200",
+          e.getMessage());
+    }
+  }
+
+  /**
+   * This method tests changing the current number of artworks in a room with a
+   * number greater than the maximum number of artworks for a large room
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testChangeCurrentNumberOfArtworkGreaterThanMaxLargeRoom() {
+    // Change the current number of artworks in the room
+    Room room = null;
+    try {
+      room = roomService.changeCurrentNumberOfArtwork(SECOND_ROOM_ID, 50000);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertNull(room);
+      assertEquals("Current number of artworks 50000 cannot be greater than the maximum number of artworks 300",
+          e.getMessage());
+    }
+  }
+
+  /**
+   * This method tests changing the current number of artworks in a room with a
+   * very large number of artworks for a storage room
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testChangeCurrentNumberOfArtworkVeryLargeNumberStorageRoom() {
+    // Change the current number of artworks in the room
+    Room room = null;
+    try {
+      room = roomService.changeCurrentNumberOfArtwork(THIRD_ROOM_ID, 50000);
+    } catch (IllegalArgumentException e) {
+      fail();
+    }
+
+    // Check that the room was changed
+    assertEquals(50000, room.getCurrentNumberOfArtwork());
+  }
+
+  /**
+   * This method tests getting the maximum number of artworks for a room with a
+   * null room type
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testGetMaxNumberOfArtworkNullRoomType() {
+    // Get the maximum number of artworks for a room
+    Integer maxNumberOfArtwork = null;
+    try {
+      maxNumberOfArtwork = roomService.getMaxNumberOfArtwork(null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertNull(maxNumberOfArtwork);
+      assertEquals("Room type cannot be empty", e.getMessage());
+    }
+  }
+
+  /**
+   * This method tests deleting a room
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testDeleteRoom() {
+    try {
+      roomService.deleteRoom(FIRST_ROOM_ID);
+    } catch (IllegalArgumentException e) {
+      fail();
+    }
+  }
+
+  /**
+   * This method tests deleting a room with a null id
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testDeleteRoomNullId() {
+    try {
+      roomService.deleteRoom(null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertEquals("Room does not exist", e.getMessage());
+    }
+  }
+
+  /**
+   * This method tests editing a room
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testEditRoom() {
+    // Edit the room
+    Room room = null;
+    try {
+      room = roomService.editRoom(FIRST_ROOM_ID, SECOND_ROOM_NAME, SECOND_ROOM_TYPE, null);
+    } catch (IllegalArgumentException e) {
+      fail();
+    }
+
+    // Check that the room was edited
+    assertEquals(FIRST_ROOM_ID, room.getRoomId());
+    assertEquals(SECOND_ROOM_NAME, room.getRoomName());
+    assertEquals(SECOND_ROOM_TYPE, room.getRoomType());
+  }
+
+  /**
+   * This method tests editing a room with a null id
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testEditRoomNullId() {
+    // Edit the room
+    Room room = null;
+    try {
+      room = roomService.editRoom(null, SECOND_ROOM_NAME, SECOND_ROOM_TYPE, null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertNull(room);
+      assertEquals("Room does not exist", e.getMessage());
+    }
+  }
+
+  /**
+   * This method tests editing a room with a null name
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testEditRoomNullName() {
+    // Edit the room
+    Room room = null;
+    try {
+      room = roomService.editRoom(FIRST_ROOM_ID, null, SECOND_ROOM_TYPE, null);
+    } catch (IllegalArgumentException e) {
+      fail();
+    }
+
+    // Check that the room was edited
+    assertEquals(FIRST_ROOM_ID, room.getRoomId());
+    assertEquals(FIRST_ROOM_NAME, room.getRoomName());
+    assertEquals(SECOND_ROOM_TYPE, room.getRoomType());
+  }
+
+  /**
+   * This method tests editing a room with a null type
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testEditRoomNullType() {
+    // Edit the room
+    Room room = null;
+    try {
+      room = roomService.editRoom(FIRST_ROOM_ID, SECOND_ROOM_NAME, null, null);
+    } catch (IllegalArgumentException e) {
+      fail();
+    }
+
+    // Check that the room was edited
+    assertEquals(FIRST_ROOM_ID, room.getRoomId());
+    assertEquals(SECOND_ROOM_NAME, room.getRoomName());
+    assertEquals(FIRST_ROOM_TYPE, room.getRoomType());
+  }
+
+  /**
+   * This method tests editing a room with a null name and type
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testEditRoomNullNameAndType() {
+    // Edit the room
+    Room room = null;
+    try {
+      room = roomService.editRoom(FIRST_ROOM_ID, null, null, null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertNull(room);
+      assertEquals("Nothing to edit, all fields are empty", e.getMessage());
     }
   }
 }

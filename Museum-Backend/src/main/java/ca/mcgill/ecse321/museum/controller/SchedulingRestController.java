@@ -133,8 +133,10 @@ public class SchedulingRestController {
         return new ResponseEntity<>("The time period has been successfully deleted", HttpStatus.OK);
 
     }
+
     /**
      * RESTful api to assign edit a timeperiod in the database
+     * 
      * @author VZ
      * @param id
      * @param startDate
@@ -158,6 +160,7 @@ public class SchedulingRestController {
 
     /**
      * RESTful api to add a time period to an employee
+     * 
      * @author VZ
      * @param employeeDto
      * @param timePeriodDto
@@ -178,12 +181,13 @@ public class SchedulingRestController {
 
     /**
      * RESTful api to add a time period to an employee's schedule
+     * 
      * @author VZ
      * @param employeeId
      * @param tpId
      * @return
      */
-    @DeleteMapping(value = {"/employee/{employeeId}/shift/{tpId}", "/employee/{employeeId}/shift/{tpId}/"})
+    @DeleteMapping(value = { "/employee/{employeeId}/shift/{tpId}", "/employee/{employeeId}/shift/{tpId}/" })
     public ResponseEntity<?> deleteTimePeriodFromEmployeeSchedule(
             @PathVariable("employeeId") long employeeId,
             @PathVariable("tpId") long tpId) {
@@ -193,8 +197,10 @@ public class SchedulingRestController {
         Employee employee = employeeService.deleteEmployeeTimePeriodAssociation(employeeId, tpId);
         return new ResponseEntity<>(DtoUtility.convertToDto(employee), HttpStatus.OK);
     }
+
     /**
      * RESTful api to add a time period to a museum
+     * 
      * @author VZ
      * @param museumId
      * @param tpId
@@ -215,6 +221,7 @@ public class SchedulingRestController {
 
     /**
      * RESTful api to remove a time period from a museum
+     * 
      * @author VZ
      * @param museumId
      * @param tpId
@@ -234,6 +241,7 @@ public class SchedulingRestController {
 
     /**
      * Helper method to check if a time period is valid
+     * 
      * @author VZ
      * @param startDate
      * @param endDate

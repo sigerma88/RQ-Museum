@@ -29,18 +29,19 @@ public class ArtworkService {
   /**
    * Method to create an artwork
    * 
-   * @param name - name of the artwork
-   * @param artist - artist of the artwork
+   * @param name               - name of the artwork
+   * @param artist             - artist of the artwork
    * @param isAvailableForLoan - availability of the artwork
-   * @param loanFee - loan fee of the artwork
-   * @param image - image of the artwork
-   * @param isOnLoan - loan status of the artwork
-   * @param room - room of the artwork
+   * @param loanFee            - loan fee of the artwork
+   * @param image              - image of the artwork
+   * @param isOnLoan           - loan status of the artwork
+   * @param room               - room of the artwork
    * @return artwork
    * @author Siger
    */
   @Transactional
-  public Artwork createArtwork(String name, String artist, Boolean isAvailableForLoan, Double loanFee, String image, Boolean isOnLoan, Room room) {
+  public Artwork createArtwork(String name, String artist, Boolean isAvailableForLoan, Double loanFee, String image,
+      Boolean isOnLoan, Room room) {
     // Error handling
     if (name == null || name.trim().length() == 0) {
       throw new IllegalArgumentException("Artwork name cannot be empty");
@@ -83,7 +84,8 @@ public class ArtworkService {
     artwork.setLoanFee(loanFee);
     artwork.setImage(image);
     artwork.setIsOnLoan(isOnLoan);
-    if (room != null) artwork.setRoom(room);
+    if (room != null)
+      artwork.setRoom(room);
     artworkRepository.save(artwork);
     return artwork;
   }
@@ -128,11 +130,11 @@ public class ArtworkService {
   public List<Artwork> getAllArtworksByRoom(Room room) {
     List<Artwork> artworksInRoom = new ArrayList<>();
     for (Artwork artwork : getAllArtworks()) {
-      if (artwork.getRoom().equals(room)) artworksInRoom.add(artwork);
+      if (artwork.getRoom().equals(room))
+        artworksInRoom.add(artwork);
     }
     return artworksInRoom;
   }
-
 
   public boolean getArtworkAvailabilityForLoan(Artwork artwork) {
     return artwork.getIsAvailableForLoan();
@@ -146,9 +148,9 @@ public class ArtworkService {
    * Method to edit an artwork's information and image
    * 
    * @param artworkId - ID of artwork to be edited
-   * @param name - name of the artwork
-   * @param artist - artist of the artwork
-   * @param image - image of the artwork
+   * @param name      - name of the artwork
+   * @param artist    - artist of the artwork
+   * @param image     - image of the artwork
    * @return artwork
    * @author Siger
    */
@@ -160,23 +162,27 @@ public class ArtworkService {
       throw new IllegalArgumentException("Artwork does not exist");
     }
 
-    if ((name == null || name.trim().length() == 0) && (artist == null || artist.trim().length() == 0) && (image == null || image.trim().length() == 0)) {
+    if ((name == null || name.trim().length() == 0) && (artist == null || artist.trim().length() == 0)
+        && (image == null || image.trim().length() == 0)) {
       throw new IllegalArgumentException("Nothing to edit, all fields are empty");
     }
 
     // Edit artwork information
-    if (name != null) artwork.setName(name);
-    if (artist != null) artwork.setArtist(artist);
-    if (image != null) artwork.setImage(image);
+    if (name != null)
+      artwork.setName(name);
+    if (artist != null)
+      artwork.setArtist(artist);
+    if (image != null)
+      artwork.setImage(image);
     return artworkRepository.save(artwork);
   }
 
   /**
    * Method to edit an artwork's loan availability and loan fee
    * 
-   * @param artworkId - ID of artwork to be edited
+   * @param artworkId          - ID of artwork to be edited
    * @param isAvailableForLoan - availability of the artwork
-   * @param loanFee - loan fee of the artwork
+   * @param loanFee            - loan fee of the artwork
    * @return artwork
    * @author Siger
    */
@@ -196,7 +202,8 @@ public class ArtworkService {
     }
 
     // Change loan availability
-    if (isAvailableForLoan != null) artwork.setIsAvailableForLoan(isAvailableForLoan);
+    if (isAvailableForLoan != null)
+      artwork.setIsAvailableForLoan(isAvailableForLoan);
     artwork.setLoanFee(loanFee);
     return artworkRepository.save(artwork);
   }

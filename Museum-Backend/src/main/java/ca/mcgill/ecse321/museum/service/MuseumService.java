@@ -216,7 +216,7 @@ public class MuseumService {
   /**
    * Method to get all the museums in the database
    * 
-   * @return List of all museums 
+   * @return List of all museums
    * @author Siger
    */
   @Transactional
