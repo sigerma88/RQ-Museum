@@ -134,12 +134,12 @@ public class RoomService {
    * Method to change current number of artworks in a room
    * 
    * @param roomId - id of the room
-   * @param currentNumberOfArtworks - number of artworks in the room
+   * @param currentNumberOfArtwork - number of artworks in the room
    * @return room
    * @author Siger
    */
   @Transactional
-  public Room changeCurrentNumberOfArtwork(Long roomId, int currentNumberOfArtwork) {
+  public Room changeCurrentNumberOfArtwork(Long roomId, Integer currentNumberOfArtwork) {
     // Get room and check if it exists and error handling
     Room room = roomRepository.findRoomByRoomId(roomId);
     if (room == null) {
@@ -159,7 +159,7 @@ public class RoomService {
     }
 
     // Set new value
-    room.setCurrentNumberOfArtwork(currentNumberOfArtworks);
+    room.setCurrentNumberOfArtwork(currentNumberOfArtwork);
     roomRepository.save(room);
     return room;
   }
