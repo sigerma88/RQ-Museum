@@ -56,7 +56,7 @@ public class EmployeeRestController {
   public ResponseEntity<?> deleteEmployee(@PathVariable("id") long id) {
     try {
       // Check if employee exists
-      if (service.getEmployeeByMuseumUserId(id) == null) {
+      if (service.getEmployee(id) == null) {
         return ResponseEntity.badRequest().body("Employee does not exist");
       }
 

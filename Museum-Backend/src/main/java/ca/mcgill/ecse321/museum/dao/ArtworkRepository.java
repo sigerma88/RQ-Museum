@@ -5,12 +5,14 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 
 import ca.mcgill.ecse321.museum.model.Artwork;
+import ca.mcgill.ecse321.museum.model.Room;
 
 /**
  * Repository for Artwork class
  *
  * @author Zahra
  * @author Kevin
+ * @author Siger
  */
 public interface ArtworkRepository extends CrudRepository<Artwork, Long> {
 
@@ -20,5 +22,8 @@ public interface ArtworkRepository extends CrudRepository<Artwork, Long> {
 
   List<Artwork> findArtworkByArtist(String artist);
 
+  List<Artwork> findArtworkByRoom(Room room);
+
+  void deleteArtworkByArtworkId(Long artworkId);
 
 }
