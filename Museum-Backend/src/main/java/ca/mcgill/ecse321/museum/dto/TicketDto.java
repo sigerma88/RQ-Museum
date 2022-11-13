@@ -26,6 +26,11 @@ public class TicketDto {
 
   }
 
+  public TicketDto(Date visitSDate, VisitorDto visitor) {
+    this.visitor = visitor;
+    this.visitSDate = visitSDate;
+  }
+
   public VisitorDto getVisitor() {
     return visitor;
   }

@@ -73,7 +73,12 @@ public class DtoUtility {
       throw new IllegalArgumentException("There is no such ticket");
     }
     VisitorDto visitorDto = convertToDto(ticket.getVisitor());
-    return new TicketDto(ticket.getTicketId(), ticket.getVisitDate(), visitorDto);
+
+    TicketDto ticketDto = new TicketDto();
+    ticketDto.setVisitor(visitorDto);
+    ticketDto.setTicketId(ticket.getTicketId());
+    ticketDto.setVisitSDate(ticket.getVisitDate());
+    return ticketDto;
   }
 
 

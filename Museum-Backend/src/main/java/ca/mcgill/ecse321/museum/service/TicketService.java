@@ -24,22 +24,30 @@ public class TicketService {
 
   /**
    * Feature 4
-   * TODO Generate tickets
    */
-  public Ticket createTicket(Date visitDate, Long visitorID) {
+  @Transactional
+  public List<Ticket> createTickets(Long visitorID, Date date, int numberOfTickets) {
 
-    Visitor visitor = visitorRepository.findVisitorByMuseumUserId(visitorID);
-    Ticket ticket = new Ticket();
-    ticket.setVisitDate(visitDate);
-    ticket.setVisitor(visitor);
-    return ticket;
+    List<Ticket> ticketsBought = new ArrayList<>();
+    for (int i = 0; i < numberOfTickets; i++) {
+      Ticket ticket = createTicket(visitorID, date);
+      ticketsBought.add(ticket);
+    }
+    return ticketsBought;
   }
 
+  public Ticket createTicket(Long visitorID, Date visitDate) {
+    Ticket ticket = new Ticket();
+    ticket.setVisitDate(visitDate);
+    ticket.setVisitor(visitorRepository.findVisitorByMuseumUserId(visitorID));
+    return ticket;
+
+  }
 
   /**
    * Feature 6
-   * TODO get all tickets by visitor
    */
+  @Transactional
   public List<Ticket> getAllTicketsByVisitor(Visitor visitor) {
 
     if (visitor == null) {
