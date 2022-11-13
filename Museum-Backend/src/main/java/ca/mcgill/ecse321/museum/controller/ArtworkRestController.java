@@ -117,7 +117,7 @@ public class ArtworkRestController {
    * @author Siger
    */
   @PutMapping(value = { "/artwork/{artworkId}", "/artwork/{artworkId}/" }, produces = "application/json")
-  public ResponseEntity<?> editArtworkInfo(@PathVariable("artworkId") Long artworkId, @RequestParam(name = "name") String name, @RequestParam(name = "artist") String artist, @RequestParam(name = "image") String image) {
+  public ResponseEntity<?> editArtworkInfo(@PathVariable("artworkId") Long artworkId, @RequestParam(name = "name", required = false) String name, @RequestParam(name = "artist", required = false) String artist, @RequestParam(name = "image", required = false) String image) {
     try {
       Artwork result = artworkService.editArtworkInfo(artworkId, name, artist, image);
       return ResponseEntity.ok(DtoUtility.convertToDto(result));

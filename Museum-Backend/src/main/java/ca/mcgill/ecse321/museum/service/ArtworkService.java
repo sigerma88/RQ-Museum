@@ -162,6 +162,10 @@ public class ArtworkService {
       throw new IllegalArgumentException("Artwork does not exist");
     }
 
+    if ((name == null || name.trim().length() == 0) && (artist == null || artist.trim().length() == 0) && (image == null || image.trim().length() == 0)) {
+      throw new IllegalArgumentException("Nothing to edit, all fields are empty");
+    }
+
     // Edit artwork information
     if (name != null) artwork.setName(name);
     if (artist != null) artwork.setArtist(artist);
