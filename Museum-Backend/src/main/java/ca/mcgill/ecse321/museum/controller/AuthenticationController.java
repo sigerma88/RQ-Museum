@@ -30,12 +30,12 @@ public class AuthenticationController {
     public ResponseEntity<?> login(HttpServletRequest request,
             @RequestBody MuseumUserDto museumUser) {
         try {
-            System.out.println(request.getSession().getAttribute("user_id"));
-
             // double check cuz might not work when multiple session
             if (AuthenticationUtility.isLoggedIn(request.getSession())) {
-                throw new Exception("Cannot login when already logged in.");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Cannot login while logged in");
             }
+
             MuseumUser userAuthentication = authenticationService
                     .authenticateUser(museumUser.getEmail(), museumUser.getPassword());
             HttpSession session = request.getSession(true);
@@ -54,9 +54,10 @@ public class AuthenticationController {
                 session.setMaxInactiveInterval(60 * 60 * 24);
             }
 
-            System.out.println(session.getId());
             return ResponseEntity.ok("logged in");
-        } catch (Exception e) {
+        } catch (
+
+        Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

@@ -95,7 +95,8 @@ public class VisitorRestController {
         try {
             HttpSession session = request.getSession();
             if (!AuthenticationUtility.isLoggedIn(session)) {
-                return new ResponseEntity<>("You are not logged in", HttpStatus.BAD_REQUEST);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("You are not logged in.");
             } else if (!AuthenticationUtility.checkUserId(session, id)) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body("Not allowed to edit this account");
