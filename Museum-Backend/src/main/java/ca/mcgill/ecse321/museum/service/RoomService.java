@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
-import ca.mcgill.ecse321.museum.dao.MuseumRepository;
 import ca.mcgill.ecse321.museum.dao.RoomRepository;
 import ca.mcgill.ecse321.museum.model.Artwork;
 import ca.mcgill.ecse321.museum.model.Museum;
@@ -17,19 +16,16 @@ import ca.mcgill.ecse321.museum.model.RoomType;
 
 @Service
 public class RoomService {
-  
+
   @Autowired
   RoomRepository roomRepository;
-  
-  @Autowired
-  MuseumRepository museumRepository;
-  
+
   @Autowired
   ArtworkRepository artworkRepository;
 
   @Autowired
   ArtworkService artworkService;
-  
+
   /**
    * Method to create a room
    * 
@@ -40,6 +36,18 @@ public class RoomService {
    */
   @Transactional
   public Room createRoom(String roomName, RoomType roomType, Museum museum) {
+    // Error handling
+    if (roomName == null || roomName.trim().length() == 0) {
+      throw new IllegalArgumentException("Room name cannot be empty");
+    }
+    if (roomType == null) {
+      throw new IllegalArgumentException("Room type cannot be empty");
+    }
+    if (museum == null) {
+      throw new IllegalArgumentException("Museum cannot be empty");
+    }
+
+    // Create room
     Room room = new Room();
     room.setRoomName(roomName);
     room.setRoomType(roomType);
@@ -48,7 +56,7 @@ public class RoomService {
     roomRepository.save(room);
     return room;
   }
-  
+
   /**
    * Method to get room by id
    * 
@@ -58,10 +66,16 @@ public class RoomService {
    */
   @Transactional
   public Room getRoomById(Long roomId) {
+    // Error handling
+    if (roomId == null) {
+      throw new IllegalArgumentException("Room id cannot be empty");
+    }
+
+    // Get room
     Room room = roomRepository.findRoomByRoomId(roomId);
     return room;
   }
-  
+
   /**
    * Method to get all rooms
    * 
@@ -72,7 +86,7 @@ public class RoomService {
   public List<Room> getAllRooms() {
     return toList(roomRepository.findAll());
   }
-  
+
   /**
    * Method to get all rooms by museum
    * 
@@ -82,6 +96,11 @@ public class RoomService {
    */
   @Transactional
   public List<Room> getAllRoomsByMuseum(Museum museum) {
+    // Error handling
+    if (museum == null) {
+      throw new IllegalArgumentException("Museum cannot be empty");
+    }
+
     return toList(roomRepository.findRoomByMuseum(museum));
   }
 
@@ -120,11 +139,23 @@ public class RoomService {
    * @author Siger
    */
   @Transactional
-  public Room changeCurrentNumberOfArtworks(Long roomId, int currentNumberOfArtworks) {
-    // Get room and check if it exists
+  public Room changeCurrentNumberOfArtwork(Long roomId, int currentNumberOfArtwork) {
+    // Get room and check if it exists and error handling
     Room room = roomRepository.findRoomByRoomId(roomId);
     if (room == null) {
       throw new IllegalArgumentException("Room does not exist");
+    }
+
+    if (currentNumberOfArtwork == null) {
+      throw new IllegalArgumentException("Current number of artworks cannot be empty");
+    } else if (currentNumberOfArtwork < 0) {
+      throw new IllegalArgumentException("Current number of artworks cannot be negative");
+    }
+
+    // Check if current number of artworks is less than the maximum number of artworks
+    int maxNumberOfArtwork = getMaxNumberOfArtwork(room.getRoomType());
+    if (maxNumberOfArtwork != -1 && currentNumberOfArtwork > maxNumberOfArtwork) {
+      throw new IllegalArgumentException("Current number of artworks " + currentNumberOfArtwork + "cannot be greater than the maximum number of artworks" + maxNumberOfArtwork);
     }
 
     // Set new value
@@ -142,7 +173,7 @@ public class RoomService {
    */
   @Transactional
   public Room deleteRoom(Long roomId) {
-    // Get room and check if it exists
+    // Get room and check if it exists and error handling
     Room room = roomRepository.findRoomByRoomId(roomId);
     if (room == null) {
       throw new IllegalArgumentException("Room does not exist");
@@ -157,6 +188,36 @@ public class RoomService {
     // Delete room
     roomRepository.delete(room);
     return room;
+  }
+
+  /**
+   * Method to get the maximum number of artworks in a room
+   * -1 if room has no limit
+   * 
+   * @param roomType - type of the room
+   * @return maximum number of artworks
+   * @author Siger
+   */
+  @Transactional
+  public int getMaxNumberOfArtwork(RoomType roomType) {
+    // Error handling
+    if (roomType == null) {
+      throw new IllegalArgumentException("Room type cannot be empty");
+    }
+
+    // Get maximum number of artworks
+    int maxNumberOfArtwork = 0;
+    if (roomType.equals(RoomType.Small)) {
+      maxNumberOfArtwork = 200;
+    } else if (roomType.equals(RoomType.Large)) {
+      maxNumberOfArtwork = 300;
+    } else if (roomType.equals(RoomType.Storage)) {
+      maxNumberOfArtwork = -1;
+    } else {
+      throw new IllegalArgumentException("Room type is invalid");
+    }
+
+    return maxNumberOfArtwork;
   }
 
   /**
