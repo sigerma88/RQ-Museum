@@ -24,12 +24,17 @@ public class EmployeeService {
   /**
    * Method to get an employee by their id
    * 
-   * @param id - long
+   * @param id - Long
    * @return employee
    * @author Siger
    */
   @Transactional
-  public Employee getEmployee(long id) {
+  public Employee getEmployee(Long id) {
+    // Error handling
+    if (id == null) {
+      throw new IllegalArgumentException("Employee id cannot be null");
+    }
+
     return employeeRepository.findEmployeeByMuseumUserId(id);
   }
 
@@ -49,12 +54,13 @@ public class EmployeeService {
    * Method to delete an employee from the database by their id
    * Allows the manager to delete an employee
    * 
-   * @param id - long
+   * @param id - Long
    * @return if the employee was deleted (success)
    * @author Siger
    */
   @Transactional
-  public boolean deleteEmployee(long id) {
+  public boolean deleteEmployee(Long id) {
+    // Check if the employee exists and error handling
     Employee employee = employeeRepository.findEmployeeByMuseumUserId(id);
     if (employee == null) {
       throw new IllegalArgumentException("Employee does not exist");
