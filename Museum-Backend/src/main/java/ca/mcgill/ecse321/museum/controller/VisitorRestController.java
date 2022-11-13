@@ -42,15 +42,17 @@ public class VisitorRestController {
     public ResponseEntity<?> register(HttpServletRequest request, @RequestBody Visitor visitor) {
         try {
             HttpSession session = request.getSession();
-
-            if (!AuthenticationUtility.isLoggedIn(session)) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
+            System.out.println(session.getAttribute("user_id"));
+            System.out.println(AuthenticationUtility.isLoggedIn(session));
+            if (AuthenticationUtility.isLoggedIn(session)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Cannot register a visitor while logged in");
             }
 
             MuseumUserDto visitorDto = DtoUtility.convertToDto(registrationService
                     .createVisitor(visitor.getEmail(), visitor.getPassword(), visitor.getName()));
 
-            if (visitorDto.getClass().equals(Visitor.class)) {
+            if (visitorDto != null) {
                 session.setAttribute("user_id", visitorDto.getUserId());
                 session.setAttribute("user_type", "visitor");
             }

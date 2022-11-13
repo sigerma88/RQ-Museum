@@ -57,7 +57,7 @@ public class AuthenticationService {
 
     @Transactional
     public boolean logout(HttpServletRequest request) throws Exception {
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession();
 
         session.invalidate();
         return true;

@@ -91,8 +91,8 @@ public class RegistrationService {
    */
 
   @Transactional
-  public Visitor editVisitorInformation(long visitorId, String email, String newPassword,
-      String oldPassword, String name) throws Exception {
+  public Visitor editVisitorInformation(long visitorId, String email, String oldPassword,
+      String newPassword, String name) throws Exception {
     Visitor visitor = visitorRepository.findVisitorByMuseumUserId(visitorId);
 
     if (visitor == null) {
@@ -116,9 +116,10 @@ public class RegistrationService {
         if (!passwordValidityChecker(newPassword)) {
           throw new Exception(
               "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special character. ");
-        } else {
-          visitor.setPassword(newPassword);
         }
+
+        visitor.setPassword(newPassword);
+
       } else {
         throw new Exception("Old password incorrect");
       }

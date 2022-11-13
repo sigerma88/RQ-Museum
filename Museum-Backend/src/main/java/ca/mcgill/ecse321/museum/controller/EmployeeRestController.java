@@ -112,6 +112,7 @@ public class EmployeeRestController {
 
       EmployeeDto employeeDto =
           DtoUtility.convertToDto(registrationService.registerEmployee(employee.getName()));
+
       return ResponseEntity.ok(employeeDto);
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
