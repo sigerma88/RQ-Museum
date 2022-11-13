@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.museum.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,13 @@ public class MuseumService {
   private MuseumRepository museumRepository;
   @Autowired
   private ScheduleRepository scheduleRepository;
-  @Autowired 
+  @Autowired
   private ScheduleOfTimePeriodRepository scheduleOfTimePeriodRepository;
-  @Autowired 
+  @Autowired
   private TimePeriodRepository timePeriodRepository;
-  @Autowired 
+  @Autowired
   private TimePeriodService timePeriodService;
-  
+
   /**
    * Method to view a museum
    * 
@@ -50,7 +51,7 @@ public class MuseumService {
   @Transactional
   public Museum createMuseum(String name, double visitFee, Schedule schedule) {
     if (name == null || name.trim().length() == 0) {
-      throw new IllegalArgumentException("Museum name cannot be empty!");
+      throw new IllegalArgumentException("Name cannot be empty!");
     }
     if (visitFee < 0) {
       throw new IllegalArgumentException("Visit fee cannot be negative!");
@@ -79,7 +80,7 @@ public class MuseumService {
   @Transactional
   public Museum editMuseum(long museumId, String name, double visitFee, Schedule schedule) {
     if (name == null || name.trim().length() == 0) {
-      throw new IllegalArgumentException("Museum name cannot be empty!");
+      throw new IllegalArgumentException("Name cannot be empty!");
     }
     if (visitFee < 0) {
       throw new IllegalArgumentException("Visit fee cannot be negative!");
@@ -92,7 +93,7 @@ public class MuseumService {
     museum.setName(name);
     museum.setVisitFee(visitFee);
     museum.setSchedule(schedule);
-  
+
     return museumRepository.save(museum);
   }
 
@@ -115,9 +116,10 @@ public class MuseumService {
     }
     return schedule;
   }
-  
+
   /**
    * Method to get all of museum's shifts
+   * 
    * @author VZ
    * @param museumId
    * @return
@@ -138,6 +140,7 @@ public class MuseumService {
 
   /**
    * Method to add a time period to a museum's schedule
+   * 
    * @author VZ
    * @param museumId
    * @param timePeriodId
@@ -167,6 +170,7 @@ public class MuseumService {
 
   /**
    * Method to remove a time period from a museum's schedule
+   * 
    * @author VZ
    * @param museumId
    * @param timePeriodId
@@ -191,7 +195,33 @@ public class MuseumService {
     scheduleOfTimePeriodRepository.deleteScheduleOfTimePeriodByScheduleAndTimePeriod(schedule, timePeriod);
 
     return museumRepository.save(museum);
-  
+
+  }
+
+  /**
+   * Method to convert an Iterable to a List
+   * 
+   * @param iterable - Iterable
+   * @return List
+   * @author From tutorial notes
+   */
+  private <T> List<T> toList(Iterable<T> iterable) {
+    List<T> resultList = new ArrayList<T>();
+    for (T t : iterable) {
+      resultList.add(t);
+    }
+    return resultList;
+  }
+
+  /**
+   * Method to get all the museums in the database
+   * 
+   * @return List of all museums 
+   * @author Siger
+   */
+  @Transactional
+  public List<Museum> getAllMuseums() {
+    return toList(museumRepository.findAll());
   }
 
 }
