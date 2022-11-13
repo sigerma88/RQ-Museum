@@ -1,103 +1,221 @@
 package ca.mcgill.ecse321.museum.controller;
 
-import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
-import ca.mcgill.ecse321.museum.dao.MuseumRepository;
-import ca.mcgill.ecse321.museum.dao.RoomRepository;
 import ca.mcgill.ecse321.museum.dto.ArtworkDto;
-import ca.mcgill.ecse321.museum.model.*;
+import ca.mcgill.ecse321.museum.model.Artwork;
+import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.service.ArtworkService;
+import ca.mcgill.ecse321.museum.service.RoomService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * @author kianmamicheafara
- * ArtworkRestController class is used as a controller where we call
- * our API for our web application
- */
 
 @CrossOrigin(origins = "*")
 @RestController
 public class ArtworkRestController {
 
-    @Autowired
-    ArtworkService artworkService;
+  @Autowired
+  private ArtworkService artworkService;
 
-    @Autowired
-    ArtworkRepository artworkRepository;
+  @Autowired
+  private RoomService roomService;
 
-    @Autowired
-    RoomRepository roomRepository;
+  /**
+   * RESTful API to create an artwork
+   * 
+   * @param artworkDto - Artwork
+   * @return created artwork
+   * @author Siger
+   */
+  @PostMapping(value = { "/artwork", "/artwork/" }, produces = "application/json")
+  public ResponseEntity<?> createArtwork(@RequestParam(name = "name") String name, @RequestParam(name = "artist") String artist, @RequestParam(name = "isAvailableForLoan") Boolean isAvailableForLoan, @RequestParam(name = "loanFee", required = false) Double loanFee, @RequestParam(name = "image") String image, @RequestParam(name = "isOnLoan") Boolean isOnLoan, @RequestParam(name = "roomId", required = false) Long roomId) {
+    try {
+      // Get room
+      Room room = null;
+      if (roomId != null) {
+        room = roomService.getRoomById(roomId);
+      }
 
-    @Autowired
-    MuseumRepository museumRepository;
-
-    // Getting artwork status - FR7
-    // Returns a status string of 4 options: loan/on display/in storage
-        // 1. "none" -> The artwork doesn't exist
-        // 2. "loan" -> The artwork is on loan
-        // 3. "display" -> The artwork is on Display
-        // 4. "storage" -> The artwork is in storage
-    @GetMapping(value = "/getArtworkStatus/{id}")
-    public ResponseEntity<?> getArtworkStatus(@PathVariable("id") long id) {
-        try {
-            String status = artworkService.getArtworkStatus(id);
-            if (status.equals("none")){
-                return new ResponseEntity<>("Error getting status", HttpStatus.BAD_REQUEST);
-            }
-            return new ResponseEntity<>(status, HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+      // Create artwork
+      Artwork result = artworkService.createArtwork(name, artist, isAvailableForLoan, loanFee, image, isOnLoan, room);
+      return ResponseEntity.ok(DtoUtility.convertToDto(result));
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
     }
+  }
 
-
-    @GetMapping(value = "/getAllArtworksInRoom/{roomId}")
-    public ResponseEntity<?> getAllArtworksInRoom(@PathVariable("roomId") long roomId) {
-        try {
-            List<Artwork> listOfArtworksThatBelongToRoom = artworkService.getAllArtworksInRoom(roomId);
-            List<ArtworkDto> artworkDtos = new ArrayList<>();
-            for (Artwork artwork: listOfArtworksThatBelongToRoom){
-                artworkDtos.add(new ArtworkDto(artwork.getArtworkId(), artwork.getName(), artwork.getArtist(), artwork.getIsAvailableForLoan(), artwork.getLoanFee(), artwork.getImage(), artwork.getIsOnLoan(), artwork.getRoom()));
-            }
-            return new ResponseEntity<>(artworkDtos, HttpStatus.OK);
-        }catch (Exception e){
-            // return error message
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+  /**
+   * RESTful API to get an artwork by its id
+   * 
+   * @param artworkId - long
+   * @return artwork with the given id
+   * @author Siger
+   */
+  @GetMapping(value = { "/artwork/{artworkId}", "/artwork/{artworkId}/" })
+  public ResponseEntity<?> getArtworkById(@PathVariable("artworkId") long artworkId) {
+    try {
+      Artwork artwork = artworkService.getArtwork(artworkId);
+      return ResponseEntity.ok(DtoUtility.convertToDto(artwork));
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
     }
+  }
 
-    @GetMapping(value = "/getNumberOfArtworksInRoom/{roomId}")
-    public ResponseEntity<?> getNumberOfArtworksInRoom(@PathVariable("roomId") long roomId) {
-        try {
-            int numberOfArtworksInRoom = artworkService.getNumberOfArtworksInRoom(roomId);
-            return new ResponseEntity<>(numberOfArtworksInRoom, HttpStatus.OK);
-        }catch (Exception e){
-            // return error message
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+  @GetMapping(value = {"/artworks", "/artworks/"})
+  public List<ArtworkDto> getAllArtworks() {
+    List<ArtworkDto> artworkDtos = new ArrayList<ArtworkDto>();
+
+    for (Artwork artwork : artworkService.getAllArtworks()) {
+      try {
+        artworkDtos.add(DtoUtility.convertToDto(artwork));
+
+      } catch (Exception e) {
+      }
     }
+    return artworkDtos;
+  }
 
+  // @GetMapping(value = {"/artworks/{room}", "/artworks/{room}/"})
+  // public List<ArtworkDto> getAllArtworksByRoom(@PathVariable("room") Room room) {
+  //   List<ArtworkDto> artworkInRoomDtos = new ArrayList<ArtworkDto>();
+  //   List<Artwork> artworksInRoom = artworkService.getAllArtworksByRoom(room);
+  //   for (Artwork artwork : artworksInRoom) {
+  //     try {
+  //       artworkInRoomDtos.add(DtoUtility.convertToDto(artwork));
+  //     } catch (Exception e) {
+  //       e.printStackTrace();
+  //     }
 
+  //   }
+  //   return artworkInRoomDtos;
+  // }
 
-    @PutMapping(value = "/moveArtworkToRoom/{artworkId}/{roomId}")
-    public ResponseEntity<?> moveArtworkToRoom(@PathVariable("artworkId") long artworkId, @PathVariable("roomId") long roomId){
-        try{
-            int result = artworkService.moveArtworkToRoom(artworkId, roomId);
-            if (result == 0){
-                return new ResponseEntity<>("Successfully moved artwork to room", HttpStatus.OK);
-            } else if (result ==- 2) {
-                return new ResponseEntity<>("Room has no capacity left", HttpStatus.BAD_REQUEST);
-            }else {
-                return new ResponseEntity<>("There was an error", HttpStatus.BAD_REQUEST);
-            }
-        }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+  @GetMapping(value = "/getAllArtworksInRoom/{roomId}")
+  public ResponseEntity<?> getAllArtworksInRoom(@PathVariable("roomId") long roomId) {
+    try {
+      List<Artwork> listOfArtworksThatBelongToRoom = artworkService.getAllArtworksInRoom(roomId);
+      List<ArtworkDto> artworkDtos = new ArrayList<>();
+      for (Artwork artwork: listOfArtworksThatBelongToRoom){
+        artworkDtos.add(DtoUtility.convertToDto(artwork));
+      }
+      return new ResponseEntity<>(artworkDtos, HttpStatus.OK);
+    }catch (Exception e){
+      // return error message
+      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
+  }
 
+  /**
+   * RESTful API to edit an artwork's information
+   * 
+   * @param artworkId - id of artwork to be edited
+   * @param name - new name of artwork
+   * @param artist - new artist of artwork
+   * @param image - new image of artwork
+   * @return edited artwork
+   * @author Siger
+   */
+  @PutMapping(value = { "/artwork/{artworkId}", "/artwork/{artworkId}/" }, produces = "application/json")
+  public ResponseEntity<?> editArtworkInfo(@PathVariable("artworkId") Long artworkId, @RequestParam(name = "name") String name, @RequestParam(name = "artist") String artist, @RequestParam(name = "image") String image) {
+    try {
+      Artwork result = artworkService.editArtworkInfo(artworkId, name, artist, image);
+      return ResponseEntity.ok(DtoUtility.convertToDto(result));
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+
+  /**
+   * RESTful API to edit an artwork's loan availability and loan fee
+   * 
+   * @param artworkId - id of artwork to be edited
+   * @param isAvailableForLoan - new availability of artwork
+   * @param loanFee - new loan fee of artwork
+   * @return edited artwork
+   * @author Siger
+   */
+  @PutMapping(value = { "/artwork/loanInfo/{artworkId}", "/artwork/loanInfo/{artworkId}/" }, produces = "application/json")
+  public ResponseEntity<?> editArtworkLoanInfo(@PathVariable("artworkId") Long artworkId, @RequestParam(name = "isAvailableForLoan") boolean isAvailableForLoan, @RequestParam(name = "loanFee", required = false) Double loanFee) {
+    try {
+      Artwork result = artworkService.editArtworkLoan(artworkId, isAvailableForLoan, loanFee);
+      return ResponseEntity.ok(DtoUtility.convertToDto(result));
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+
+  /**
+   * RESTful API to delete an artwork
+   * 
+   * @param artworkId - long
+   * @return if the artwork was deleted (success)
+   * @author Siger
+   */
+  @DeleteMapping(value = { "/artwork/{artworkId}", "/artwork/{artworkId}/" })
+  public ResponseEntity<?> deleteArtwork(@PathVariable("artworkId") Long artworkId) {
+    try {
+      // Delete the artwork
+      artworkService.deleteArtwork(artworkId);
+      return ResponseEntity.ok("Artwork deleted");
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+
+  // Getting artwork status - FR7
+  // Returns a status string of 4 options: loan/on display/in storage
+  // 1. "none" -> The artwork doesn't exist
+  // 2. "loan" -> The artwork is on loan
+  // 3. "display" -> The artwork is on Display
+  // 4. "storage" -> The artwork is in storage
+  @GetMapping(value = "/getArtworkStatus/{id}")
+  public ResponseEntity<?> getArtworkStatus(@PathVariable("id") long id) {
+    try {
+      String status = artworkService.getArtworkStatus(id);
+      if (status.equals("none")){
+        return new ResponseEntity<>("Error getting status", HttpStatus.BAD_REQUEST);
+      }
+      return new ResponseEntity<>(status, HttpStatus.OK);
+    }catch (Exception e){
+      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @GetMapping(value = "/getNumberOfArtworksInRoom/{roomId}")
+  public ResponseEntity<?> getNumberOfArtworksInRoom(@PathVariable("roomId") long roomId) {
+    try {
+      int numberOfArtworksInRoom = artworkService.getNumberOfArtworksInRoom(roomId);
+      return new ResponseEntity<>(numberOfArtworksInRoom, HttpStatus.OK);
+    }catch (Exception e){
+      // return error message
+      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @PutMapping(value = "/moveArtworkToRoom/{artworkId}/{roomId}")
+  public ResponseEntity<?> moveArtworkToRoom(@PathVariable("artworkId") long artworkId, @PathVariable("roomId") long roomId){
+    try{
+      int result = artworkService.moveArtworkToRoom(artworkId, roomId);
+      if (result == 0){
+        return new ResponseEntity<>("Successfully moved artwork to room", HttpStatus.OK);
+      } else if (result ==- 2) {
+        return new ResponseEntity<>("Room has no capacity left", HttpStatus.BAD_REQUEST);
+      }else {
+        return new ResponseEntity<>("There was an error", HttpStatus.BAD_REQUEST);
+      }
+    }catch (Exception e){
+      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+  }
 }

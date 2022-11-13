@@ -1,77 +1,109 @@
 package ca.mcgill.ecse321.museum.dto;
 
-import ca.mcgill.ecse321.museum.model.Room;
-
-
 /**
- * @author kianmamicheafara
- * ArtworkDto class is used as the object which we return from our API to our web application
+ * Artwork DTO
+ *
+ * @author Zahra
+ * @author Siger
  */
 public class ArtworkDto {
 
-    // Artwork Attributes
-    private long artworkId;
-    private String name;
-    private String artist;
-    private boolean isAvailableForLoan;
-    private double loanFee;
-    private String image;
+  private Long artworkId;
+  private String name;
+  private String artist;
+  private Boolean isAvailableForLoan;
+  private Double loanFee;
+  private String image;
+  private Boolean isOnLoan;
+  private RoomDto room;
 
-    private boolean isOnLoan;
+  public ArtworkDto() {
+  }
 
-    // Artwork Associations
-    private Room room;
+  // Constructor with every attribute including associations
+  public ArtworkDto(Long artworkId, String name, String artist, Boolean isAvailableForLoan, Double loanFee, String image, Boolean isOnLoan, RoomDto room) {
+    this.artworkId = artworkId;
+    this.name = name;
+    this.artist = artist;
+    this.isAvailableForLoan = isAvailableForLoan;
+    this.loanFee = loanFee;
+    this.image = image;
+    this.isOnLoan = isOnLoan;
+    this.room = room;
+  }
 
-    // Constructor with all attributes except associations - associations can be set
-    public ArtworkDto(long artworkId, String name, String artist, boolean isAvailableForLoan, double loanFee, String image, boolean isOnLoan) {
-        this.artworkId = artworkId;
-        this.name = name;
-        this.artist = artist;
-        this.isAvailableForLoan = isAvailableForLoan;
-        this.loanFee = loanFee;
-        this.image = image;
-        this.isOnLoan = isOnLoan;
-    }
+  // Constructor with all attributes except associations - associations can be set
+  public ArtworkDto(long artworkId, String name, String artist, boolean isAvailableForLoan, double loanFee, String image, boolean isOnLoan) {
+    this.artworkId = artworkId;
+    this.name = name;
+    this.artist = artist;
+    this.isAvailableForLoan = isAvailableForLoan;
+    this.loanFee = loanFee;
+    this.image = image;
+    this.isOnLoan = isOnLoan;
+}
 
-    // Constructor with every attribute including associations
-    public ArtworkDto(long artworkId, String name, String artist, boolean isAvailableForLoan, double loanFee, String image, boolean isOnLoan, Room room) {
-        this.artworkId = artworkId;
-        this.name = name;
-        this.artist = artist;
-        this.isAvailableForLoan = isAvailableForLoan;
-        this.loanFee = loanFee;
-        this.image = image;
-        this.isOnLoan = isOnLoan;
-        this.room = room;
-    }
+  public Long getArtworkId() {
+    return artworkId;
+  }
 
-    // Getters for ArtworkDTO
-    public long getArtworkId() {
-        return artworkId;
-    }
-    public String getName() {
-        return name;
-    }
-    public String getArtist() {
-        return artist;
-    }
-    public boolean getIsAvailableForLoan() {
-        return isAvailableForLoan;
-    }
-    public double getLoanFee() {
-        return loanFee;
-    }
-    public String getImage() {
-        return image;
-    }
-    public Room getRoom() {
-        return room;
-    }
-    public Boolean getIsOnLoan() {return isOnLoan;}
+  public String getName() {
+    return name;
+  }
 
-    // Setter for linked attribute to the ArtworkDto
-    public void setRoom(Room room){
-        this.room = room;
-    }
+  public String getArtist() {
+    return artist;
+  }
 
+  public Boolean getIsAvailableForLoan() {
+    return isAvailableForLoan;
+  }
+
+  public Double getLoanFee() {
+    return loanFee;
+  }
+
+  public String getImage() {
+    return image;
+  }
+
+  public Boolean getIsOnLoan() {
+    return isOnLoan;
+  }
+
+  public RoomDto getRoom() {
+    return room;
+  }
+
+  public void setArtworkId(Long artworkId) {
+    this.artworkId = artworkId;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setArtist(String artist) {
+    this.artist = artist;
+  }
+
+  public void setIsAvailableForLoan(Boolean availableForLoan) {
+    isAvailableForLoan = availableForLoan;
+  }
+
+  public void setLoanFee(Double loanFee) {
+    this.loanFee = loanFee;
+  }
+
+  public void setImage(String image) {
+    this.image = image;
+  }
+
+  public void setIsOnLoan(Boolean onLoan) {
+    isOnLoan = onLoan;
+  }
+
+  public void setRoom(RoomDto room) {
+    this.room = room;
+  }
 }
