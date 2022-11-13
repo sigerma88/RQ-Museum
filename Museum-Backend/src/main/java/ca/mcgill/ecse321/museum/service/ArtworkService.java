@@ -41,12 +41,39 @@ public class ArtworkService {
   @Transactional
   public Artwork createArtwork(String name, String artist, Boolean isAvailableForLoan, Double loanFee, String image, Boolean isOnLoan, Room room) {
     // Error handling
+    if (name == null || name.trim().length() == 0) {
+      throw new IllegalArgumentException("Artwork name cannot be empty");
+    }
+
+    if (artist == null || artist.trim().length() == 0) {
+      throw new IllegalArgumentException("Artist name cannot be empty");
+    }
+
     if (isAvailableForLoan == true) {
       if (loanFee == null) {
         throw new IllegalArgumentException("Loan fee cannot be null if artwork is available for loan");
       }
     } else if (isAvailableForLoan == false && loanFee != null) {
       throw new IllegalArgumentException("Loan fee must be null if artwork is not available for loan");
+    }
+
+    if (image == null || image.trim().length() == 0) {
+      throw new IllegalArgumentException("Image cannot be empty");
+    }
+
+    if (isOnLoan == true) {
+      if (room != null) {
+        throw new IllegalArgumentException("Room must be null if artwork is on loan");
+      }
+    } else if (isOnLoan == false && room == null) {
+      throw new IllegalArgumentException("Room cannot be null if artwork is not on loan");
+    } else if (isOnLoan == false && room != null) {
+      // Update room artwork count
+      // TODO: Check if room is full, so use the method in RoomService
+      room.setCurrentNumberOfArtwork(room.getCurrentNumberOfArtwork() + 1);
+      roomRepository.save(room);
+    } else {
+      throw new IllegalArgumentException("Artwork must be either on loan or not on loan");
     }
 
     Artwork artwork = new Artwork();
