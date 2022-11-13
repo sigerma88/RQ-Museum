@@ -20,9 +20,12 @@ public class DtoUtility {
    * @author Siger
    */
   static ScheduleDto convertToDto(Schedule schedule) {
+    // Error handling
     if (schedule == null) {
       throw new IllegalArgumentException("There is no such schedule");
     }
+
+    // Convert schedule to DTO
     return new ScheduleDto(schedule.getScheduleId());
   }
 
@@ -34,10 +37,15 @@ public class DtoUtility {
    * @author Siger
    */
   static EmployeeDto convertToDto(Employee employee) {
+    // Error handling
     if (employee == null) {
       throw new IllegalArgumentException("There is no such employee");
     }
+
+    // Convert schedule to DTO
     ScheduleDto scheduleDto = convertToDto(employee.getSchedule());
+
+    // Convert employee to DTO
     return new EmployeeDto(employee.getMuseumUserId(), employee.getEmail(), employee.getName(), employee.getPassword(), scheduleDto);
   }
 
@@ -50,10 +58,18 @@ public class DtoUtility {
    * @author Siger
    */
   static ArtworkDto convertToDto(Artwork artwork) {
+    // Error handling
     if (artwork == null) {
       throw new IllegalArgumentException("There is no such artwork");
     }
-    RoomDto roomDto = convertToDto(artwork.getRoom());
+
+    // Convert room to DTO
+    RoomDto roomDto = null;
+    if (artwork.getRoom() != null) {
+      roomDto = convertToDto(artwork.getRoom());
+    }
+
+    // Convert artwork to DTO
     return new ArtworkDto(artwork.getArtworkId(), artwork.getName(), artwork.getArtist(), artwork.getIsAvailableForLoan(), artwork.getLoanFee(), artwork.getImage(), artwork.getIsOnLoan(), roomDto);
   }
 
@@ -65,10 +81,15 @@ public class DtoUtility {
    * @author Siger
    */
   static RoomDto convertToDto(Room room) {
+    // Error handling
     if (room == null) {
       throw new IllegalArgumentException("There is no such room");
     }
+
+    // Convert museum to DTO
     MuseumDto museumDto = convertToDto(room.getMuseum());
+
+    // Convert room to DTO
     return new RoomDto(room.getRoomId(), room.getRoomName(), room.getRoomType(), room.getCurrentNumberOfArtwork(), museumDto);
   }
 
@@ -80,10 +101,15 @@ public class DtoUtility {
    * @author Siger
    */
   static MuseumDto convertToDto(Museum museum) {
+    // Error handling
     if (museum == null) {
       throw new IllegalArgumentException("There is no such museum");
     }
+
+    // Convert schedule to DTO
     ScheduleDto scheduleDto = convertToDto(museum.getSchedule());
+
+    // Convert museum to DTO
     return new MuseumDto(museum.getMuseumId(), museum.getName(), museum.getVisitFee(), scheduleDto);
   }
 }

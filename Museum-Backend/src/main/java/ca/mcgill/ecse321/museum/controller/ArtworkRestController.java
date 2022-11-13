@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,9 +39,16 @@ public class ArtworkRestController {
    * @author Siger
    */
   @PostMapping(value = { "/artwork", "/artwork/" }, produces = "application/json")
-  public ResponseEntity<?> createArtwork(@RequestBody ArtworkDto artworkDto) {
+  public ResponseEntity<?> createArtwork(@RequestParam(name = "name") String name, @RequestParam(name = "artist") String artist, @RequestParam(name = "isAvailableForLoan") Boolean isAvailableForLoan, @RequestParam(name = "loanFee", required = false) Double loanFee, @RequestParam(name = "image") String image, @RequestParam(name = "isOnLoan") Boolean isOnLoan, @RequestParam(name = "roomId", required = false) Long roomId) {
     try {
-      Artwork result = artworkService.createArtwork(artworkDto.getName(), artworkDto.getArtist(), artworkDto.getIsAvailableForLoan(), artworkDto.getLoanFee(), artworkDto.getImage(), artworkDto.getIsOnLoan(), roomService.getRoomById(artworkDto.getRoom().getRoomId()));
+      // Get room
+      Room room = null;
+      if (roomId != null) {
+        room = roomService.getRoomById(roomId);
+      }
+
+      // Create artwork
+      Artwork result = artworkService.createArtwork(name, artist, isAvailableForLoan, loanFee, image, isOnLoan, room);
       return ResponseEntity.ok(DtoUtility.convertToDto(result));
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
@@ -125,7 +131,7 @@ public class ArtworkRestController {
    * @author Siger
    */
   @PutMapping(value = { "/artwork/loanInfo/{artworkId}", "/artwork/loanInfo/{artworkId}/" }, produces = "application/json")
-  public ResponseEntity<?> editArtworkLoanInfo(@PathVariable("artworkId") Long artworkId, @RequestParam(name = "isAvailableForLoan") boolean isAvailableForLoan, @RequestParam(name = "loanFee") double loanFee) {
+  public ResponseEntity<?> editArtworkLoanInfo(@PathVariable("artworkId") Long artworkId, @RequestParam(name = "isAvailableForLoan") boolean isAvailableForLoan, @RequestParam(name = "loanFee", required = false) Double loanFee) {
     try {
       Artwork result = artworkService.editArtworkLoan(artworkId, isAvailableForLoan, loanFee);
       return ResponseEntity.ok(DtoUtility.convertToDto(result));

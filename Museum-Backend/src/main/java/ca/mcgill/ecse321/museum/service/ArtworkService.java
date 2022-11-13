@@ -40,6 +40,15 @@ public class ArtworkService {
    */
   @Transactional
   public Artwork createArtwork(String name, String artist, Boolean isAvailableForLoan, Double loanFee, String image, Boolean isOnLoan, Room room) {
+    // Error handling
+    if (isAvailableForLoan == true) {
+      if (loanFee == null) {
+        throw new IllegalArgumentException("Loan fee cannot be null if artwork is available for loan");
+      }
+    } else if (isAvailableForLoan == false && loanFee != null) {
+      throw new IllegalArgumentException("Loan fee must be null if artwork is not available for loan");
+    }
+
     Artwork artwork = new Artwork();
     artwork.setName(name);
     artwork.setArtist(artist);
@@ -47,7 +56,7 @@ public class ArtworkService {
     artwork.setLoanFee(loanFee);
     artwork.setImage(image);
     artwork.setIsOnLoan(isOnLoan);
-    artwork.setRoom(room);
+    if (room != null) artwork.setRoom(room);
     artworkRepository.save(artwork);
     return artwork;
   }
@@ -61,6 +70,11 @@ public class ArtworkService {
    */
   @Transactional
   public Artwork getArtwork(Long artworkId) {
+    // Error handling
+    if (artworkId == null) {
+      throw new IllegalArgumentException("Artwork id cannot be null");
+    }
+
     return artworkRepository.findArtworkByArtworkId(artworkId);
   }
 
@@ -113,11 +127,13 @@ public class ArtworkService {
    */
   @Transactional
   public Artwork editArtworkInfo(Long artworkId, String name, String artist, String image) {
+    // Get artwork and check if it exists and error handling
     Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
     if (artwork == null) {
       throw new IllegalArgumentException("Artwork does not exist");
     }
 
+    // Edit artwork information
     if (name != null) artwork.setName(name);
     if (artist != null) artwork.setArtist(artist);
     if (image != null) artwork.setImage(image);
@@ -135,11 +151,20 @@ public class ArtworkService {
    */
   @Transactional
   public Artwork editArtworkLoan(Long artworkId, Boolean isAvailableForLoan, Double loanFee) {
+    // Get artwork and check if it exists and error handling
     Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
     if (artwork == null) {
       throw new IllegalArgumentException("Artwork does not exist");
     }
+    if (isAvailableForLoan == true) {
+      if (loanFee == null) {
+        throw new IllegalArgumentException("Loan fee cannot be null if artwork is available for loan");
+      }
+    } else if (isAvailableForLoan == false && loanFee != null) {
+      throw new IllegalArgumentException("Loan fee must be null if artwork is not available for loan");
+    }
 
+    // Change loan availability
     if (isAvailableForLoan != null) artwork.setIsAvailableForLoan(isAvailableForLoan);
     artwork.setLoanFee(loanFee);
     return artworkRepository.save(artwork);
@@ -154,6 +179,7 @@ public class ArtworkService {
    */
   @Transactional
   public boolean deleteArtwork(Long artworkId) {
+    // Get artwork and check if it exists and error handling
     Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
     if (artwork == null) {
       throw new IllegalArgumentException("Artwork does not exist");
