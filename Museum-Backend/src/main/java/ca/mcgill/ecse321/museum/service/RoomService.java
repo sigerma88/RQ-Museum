@@ -23,9 +23,6 @@ public class RoomService {
   @Autowired
   ArtworkRepository artworkRepository;
 
-  @Autowired
-  ArtworkService artworkService;
-
   /**
    * Method to create a room
    * 
@@ -186,6 +183,7 @@ public class RoomService {
     // Delete artworks in the room
     List<Artwork> artworks = toList(artworkRepository.findArtworkByRoom(room));
     for (Artwork artwork : artworks) {
+      ArtworkService artworkService = new ArtworkService();
       boolean b = artworkService.deleteArtwork(artwork.getArtworkId());
     }
 

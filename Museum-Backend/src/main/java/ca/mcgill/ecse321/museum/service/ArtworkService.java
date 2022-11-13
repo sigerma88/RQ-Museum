@@ -26,9 +26,6 @@ public class ArtworkService {
   @Autowired
   LoanRepository loanRepository;
 
-  @Autowired
-  RoomService roomService;
-
   /**
    * Method to create an artwork
    * 
@@ -73,6 +70,7 @@ public class ArtworkService {
       throw new IllegalArgumentException("Room cannot be null if artwork is not on loan");
     } else if (isOnLoan == false && room != null) {
       // Update room artwork count
+      RoomService roomService = new RoomService();
       roomService.changeCurrentNumberOfArtwork(room.getRoomId(), room.getCurrentNumberOfArtwork() + 1);
     } else {
       throw new IllegalArgumentException("Artwork must be either on loan or not on loan");

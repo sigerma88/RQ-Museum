@@ -4,7 +4,7 @@ import ca.mcgill.ecse321.museum.dto.RoomDto;
 import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.model.RoomType;
-import ca.mcgill.ecse321.museum.service.museumService;
+import ca.mcgill.ecse321.museum.service.MuseumService;
 import ca.mcgill.ecse321.museum.service.RoomService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ public class RoomRestController {
   public ResponseEntity<?> createRoom(@RequestParam(name = "roomName") String roomName, @RequestParam(name = "roomType") RoomType roomType, @RequestParam(name = "museumId") Long museumId) {
     try {
       // Get museum
-      Museum museum = museumService.getMuseumById(museumId); // TODO
+      Museum museum = museumService.getMuseum(museumId);
 
       // Create room
       Room result = roomService.createRoom(roomName, roomType, museum);
@@ -101,7 +101,7 @@ public class RoomRestController {
   public ResponseEntity<?> getAllRoomsByMuseumId(@PathVariable Long museumId) {
     try {
       // Get museum
-      Museum museum = museumService.getMuseumById(museumId); // TODO
+      Museum museum = museumService.getMuseum(museumId);
 
       // Get rooms
       List<RoomDto> roomDtos = new ArrayList<>();
@@ -130,7 +130,7 @@ public class RoomRestController {
       // Get museum
       Museum museum = null;
       if (museumId != null) {
-        museum = museumService.getMuseumById(museumId); // TODO
+        museum = museumService.getMuseum(museumId);
       }
 
       // Update room

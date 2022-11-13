@@ -214,6 +214,22 @@ public class TestEmployeeService {
   }
 
   /**
+   * Test method for getting an employee by id when id is null.
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testGetEmployeeNull() {
+    String error = null;
+    try {
+      employeeService.getEmployee(null);
+    } catch (IllegalArgumentException e) {
+      error = e.getMessage();
+    }
+    assertEquals("Employee id cannot be null", error);
+  }
+
+  /**
    * Test method for getting all employees.
    * 
    * @author Siger

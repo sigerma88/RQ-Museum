@@ -12,17 +12,31 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.museum.model.Employee;
-import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.dto.EmployeeDto;
-import ca.mcgill.ecse321.museum.dto.ScheduleDto;
 import ca.mcgill.ecse321.museum.service.EmployeeService;
 
 @CrossOrigin(origins = "*")
 @RestController
 public class EmployeeRestController {
 
-	@Autowired
-	private EmployeeService service;
+  @Autowired
+  private EmployeeService service;
+
+  /**
+   * RESTful api to get an employee
+   * @author VZ
+   * @param id
+   * @return
+   */
+  @GetMapping(value = { "/employee/{id}", "/employee/{id}/" })
+  public ResponseEntity<?> getEmployee(@PathVariable("id") long id) {
+    try {
+      EmployeeDto employeeDto = DtoUtility.convertToDto(service.getEmployee(id));
+      return ResponseEntity.ok(employeeDto);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
 
   /**
    * RESTful API to get all employees
@@ -41,7 +55,6 @@ public class EmployeeRestController {
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
-    
   }
 
   /**
@@ -54,12 +67,6 @@ public class EmployeeRestController {
   @DeleteMapping(value = { "/employee/{id}", "/employee/{id}/" })
   public ResponseEntity<?> deleteEmployee(@PathVariable("id") long id) {
     try {
-      // Check if employee exists
-      if (service.getEmployee(id) == null) {
-        return ResponseEntity.badRequest().body("Employee does not exist");
-      }
-
-      // Delete employee
       service.deleteEmployee(id);
       return ResponseEntity.ok("Employee deleted");
     } catch (Exception e) {
