@@ -21,8 +21,6 @@ import ca.mcgill.ecse321.museum.model.Schedule;
 public class EmployeeRepositoryTests {
   @Autowired
   private EmployeeRepository employeeRepository;
-  @Autowired
-  private ScheduleRepository scheduleRepository;
 
   @AfterEach
   public void clearDatabase() {
