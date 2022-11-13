@@ -84,6 +84,8 @@ public class LoanRestController {
             LoanDto loanDto = DtoUtility.convertToDto(loan);
 
             // TODO: Send email to user about the status of their loan request
+
+            // TODO: Update the room of the artwork to null
             return ResponseEntity.ok(loanDto);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -103,22 +105,7 @@ public class LoanRestController {
         produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<?> postLoan(@RequestBody Loan loan, @PathVariable Long artworkId, @PathVariable Long visitorId) {
         try {
-            Artwork artwork = artworkService.getArtwork(artworkId);
-            Visitor visitor = visitorService.getVisitorById(visitorId);
-            // if (artwork == null) {
-            //     return ResponseEntity.badRequest().body("Artwork does not exist");
-            // }
-            // if (artwork.getIsAvailableForLoan() == false) {
-            //     return ResponseEntity.badRequest().body("Artwork cannot be loaned");
-            // }
-            // if (artwork.getIsOnLoan() == true) {
-            //     return ResponseEntity.badRequest().body("Cannot create a loan request for artwork that is already on loan");
-            // }
-            // if (visitor == null) {
-            //     return ResponseEntity.badRequest().body("Visitor does not exist");
-            // }
-            // Save loan in database
-            Loan persistedLoan = loanService.save(loan, artworkId, visitorId);
+            Loan persistedLoan = loanService.createLoan(loan, artworkId, visitorId);
 
             LoanDto loanDto = DtoUtility.convertToDto(persistedLoan);
 
