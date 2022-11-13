@@ -6,7 +6,7 @@ import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.Visitor;
 import ca.mcgill.ecse321.museum.dto.EmployeeDto;
 import ca.mcgill.ecse321.museum.dto.ScheduleDto;
-import ca.mcgill.ecse321.museum.dto.MuseumUserDto;
+import ca.mcgill.ecse321.museum.dto.VisitorDto;
 
 public class DtoUtility {
   /**
@@ -46,16 +46,16 @@ public class DtoUtility {
    * @return visitor DTO
    * @author Kevin
    */
-  static MuseumUserDto convertToDto(MuseumUser museumUser) {
-    if (museumUser == null) {
+  static VisitorDto convertToDto(Visitor visitor) {
+    if (visitor == null) {
       throw new IllegalArgumentException("There is no such employee");
     }
 
-    MuseumUserDto museumUserDto = new MuseumUserDto();
-    museumUserDto.setEmail(museumUser.getEmail());
-    museumUserDto.setName(museumUser.getName());
-    museumUserDto.setPassword(museumUser.getPassword());
-    museumUserDto.setUserId(museumUser.getMuseumUserId());
-    return museumUserDto;
+    VisitorDto visitorDto = new VisitorDto();
+    visitorDto.setEmail(visitor.getEmail());
+    visitorDto.setName(visitor.getName());
+    visitorDto.setPassword(visitor.getPassword());
+    visitorDto.setUserId(visitor.getMuseumUserId());
+    return visitorDto;
   }
 }

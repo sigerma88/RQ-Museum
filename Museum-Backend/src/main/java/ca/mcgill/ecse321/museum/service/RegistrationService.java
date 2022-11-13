@@ -1,17 +1,22 @@
 package ca.mcgill.ecse321.museum.service;
 
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
+import ca.mcgill.ecse321.museum.dao.ManagerRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
 import ca.mcgill.ecse321.museum.model.Employee;
+import ca.mcgill.ecse321.museum.model.Manager;
 import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.Visitor;
+
 import java.util.regex.Pattern;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.regex.Matcher;
+
 
 @Service
 public class RegistrationService {
@@ -21,8 +26,11 @@ public class RegistrationService {
   @Autowired
   private EmployeeRepository employeeRepository;
 
+  @Autowired
+  private ManagerRepository managerRepository;
+
   /*
-   * 
+   *
    */
 
   @Transactional
@@ -41,12 +49,8 @@ public class RegistrationService {
           "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special character. ");
     }
 
-    if (visitorRepository.findVisitorByEmail(email) != null) {
+    if (checkIfEmailExists(email)) {
       throw new Exception("An account with the email " + email + " already exists.");
-    }
-
-    if (visitorRepository.findVisitorByName(name) != null) {
-      throw new Exception("Please choose another username. " + name + " already exists. ");
     }
 
     Visitor visitor = new Visitor();
@@ -61,7 +65,7 @@ public class RegistrationService {
 
 
   /*
-   * 
+   *
    */
 
   @Transactional
@@ -75,7 +79,7 @@ public class RegistrationService {
   }
 
   /*
-   * 
+   *
    */
   public Employee getEmployeePersonalInformation(long museumUserId) throws Exception {
     Employee employee = employeeRepository.findEmployeeByMuseumUserId(museumUserId);
@@ -87,7 +91,7 @@ public class RegistrationService {
 
 
   /*
-   * 
+   *
    */
 
   @Transactional
@@ -102,7 +106,7 @@ public class RegistrationService {
     String visitorCurrentPassword = visitor.getPassword();
 
     if (email != null) {
-      if (visitorRepository.findVisitorByEmail(email) != null) {
+      if (checkIfEmailExists(email)) {
         throw new Exception("An account with the email " + email + " already exists.");
       } else if (!emailValidityChecker(email)) {
         throw new Exception("Invalid email. ");
@@ -126,10 +130,6 @@ public class RegistrationService {
     }
 
     if (name != null) {
-      Visitor visitorWithNewName = visitorRepository.findVisitorByName(name);
-      if (visitorWithNewName != null) {
-        throw new Exception("Please choose another username. " + name + " already exists. ");
-      }
       visitor.setName(name);
     }
 
@@ -139,22 +139,38 @@ public class RegistrationService {
 
 
   /*
-   * 
+   *
    */
 
-  public Employee registerEmployee(String name) throws Exception {
+  public Employee createEmployee(String name) throws Exception {
 
     if (name == null) {
       throw new Exception("Name must be filled");
     }
 
-    if (employeeRepository.findVisitorByName(name) != null) {
-      throw new Exception("Please choose another username. " + name + " already exists. ");
+    String[] fullName = name.split(" ");
+
+    if (fullName.length < 2) {
+      throw new Exception("Name must be in the format of Firstname Lastname");
     }
 
-    String email = name + "@museum.com";
-    String password = passwordGenerator();
+    String names = String.join(".", fullName);
+    String email = names.toLowerCase() + "@museum.ca";
 
+    if (checkIfEmailExists(email)) {
+      boolean isEmailSet = false;
+      int count = 0;
+      while (!isEmailSet) {
+        count += 1;
+        email = names.toLowerCase() + count + "@museum.ca";
+        if (!checkIfEmailExists(email)) {
+          isEmailSet = true;
+        }
+      }
+
+    }
+
+    String password = passwordGenerator();
     Employee employee = new Employee();
     employee.setEmail(email);
     employee.setPassword(password);
@@ -166,14 +182,16 @@ public class RegistrationService {
     return employee;
   }
 
-  /** */
+  /**
+   *
+   */
 
   public Employee editEmployeeInformation(long employeeId, String oldPassword, String newPassword)
       throws Exception {
     Employee employee = employeeRepository.findEmployeeByMuseumUserId(employeeId);
 
     if (employee == null) {
-      throw new Exception("Employee not found");
+      throw new Exception("Account was not found in the system. ");
     }
 
     String currentPassword = employee.getPassword();
@@ -194,7 +212,7 @@ public class RegistrationService {
 
 
   /*
-   * 
+   *
    */
 
   public boolean passwordValidityChecker(String password) {
@@ -207,7 +225,7 @@ public class RegistrationService {
 
 
   /*
-   * 
+   *
    */
 
   public boolean emailValidityChecker(String email) {
@@ -220,14 +238,14 @@ public class RegistrationService {
 
 
   /*
-   * 
+   *
    */
 
   public String passwordGenerator() {
     final char[] lowercase = "abcdefghijklmnopqrstuvwxyz".toCharArray();
     final char[] uppercase = "ABCDEFGJKLMNPRSTUVWXYZ".toCharArray();
     final char[] numbers = "0123456789".toCharArray();
-    final char[] symbols = "^$?!@#%&".toCharArray();
+    final char[] symbols = "!@#$%^&*()_+{}|'[]:>?</".toCharArray();
     final char[] allAllowed =
         "abcdefghijklmnopqrstuvwxyzABCDEFGJKLMNPRSTUVWXYZ0123456789^$?!@#%&".toCharArray();
 
@@ -253,10 +271,26 @@ public class RegistrationService {
   }
 
   /*
-   * 
+   *
    */
 
   public int getRandomNumber(int min, int max) {
     return (int) ((Math.random() * (max - min)) + min);
   }
+
+  public boolean checkIfEmailExists(String email) {
+    Visitor visitor = visitorRepository.findVisitorByEmail(email);
+    Employee employee = employeeRepository.findEmployeeByEmail(email);
+    Manager manager = managerRepository.findManagerByEmail(email);
+
+    return visitor != null || employee != null || manager != null;
+  }
+
+  // public boolean checkIfNameExists(String name) {
+  // Visitor visitor = visitorRepository.findVisitorByName(name);
+  // Employee employee = employeeRepository.findEmployeeByName(name);
+  // Manager manager = managerRepository.findManagerByName(name);
+
+  // return visitor != null || employee != null || manager != null;
+  // }
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.museum.controller.utilities.AuthenticationUtility;
-import ca.mcgill.ecse321.museum.dto.MuseumUserDto;
+import ca.mcgill.ecse321.museum.dto.VisitorDto;
 import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Manager;
 import ca.mcgill.ecse321.museum.model.MuseumUser;
@@ -27,8 +27,7 @@ public class AuthenticationController {
     private AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(HttpServletRequest request,
-            @RequestBody MuseumUserDto museumUser) {
+    public ResponseEntity<?> login(HttpServletRequest request, @RequestBody VisitorDto museumUser) {
         try {
             // double check cuz might not work when multiple session
             if (AuthenticationUtility.isLoggedIn(request.getSession())) {
@@ -40,7 +39,7 @@ public class AuthenticationController {
                     .authenticateUser(museumUser.getEmail(), museumUser.getPassword());
             HttpSession session = request.getSession(true);
 
-            if (userAuthentication.getClass().equals(Visitor.class)) {
+            if (userAuthentication.getClass().equals(VisitorDto.class)) {
                 session.setAttribute("user_id", userAuthentication.getMuseumUserId());
                 session.setAttribute("role", "visitor");
                 session.setMaxInactiveInterval(60 * 60 * 24);
@@ -77,4 +76,5 @@ public class AuthenticationController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
 }

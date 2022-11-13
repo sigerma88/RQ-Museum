@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.museum.controller.utilities.AuthenticationUtility;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
-import ca.mcgill.ecse321.museum.dto.MuseumUserDto;
+import ca.mcgill.ecse321.museum.dto.VisitorDto;
 import ca.mcgill.ecse321.museum.model.Visitor;
 import ca.mcgill.ecse321.museum.service.RegistrationService;
 
@@ -39,7 +39,7 @@ public class VisitorRestController {
      */
 
     @PostMapping(value = "/register", produces = "application/json")
-    public ResponseEntity<?> register(HttpServletRequest request, @RequestBody Visitor visitor) {
+    public ResponseEntity<?> register(HttpServletRequest request, @RequestBody VisitorDto visitor) {
         try {
             HttpSession session = request.getSession();
             System.out.println(session.getAttribute("user_id"));
@@ -49,7 +49,7 @@ public class VisitorRestController {
                         .body("Cannot register a visitor while logged in");
             }
 
-            MuseumUserDto visitorDto = DtoUtility.convertToDto(registrationService
+            VisitorDto visitorDto = DtoUtility.convertToDto(registrationService
                     .createVisitor(visitor.getEmail(), visitor.getPassword(), visitor.getName()));
 
             if (visitorDto != null) {
@@ -80,7 +80,7 @@ public class VisitorRestController {
 
             }
 
-            MuseumUserDto visitorDto =
+            VisitorDto visitorDto =
                     DtoUtility.convertToDto(registrationService.getVisitorPersonalInformation(id));
             return ResponseEntity.ok(visitorDto);
 
@@ -102,7 +102,7 @@ public class VisitorRestController {
                         .body("Not allowed to edit this account");
             }
 
-            MuseumUserDto visitorDto =
+            VisitorDto visitorDto =
                     DtoUtility.convertToDto(registrationService.editVisitorInformation(id,
                             updatedCredential.get("email"), updatedCredential.get("oldPassword"),
                             updatedCredential.get("newPassword"), updatedCredential.get("name")));

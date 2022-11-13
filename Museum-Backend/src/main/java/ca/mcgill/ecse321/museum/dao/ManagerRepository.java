@@ -15,4 +15,6 @@ public interface ManagerRepository extends CrudRepository<Manager, Long> {
 
   Manager findManagerByEmail(String email);
 
+  Manager findManagerByName(String name);
+
 }

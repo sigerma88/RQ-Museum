@@ -1,7 +1,7 @@
 package ca.mcgill.ecse321.museum.dto;
 
-public class MuseumUserDto {
-    private Long userId;
+public class VisitorDto {
+    private long userId;
     private String email;
     private String name;
     private String password;

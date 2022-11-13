@@ -16,6 +16,8 @@ public interface EmployeeRepository extends CrudRepository<Employee, Long> {
 
   Employee findEmployeeByEmail(String email);
 
+  Employee findEmployeeByName(String name);
+
   void deleteEmployeeByMuseumUserId(Long museumUserId);
 
   Object findVisitorByName(String name);

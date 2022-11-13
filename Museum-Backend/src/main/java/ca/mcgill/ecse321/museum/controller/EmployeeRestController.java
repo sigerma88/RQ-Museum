@@ -105,13 +105,15 @@ public class EmployeeRestController {
       HttpSession session = request.getSession();
 
       if (!AuthenticationUtility.isLoggedIn(session)) {
-        return ResponseEntity.status(401).body("You must be logged in to register an employee");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body("You must be logged in to register an employee");
       } else if (!AuthenticationUtility.isManager(session)) {
-        return ResponseEntity.status(401).body("You must be a manager to register an employee");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body("You must be a manager to register an employee");
       }
 
       EmployeeDto employeeDto =
-          DtoUtility.convertToDto(registrationService.registerEmployee(employee.getName()));
+          DtoUtility.convertToDto(registrationService.createEmployee(employee.getName()));
 
       return ResponseEntity.ok(employeeDto);
     } catch (Exception e) {
@@ -126,13 +128,16 @@ public class EmployeeRestController {
       HttpSession session = request.getSession();
 
       if (!AuthenticationUtility.isLoggedIn(session)) {
-        return ResponseEntity.status(401).body("You must be logged in to edit an employee");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body("You must be logged in to edit an employee");
       } else if (!AuthenticationUtility.isStaffMember(session)) {
-        return ResponseEntity.status(401).body("You must be a staff member to edit an employee");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body("You must be a staff member to edit an employee");
       }
 
       if (!AuthenticationUtility.checkUserId(session, id)) {
-        return ResponseEntity.status(401).body("You can only edit your own information");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body("You can only edit your own information");
       }
 
       EmployeeDto employeeDto =
