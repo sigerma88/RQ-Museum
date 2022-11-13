@@ -86,6 +86,7 @@ public class RegistrationService {
     if (employee == null) {
       throw new Exception("Account was not found in out system. ");
     }
+
     return employee;
   }
 

@@ -35,9 +35,17 @@ public class TestRegistrationService {
     @InjectMocks
     private RegistrationService registrationService;
 
-    private static final String VISITOR_VALID_EMAIL = "max@gmail.com";
-    private static final String VALID_VISITOR_NAME = "max";
-    private static final long VISITOR_ID = 1;
+    private static final String FIRST_VISITOR_VALID_EMAIL = "sebastienVettel@gmail.com";
+    private static final String FIRST_VALID_VISITOR_NAME = "Sebastien Vettel";
+    private static final long FIRST_VISITOR_ID = 1;
+
+    private static final String SECOND_VISITOR_VALID_EMAIL = "george@gmail.com";
+    private static final String SECOND_VALID_VISITOR_NAME = "george russel";
+    private static final long SECOND_VISITOR_ID = 2;
+
+    private static final long EMPLOYEE_ID = 3;
+    private static final String EMPLOYEE_VALID_EMAIL = "sergio.perez@museum.ca";
+    private static final String EMPLOYEE_VALID_NAME = "Sergio Perez";
 
     private static final String VALID_PASSWORD = "Speed123#$";
 
@@ -45,35 +53,45 @@ public class TestRegistrationService {
     private static final String INVALID_EMAIL = "lewisgmailcom";
 
 
-    private static final long EMPLOYEE_ID = 2;
-    private static final String EMPLOYEE_VALID_EMAIL = "sergio.perez@museum.ca";
-    private static final String EMPLOYEE_VALID_NAME = "Sergio Perez";
-    private static final String ADMIN_VALID_EMAIL = "admin@museum.com";
-
     @BeforeEach
     public void setMockOutput() {
         lenient().when(visitorRepository.findVisitorByMuseumUserId(anyLong()))
                 .thenAnswer((InvocationOnMock invocation) -> {
-                    if (invocation.getArgument(0).equals(VISITOR_ID)) {
+                    if (invocation.getArgument(0).equals(FIRST_VISITOR_ID)) {
                         Visitor visitor = new Visitor();
-                        visitor.setMuseumUserId(VISITOR_ID);
-                        visitor.setEmail(VISITOR_VALID_EMAIL);
+                        visitor.setMuseumUserId(FIRST_VISITOR_ID);
+                        visitor.setEmail(FIRST_VISITOR_VALID_EMAIL);
                         visitor.setPassword(VALID_PASSWORD);
-                        visitor.setName(VALID_VISITOR_NAME);
+                        visitor.setName(FIRST_VALID_VISITOR_NAME);
+                        return visitor;
+                    } else if (invocation.getArgument(0).equals(SECOND_VISITOR_ID)) {
+                        Visitor visitor = new Visitor();
+                        visitor.setMuseumUserId(SECOND_VISITOR_ID);
+                        visitor.setEmail(SECOND_VISITOR_VALID_EMAIL);
+                        visitor.setPassword(VALID_PASSWORD);
+                        visitor.setName(SECOND_VALID_VISITOR_NAME);
                         return visitor;
                     } else {
                         return null;
                     }
+
                 });
 
         lenient().when(visitorRepository.findVisitorByEmail(anyString()))
                 .thenAnswer((InvocationOnMock invocation) -> {
-                    if (invocation.getArgument(0).equals(VISITOR_VALID_EMAIL)) {
+                    if (invocation.getArgument(0).equals(FIRST_VISITOR_VALID_EMAIL)) {
                         Visitor visitor = new Visitor();
-                        visitor.setMuseumUserId(VISITOR_ID);
-                        visitor.setEmail(VISITOR_VALID_EMAIL);
+                        visitor.setMuseumUserId(FIRST_VISITOR_ID);
+                        visitor.setEmail(FIRST_VISITOR_VALID_EMAIL);
                         visitor.setPassword(VALID_PASSWORD);
-                        visitor.setName(VALID_VISITOR_NAME);
+                        visitor.setName(FIRST_VALID_VISITOR_NAME);
+                        return visitor;
+                    } else if (invocation.getArgument(0).equals(SECOND_VISITOR_VALID_EMAIL)) {
+                        Visitor visitor = new Visitor();
+                        visitor.setMuseumUserId(SECOND_VISITOR_ID);
+                        visitor.setEmail(SECOND_VISITOR_VALID_EMAIL);
+                        visitor.setPassword(VALID_PASSWORD);
+                        visitor.setName(SECOND_VALID_VISITOR_NAME);
                         return visitor;
                     } else {
                         return null;
@@ -82,12 +100,19 @@ public class TestRegistrationService {
 
         lenient().when(visitorRepository.findVisitorByName(anyString()))
                 .thenAnswer((InvocationOnMock invocation) -> {
-                    if (invocation.getArgument(0).equals(VALID_VISITOR_NAME)) {
+                    if (invocation.getArgument(0).equals(FIRST_VALID_VISITOR_NAME)) {
                         Visitor visitor = new Visitor();
-                        visitor.setMuseumUserId(VISITOR_ID);
-                        visitor.setEmail(VISITOR_VALID_EMAIL);
+                        visitor.setMuseumUserId(FIRST_VISITOR_ID);
+                        visitor.setEmail(FIRST_VISITOR_VALID_EMAIL);
                         visitor.setPassword(VALID_PASSWORD);
-                        visitor.setName(VALID_VISITOR_NAME);
+                        visitor.setName(FIRST_VALID_VISITOR_NAME);
+                        return visitor;
+                    } else if (invocation.getArgument(0).equals(SECOND_VALID_VISITOR_NAME)) {
+                        Visitor visitor = new Visitor();
+                        visitor.setMuseumUserId(SECOND_VISITOR_ID);
+                        visitor.setEmail(SECOND_VISITOR_VALID_EMAIL);
+                        visitor.setPassword(VALID_PASSWORD);
+                        visitor.setName(SECOND_VALID_VISITOR_NAME);
                         return visitor;
                     } else {
                         return null;
@@ -100,6 +125,7 @@ public class TestRegistrationService {
                         Employee employee = new Employee();
                         employee.setEmail(EMPLOYEE_VALID_EMAIL);
                         employee.setPassword(VALID_PASSWORD);
+                        employee.setMuseumUserId(EMPLOYEE_ID);
                         return employee;
                     } else {
                         return null;
@@ -111,7 +137,9 @@ public class TestRegistrationService {
                     if (invocation.getArgument(0).equals(EMPLOYEE_VALID_NAME)) {
                         Employee employee = new Employee();
                         employee.setEmail(EMPLOYEE_VALID_EMAIL);
+                        employee.setMuseumUserId(EMPLOYEE_ID);
                         employee.setPassword(VALID_PASSWORD);
+                        employee.setName(EMPLOYEE_VALID_NAME);
                         return employee;
                     } else {
                         return null;
@@ -126,19 +154,8 @@ public class TestRegistrationService {
                         employee.setEmail(EMPLOYEE_VALID_EMAIL);
                         employee.setMuseumUserId(EMPLOYEE_ID);
                         employee.setPassword(VALID_PASSWORD);
+                        employee.setName(EMPLOYEE_VALID_NAME);
                         return employee;
-                    } else {
-                        return null;
-                    }
-                });
-
-        lenient().when(managerRepository.findManagerByEmail(anyString()))
-                .thenAnswer((InvocationOnMock invocation) -> {
-                    if (invocation.getArgument(0).equals(ADMIN_VALID_EMAIL)) {
-                        Manager manager = new Manager();
-                        manager.setEmail(ADMIN_VALID_EMAIL);
-                        manager.setPassword(VALID_PASSWORD);
-                        return manager;
                     } else {
                         return null;
                     }
@@ -147,8 +164,9 @@ public class TestRegistrationService {
 
     @Test
     public void createValidVisitor() {
+        VisitorDto visitorDto = null;
         try {
-            VisitorDto visitorDto = new VisitorDto();
+            visitorDto = new VisitorDto();
             visitorDto.setEmail("lewis@mail.com");
             visitorDto.setPassword("Speed123#$");
             visitorDto.setName("lewis");
@@ -158,10 +176,14 @@ public class TestRegistrationService {
         } catch (Exception e) {
             fail(e.getMessage());
         }
+
+        assertEquals("lewis@mail.com", visitorDto.getEmail());
+        assertEquals("Speed123#$", visitorDto.getPassword());
+        assertEquals("lewis", visitorDto.getName());
     }
 
     @Test
-    public void createVisitorWithNullFields() {
+    public void testCreateVisitorWithNullFields() {
         Visitor visitor = new Visitor();
         visitor.setEmail(null);
         visitor.setPassword(null);
@@ -176,11 +198,11 @@ public class TestRegistrationService {
     }
 
     @Test
-    public void createVisitorWithInvalidEmail() {
+    public void testCreateVisitorWithInvalidEmail() {
         Visitor visitor = new Visitor();
         visitor.setEmail(INVALID_EMAIL);
         visitor.setPassword(VALID_PASSWORD);
-        visitor.setName(VALID_VISITOR_NAME);
+        visitor.setName(FIRST_VALID_VISITOR_NAME);
         try {
             registrationService.createVisitor(visitor.getEmail(), visitor.getPassword(),
                     visitor.getName());
@@ -190,11 +212,11 @@ public class TestRegistrationService {
     }
 
     @Test
-    public void createVisitorWithInvalidPassword() {
+    public void testCreateVisitorWithInvalidPassword() {
         Visitor visitor = new Visitor();
-        visitor.setEmail(VISITOR_VALID_EMAIL);
+        visitor.setEmail(FIRST_VISITOR_VALID_EMAIL);
         visitor.setPassword(INVALID_PASSWORD);
-        visitor.setName(VALID_VISITOR_NAME);
+        visitor.setName(FIRST_VALID_VISITOR_NAME);
         try {
             registrationService.createVisitor(visitor.getEmail(), visitor.getPassword(),
                     visitor.getName());
@@ -206,16 +228,17 @@ public class TestRegistrationService {
     }
 
     @Test
-    public void testRegisteringWithExistingEmail() {
+    public void testCreateVisitorWithExistingEmail() {
         try {
             Visitor visitor = new Visitor();
-            visitor.setEmail(VISITOR_VALID_EMAIL);
+            visitor.setEmail(SECOND_VISITOR_VALID_EMAIL);
             visitor.setPassword(VALID_PASSWORD);
-            visitor.setName(VALID_VISITOR_NAME);
+            visitor.setName("Lewis Hamilton");
             registrationService.createVisitor(visitor.getEmail(), visitor.getPassword(),
                     visitor.getName());
         } catch (Exception e) {
-            assertEquals("An account with the email " + VISITOR_VALID_EMAIL + " already exists.",
+            assertEquals(
+                    "An account with the email " + SECOND_VISITOR_VALID_EMAIL + " already exists.",
                     e.getMessage());
         }
 
@@ -223,7 +246,7 @@ public class TestRegistrationService {
             Visitor visitor = new Visitor();
             visitor.setEmail(EMPLOYEE_VALID_EMAIL);
             visitor.setPassword(VALID_PASSWORD);
-            visitor.setName(VALID_VISITOR_NAME);
+            visitor.setName(FIRST_VALID_VISITOR_NAME);
             registrationService.createVisitor(visitor.getEmail(), visitor.getPassword(),
                     visitor.getName());
         } catch (Exception e) {
@@ -249,17 +272,22 @@ public class TestRegistrationService {
 
     @Test
     public void testGetVisitorPersonalInformation() {
+        Visitor visitor = new Visitor();
         try {
-            registrationService.getVisitorPersonalInformation(VISITOR_ID);
+            visitor = registrationService.getVisitorPersonalInformation(FIRST_VISITOR_ID);
         } catch (Exception e) {
             fail(e.getMessage());
         }
+
+        assertEquals(FIRST_VISITOR_VALID_EMAIL, visitor.getEmail());
+        assertEquals(FIRST_VALID_VISITOR_NAME, visitor.getName());
+        assertEquals(FIRST_VISITOR_ID, visitor.getMuseumUserId());
     }
 
     @Test
     public void testGetVisitorPersonalInformationWithInvalidId() {
         try {
-            registrationService.getVisitorPersonalInformation(VISITOR_ID + 1);
+            registrationService.getVisitorPersonalInformation(FIRST_VISITOR_ID + 1);
         } catch (Exception e) {
             assertEquals("Account was not found in out system. ", e.getMessage());
         }
@@ -267,15 +295,21 @@ public class TestRegistrationService {
 
     @Test
     public void testEditVisitor() {
+        Visitor visitor = new Visitor();
+        String newPassword = "#BrazilGP2022";
+        String newEmail = "pierre.gasly@mail.com";
+        String newUserName = "Alonso";
+
         try {
-            String newPassword = "#BrazilGP2022";
-            String newEmail = "pierre.gasly@mail.com";
-            String newUserName = "Alonso";
-            registrationService.editVisitorInformation(VISITOR_ID, newEmail, VALID_PASSWORD,
-                    newPassword, newUserName);
+            visitor = registrationService.editVisitorInformation(FIRST_VISITOR_ID, newEmail,
+                    VALID_PASSWORD, newPassword, newUserName);
         } catch (Exception e) {
             fail(e.getMessage());
         }
+
+        assertEquals(newPassword, visitor.getPassword());
+        assertEquals(newEmail, visitor.getEmail());
+        assertEquals(newUserName, visitor.getName());
     }
 
     @Test
@@ -290,7 +324,8 @@ public class TestRegistrationService {
     @Test
     public void testEditVisitorWithInvalidEmail() {
         try {
-            registrationService.editVisitorInformation(VISITOR_ID, INVALID_EMAIL, null, null, null);
+            registrationService.editVisitorInformation(FIRST_VISITOR_ID, INVALID_EMAIL, null, null,
+                    null);
         } catch (Exception e) {
             assertEquals("Invalid email. ", e.getMessage());
         }
@@ -299,10 +334,11 @@ public class TestRegistrationService {
     @Test
     public void testEditVisitorExistingEmail() {
         try {
-            registrationService.editVisitorInformation(VISITOR_ID, VISITOR_VALID_EMAIL, null, null,
-                    null);
+            registrationService.editVisitorInformation(FIRST_VISITOR_ID, SECOND_VISITOR_VALID_EMAIL,
+                    null, null, null);
         } catch (Exception e) {
-            assertEquals("An account with the email " + VISITOR_VALID_EMAIL + " already exists.",
+            assertEquals(
+                    "An account with the email " + SECOND_VISITOR_VALID_EMAIL + " already exists.",
                     e.getMessage());
         }
     }
@@ -310,7 +346,7 @@ public class TestRegistrationService {
     @Test
     public void testEditVisitorWithInvalidNewPassword() {
         try {
-            registrationService.editVisitorInformation(VISITOR_ID, null, VALID_PASSWORD,
+            registrationService.editVisitorInformation(FIRST_VISITOR_ID, null, VALID_PASSWORD,
                     INVALID_PASSWORD, null);
         } catch (Exception e) {
             assertEquals(
@@ -322,7 +358,7 @@ public class TestRegistrationService {
     @Test
     public void testEditVisitorWithWrongOldPassword() {
         try {
-            registrationService.editVisitorInformation(VISITOR_ID, null, INVALID_PASSWORD,
+            registrationService.editVisitorInformation(FIRST_VISITOR_ID, null, INVALID_PASSWORD,
                     VALID_PASSWORD, null);
         } catch (Exception e) {
             assertEquals("Old password incorrect", e.getMessage());
@@ -344,13 +380,17 @@ public class TestRegistrationService {
 
     @Test
     public void testCreateEmployee() {
+        Employee employee = null;
         try {
-            Employee employee = new Employee();
+            employee = new Employee();
             employee.setName("Lando Norris");
-            registrationService.createEmployee(employee.getName());
+            employee = registrationService.createEmployee(employee.getName());
         } catch (Exception e) {
             fail(e.getMessage());
         }
+
+        assertEquals("Lando Norris", employee.getName());
+        assertEquals("lando.norris@museum.ca", employee.getEmail());
     }
 
     @Test
@@ -380,21 +420,32 @@ public class TestRegistrationService {
 
     @Test
     public void testEditEmployee() {
+        Employee employee = null;
+        String newPassword = "#BrazilGP2022";
+
         try {
-            String newPassword = "#BrazilGP2022";
-            registrationService.editEmployeeInformation(EMPLOYEE_ID, VALID_PASSWORD, newPassword);
+            employee = registrationService.editEmployeeInformation(EMPLOYEE_ID, VALID_PASSWORD,
+                    newPassword);
         } catch (Exception e) {
             fail(e.getMessage());
         }
+
+        assertEquals(newPassword, employee.getPassword());
     }
 
     @Test
     public void testGetEmployeePersonalInformation() {
+        Employee employee = new Employee();
         try {
-            registrationService.getEmployeePersonalInformation(EMPLOYEE_ID);
+            employee = registrationService.getEmployeePersonalInformation(EMPLOYEE_ID);
         } catch (Exception e) {
             fail(e.getMessage());
         }
+
+        assertEquals(EMPLOYEE_VALID_EMAIL, employee.getEmail());
+        assertEquals(EMPLOYEE_VALID_NAME, employee.getName());
+        assertEquals(EMPLOYEE_ID, employee.getMuseumUserId());
+
     }
 
     @Test
