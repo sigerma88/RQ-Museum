@@ -63,11 +63,14 @@ public class ArtworkService {
         List<Artwork> artworkList = new ArrayList<Artwork>();
         Iterable<Artwork> artworkIterable = artworkRepository.findAll();
         Iterator<Artwork> artworkIterator = artworkIterable.iterator();
+
         while(artworkIterator.hasNext()){
             Artwork currentArtwork = artworkIterator.next();
-            if(currentArtwork.getRoom().getRoomId() == roomId){
-                // add artwork to list if it has the room id we want to query for
-               artworkList.add(currentArtwork);
+            if (currentArtwork.getRoom() != null) {
+                if (currentArtwork.getRoom().getRoomId() == roomId) {
+                    // add artwork to list if it has the room id we want to query for
+                    artworkList.add(currentArtwork);
+                }
             }
         }
         return artworkList;
