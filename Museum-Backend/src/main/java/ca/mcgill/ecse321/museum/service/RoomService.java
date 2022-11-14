@@ -205,6 +205,12 @@ public class RoomService {
       throw new IllegalArgumentException("Room type cannot be empty");
     }
 
+    // Check if there are artworks in the room
+    List<Artwork> artworks = toList(artworkRepository.findArtworkByRoom(room));
+    if (artworks.size() > 0) {
+      throw new IllegalArgumentException("There are still artworks in the room, remove them first");
+    }
+
     // Get maximum number of artworks
     int maxNumberOfArtwork = 0;
     if (roomType.equals(RoomType.Small)) {
