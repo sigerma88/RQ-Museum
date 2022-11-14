@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.museum.service;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
 import org.junit.jupiter.api.BeforeEach;
@@ -92,7 +93,15 @@ public class TestAuthenticationService {
                         return null;
                     }
                 });
+
+        lenient().when(employeeRepository.save(any(Employee.class)))
+                .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
+
+        lenient().when(visitorRepository.save(any(Visitor.class)))
+                .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
     }
+
+
 
     @Test
     public void testAuthenticateValidMuseumUser() {

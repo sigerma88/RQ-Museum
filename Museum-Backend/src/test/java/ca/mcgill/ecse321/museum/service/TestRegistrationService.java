@@ -1,8 +1,8 @@
 package ca.mcgill.ecse321.museum.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
@@ -18,7 +18,6 @@ import ca.mcgill.ecse321.museum.dao.ManagerRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
 import ca.mcgill.ecse321.museum.dto.VisitorDto;
 import ca.mcgill.ecse321.museum.model.Employee;
-import ca.mcgill.ecse321.museum.model.Manager;
 import ca.mcgill.ecse321.museum.model.Visitor;
 
 @ExtendWith(MockitoExtension.class)
@@ -160,6 +159,12 @@ public class TestRegistrationService {
                         return null;
                     }
                 });
+
+        lenient().when(employeeRepository.save(any(Employee.class)))
+                .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
+
+        lenient().when(visitorRepository.save(any(Visitor.class)))
+                .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
     }
 
     @Test

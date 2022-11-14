@@ -77,76 +77,26 @@ public class EmployeeRestController {
     }
   }
 
-  @GetMapping(value = {"/{id}", "/{id}/"}, produces = "application/json")
-  public ResponseEntity<?> getEmployee(HttpServletRequest request, @PathVariable("id") long id) {
-    try {
-      HttpSession session = request.getSession();
-      if (!AuthenticationUtility.isLoggedIn(session)) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
-      } else if (!AuthenticationUtility.isStaffMember(session)) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body("You are not authorized to view this page");
-      }
+  // @GetMapping(value = {"/{id}", "/{id}/"}, produces = "application/json")
+  // public ResponseEntity<?> getEmployee(HttpServletRequest request, @PathVariable("id") long id) {
+  // try {
+  // HttpSession session = request.getSession();
+  // if (!AuthenticationUtility.isLoggedIn(session)) {
+  // return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
+  // } else if (!AuthenticationUtility.isStaffMember(session)) {
+  // return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+  // .body("You are not authorized to view this page");
+  // }
 
-      if (!AuthenticationUtility.checkUserId(session, id)) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body("You can only view your own information");
-      }
+  // if (!AuthenticationUtility.checkUserId(session, id)) {
+  // return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+  // .body("You can only view your own information");
+  // }
 
-      return ResponseEntity.ok(DtoUtility.convertToDto(service.getEmployee(id)));
-    } catch (Exception e) {
-      return ResponseEntity.badRequest().body(e.getMessage());
-    }
-  }
+  // return ResponseEntity.ok(DtoUtility.convertToDto(service.getEmployee(id)));
+  // } catch (Exception e) {
+  // return ResponseEntity.badRequest().body(e.getMessage());
+  // }
+  // }
 
-  @PostMapping(value = "/register", produces = "application/json")
-  public ResponseEntity<?> register(HttpServletRequest request, @RequestBody Employee employee) {
-    try {
-      HttpSession session = request.getSession();
-
-      if (!AuthenticationUtility.isLoggedIn(session)) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body("You must be logged in to register an employee");
-      } else if (!AuthenticationUtility.isManager(session)) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body("You must be a manager to register an employee");
-      }
-
-      EmployeeDto employeeDto =
-          DtoUtility.convertToDto(registrationService.createEmployee(employee.getName()));
-
-      return ResponseEntity.ok(employeeDto);
-    } catch (Exception e) {
-      return ResponseEntity.badRequest().body(e.getMessage());
-    }
-  }
-
-  @PostMapping(value = "/edit/{id}", produces = "application/json")
-  public ResponseEntity<?> editEmployeeInformation(HttpServletRequest request,
-      @PathVariable long id, @RequestBody Map<String, String> updatedEmployeeCredential) {
-    try {
-      HttpSession session = request.getSession();
-
-      if (!AuthenticationUtility.isLoggedIn(session)) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body("You must be logged in to edit an employee");
-      } else if (!AuthenticationUtility.isStaffMember(session)) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body("You must be a staff member to edit an employee");
-      }
-
-      if (!AuthenticationUtility.checkUserId(session, id)) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body("You can only edit your own information");
-      }
-
-      EmployeeDto employeeDto =
-          DtoUtility.convertToDto(registrationService.editEmployeeInformation(id,
-              updatedEmployeeCredential.get("oldPassword"),
-              updatedEmployeeCredential.get("newPassword")));
-      return ResponseEntity.ok(employeeDto);
-    } catch (Exception e) {
-      return ResponseEntity.badRequest().body(e.getMessage());
-    }
-  }
 }

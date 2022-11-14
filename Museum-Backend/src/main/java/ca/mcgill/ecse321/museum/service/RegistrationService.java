@@ -41,7 +41,10 @@ public class RegistrationService {
 
     if (!emailValidityChecker(email)) {
       throw new Exception("Invalid email. ");
+    }
 
+    if (!nameChecker(name)) {
+      throw new Exception("Invalid name. ");
     }
 
     if (!passwordValidityChecker(password)) {
@@ -277,6 +280,16 @@ public class RegistrationService {
 
   public int getRandomNumber(int min, int max) {
     return (int) ((Math.random() * (max - min)) + min);
+  }
+
+  /*
+   *
+   */
+  public boolean nameChecker(String name) {
+    String namePattern = "^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$";
+    Pattern pattern = Pattern.compile(namePattern);
+    Matcher nameMatcher = pattern.matcher(name);
+    return nameMatcher.matches();
   }
 
   public boolean checkIfEmailExists(String email) {

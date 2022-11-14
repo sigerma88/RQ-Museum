@@ -39,7 +39,7 @@ public class AuthenticationController {
                     .authenticateUser(museumUser.getEmail(), museumUser.getPassword());
             HttpSession session = request.getSession(true);
 
-            if (userAuthentication.getClass().equals(VisitorDto.class)) {
+            if (userAuthentication.getClass().equals(Visitor.class)) {
                 session.setAttribute("user_id", userAuthentication.getMuseumUserId());
                 session.setAttribute("role", "visitor");
                 session.setMaxInactiveInterval(60 * 60 * 24);
@@ -66,6 +66,7 @@ public class AuthenticationController {
     public ResponseEntity<?> logout(HttpServletRequest request) {
         try {
             HttpSession session = request.getSession();
+            System.out.println(session.getAttribute("user_id"));
             if (AuthenticationUtility.isLoggedIn(session)
                     && AuthenticationUtility.isMuseumUser(session)) {
                 authenticationService.logout(request);
