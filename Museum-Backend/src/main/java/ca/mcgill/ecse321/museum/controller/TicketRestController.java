@@ -21,13 +21,18 @@ public class TicketRestController {
   private TicketService ticketService;
 
   /**
-   * TODO javadoc
+   * RESTful API to purchase tickets
+   *
+   * @param visitDate
+   * @param numberOfTickets
+   * @param visitorID
+   * @return boughtTickets
    */
   @PostMapping(value = {"/tickets/purchase", "/tickets/purchase/"})
-  public ResponseEntity<?> buyTickets(@RequestParam(name = "visitor") Long visitorID, @RequestParam Date date, @RequestParam(name = "number") int numberOfTickets) {
+  public ResponseEntity<?> buyTickets(@RequestParam(name = "visitor") Long visitorID, @RequestParam Date visitDate, @RequestParam(name = "number") int numberOfTickets) {
     try {
       List<TicketDto> boughtTickets = new ArrayList<>();
-      for (Ticket ticket : ticketService.createTickets(visitorID, date, numberOfTickets)) {
+      for (Ticket ticket : ticketService.createTickets(visitorID, visitDate, numberOfTickets)) {
         boughtTickets.add(DtoUtility.convertToDto(ticket));
       }
       return new ResponseEntity<>(boughtTickets, HttpStatus.CREATED);
@@ -38,13 +43,17 @@ public class TicketRestController {
   }
 
   /**
-   * TODO javadoc
+   * RESTful API to get all ticktets by visitor
+   *
+   * @param visitor Visitor
+   * @return allTicketsOfVisitor
+   * @author Zahra
    */
   @GetMapping(value = {"/tickets/{visitor}", "/tickets/{visitor}/"})
   public ResponseEntity<?> getAllTicketsByVisitor(@PathVariable("visitor") Visitor visitor) {
     try {
       List<TicketDto> allTicketsOfVisitor = new ArrayList<>();
-      for (Ticket ticket : ticketService.getAllTicketsByVisitor(visitor)) {
+      for (Ticket ticket : ticketService.getTicketsByVisitor(visitor)) {
         allTicketsOfVisitor.add(DtoUtility.convertToDto(ticket));
 
       }

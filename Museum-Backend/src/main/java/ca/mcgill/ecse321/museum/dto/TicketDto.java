@@ -1,7 +1,5 @@
 package ca.mcgill.ecse321.museum.dto;
 
-import ca.mcgill.ecse321.museum.model.Visitor;
-
 import java.sql.Date;
 
 /**
@@ -12,23 +10,23 @@ import java.sql.Date;
 public class TicketDto {
 
   private long ticketId;
-  private Date visitSDate;
+  private Date visitDate;
   private VisitorDto visitor;
 
   public TicketDto() {
 
   }
 
-  public TicketDto(long ticketId, Date visitSDate, VisitorDto visitor) {
+  public TicketDto(long ticketId, Date visitDate, VisitorDto visitor) {
     this.ticketId = ticketId;
-    this.visitSDate = visitSDate;
+    this.visitDate = visitDate;
     this.visitor = visitor;
 
   }
 
   public TicketDto(Date visitSDate, VisitorDto visitor) {
     this.visitor = visitor;
-    this.visitSDate = visitSDate;
+    this.visitDate = visitDate;
   }
 
   public VisitorDto getVisitor() {
@@ -43,15 +41,15 @@ public class TicketDto {
     return ticketId;
   }
 
-  public Date getVisitSDate() {
-    return visitSDate;
+  public Date getVisitDate() {
+    return visitDate;
   }
 
   public void setTicketId(long ticketId) {
     this.ticketId = ticketId;
   }
 
-  public void setVisitSDate(Date visitSDate) {
-    this.visitSDate = visitSDate;
+  public void setVisitDate(Date visitSDate) {
+    this.visitDate = visitDate;
   }
 }

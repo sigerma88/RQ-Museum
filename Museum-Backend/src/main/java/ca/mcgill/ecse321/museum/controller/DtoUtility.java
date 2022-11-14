@@ -77,7 +77,7 @@ public class DtoUtility {
     TicketDto ticketDto = new TicketDto();
     ticketDto.setVisitor(visitorDto);
     ticketDto.setTicketId(ticket.getTicketId());
-    ticketDto.setVisitSDate(ticket.getVisitDate());
+    ticketDto.setVisitDate(ticket.getVisitDate());
     return ticketDto;
   }
 
