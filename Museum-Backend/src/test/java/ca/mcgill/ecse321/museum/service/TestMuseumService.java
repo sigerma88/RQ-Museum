@@ -6,11 +6,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.sql.Timestamp;
@@ -22,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.internal.exceptions.util.ScenarioPrinter;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
@@ -502,19 +506,194 @@ public class TestMuseumService {
         assertEquals("Museum doesn't exist!", error);
     }
 
-    // @Test
-    // public void testAddMuseumTimePeriodAssociation() {
-    //     //CREATE MUSEUM
-    //     Museum museum = null;
-    //     try {
-    //         museum = museumService.addMuseumTimePeriodAssociation(MUSEUM_ID, TIMEPERIOD_ID);
-    //     } catch (IllegalArgumentException e) {
-    //         fail(e.getMessage());
-    //     }
-    //     TimePeriod timePeriod = timePeriodRepository.findTimePeriodByTimePeriodId(TIMEPERIOD_ID);
-    //     assertNotNull(museum);
-    //     assertNotNull(scheduleOfTimePeriodRepository.findScheduleOfTimePeriodByScheduleAndTimePeriod(museum.getSchedule(), timePeriod));
+    @Test
+    public void testAddMuseumTimePeriodAssociation() {
+        // CREATE MUSEUM WITH SCHEDULE
+        Museum museum = new Museum();
+        Schedule schedule = new Schedule();
+        schedule.setScheduleId(SCHEDULE_ID);
+        museum.setMuseumId(MUSEUM_ID);
+        museum.setSchedule(schedule);
+        museum.setName(MUSEUM_NAME);
+        museum.setVisitFee(MUSEUM_VISITFEE);
+        // CREATE TIMEPERIOD WE WANT TO ADD
+        TimePeriod timeperiod = new TimePeriod();
+        timeperiod.setTimePeriodId(TIMEPERIOD_ID);
 
-    // }
+        ScheduleOfTimePeriod dummyScheduleOfTimePeriod = null;
+
+        // finding SOTPs associated with the museum's schedule.
+        lenient().when(scheduleOfTimePeriodRepository.findScheduleOfTimePeriodBySchedule(any(Schedule.class)))
+                .thenAnswer((InvocationOnMock invocation) -> {
+                    // create 2 SOTPs and associate them with the schedule, associate only one with
+                    // timeperiod
+                    List<ScheduleOfTimePeriod> scheduleOfTimePeriods = new ArrayList<>();
+                    ScheduleOfTimePeriod scheduleOfTimePeriod = new ScheduleOfTimePeriod();
+                    ScheduleOfTimePeriod scheduleOfTimePeriod2 = new ScheduleOfTimePeriod();
+
+                    scheduleOfTimePeriod.setSchedule(schedule);
+                    scheduleOfTimePeriod2.setSchedule(schedule);
+
+                    scheduleOfTimePeriod.setTimePeriod(timeperiod);
+                    scheduleOfTimePeriod2.setTimePeriod(new TimePeriod());
+
+                    scheduleOfTimePeriods.add(scheduleOfTimePeriod);
+                    scheduleOfTimePeriods.add(scheduleOfTimePeriod2);
+                    return scheduleOfTimePeriods;
+                });
+
+        try {
+            museum = museumService.addMuseumTimePeriodAssociation(MUSEUM_ID, TIMEPERIOD_ID);
+
+            List<ScheduleOfTimePeriod> scheduleOfTimePeriods = scheduleOfTimePeriodRepository
+                    .findScheduleOfTimePeriodBySchedule(museum.getSchedule());
+
+            // check if the timeperiod was added to the museum's schedule
+            for (ScheduleOfTimePeriod sotp : scheduleOfTimePeriods) {
+                if (sotp.getTimePeriod().getTimePeriodId() == TIMEPERIOD_ID) {
+                    dummyScheduleOfTimePeriod = sotp;
+                }
+            }
+
+        } catch (IllegalArgumentException e) {
+            fail(e.getMessage());
+        }
+        assertNotNull(museum);
+        assertNotNull(dummyScheduleOfTimePeriod);
+        assertEquals(timeperiod, dummyScheduleOfTimePeriod.getTimePeriod());
+    }
+
+    /**
+     * test for removing a timeperiod association from a museum's schedule
+     * @author VZ
+     */
+    @Test
+    public void testRemoveMuseumTimePeriodAssociation() {
+        // CREATE MUSEUM WITH SCHEDULE
+        final Long id = 1L;
+        final String name = "asdf";
+        final double visitFee = 10L;
+        final Museum museum = new Museum();
+        final Schedule schedule = new Schedule();
+        museum.setMuseumId(id);
+        museum.setName(name);
+        museum.setVisitFee(visitFee);
+        museum.setSchedule(schedule);
+        // CREATE TIMEPERIOD WE WANT TO DELETE
+        final Long tpId = 1L;
+        final Timestamp startDate = new Timestamp(0);
+        final Timestamp endDate = new Timestamp(1);
+        final TimePeriod tp = new TimePeriod();
+        tp.setTimePeriodId(tpId);
+        tp.setStartDate(startDate);
+        tp.setEndDate(endDate);
+
+        // ADD SHIFT TO MUSEUM SCHEDULE
+        final ScheduleOfTimePeriod sotp = new ScheduleOfTimePeriod();
+        sotp.setSchedule(schedule);
+        sotp.setTimePeriod(tp);
+
+        Museum testMuseum = null;
+
+        when(museumRepository.findMuseumByMuseumId(id)).thenAnswer((InvocationOnMock invocation) -> museum);
+        when(timePeriodRepository.findTimePeriodByTimePeriodId(tpId)).thenAnswer((InvocationOnMock invocation) -> tp);
+        when(scheduleOfTimePeriodRepository.findScheduleOfTimePeriodByScheduleAndTimePeriod(schedule, tp))
+                .thenAnswer((InvocationOnMock invocation) -> sotp);
+        // test that we get back a museum
+        testMuseum = museumService.removeMuseumTimePeriodAssociation(id, tpId);
+        assertNotNull(testMuseum);
+        // test that service actually saved museum
+        verify(museumRepository, times(1)).save(museum);
+    }
+
+    /**
+     * test for removing a timeperiod association from a museum's schedule that doesn't have the 
+     * timeperiod we want to remove
+     * @author VZ
+     */
+    @Test
+    public void testRemoveMuseumTimePeriodAssociationWithoutTimePeriod() {
+        // CREATE MUSEUM WITH SCHEDULE
+        final Long id = 1L;
+        final String name = "asdf";
+        final double visitFee = 10L;
+        final Museum museum = new Museum();
+        final Schedule schedule = new Schedule();
+        museum.setMuseumId(id);
+        museum.setName(name);
+        museum.setVisitFee(visitFee);
+        museum.setSchedule(schedule);
+        // CREATE TIMEPERIOD WE WANT TO DELETE
+        final Long tpId = 1L;
+        final Timestamp startDate = new Timestamp(0);
+        final Timestamp endDate = new Timestamp(1);
+        final TimePeriod tp = new TimePeriod();
+        tp.setTimePeriodId(tpId);
+        tp.setStartDate(startDate);
+        tp.setEndDate(endDate);
+
+        String error = "";
+
+        Museum testMuseum = null;
+        when(museumRepository.findMuseumByMuseumId(id)).thenAnswer((InvocationOnMock invocation) -> museum);
+        when(timePeriodRepository.findTimePeriodByTimePeriodId(tpId)).thenAnswer((InvocationOnMock invocation) -> tp);
+        when(scheduleOfTimePeriodRepository.findScheduleOfTimePeriodByScheduleAndTimePeriod(schedule, tp))
+                .thenAnswer((InvocationOnMock invocation) -> null);
+
+        try { testMuseum = museumService.removeMuseumTimePeriodAssociation(id, tpId);
+        } catch (IllegalArgumentException e){
+            error = e.getMessage();
+        };
+        assertNull(testMuseum);
+        assertEquals("Time period doesn't exist in museum's schedule!", error);
+    }
+    /**
+     * test for removing a timePeriod association from a museum that doesn't exist
+     * @author VZ
+     */
+    @Test
+    public void testRemoveMuseumTimePeriodAssociationInvalidMuseumId() {
+        final Long invalidId = 99L;
+        final Long timePeriodId = 1L;
+        String error = "";
+        when(museumRepository.findMuseumByMuseumId(invalidId)).thenAnswer((InvocationOnMock invocation) -> null);
+        try {
+            museumService.removeMuseumTimePeriodAssociation(invalidId, timePeriodId);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertEquals("Museum doesn't exist!", error);
+    }
+
+    /**
+     * test for getting all museums 
+     * @author VZ
+     */
+    @Test
+    public void testGetAllMuseums(){
+        //CREATE FIRST MUSEUM
+        final Long id = 1L;
+        final String name = "asdf";
+        final double visitFee = 10;
+        final Museum museum = new Museum();
+        museum.setMuseumId(id);
+        museum.setName(name);
+        museum.setVisitFee(visitFee);
+
+        //CREATE SECOND MUSEUM
+        final Long id2 = 2L;
+        final String name2 = "fdsa";
+        final double visitFee2 = 9;
+        final Museum museum2 = new Museum();
+        List<Museum> museums = new ArrayList<>();
+        
+        museums.add(museum);
+        museums.add(museum2);
+        when(museumRepository.findAll()).thenAnswer((InvocationOnMock invocation) -> museums);
+        
+        List<Museum> testMuseums = museumService.getAllMuseums();
+        assertEquals(museums, testMuseums);
+
+    }
 
 }
