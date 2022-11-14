@@ -6,11 +6,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -22,22 +20,15 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.internal.exceptions.util.ScenarioPrinter;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
-import org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean;
 
 import ca.mcgill.ecse321.museum.dao.MuseumRepository;
 import ca.mcgill.ecse321.museum.dao.ScheduleOfTimePeriodRepository;
 import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
 import ca.mcgill.ecse321.museum.dao.TimePeriodRepository;
-import ca.mcgill.ecse321.museum.dto.MuseumDto;
-import ca.mcgill.ecse321.museum.dto.ScheduleDto;
-import ca.mcgill.ecse321.museum.dto.ScheduleOfTimePeriodDto;
 import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
@@ -161,7 +152,7 @@ public class TestMuseumService {
 
   /**
    * @author VZ
-   *         This method is used to test the creation of a museum
+   * This method is used to test the creation of a museum
    */
   @Test
   public void testCreateMuseum() {
@@ -183,9 +174,7 @@ public class TestMuseumService {
 
   /**
    * @author VZ
-   *         This test checks if the museum service throws an exception when the
-   *         museum
-   *         name is null
+   * This test checks if the museum service throws an exception when the museum name is null
    */
   @Test
   public void testCreateMuseumNullName() {
@@ -207,7 +196,7 @@ public class TestMuseumService {
 
   /**
    * @author VZ
-   *         test for creating a museum with an empty name
+   * test for creating a museum with an empty name
    */
   @Test
   public void testCreateMuseumEmptyName() {
@@ -229,7 +218,7 @@ public class TestMuseumService {
 
   /**
    * @author VZ
-   *         Test for creating a museum with name [space]
+   * Test for creating a museum with name [space]
    */
   @Test
   public void testCreateMuseumSpaceName() {
@@ -251,7 +240,7 @@ public class TestMuseumService {
 
   /**
    * @author VZ
-   *         test method for creating a museum that doesn't exist.
+   * test method for creating a museum that doesn't exist.
    */
   @Test
   public void testCreateNonExistingMuseum() {
@@ -260,7 +249,7 @@ public class TestMuseumService {
 
   /**
    * @author VZ
-   *         test for creating a museum with a negative visit fee
+   * test for creating a museum with a negative visit fee
    */
   @Test
   public void testCreateMuseumWithNegativeVisitFee() {
@@ -281,7 +270,8 @@ public class TestMuseumService {
 
   /**
    * @author VZ
-   *         test for creating a museum with no schedule
+   * test for creating a museum with no schedule
+   * 
    */
   @Test
   public void testCreateMuseumWithNoSchedule() {
@@ -301,7 +291,7 @@ public class TestMuseumService {
 
   /**
    * @author VZ
-   *         test for editing a museum's attributes
+   * test for editing a museum's attributes
    */
   @Test
   public void testEditMuseum() {
@@ -325,7 +315,7 @@ public class TestMuseumService {
 
   /**
    * @author VZ
-   *         test for editing a museum by setting the name to null
+   * test for editing a museum by setting the name to null
    */
   @Test
   public void testEditMuseumWithNullName() {
@@ -349,7 +339,7 @@ public class TestMuseumService {
 
   /**
    * @author VZ
-   *         test for trying to edit a museum by setting an empty name
+   * test for trying to edit a museum by setting an empty name
    */
   @Test
   public void testEditMuseumWithEmptyName() {
@@ -373,7 +363,7 @@ public class TestMuseumService {
 
   /**
    * @author VZ
-   *         test for trying to edit a museum by setting a name with only space
+   * test for trying to edit a museum by setting a name with only space
    */
   @Test
   public void testEditMuseumWithSpaceName() {
@@ -397,7 +387,7 @@ public class TestMuseumService {
 
   /**
    * @author VZ
-   *         test for editing a museum by setting a negative visit fee
+   * test for editing a museum by setting a negative visit fee
    */
   @Test
   public void testEditMuseumWithNegativeVisitFee() {
@@ -420,7 +410,7 @@ public class TestMuseumService {
 
   /**
    * @author VZ
-   *         test for editing a museum by setting a null schedule
+   * test for editing a museum by setting a null schedule
    */
   @Test
   public void testEditMuseumWithNoSchedule() {
@@ -443,7 +433,7 @@ public class TestMuseumService {
 
   /**
    * @author VZ
-   *         Test for getting a museum schedule
+   * Test for getting a museum schedule
    */
   @Test
   public void testGetMuseumSchedule() {
@@ -458,7 +448,7 @@ public class TestMuseumService {
 
   /**
    * @author VZ
-   *         Test for getting a museum schedule with an invalid museum id
+   * Test for getting a museum schedule with an invalid museum id
    */
   @Test
   public void testGetMuseumScheduleWithInvalidMuseumId() {
@@ -475,7 +465,7 @@ public class TestMuseumService {
 
   /**
    * @author VZ
-   *         Test for getting museum timeperiods
+   * Test for getting museum timeperiods
    */
   @Test
   public void testGetMuseumTimePeriods() {
@@ -491,7 +481,7 @@ public class TestMuseumService {
 
   /**
    * @author VZ
-   *         Test for getting museum timeperiods with an invalid museum id
+   * Test for getting museum timeperiods with an invalid museum id
    */
   @Test
   public void testGetMuseumTimePeriodsWithInvalidId() {
@@ -506,6 +496,10 @@ public class TestMuseumService {
     assertEquals("Museum doesn't exist!", error);
   }
 
+  /**
+   * @author VZ
+   * test for adding a timeperiod to a museum schedule
+   */
   @Test
   public void testAddMuseumTimePeriodAssociation() {
     // CREATE MUSEUM WITH SCHEDULE
@@ -544,8 +538,7 @@ public class TestMuseumService {
 
   /**
    * 
-   * test for adding a timeperiod association to a museum with an invalid museum
-   * id
+   * test for adding a timeperiod association to a museum with an invalid museum id
    * 
    * @author VZ
    */
@@ -564,6 +557,10 @@ public class TestMuseumService {
     assertEquals("Museum doesn't exist!", error);
   }
 
+  /**
+   * test for adding a timeperiod association where the timeperiod doesn't exist
+   * @author VZ
+   */
   @Test
   public void testAddMuseumTimePeriodAssociationInvalidTimePeriod() {
     final Long invalidId = 99L;
@@ -688,6 +685,7 @@ public class TestMuseumService {
 
   /**
    * test for removing a timePeriod association where the timeperiod doesn't exist
+   * @author VZ
    */
   @Test
   public void testRemoveMuseumTimePeriodAssociationInvalidTimePeriodId() {
