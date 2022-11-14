@@ -184,6 +184,9 @@ public class MuseumService {
       throw new IllegalArgumentException("Museum doesn't exist!");
     }
     TimePeriod timePeriod = timePeriodRepository.findTimePeriodByTimePeriodId(timePeriodId);
+    if (timePeriod == null) {
+      throw new IllegalArgumentException("Time period doesn't exist!");
+    }
     Schedule schedule = museum.getSchedule();
     if (schedule == null) {
       throw new IllegalArgumentException("Schedule doesn't exist!");
