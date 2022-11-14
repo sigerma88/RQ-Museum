@@ -16,7 +16,6 @@ import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
 import ca.mcgill.ecse321.museum.model.TimePeriod;
 
-
 @Service
 public class EmployeeService {
 
@@ -31,9 +30,6 @@ public class EmployeeService {
 
   @Autowired
   private TimePeriodRepository timePeriodRepository;
-
-  @Autowired 
-  private TimePeriodService timePeriodService;
 
   /**
    * Method to view an employee and get them by their id
@@ -67,6 +63,7 @@ public class EmployeeService {
 
   /**
    * Method to view an employee's schedule
+   * 
    * @author VZ
    * @param employeeId - id of employee
    * @return
@@ -84,9 +81,10 @@ public class EmployeeService {
     }
     return schedule;
   }
-  
+
   /**
    * Method to get all of employee's shifts
+   * 
    * @author VZ
    * @param employeeId
    * @return
@@ -106,23 +104,23 @@ public class EmployeeService {
       throw new IllegalArgumentException("Employee has empty schedule");
     }
 
-    List<TimePeriod> timePeriods = timePeriodService.getTimePeriodsOfSchedule(schedule);
+    List<TimePeriod> timePeriods = getTimePeriodsOfSchedule(schedule);
     return timePeriods;
   }
-
 
   /**
    * Method to add a time period to employee's schedule, in other words
    * give more work to an employee.
+   * 
    * @author VZ
    * @param employee
    * @param timeperiod
    * @return
    */
-  
+
   @Transactional
   public Employee addEmployeeTimePeriodAssociation(long employeeId, long timePeriodId) {
-    
+
     Employee employee = employeeRepository.findEmployeeByMuseumUserId(employeeId);
     TimePeriod timePeriod = timePeriodRepository.findTimePeriodByTimePeriodId(timePeriodId);
     if (employee == null) {
@@ -133,10 +131,10 @@ public class EmployeeService {
     }
 
     Schedule employeeSchedule = employee.getSchedule(); // get the schedule of the employee
-    if(employeeSchedule == null) {
+    if (employeeSchedule == null) {
       throw new IllegalArgumentException("Employee has no schedule");
     }
-    
+
     ScheduleOfTimePeriod scheduleOfTimePeriod = new ScheduleOfTimePeriod(); // create a new schedule of time period
     scheduleOfTimePeriod.setTimePeriod(timePeriod); // set the time period of the schedule of time period
     scheduleOfTimePeriod.setSchedule(employeeSchedule); // set the schedule of the schedule of time period
@@ -150,6 +148,7 @@ public class EmployeeService {
   /**
    * Method to delete a time period from an employee's schedule, in other words
    * lessen an employee's workload.
+   * 
    * @author VZ
    * @param employeeId
    * @param timePeriodId
@@ -174,7 +173,8 @@ public class EmployeeService {
     if (employeeSchedule == null) {
       throw new IllegalArgumentException("Employee has empty schedule");
     }
-    if (scheduleOfTimePeriodRepository.findScheduleOfTimePeriodByScheduleAndTimePeriod(employeeSchedule, timePeriod) == null) {
+    if (scheduleOfTimePeriodRepository.findScheduleOfTimePeriodByScheduleAndTimePeriod(employeeSchedule,
+        timePeriod) == null) {
       throw new IllegalArgumentException("Time period does not exist in employee's schedule");
     }
 
@@ -199,8 +199,9 @@ public class EmployeeService {
     }
 
     // Delete scheduleOfTimePeriods
-    List<ScheduleOfTimePeriod> scheduleOfTimePeriods = scheduleOfTimePeriodRepository.findScheduleOfTimePeriodBySchedule(employee.getSchedule());
-    if (scheduleOfTimePeriods != null  && !scheduleOfTimePeriods.isEmpty()) {
+    List<ScheduleOfTimePeriod> scheduleOfTimePeriods = scheduleOfTimePeriodRepository
+        .findScheduleOfTimePeriodBySchedule(employee.getSchedule());
+    if (scheduleOfTimePeriods != null && !scheduleOfTimePeriods.isEmpty()) {
       scheduleOfTimePeriodRepository.deleteScheduleOfTimePeriodBySchedule(employee.getSchedule());
     }
 
@@ -224,5 +225,26 @@ public class EmployeeService {
       resultList.add(t);
     }
     return resultList;
+  }
+
+  /**
+   * Helper method to get the time periods of a schedule
+   * 
+   * @author VZ
+   * @param schedule
+   * @return
+   */
+
+  public List<TimePeriod> getTimePeriodsOfSchedule(Schedule schedule) {
+
+    List<ScheduleOfTimePeriod> scheduleOfTimePeriods = scheduleOfTimePeriodRepository
+        .findScheduleOfTimePeriodBySchedule(schedule);
+
+    List<TimePeriod> timePeriods = new ArrayList<TimePeriod>();
+    for (ScheduleOfTimePeriod scheduleOfTimePeriod : scheduleOfTimePeriods) {
+      timePeriods.add(scheduleOfTimePeriod.getTimePeriod());
+    }
+
+    return timePeriods;
   }
 }

@@ -134,7 +134,7 @@ public class MuseumService {
     if (schedule == null) {
       throw new IllegalArgumentException("Schedule doesn't exist!");
     }
-    List<TimePeriod> timePeriods = timePeriodService.getTimePeriodsOfSchedule(schedule);
+    List<TimePeriod> timePeriods = getTimePeriodsOfSchedule(schedule);
     return timePeriods;
   }
 
@@ -222,6 +222,27 @@ public class MuseumService {
   @Transactional
   public List<Museum> getAllMuseums() {
     return toList(museumRepository.findAll());
+  }
+
+      /**
+     * Helper method to get the time periods of a schedule
+     * 
+     * @author VZ
+     * @param schedule
+     * @return
+     */
+
+    public List<TimePeriod> getTimePeriodsOfSchedule(Schedule schedule) {
+
+      List<ScheduleOfTimePeriod> scheduleOfTimePeriods = scheduleOfTimePeriodRepository
+              .findScheduleOfTimePeriodBySchedule(schedule);
+
+      List<TimePeriod> timePeriods = new ArrayList<TimePeriod>();
+      for (ScheduleOfTimePeriod scheduleOfTimePeriod : scheduleOfTimePeriods) {
+          timePeriods.add(scheduleOfTimePeriod.getTimePeriod());
+      }
+
+      return timePeriods;
   }
 
 }

@@ -25,6 +25,10 @@ public class TimePeriodDto {
         return timePeriodId;
     }
 
+    public void setId(Long timePeriodId){
+        this.timePeriodId = timePeriodId;
+    }
+
     public Timestamp getStartDate() {
         return startDate;
     }

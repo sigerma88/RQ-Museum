@@ -16,7 +16,7 @@ public class ScheduleDto {
     this.scheduleId = scheduleId;
   }
 
-  public void setSheduleId(Long scheduleId) {
+  public void setScheduleId(Long scheduleId) {
     this.scheduleId = scheduleId;
   }
 
