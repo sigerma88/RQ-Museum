@@ -56,6 +56,7 @@ public class RegistrationRestController {
                 session.setAttribute("user_id", visitorDto.getUserId());
                 session.setAttribute("role", "visitor");
             }
+
             return ResponseEntity.ok(visitorDto);
 
         } catch (Exception e) {
@@ -66,7 +67,7 @@ public class RegistrationRestController {
     /**
     * 
     */
-    @GetMapping(value = "visitor/{id}", produces = "application/json")
+    @GetMapping(value = "/visitor/{id}", produces = "application/json")
     public ResponseEntity<?> viewVisitorInformation(HttpServletRequest request,
             @PathVariable long id) {
         try {
@@ -90,7 +91,7 @@ public class RegistrationRestController {
         }
     }
 
-    @PutMapping(value = "visitor/edit/{id}", produces = "application/json")
+    @PutMapping(value = "/visitor/edit/{id}", produces = "application/json")
     public ResponseEntity<?> editVisitorInformation(HttpServletRequest request,
             @PathVariable long id, @RequestBody Map<String, String> updatedCredential) {
         try {
@@ -114,7 +115,7 @@ public class RegistrationRestController {
     }
 
 
-    @GetMapping(value = {"employee/{id}", "/{id}/"}, produces = "application/json")
+    @GetMapping(value = {"/employee/{id}", "/{id}/"}, produces = "application/json")
     public ResponseEntity<?> getEmployee(HttpServletRequest request, @PathVariable("id") long id) {
         try {
             HttpSession session = request.getSession();

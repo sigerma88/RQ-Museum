@@ -5,6 +5,9 @@ public class VisitorDto {
     private String email;
     private String name;
     private String password;
+    private String sessionId;
+
+    public VisitorDto() {}
 
     public Long getUserId() {
         return userId;
@@ -36,5 +39,13 @@ public class VisitorDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 }
