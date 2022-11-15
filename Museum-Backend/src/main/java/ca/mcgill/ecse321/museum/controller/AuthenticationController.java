@@ -65,7 +65,7 @@ public class AuthenticationController {
   public ResponseEntity<?> logout(HttpServletRequest request) {
     try {
       HttpSession session = request.getSession();
-      System.out.println(session.getAttribute("user_id"));
+
       if (AuthenticationUtility.isLoggedIn(session)
           && AuthenticationUtility.isMuseumUser(session)) {
         authenticationService.logout(request);
