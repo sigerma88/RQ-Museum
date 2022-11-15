@@ -151,7 +151,7 @@ public class ArtworkRestController {
       @RequestParam(name = "isAvailableForLoan") boolean isAvailableForLoan,
       @RequestParam(name = "loanFee", required = false) Double loanFee) {
     try {
-      Artwork result = artworkService.editArtworkLoan(artworkId, isAvailableForLoan, loanFee);
+      Artwork result = artworkService.editArtworkLoanInfo(artworkId, isAvailableForLoan, loanFee);
       return ResponseEntity.ok(DtoUtility.convertToDto(result));
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
@@ -169,8 +169,8 @@ public class ArtworkRestController {
   public ResponseEntity<?> deleteArtwork(@PathVariable("artworkId") Long artworkId) {
     try {
       // Delete the artwork
-      artworkService.deleteArtwork(artworkId);
-      return ResponseEntity.ok("Artwork deleted");
+      Artwork artwork = artworkService.deleteArtwork(artworkId);
+      return ResponseEntity.ok(DtoUtility.convertToDto(artwork));
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }

@@ -19,12 +19,13 @@ import org.mockito.stubbing.Answer;
 
 import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
 import ca.mcgill.ecse321.museum.dao.LoanRepository;
-import ca.mcgill.ecse321.museum.dao.RoomRepository;
 import ca.mcgill.ecse321.museum.model.Artwork;
+import ca.mcgill.ecse321.museum.model.Loan;
 import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.model.RoomType;
 import ca.mcgill.ecse321.museum.model.Schedule;
+import ca.mcgill.ecse321.museum.model.Visitor;
 
 /**
  * This is the test class for the ArtworkService class
@@ -36,9 +37,6 @@ public class TestArtworkService {
 
   @Mock
   private ArtworkRepository artworkRepository;
-
-  @Mock
-  private RoomRepository roomRepository;
 
   @Mock
   private LoanRepository loanRepository;
@@ -73,6 +71,16 @@ public class TestArtworkService {
 
   private static final Long FIRST_SCHEDULE_ID = 0L;
 
+  private static final Long FIRST_VISITOR_ID = 0L;
+  private static final String FIRST_VISITOR_NAME = "Visitor Name";
+  private static final String FIRST_VISITOR_EMAIL = "Visitor Email";
+  private static final String FIRST_VISITOR_PASSWORD = "Visitor Password";
+
+  private static final Long FIRST_LOAN_ID = 0L;
+  private static final Boolean FIRST_LOAN_REQUEST_ACCEPTED = false;
+
+  private static final Double SECOND_LOAN_FEE = 100.0;
+
   /**
    * This method sets up the mock objects before each test
    * There is one loaned artwork not in a room and one non-loanable artwork in a
@@ -90,6 +98,7 @@ public class TestArtworkService {
       if (invocation.getArgument(0).equals(FIRST_ARTWORK_ID)) {
         // Create an artwork
         Artwork artwork = new Artwork();
+        artwork.setArtworkId(FIRST_ARTWORK_ID);
         artwork.setName(FIRST_ARTWORK_NAME);
         artwork.setArtist(FIRST_ARTWORK_ARTIST);
         artwork.setIsAvailableForLoan(FIRST_ARTWORK_IS_AVAILABLE_FOR_LOAN);
@@ -103,6 +112,7 @@ public class TestArtworkService {
 
         // Create an artwork
         Artwork artwork = new Artwork();
+        artwork.setArtworkId(SECOND_ARTWORK_ID);
         artwork.setName(SECOND_ARTWORK_NAME);
         artwork.setArtist(SECOND_ARTWORK_ARTIST);
         artwork.setIsAvailableForLoan(SECOND_ARTWORK_IS_AVAILABLE_FOR_LOAN);
@@ -111,6 +121,17 @@ public class TestArtworkService {
         artwork.setIsOnLoan(SECOND_ARTWORK_IS_ON_LOAN);
         artwork.setRoom(room);
         return artwork;
+      } else {
+        return null;
+      }
+    });
+
+    lenient().when(loanRepository.findLoanByArtwork(any(Artwork.class))).thenAnswer((InvocationOnMock invocation) -> {
+      Artwork artwork = (Artwork) invocation.getArgument(0);
+      if (artwork.getArtworkId().equals(FIRST_ARTWORK_ID)) {
+        // Create a loan stub
+        Loan loan = createLoanStub(artwork);
+        return loan;
       } else {
         return null;
       }
@@ -353,6 +374,466 @@ public class TestArtworkService {
   }
 
   /**
+   * This method tests getting an artwork by its id
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testGetArtworkById() {
+    Artwork firstArtwork = null;
+    Artwork secondArtwork = null;
+    try {
+      firstArtwork = artworkService.getArtwork(FIRST_ARTWORK_ID);
+      secondArtwork = artworkService.getArtwork(SECOND_ARTWORK_ID);
+    } catch (IllegalArgumentException e) {
+      // Check that no error occurred
+      fail();
+    }
+
+    // Check that the artwork was correctly retrieved
+    assertNotNull(firstArtwork);
+    assertEquals(FIRST_ARTWORK_ID, firstArtwork.getArtworkId());
+    assertEquals(FIRST_ARTWORK_NAME, firstArtwork.getName());
+    assertEquals(FIRST_ARTWORK_ARTIST, firstArtwork.getArtist());
+    assertEquals(FIRST_ARTWORK_IS_AVAILABLE_FOR_LOAN, firstArtwork.getIsAvailableForLoan());
+    assertEquals(FIRST_ARTWORK_LOAN_FEE, firstArtwork.getLoanFee());
+    assertEquals(FIRST_ARTWORK_IMAGE, firstArtwork.getImage());
+    assertEquals(FIRST_ARTWORK_IS_ON_LOAN, firstArtwork.getIsOnLoan());
+    assertNull(firstArtwork.getRoom());
+
+    assertNotNull(secondArtwork);
+    assertEquals(SECOND_ARTWORK_ID, secondArtwork.getArtworkId());
+    assertEquals(SECOND_ARTWORK_NAME, secondArtwork.getName());
+    assertEquals(SECOND_ARTWORK_ARTIST, secondArtwork.getArtist());
+    assertEquals(SECOND_ARTWORK_IS_AVAILABLE_FOR_LOAN, secondArtwork.getIsAvailableForLoan());
+    assertEquals(SECOND_ARTWORK_LOAN_FEE, secondArtwork.getLoanFee());
+    assertEquals(SECOND_ARTWORK_IMAGE, secondArtwork.getImage());
+    assertEquals(SECOND_ARTWORK_IS_ON_LOAN, secondArtwork.getIsOnLoan());
+    assertNotNull(secondArtwork.getRoom());
+  }
+
+  /**
+   * This method tests getting an artwork by a non-existent id
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testGetArtworkByNonExistentId() {
+    Artwork artwork = null;
+    try {
+      artwork = artworkService.getArtwork(-1L);
+    } catch (IllegalArgumentException e) {
+      // Check that no error occurred
+      fail();
+    }
+
+    // Check that the artwork was correctly retrieved
+    assertNull(artwork);
+  }
+
+  /**
+   * This method tests getting an artwork by a null id
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testGetArtworkByNullId() {
+    Artwork artwork = null;
+    try {
+      artwork = artworkService.getArtwork(null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertNull(artwork);
+      assertEquals("Artwork id cannot be null", e.getMessage());
+    }
+  }
+
+  /**
+   * This method tests editing an artwork's information
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testEditArtworkInfo() {
+    Artwork artwork = null;
+    try {
+      artwork = artworkService.editArtworkInfo(FIRST_ARTWORK_ID, SECOND_ARTWORK_NAME, SECOND_ARTWORK_ARTIST,
+          SECOND_ARTWORK_IMAGE);
+    } catch (IllegalArgumentException e) {
+      // Check that no error occurred
+      fail();
+    }
+
+    // Check that the artwork was correctly edited
+    assertNotNull(artwork);
+    assertEquals(FIRST_ARTWORK_ID, artwork.getArtworkId());
+    assertEquals(SECOND_ARTWORK_NAME, artwork.getName());
+    assertEquals(SECOND_ARTWORK_ARTIST, artwork.getArtist());
+    assertEquals(FIRST_ARTWORK_IS_AVAILABLE_FOR_LOAN, artwork.getIsAvailableForLoan());
+    assertEquals(FIRST_ARTWORK_LOAN_FEE, artwork.getLoanFee());
+    assertEquals(SECOND_ARTWORK_IMAGE, artwork.getImage());
+    assertEquals(FIRST_ARTWORK_IS_ON_LOAN, artwork.getIsOnLoan());
+    assertNull(artwork.getRoom());
+  }
+
+  /**
+   * This method tests editing an artwork's information with a null id
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testEditArtworkInfoNullId() {
+    Artwork artwork = null;
+    try {
+      artwork = artworkService.editArtworkInfo(null, SECOND_ARTWORK_NAME, SECOND_ARTWORK_ARTIST,
+          SECOND_ARTWORK_IMAGE);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertNull(artwork);
+      assertEquals("Artwork does not exist", e.getMessage());
+    }
+  }
+
+  /**
+   * This method tests editing an artwork's information with a non-existent id
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testEditArtworkInfoNonExistentId() {
+    Artwork artwork = null;
+    try {
+      artwork = artworkService.editArtworkInfo(-1L, SECOND_ARTWORK_NAME, SECOND_ARTWORK_ARTIST,
+          SECOND_ARTWORK_IMAGE);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertNull(artwork);
+      assertEquals("Artwork does not exist", e.getMessage());
+    }
+  }
+
+  /**
+   * This method tests editing an artwork's information with a null name
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testEditArtworkInfoNullName() {
+    Artwork artwork = null;
+    try {
+      artwork = artworkService.editArtworkInfo(FIRST_ARTWORK_ID, null, SECOND_ARTWORK_ARTIST,
+          SECOND_ARTWORK_IMAGE);
+    } catch (IllegalArgumentException e) {
+      fail();
+    }
+
+    // Check that the artwork was correctly edited
+    assertNotNull(artwork);
+    assertEquals(FIRST_ARTWORK_ID, artwork.getArtworkId());
+    assertEquals(FIRST_ARTWORK_NAME, artwork.getName());
+    assertEquals(SECOND_ARTWORK_ARTIST, artwork.getArtist());
+    assertEquals(FIRST_ARTWORK_IS_AVAILABLE_FOR_LOAN, artwork.getIsAvailableForLoan());
+    assertEquals(FIRST_ARTWORK_LOAN_FEE, artwork.getLoanFee());
+    assertEquals(SECOND_ARTWORK_IMAGE, artwork.getImage());
+    assertEquals(FIRST_ARTWORK_IS_ON_LOAN, artwork.getIsOnLoan());
+    assertNull(artwork.getRoom());
+  }
+
+  /**
+   * This method tests editing an artwork's information with a null artist
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testEditArtworkInfoNullArtist() {
+    Artwork artwork = null;
+    try {
+      artwork = artworkService.editArtworkInfo(FIRST_ARTWORK_ID, SECOND_ARTWORK_NAME, null,
+          SECOND_ARTWORK_IMAGE);
+    } catch (IllegalArgumentException e) {
+      fail();
+    }
+
+    // Check that the artwork was correctly edited
+    assertNotNull(artwork);
+    assertEquals(FIRST_ARTWORK_ID, artwork.getArtworkId());
+    assertEquals(SECOND_ARTWORK_NAME, artwork.getName());
+    assertEquals(FIRST_ARTWORK_ARTIST, artwork.getArtist());
+    assertEquals(FIRST_ARTWORK_IS_AVAILABLE_FOR_LOAN, artwork.getIsAvailableForLoan());
+    assertEquals(FIRST_ARTWORK_LOAN_FEE, artwork.getLoanFee());
+    assertEquals(SECOND_ARTWORK_IMAGE, artwork.getImage());
+    assertEquals(FIRST_ARTWORK_IS_ON_LOAN, artwork.getIsOnLoan());
+    assertNull(artwork.getRoom());
+  }
+
+  /**
+   * This method tests editing an artwork's information with a null image
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testEditArtworkInfoNullImage() {
+    Artwork artwork = null;
+    try {
+      artwork = artworkService.editArtworkInfo(FIRST_ARTWORK_ID, SECOND_ARTWORK_NAME, SECOND_ARTWORK_ARTIST,
+          null);
+    } catch (IllegalArgumentException e) {
+      fail();
+    }
+
+    // Check that the artwork was correctly edited
+    assertNotNull(artwork);
+    assertEquals(FIRST_ARTWORK_ID, artwork.getArtworkId());
+    assertEquals(SECOND_ARTWORK_NAME, artwork.getName());
+    assertEquals(SECOND_ARTWORK_ARTIST, artwork.getArtist());
+    assertEquals(FIRST_ARTWORK_IS_AVAILABLE_FOR_LOAN, artwork.getIsAvailableForLoan());
+    assertEquals(FIRST_ARTWORK_LOAN_FEE, artwork.getLoanFee());
+    assertEquals(FIRST_ARTWORK_IMAGE, artwork.getImage());
+    assertEquals(FIRST_ARTWORK_IS_ON_LOAN, artwork.getIsOnLoan());
+    assertNull(artwork.getRoom());
+  }
+
+  /**
+   * This method tests editing an artwork's information with everything null
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testEditArtworkInfoEverythingNull() {
+    Artwork artwork = null;
+    try {
+      artwork = artworkService.editArtworkInfo(FIRST_ARTWORK_ID, null, null, null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertNull(artwork);
+      assertEquals("Nothing to edit, all fields are empty", e.getMessage());
+    }
+  }
+
+  /**
+   * This method tests editing an artwork's loan information
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testEditArtworkLoanInfo() {
+    Artwork firstArtwork = null;
+    Artwork secondArtwork = null;
+    try {
+      firstArtwork = artworkService.editArtworkLoanInfo(FIRST_ARTWORK_ID, SECOND_ARTWORK_IS_AVAILABLE_FOR_LOAN,
+          SECOND_ARTWORK_LOAN_FEE);
+      secondArtwork = artworkService.editArtworkLoanInfo(SECOND_ARTWORK_ID, FIRST_ARTWORK_IS_AVAILABLE_FOR_LOAN,
+          FIRST_ARTWORK_LOAN_FEE);
+    } catch (IllegalArgumentException e) {
+      fail();
+    }
+
+    // Check that the artwork was correctly edited
+    assertNotNull(firstArtwork);
+    assertEquals(FIRST_ARTWORK_ID, firstArtwork.getArtworkId());
+    assertEquals(FIRST_ARTWORK_NAME, firstArtwork.getName());
+    assertEquals(FIRST_ARTWORK_ARTIST, firstArtwork.getArtist());
+    assertEquals(SECOND_ARTWORK_IS_AVAILABLE_FOR_LOAN, firstArtwork.getIsAvailableForLoan());
+    assertEquals(SECOND_ARTWORK_LOAN_FEE, firstArtwork.getLoanFee());
+    assertEquals(FIRST_ARTWORK_IMAGE, firstArtwork.getImage());
+    assertEquals(FIRST_ARTWORK_IS_ON_LOAN, firstArtwork.getIsOnLoan());
+    assertNull(firstArtwork.getRoom());
+
+    assertNotNull(secondArtwork);
+    assertEquals(SECOND_ARTWORK_ID, secondArtwork.getArtworkId());
+    assertEquals(SECOND_ARTWORK_NAME, secondArtwork.getName());
+    assertEquals(SECOND_ARTWORK_ARTIST, secondArtwork.getArtist());
+    assertEquals(FIRST_ARTWORK_IS_AVAILABLE_FOR_LOAN, secondArtwork.getIsAvailableForLoan());
+    assertEquals(FIRST_ARTWORK_LOAN_FEE, secondArtwork.getLoanFee());
+    assertEquals(SECOND_ARTWORK_IMAGE, secondArtwork.getImage());
+    assertEquals(SECOND_ARTWORK_IS_ON_LOAN, secondArtwork.getIsOnLoan());
+    assertNotNull(secondArtwork.getRoom());
+  }
+
+  /**
+   * This method tests editing an artwork's loan information with a null artwork
+   * id
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testEditArtworkLoanInfoNullArtworkId() {
+    Artwork artwork = null;
+    try {
+      artwork = artworkService.editArtworkLoanInfo(null, SECOND_ARTWORK_IS_AVAILABLE_FOR_LOAN,
+          SECOND_ARTWORK_LOAN_FEE);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertNull(artwork);
+      assertEquals("Artwork does not exist", e.getMessage());
+    }
+  }
+
+  /**
+   * This method tests editing an artwork's loan information with an invalid
+   * artwork id
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testEditArtworkLoanInfoInvalidArtworkId() {
+    Artwork artwork = null;
+    try {
+      artwork = artworkService.editArtworkLoanInfo(-1L, SECOND_ARTWORK_IS_AVAILABLE_FOR_LOAN,
+          SECOND_ARTWORK_LOAN_FEE);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertNull(artwork);
+      assertEquals("Artwork does not exist", e.getMessage());
+    }
+  }
+
+  /**
+   * This method tests editing an artwork's loan information with a null
+   * isAvailableForLoan
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testEditArtworkLoanInfoNullIsAvailableForLoan() {
+    Artwork artwork = null;
+    try {
+      artwork = artworkService.editArtworkLoanInfo(FIRST_ARTWORK_ID, null, SECOND_LOAN_FEE);
+    } catch (IllegalArgumentException e) {
+      fail(e.getMessage());
+    }
+
+    // Check that the artwork was correctly edited
+    assertNotNull(artwork);
+    assertEquals(FIRST_ARTWORK_ID, artwork.getArtworkId());
+    assertEquals(FIRST_ARTWORK_NAME, artwork.getName());
+    assertEquals(FIRST_ARTWORK_ARTIST, artwork.getArtist());
+    assertEquals(FIRST_ARTWORK_IS_AVAILABLE_FOR_LOAN, artwork.getIsAvailableForLoan());
+    assertEquals(SECOND_LOAN_FEE, artwork.getLoanFee());
+    assertEquals(FIRST_ARTWORK_IMAGE, artwork.getImage());
+    assertEquals(FIRST_ARTWORK_IS_ON_LOAN, artwork.getIsOnLoan());
+    assertNull(artwork.getRoom());
+  }
+
+  /**
+   * This method tests editing an artwork's loan information with a null loanFee
+   * when it is available for loan
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testEditArtworkLoanInfoNullLoanFee() {
+    Artwork artwork = null;
+    try {
+      artwork = artworkService.editArtworkLoanInfo(FIRST_ARTWORK_ID, true, null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertNull(artwork);
+      assertEquals("Loan fee cannot be null if artwork is available for loan", e.getMessage());
+    }
+  }
+
+  /**
+   * This method tests editing an artwork's loan information with a non null
+   * loanFee when it is not available for loan
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testEditArtworkLoanInfoNotNullLoanFee() {
+    Artwork artwork = null;
+    try {
+      artwork = artworkService.editArtworkLoanInfo(FIRST_ARTWORK_ID, false, SECOND_LOAN_FEE);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertNull(artwork);
+      assertEquals("Loan fee must be null if artwork is not available for loan", e.getMessage());
+    }
+  }
+
+  /**
+   * This method tests deleting an artwork with a valid id
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testDeleteArtwork() {
+    Artwork firstArtwork = null;
+    Artwork secondArtwork = null;
+    try {
+      firstArtwork = artworkService.deleteArtwork(FIRST_ARTWORK_ID);
+      secondArtwork = artworkService.deleteArtwork(SECOND_ARTWORK_ID);
+    } catch (IllegalArgumentException e) {
+      fail(e.getMessage());
+    }
+
+    // Check that the artworks were correctly deleted
+    assertNotNull(firstArtwork);
+    assertEquals(FIRST_ARTWORK_ID, firstArtwork.getArtworkId());
+    assertEquals(FIRST_ARTWORK_NAME, firstArtwork.getName());
+    assertEquals(FIRST_ARTWORK_ARTIST, firstArtwork.getArtist());
+    assertEquals(FIRST_ARTWORK_IS_AVAILABLE_FOR_LOAN, firstArtwork.getIsAvailableForLoan());
+    assertEquals(FIRST_ARTWORK_LOAN_FEE, firstArtwork.getLoanFee());
+    assertEquals(FIRST_ARTWORK_IMAGE, firstArtwork.getImage());
+    assertEquals(FIRST_ARTWORK_IS_ON_LOAN, firstArtwork.getIsOnLoan());
+    assertNull(firstArtwork.getRoom());
+
+    assertNotNull(secondArtwork);
+    assertEquals(SECOND_ARTWORK_ID, secondArtwork.getArtworkId());
+    assertEquals(SECOND_ARTWORK_NAME, secondArtwork.getName());
+    assertEquals(SECOND_ARTWORK_ARTIST, secondArtwork.getArtist());
+    assertEquals(SECOND_ARTWORK_IS_AVAILABLE_FOR_LOAN, secondArtwork.getIsAvailableForLoan());
+    assertEquals(SECOND_ARTWORK_LOAN_FEE, secondArtwork.getLoanFee());
+    assertEquals(SECOND_ARTWORK_IMAGE, secondArtwork.getImage());
+    assertEquals(SECOND_ARTWORK_IS_ON_LOAN, secondArtwork.getIsOnLoan());
+    assertNotNull(secondArtwork.getRoom());
+  }
+
+  /**
+   * This method tests deleting an artwork with a null id
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testDeleteArtworkNullId() {
+    Artwork artwork = null;
+    try {
+      artwork = artworkService.deleteArtwork(null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertNull(artwork);
+      assertEquals("Artwork does not exist", e.getMessage());
+    }
+  }
+
+  /**
+   * This method tests deleting an artwork with an invalid id
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testDeleteArtworkInvalidId() {
+    Artwork artwork = null;
+    try {
+      artwork = artworkService.deleteArtwork(-1L);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertNull(artwork);
+      assertEquals("Artwork does not exist", e.getMessage());
+    }
+  }
+
+  /**
    * This is a helper method that creates a room stub
    * 
    * @author Siger
@@ -378,5 +859,28 @@ public class TestArtworkService {
     room.setMuseum(museum);
 
     return room;
+  }
+
+  /**
+   * This is a helper method that creates a loan stub
+   * 
+   * @author Siger
+   */
+  public Loan createLoanStub(Artwork artwork) {
+    // Create a visitor
+    Visitor visitor = new Visitor();
+    visitor.setMuseumUserId(FIRST_VISITOR_ID);
+    visitor.setName(FIRST_VISITOR_NAME);
+    visitor.setEmail(FIRST_VISITOR_EMAIL);
+    visitor.setPassword(FIRST_VISITOR_PASSWORD);
+
+    // Create a loan
+    Loan loan = new Loan();
+    loan.setLoanId(FIRST_LOAN_ID);
+    loan.setRequestAccepted(FIRST_LOAN_REQUEST_ACCEPTED);
+    loan.setVisitor(visitor);
+    loan.setArtwork(artwork);
+
+    return loan;
   }
 }

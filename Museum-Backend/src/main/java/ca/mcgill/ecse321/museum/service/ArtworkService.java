@@ -187,11 +187,15 @@ public class ArtworkService {
    * @author Siger
    */
   @Transactional
-  public Artwork editArtworkLoan(Long artworkId, Boolean isAvailableForLoan, Double loanFee) {
+  public Artwork editArtworkLoanInfo(Long artworkId, Boolean isAvailableForLoan, Double loanFee) {
     // Get artwork and check if it exists and error handling
     Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
     if (artwork == null) {
       throw new IllegalArgumentException("Artwork does not exist");
+    }
+
+    if (isAvailableForLoan == null) {
+      isAvailableForLoan = artwork.getIsAvailableForLoan();
     }
     if (isAvailableForLoan == true) {
       if (loanFee == null) {
@@ -202,8 +206,7 @@ public class ArtworkService {
     }
 
     // Change loan availability
-    if (isAvailableForLoan != null)
-      artwork.setIsAvailableForLoan(isAvailableForLoan);
+    artwork.setIsAvailableForLoan(isAvailableForLoan);
     artwork.setLoanFee(loanFee);
     return artworkRepository.save(artwork);
   }
@@ -216,7 +219,7 @@ public class ArtworkService {
    * @author Siger
    */
   @Transactional
-  public boolean deleteArtwork(Long artworkId) {
+  public Artwork deleteArtwork(Long artworkId) {
     // Get artwork and check if it exists and error handling
     Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
     if (artwork == null) {
@@ -232,8 +235,7 @@ public class ArtworkService {
     // Delete artwork
     artworkRepository.deleteArtworkByArtworkId(artworkId);
 
-    // Check if artwork was deleted
-    return getArtwork(artworkId) == null;
+    return artwork;
   }
 
   /**
