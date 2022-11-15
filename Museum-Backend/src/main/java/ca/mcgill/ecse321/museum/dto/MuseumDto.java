@@ -15,6 +15,11 @@ public class MuseumDto {
         this.visitFee = visitFee;
         this.schedule = schedule;
     }
+    public MuseumDto(String name, double visitFee, ScheduleDto schedule) {
+        this.name = name;
+        this.visitFee = visitFee;
+        this.schedule = schedule;
+    }
 
     public void setMuseumId(Long museumId) {
         this.museumId = museumId;

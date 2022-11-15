@@ -45,7 +45,7 @@ public class DtoUtility {
    * @param museum
    * @return
    */
-  static MuseumDto convertToDto(Museum museum) {
+  public static MuseumDto convertToDto(Museum museum) {
     if(museum == null) {
       throw new IllegalArgumentException("There is no such museum");
     }
