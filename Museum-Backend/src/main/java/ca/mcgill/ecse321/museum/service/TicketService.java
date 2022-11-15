@@ -22,23 +22,44 @@ public class TicketService {
   VisitorRepository visitorRepository;
 
   /**
-   * Feature 4
+   * Method to create a list of tickets
+   *
+   * @param visitorID
+   * @param date
+   * @param numberOfTickets
+   * @return ticketsBought
+   * @author Zahra
    */
   @Transactional
   public List<Ticket> createTickets(Long visitorID, Date date, int numberOfTickets) {
     List<Ticket> ticketsBought = new ArrayList<>();
+    String error = "";
     if (numberOfTickets == 0) {
       throw new IllegalArgumentException("Number of tickets must be at least 1");
     }
-    for (int i = 0; i <= numberOfTickets; i++) {
+    if (visitorRepository.findVisitorByMuseumUserId(visitorID) == null) {
+      throw new IllegalArgumentException("Visitor doesn't exist");
+    } else if (date == null) {
+      throw new IllegalArgumentException("Please insert a date");
+    } else if (date.toLocalDate().isBefore(java.time.LocalDate.now())) {
+      throw new IllegalArgumentException("Cannot pick a date in the past.");
+    }
+    for (int i = 0; i < numberOfTickets; i++) {
       Ticket ticket = createTicket(visitorID, date);
       ticketsBought.add(ticket);
     }
-
     return ticketsBought;
 
   }
 
+  /**
+   * Method to create a ticket
+   *
+   * @param visitorID visitor's ID
+   * @param visitDate chosen date of visit
+   * @return ticket
+   */
+  @Transactional
   public Ticket createTicket(Long visitorID, Date visitDate) {
     Ticket ticket = new Ticket();
     Visitor visitor = visitorRepository.findVisitorByMuseumUserId(visitorID);
