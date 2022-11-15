@@ -5,17 +5,14 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -26,7 +23,6 @@ import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
 import ca.mcgill.ecse321.museum.dao.MuseumRepository;
 import ca.mcgill.ecse321.museum.dao.RoomRepository;
 import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
-import ca.mcgill.ecse321.museum.model.Artwork;
 import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.model.RoomType;
@@ -70,14 +66,6 @@ public class TestRoomService {
   private static final String THIRD_ROOM_NAME = "Room 3";
   private static final RoomType THIRD_ROOM_TYPE = RoomType.Storage;
 
-  private static final Long ARTWORK_ID = 0L;
-  private static final String ARTWORK_NAME = "La Joconde";
-  private static final String ARTWORK_ARTIST = "Leonardo Da Vinci";
-  private static final Boolean ARTWORK_IS_AVAILABLE_FOR_LOAN = true;
-  private static final Double ARTWORK_LOAN_FEE = 100.0;
-  private static final String ARTWORK_IMAGE = "image";
-  private static final Boolean ARTWORK_IS_ON_LOAN = false;
-
   private static final Long MUSEUM_ID = 0L;
   private static final String MUSEUM_NAME = "Museum";
   private static final Double MUSEUM_VISIT_FEE = 10.0;
@@ -102,13 +90,7 @@ public class TestRoomService {
     lenient().when(roomRepository.findRoomByRoomId(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
       if (invocation.getArgument(0).equals(FIRST_ROOM_ID)) {
         // Create museum and its schedule
-        Museum museum = new Museum();
-        museum.setMuseumId(MUSEUM_ID);
-        museum.setName(MUSEUM_NAME);
-        museum.setVisitFee(MUSEUM_VISIT_FEE);
-        Schedule schedule = new Schedule();
-        schedule.setScheduleId(SCHEDULE_ID);
-        museum.setSchedule(schedule);
+        Museum museum = createMuseumStub();
 
         // Create room
         Room room = new Room();
@@ -119,13 +101,7 @@ public class TestRoomService {
         return room;
       } else if (invocation.getArgument(0).equals(SECOND_ROOM_ID)) {
         // Create museum and its schedule
-        Museum museum = new Museum();
-        museum.setMuseumId(MUSEUM_ID);
-        museum.setName(MUSEUM_NAME);
-        museum.setVisitFee(MUSEUM_VISIT_FEE);
-        Schedule schedule = new Schedule();
-        schedule.setScheduleId(SCHEDULE_ID);
-        museum.setSchedule(schedule);
+        Museum museum = createMuseumStub();
 
         // Create room
         Room room = new Room();
@@ -136,13 +112,7 @@ public class TestRoomService {
         return room;
       } else if (invocation.getArgument(0).equals(THIRD_ROOM_ID)) {
         // Create museum and its schedule
-        Museum museum = new Museum();
-        museum.setMuseumId(MUSEUM_ID);
-        museum.setName(MUSEUM_NAME);
-        museum.setVisitFee(MUSEUM_VISIT_FEE);
-        Schedule schedule = new Schedule();
-        schedule.setScheduleId(SCHEDULE_ID);
-        museum.setSchedule(schedule);
+        Museum museum = createMuseumStub();
 
         // Create room
         Room room = new Room();
@@ -158,13 +128,7 @@ public class TestRoomService {
 
     lenient().when(roomRepository.findAll()).thenAnswer((InvocationOnMock invocation) -> {
       // Create museum and its schedule
-      Museum museum = new Museum();
-      museum.setMuseumId(MUSEUM_ID);
-      museum.setName(MUSEUM_NAME);
-      museum.setVisitFee(MUSEUM_VISIT_FEE);
-      Schedule schedule = new Schedule();
-      schedule.setScheduleId(SCHEDULE_ID);
-      museum.setSchedule(schedule);
+      Museum museum = createMuseumStub();
 
       // Create rooms
       Room room1 = new Room();
@@ -195,13 +159,7 @@ public class TestRoomService {
 
     lenient().when(roomRepository.findRoomByMuseum(any(Museum.class))).thenAnswer((InvocationOnMock invocation) -> {
       // Create museum and its schedule
-      Museum museum = new Museum();
-      museum.setMuseumId(MUSEUM_ID);
-      museum.setName(MUSEUM_NAME);
-      museum.setVisitFee(MUSEUM_VISIT_FEE);
-      Schedule schedule = new Schedule();
-      schedule.setScheduleId(SCHEDULE_ID);
-      museum.setSchedule(schedule);
+      Museum museum = createMuseumStub();
 
       // Create rooms
       Room room1 = new Room();
@@ -233,24 +191,13 @@ public class TestRoomService {
     lenient().when(museumRepository.findMuseumByMuseumId(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
       if (invocation.getArgument(0).equals(MUSEUM_ID)) {
         // Create museum and its schedule
-        Museum museum = new Museum();
-        museum.setMuseumId(MUSEUM_ID);
-        museum.setName(MUSEUM_NAME);
-        museum.setVisitFee(MUSEUM_VISIT_FEE);
-        Schedule schedule = new Schedule();
-        schedule.setScheduleId(SCHEDULE_ID);
-        museum.setSchedule(schedule);
-        return museum;
+        return createMuseumStub();
       } else {
         return null;
       }
     });
 
     lenient().when(roomRepository.save(any(Room.class))).thenAnswer(returnParameterAsAnswer);
-    lenient().when(roomRepository.saveAll(any(Iterable.class))).thenAnswer(returnParameterAsAnswer);
-    lenient().when(artworkRepository.save(any(Artwork.class))).thenAnswer(returnParameterAsAnswer);
-    lenient().when(museumRepository.save(any(Museum.class))).thenAnswer(returnParameterAsAnswer);
-    lenient().when(scheduleRepository.save(any(Schedule.class))).thenAnswer(returnParameterAsAnswer);
   }
 
   /**
@@ -261,14 +208,7 @@ public class TestRoomService {
   @Test
   public void testCreateSmallRoom() {
     // Create the museum and its schedule
-    Schedule schedule = new Schedule();
-    schedule.setScheduleId(SCHEDULE_ID);
-    Museum museum = new Museum();
-    museum.setMuseumId(MUSEUM_ID);
-    museum.setName(MUSEUM_NAME);
-    museum.setVisitFee(MUSEUM_VISIT_FEE);
-    museum.setSchedule(schedule);
-    museum = museumRepository.save(museum);
+    Museum museum = createMuseumStub();
 
     // Create the small room
     Room room = null;
@@ -300,14 +240,7 @@ public class TestRoomService {
   @Test
   public void testCreateLargeRoom() {
     // Create the museum and its schedule
-    Schedule schedule = new Schedule();
-    schedule.setScheduleId(SCHEDULE_ID);
-    Museum museum = new Museum();
-    museum.setMuseumId(MUSEUM_ID);
-    museum.setName(MUSEUM_NAME);
-    museum.setVisitFee(MUSEUM_VISIT_FEE);
-    museum.setSchedule(schedule);
-    museum = museumRepository.save(museum);
+    Museum museum = createMuseumStub();
 
     // Create the large room
     Room room = null;
@@ -339,14 +272,7 @@ public class TestRoomService {
   @Test
   public void testCreateStorageRoom() {
     // Create the museum and its schedule
-    Schedule schedule = new Schedule();
-    schedule.setScheduleId(SCHEDULE_ID);
-    Museum museum = new Museum();
-    museum.setMuseumId(MUSEUM_ID);
-    museum.setName(MUSEUM_NAME);
-    museum.setVisitFee(MUSEUM_VISIT_FEE);
-    museum.setSchedule(schedule);
-    museum = museumRepository.save(museum);
+    Museum museum = createMuseumStub();
 
     // Create the storage room
     Room room = null;
@@ -378,14 +304,7 @@ public class TestRoomService {
   @Test
   public void testCreateRoomNullRoomName() {
     // Create the museum and its schedule
-    Schedule schedule = new Schedule();
-    schedule.setScheduleId(SCHEDULE_ID);
-    Museum museum = new Museum();
-    museum.setMuseumId(MUSEUM_ID);
-    museum.setName(MUSEUM_NAME);
-    museum.setVisitFee(MUSEUM_VISIT_FEE);
-    museum.setSchedule(schedule);
-    museum = museumRepository.save(museum);
+    Museum museum = createMuseumStub();
 
     // Create the room with a null room name
     Room room = null;
@@ -407,14 +326,7 @@ public class TestRoomService {
   @Test
   public void testCreateRoomWithNullRoomType() {
     // Create the museum and its schedule
-    Schedule schedule = new Schedule();
-    schedule.setScheduleId(SCHEDULE_ID);
-    Museum museum = new Museum();
-    museum.setMuseumId(MUSEUM_ID);
-    museum.setName(MUSEUM_NAME);
-    museum.setVisitFee(MUSEUM_VISIT_FEE);
-    museum.setSchedule(schedule);
-    museum = museumRepository.save(museum);
+    Museum museum = createMuseumStub();
 
     // Create the room with a null room type
     Room room = null;
@@ -889,5 +801,23 @@ public class TestRoomService {
       assertNull(room);
       assertEquals("Nothing to edit, all fields are empty", e.getMessage());
     }
+  }
+
+  /**
+   * This is a helper method creating a museum stub
+   * 
+   * @author Siger
+   */
+  public Museum createMuseumStub() {
+    // Create the museum and its schedule
+    Schedule schedule = new Schedule();
+    schedule.setScheduleId(SCHEDULE_ID);
+    Museum museum = new Museum();
+    museum.setMuseumId(MUSEUM_ID);
+    museum.setName(MUSEUM_NAME);
+    museum.setVisitFee(MUSEUM_VISIT_FEE);
+    museum.setSchedule(schedule);
+
+    return museum;
   }
 }
