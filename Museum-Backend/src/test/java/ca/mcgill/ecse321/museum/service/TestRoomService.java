@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -219,6 +220,7 @@ public class TestRoomService {
     }
 
     // Check that the room's attributes are correct
+    assertNotNull(room);
     assertEquals(FIRST_ROOM_NAME, room.getRoomName());
     assertEquals(FIRST_ROOM_TYPE, room.getRoomType());
     assertEquals(0, room.getCurrentNumberOfArtwork());
@@ -251,6 +253,7 @@ public class TestRoomService {
     }
 
     // Check that the room's attributes are correct
+    assertNotNull(room);
     assertEquals(SECOND_ROOM_NAME, room.getRoomName());
     assertEquals(SECOND_ROOM_TYPE, room.getRoomType());
     assertEquals(0, room.getCurrentNumberOfArtwork());
@@ -283,6 +286,7 @@ public class TestRoomService {
     }
 
     // Check that the room's attributes are correct
+    assertNotNull(room);
     assertEquals(THIRD_ROOM_NAME, room.getRoomName());
     assertEquals(THIRD_ROOM_TYPE, room.getRoomType());
     assertEquals(0, room.getCurrentNumberOfArtwork());
@@ -308,7 +312,6 @@ public class TestRoomService {
 
     // Create the room with a null room name
     Room room = null;
-    String error = null;
     try {
       room = roomService.createRoom(null, FIRST_ROOM_TYPE, museum);
     } catch (IllegalArgumentException e) {
@@ -379,8 +382,11 @@ public class TestRoomService {
     }
 
     // Check that the rooms are correct
+    assertNotNull(firstRoom);
     assertEquals(FIRST_ROOM_ID, firstRoom.getRoomId());
+    assertNotNull(secondRoom);
     assertEquals(SECOND_ROOM_ID, secondRoom.getRoomId());
+    assertNotNull(thirdRoom);
     assertEquals(THIRD_ROOM_ID, thirdRoom.getRoomId());
   }
 
@@ -436,6 +442,7 @@ public class TestRoomService {
     }
 
     // Check that the rooms are correct
+    assertNotNull(rooms);
     assertEquals(3, rooms.size());
     assertEquals(FIRST_ROOM_ID, rooms.get(0).getRoomId());
     assertEquals(SECOND_ROOM_ID, rooms.get(1).getRoomId());
@@ -466,6 +473,7 @@ public class TestRoomService {
     }
 
     // Check that the rooms are correct
+    assertNotNull(rooms);
     assertEquals(3, rooms.size());
     assertEquals(FIRST_ROOM_ID, rooms.get(0).getRoomId());
     assertEquals(SECOND_ROOM_ID, rooms.get(1).getRoomId());
@@ -507,6 +515,7 @@ public class TestRoomService {
     }
 
     // Check that the room was changed
+    assertNotNull(room);
     assertEquals(5, room.getCurrentNumberOfArtwork());
   }
 
@@ -649,6 +658,7 @@ public class TestRoomService {
     }
 
     // Check that the room was changed
+    assertNotNull(room);
     assertEquals(50000, room.getCurrentNumberOfArtwork());
   }
 
@@ -718,6 +728,7 @@ public class TestRoomService {
     }
 
     // Check that the room was edited
+    assertNotNull(room);
     assertEquals(FIRST_ROOM_ID, room.getRoomId());
     assertEquals(SECOND_ROOM_NAME, room.getRoomName());
     assertEquals(SECOND_ROOM_TYPE, room.getRoomType());
@@ -758,6 +769,7 @@ public class TestRoomService {
     }
 
     // Check that the room was edited
+    assertNotNull(room);
     assertEquals(FIRST_ROOM_ID, room.getRoomId());
     assertEquals(FIRST_ROOM_NAME, room.getRoomName());
     assertEquals(SECOND_ROOM_TYPE, room.getRoomType());
@@ -779,6 +791,7 @@ public class TestRoomService {
     }
 
     // Check that the room was edited
+    assertNotNull(room);
     assertEquals(FIRST_ROOM_ID, room.getRoomId());
     assertEquals(SECOND_ROOM_NAME, room.getRoomName());
     assertEquals(FIRST_ROOM_TYPE, room.getRoomType());
