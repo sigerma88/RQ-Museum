@@ -43,7 +43,12 @@ public class ArtworkService {
    */
   @Transactional
   public List<Artwork> getAllArtworksByRoom(Room room) {
+
+    if (room == null) {
+      throw new IllegalArgumentException("Room doesn't exist");
+    }
     List<Artwork> artworksInRoom = new ArrayList<>();
+
     for (Artwork artwork : getAllArtworks()) {
       if (artwork.getRoom().equals(room)) artworksInRoom.add(artwork);
     }
