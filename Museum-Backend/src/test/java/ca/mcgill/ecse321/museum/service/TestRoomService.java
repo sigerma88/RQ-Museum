@@ -23,7 +23,6 @@ import org.mockito.stubbing.Answer;
 import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
 import ca.mcgill.ecse321.museum.dao.MuseumRepository;
 import ca.mcgill.ecse321.museum.dao.RoomRepository;
-import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
 import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.model.RoomType;
@@ -45,9 +44,6 @@ public class TestRoomService {
 
   @Mock
   private MuseumRepository museumRepository;
-
-  @Mock
-  private ScheduleRepository scheduleRepository;
 
   @InjectMocks
   private MuseumService museumService;
