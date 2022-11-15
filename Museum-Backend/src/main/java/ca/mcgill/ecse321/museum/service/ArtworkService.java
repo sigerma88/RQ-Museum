@@ -63,7 +63,9 @@ public class ArtworkService {
       throw new IllegalArgumentException("Image cannot be empty");
     }
 
-    if (isOnLoan == true) {
+    if (isOnLoan == null) {
+      throw new IllegalArgumentException("Artwork must be either on loan or not on loan");
+    } else if (isOnLoan == true) {
       if (room != null) {
         throw new IllegalArgumentException("Room must be null if artwork is on loan");
       }
@@ -73,8 +75,6 @@ public class ArtworkService {
       // Update room artwork count
       RoomService roomService = new RoomService();
       roomService.changeCurrentNumberOfArtwork(room.getRoomId(), room.getCurrentNumberOfArtwork() + 1);
-    } else {
-      throw new IllegalArgumentException("Artwork must be either on loan or not on loan");
     }
 
     Artwork artwork = new Artwork();
