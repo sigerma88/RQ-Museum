@@ -22,467 +22,450 @@ import ca.mcgill.ecse321.museum.model.Visitor;
 
 @ExtendWith(MockitoExtension.class)
 public class TestRegistrationService {
-    @Mock
-    private VisitorRepository visitorRepository;
+  @Mock
+  private VisitorRepository visitorRepository;
 
-    @Mock
-    private EmployeeRepository employeeRepository;
+  @Mock
+  private EmployeeRepository employeeRepository;
 
-    @Mock
-    private ManagerRepository managerRepository;
+  @Mock
+  private ManagerRepository managerRepository;
 
-    @InjectMocks
-    private RegistrationService registrationService;
+  @InjectMocks
+  private RegistrationService registrationService;
 
-    private static final String FIRST_VISITOR_VALID_EMAIL = "sebastienVettel@gmail.com";
-    private static final String FIRST_VALID_VISITOR_NAME = "Sebastien Vettel";
-    private static final long FIRST_VISITOR_ID = 1;
+  private static final String FIRST_VISITOR_VALID_EMAIL = "sebastienVettel@gmail.com";
+  private static final String FIRST_VALID_VISITOR_NAME = "Sebastien Vettel";
+  private static final long FIRST_VISITOR_ID = 1;
 
-    private static final String SECOND_VISITOR_VALID_EMAIL = "george@gmail.com";
-    private static final String SECOND_VALID_VISITOR_NAME = "george russel";
-    private static final long SECOND_VISITOR_ID = 2;
+  private static final String SECOND_VISITOR_VALID_EMAIL = "george@gmail.com";
+  private static final String SECOND_VALID_VISITOR_NAME = "george russel";
+  private static final long SECOND_VISITOR_ID = 2;
 
-    private static final long EMPLOYEE_ID = 3;
-    private static final String EMPLOYEE_VALID_EMAIL = "sergio.perez@museum.ca";
-    private static final String EMPLOYEE_VALID_NAME = "Sergio Perez";
+  private static final long EMPLOYEE_ID = 3;
+  private static final String EMPLOYEE_VALID_EMAIL = "sergio.perez@museum.ca";
+  private static final String EMPLOYEE_VALID_NAME = "Sergio Perez";
 
-    private static final String VALID_PASSWORD = "Speed123#$";
+  private static final String VALID_PASSWORD = "Speed123#$";
 
-    private static final String INVALID_PASSWORD = "Speed123";
-    private static final String INVALID_EMAIL = "lewisgmailcom";
-
-
-    @BeforeEach
-    public void setMockOutput() {
-        lenient().when(visitorRepository.findVisitorByMuseumUserId(anyLong()))
-                .thenAnswer((InvocationOnMock invocation) -> {
-                    if (invocation.getArgument(0).equals(FIRST_VISITOR_ID)) {
-                        Visitor visitor = new Visitor();
-                        visitor.setMuseumUserId(FIRST_VISITOR_ID);
-                        visitor.setEmail(FIRST_VISITOR_VALID_EMAIL);
-                        visitor.setPassword(VALID_PASSWORD);
-                        visitor.setName(FIRST_VALID_VISITOR_NAME);
-                        return visitor;
-                    } else if (invocation.getArgument(0).equals(SECOND_VISITOR_ID)) {
-                        Visitor visitor = new Visitor();
-                        visitor.setMuseumUserId(SECOND_VISITOR_ID);
-                        visitor.setEmail(SECOND_VISITOR_VALID_EMAIL);
-                        visitor.setPassword(VALID_PASSWORD);
-                        visitor.setName(SECOND_VALID_VISITOR_NAME);
-                        return visitor;
-                    } else {
-                        return null;
-                    }
-
-                });
-
-        lenient().when(visitorRepository.findVisitorByEmail(anyString()))
-                .thenAnswer((InvocationOnMock invocation) -> {
-                    if (invocation.getArgument(0).equals(FIRST_VISITOR_VALID_EMAIL)) {
-                        Visitor visitor = new Visitor();
-                        visitor.setMuseumUserId(FIRST_VISITOR_ID);
-                        visitor.setEmail(FIRST_VISITOR_VALID_EMAIL);
-                        visitor.setPassword(VALID_PASSWORD);
-                        visitor.setName(FIRST_VALID_VISITOR_NAME);
-                        return visitor;
-                    } else if (invocation.getArgument(0).equals(SECOND_VISITOR_VALID_EMAIL)) {
-                        Visitor visitor = new Visitor();
-                        visitor.setMuseumUserId(SECOND_VISITOR_ID);
-                        visitor.setEmail(SECOND_VISITOR_VALID_EMAIL);
-                        visitor.setPassword(VALID_PASSWORD);
-                        visitor.setName(SECOND_VALID_VISITOR_NAME);
-                        return visitor;
-                    } else {
-                        return null;
-                    }
-                });
-
-        lenient().when(visitorRepository.findVisitorByName(anyString()))
-                .thenAnswer((InvocationOnMock invocation) -> {
-                    if (invocation.getArgument(0).equals(FIRST_VALID_VISITOR_NAME)) {
-                        Visitor visitor = new Visitor();
-                        visitor.setMuseumUserId(FIRST_VISITOR_ID);
-                        visitor.setEmail(FIRST_VISITOR_VALID_EMAIL);
-                        visitor.setPassword(VALID_PASSWORD);
-                        visitor.setName(FIRST_VALID_VISITOR_NAME);
-                        return visitor;
-                    } else if (invocation.getArgument(0).equals(SECOND_VALID_VISITOR_NAME)) {
-                        Visitor visitor = new Visitor();
-                        visitor.setMuseumUserId(SECOND_VISITOR_ID);
-                        visitor.setEmail(SECOND_VISITOR_VALID_EMAIL);
-                        visitor.setPassword(VALID_PASSWORD);
-                        visitor.setName(SECOND_VALID_VISITOR_NAME);
-                        return visitor;
-                    } else {
-                        return null;
-                    }
-                });
-
-        lenient().when(employeeRepository.findEmployeeByEmail(anyString()))
-                .thenAnswer((InvocationOnMock invocation) -> {
-                    if (invocation.getArgument(0).equals(EMPLOYEE_VALID_EMAIL)) {
-                        Employee employee = new Employee();
-                        employee.setEmail(EMPLOYEE_VALID_EMAIL);
-                        employee.setPassword(VALID_PASSWORD);
-                        employee.setMuseumUserId(EMPLOYEE_ID);
-                        return employee;
-                    } else {
-                        return null;
-                    }
-                });
-
-        lenient().when(employeeRepository.findEmployeeByName(anyString()))
-                .thenAnswer((InvocationOnMock invocation) -> {
-                    if (invocation.getArgument(0).equals(EMPLOYEE_VALID_NAME)) {
-                        Employee employee = new Employee();
-                        employee.setEmail(EMPLOYEE_VALID_EMAIL);
-                        employee.setMuseumUserId(EMPLOYEE_ID);
-                        employee.setPassword(VALID_PASSWORD);
-                        employee.setName(EMPLOYEE_VALID_NAME);
-                        return employee;
-                    } else {
-                        return null;
-                    }
-                });
+  private static final String INVALID_PASSWORD = "Speed123";
+  private static final String INVALID_EMAIL = "lewisgmailcom";
 
 
-        lenient().when(employeeRepository.findEmployeeByMuseumUserId(anyLong()))
-                .thenAnswer((InvocationOnMock invocation) -> {
-                    if (invocation.getArgument(0).equals(EMPLOYEE_ID)) {
-                        Employee employee = new Employee();
-                        employee.setEmail(EMPLOYEE_VALID_EMAIL);
-                        employee.setMuseumUserId(EMPLOYEE_ID);
-                        employee.setPassword(VALID_PASSWORD);
-                        employee.setName(EMPLOYEE_VALID_NAME);
-                        return employee;
-                    } else {
-                        return null;
-                    }
-                });
-
-        lenient().when(employeeRepository.save(any(Employee.class)))
-                .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
-
-        lenient().when(visitorRepository.save(any(Visitor.class)))
-                .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
-    }
-
-    @Test
-    public void createValidVisitor() {
-        VisitorDto visitorDto = null;
-        try {
-            visitorDto = new VisitorDto();
-            visitorDto.setEmail("lewis@mail.com");
-            visitorDto.setPassword("Speed123#$");
-            visitorDto.setName("lewis");
-
-            registrationService.createVisitor(visitorDto.getEmail(), visitorDto.getPassword(),
-                    visitorDto.getName());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-
-        assertEquals("lewis@mail.com", visitorDto.getEmail());
-        assertEquals("Speed123#$", visitorDto.getPassword());
-        assertEquals("lewis", visitorDto.getName());
-    }
-
-    @Test
-    public void testCreateVisitorWithNullFields() {
-        Visitor visitor = new Visitor();
-        visitor.setEmail(null);
-        visitor.setPassword(null);
-        visitor.setName(null);
-        try {
-            registrationService.createVisitor(visitor.getEmail(), visitor.getPassword(),
-                    visitor.getName());
-        } catch (Exception e) {
-            assertEquals("Email, password and name must be filled", e.getMessage());
-
-        }
-    }
-
-    @Test
-    public void testCreateVisitorWithInvalidEmail() {
-        Visitor visitor = new Visitor();
-        visitor.setEmail(INVALID_EMAIL);
-        visitor.setPassword(VALID_PASSWORD);
-        visitor.setName(FIRST_VALID_VISITOR_NAME);
-        try {
-            registrationService.createVisitor(visitor.getEmail(), visitor.getPassword(),
-                    visitor.getName());
-        } catch (Exception e) {
-            assertEquals("Invalid email. ", e.getMessage());
-        }
-    }
-
-    @Test
-    public void testCreateVisitorWithInvalidPassword() {
-        Visitor visitor = new Visitor();
-        visitor.setEmail(FIRST_VISITOR_VALID_EMAIL);
-        visitor.setPassword(INVALID_PASSWORD);
-        visitor.setName(FIRST_VALID_VISITOR_NAME);
-        try {
-            registrationService.createVisitor(visitor.getEmail(), visitor.getPassword(),
-                    visitor.getName());
-        } catch (Exception e) {
-            assertEquals(
-                    "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special character. ",
-                    e.getMessage());
-        }
-    }
-
-    @Test
-    public void testCreateVisitorWithExistingEmail() {
-        try {
+  @BeforeEach
+  public void setMockOutput() {
+    lenient().when(visitorRepository.findVisitorByMuseumUserId(anyLong()))
+        .thenAnswer((InvocationOnMock invocation) -> {
+          if (invocation.getArgument(0).equals(FIRST_VISITOR_ID)) {
             Visitor visitor = new Visitor();
-            visitor.setEmail(SECOND_VISITOR_VALID_EMAIL);
-            visitor.setPassword(VALID_PASSWORD);
-            visitor.setName("Lewis Hamilton");
-            registrationService.createVisitor(visitor.getEmail(), visitor.getPassword(),
-                    visitor.getName());
-        } catch (Exception e) {
-            assertEquals(
-                    "An account with the email " + SECOND_VISITOR_VALID_EMAIL + " already exists.",
-                    e.getMessage());
-        }
-
-        try {
-            Visitor visitor = new Visitor();
-            visitor.setEmail(EMPLOYEE_VALID_EMAIL);
+            visitor.setMuseumUserId(FIRST_VISITOR_ID);
+            visitor.setEmail(FIRST_VISITOR_VALID_EMAIL);
             visitor.setPassword(VALID_PASSWORD);
             visitor.setName(FIRST_VALID_VISITOR_NAME);
-            registrationService.createVisitor(visitor.getEmail(), visitor.getPassword(),
-                    visitor.getName());
-        } catch (Exception e) {
-            assertEquals("An account with the email " + EMPLOYEE_VALID_EMAIL + " already exists.",
-                    e.getMessage());
-        }
-    }
+            return visitor;
+          } else if (invocation.getArgument(0).equals(SECOND_VISITOR_ID)) {
+            Visitor visitor = new Visitor();
+            visitor.setMuseumUserId(SECOND_VISITOR_ID);
+            visitor.setEmail(SECOND_VISITOR_VALID_EMAIL);
+            visitor.setPassword(VALID_PASSWORD);
+            visitor.setName(SECOND_VALID_VISITOR_NAME);
+            return visitor;
+          } else {
+            return null;
+          }
 
-    // @Test
-    // public void testRegisterVisitorWithExistingUsername() {
-    // try {
-    // Visitor visitor = new Visitor();
-    // visitor.setEmail("test@mail.com");
-    // visitor.setPassword(VALID_PASSWORD);
-    // visitor.setName(FIRST_VALID_VISITOR_NAME);
-    // registrationService.createVisitor(visitor.getEmail(), visitor.getPassword(),
-    // visitor.getName());
-    // } catch (Exception e) {
-    // assertEquals("Please choose another username. " + FIRST_VALID_VISITOR_NAME
-    // + " already exists. ", e.getMessage());
-    // }
-    // }
+        });
 
-    @Test
-    public void testGetVisitorPersonalInformation() {
-        Visitor visitor = new Visitor();
-        try {
-            visitor = registrationService.getVisitorPersonalInformation(FIRST_VISITOR_ID);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+    lenient().when(visitorRepository.findVisitorByEmail(anyString()))
+        .thenAnswer((InvocationOnMock invocation) -> {
+          if (invocation.getArgument(0).equals(FIRST_VISITOR_VALID_EMAIL)) {
+            Visitor visitor = new Visitor();
+            visitor.setMuseumUserId(FIRST_VISITOR_ID);
+            visitor.setEmail(FIRST_VISITOR_VALID_EMAIL);
+            visitor.setPassword(VALID_PASSWORD);
+            visitor.setName(FIRST_VALID_VISITOR_NAME);
+            return visitor;
+          } else if (invocation.getArgument(0).equals(SECOND_VISITOR_VALID_EMAIL)) {
+            Visitor visitor = new Visitor();
+            visitor.setMuseumUserId(SECOND_VISITOR_ID);
+            visitor.setEmail(SECOND_VISITOR_VALID_EMAIL);
+            visitor.setPassword(VALID_PASSWORD);
+            visitor.setName(SECOND_VALID_VISITOR_NAME);
+            return visitor;
+          } else {
+            return null;
+          }
+        });
 
-        assertEquals(FIRST_VISITOR_VALID_EMAIL, visitor.getEmail());
-        assertEquals(FIRST_VALID_VISITOR_NAME, visitor.getName());
-        assertEquals(FIRST_VISITOR_ID, visitor.getMuseumUserId());
-    }
+    lenient().when(visitorRepository.findVisitorByName(anyString()))
+        .thenAnswer((InvocationOnMock invocation) -> {
+          if (invocation.getArgument(0).equals(FIRST_VALID_VISITOR_NAME)) {
+            Visitor visitor = new Visitor();
+            visitor.setMuseumUserId(FIRST_VISITOR_ID);
+            visitor.setEmail(FIRST_VISITOR_VALID_EMAIL);
+            visitor.setPassword(VALID_PASSWORD);
+            visitor.setName(FIRST_VALID_VISITOR_NAME);
+            return visitor;
+          } else if (invocation.getArgument(0).equals(SECOND_VALID_VISITOR_NAME)) {
+            Visitor visitor = new Visitor();
+            visitor.setMuseumUserId(SECOND_VISITOR_ID);
+            visitor.setEmail(SECOND_VISITOR_VALID_EMAIL);
+            visitor.setPassword(VALID_PASSWORD);
+            visitor.setName(SECOND_VALID_VISITOR_NAME);
+            return visitor;
+          } else {
+            return null;
+          }
+        });
 
-    @Test
-    public void testGetVisitorPersonalInformationWithInvalidId() {
-        try {
-            registrationService.getVisitorPersonalInformation(FIRST_VISITOR_ID + 1);
-        } catch (Exception e) {
-            assertEquals("Account was not found in out system. ", e.getMessage());
-        }
-    }
-
-    @Test
-    public void testEditVisitor() {
-        Visitor visitor = new Visitor();
-        String newPassword = "#BrazilGP2022";
-        String newEmail = "pierre.gasly@mail.com";
-        String newUserName = "Alonso";
-
-        try {
-            visitor = registrationService.editVisitorInformation(FIRST_VISITOR_ID, newEmail,
-                    VALID_PASSWORD, newPassword, newUserName);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-
-        assertEquals(newPassword, visitor.getPassword());
-        assertEquals(newEmail, visitor.getEmail());
-        assertEquals(newUserName, visitor.getName());
-    }
-
-    @Test
-    public void testEditVisitorWithInvalidId() {
-        try {
-            registrationService.editVisitorInformation(2, null, null, null, null);
-        } catch (Exception e) {
-            assertEquals("Account was not found in the system. ", e.getMessage());
-        }
-    }
-
-    @Test
-    public void testEditVisitorWithInvalidEmail() {
-        try {
-            registrationService.editVisitorInformation(FIRST_VISITOR_ID, INVALID_EMAIL, null, null,
-                    null);
-        } catch (Exception e) {
-            assertEquals("Invalid email. ", e.getMessage());
-        }
-    }
-
-    @Test
-    public void testEditVisitorExistingEmail() {
-        try {
-            registrationService.editVisitorInformation(FIRST_VISITOR_ID, SECOND_VISITOR_VALID_EMAIL,
-                    null, null, null);
-        } catch (Exception e) {
-            assertEquals(
-                    "An account with the email " + SECOND_VISITOR_VALID_EMAIL + " already exists.",
-                    e.getMessage());
-        }
-    }
-
-    @Test
-    public void testEditVisitorWithInvalidNewPassword() {
-        try {
-            registrationService.editVisitorInformation(FIRST_VISITOR_ID, null, VALID_PASSWORD,
-                    INVALID_PASSWORD, null);
-        } catch (Exception e) {
-            assertEquals(
-                    "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special character. ",
-                    e.getMessage());
-        }
-    }
-
-    @Test
-    public void testEditVisitorWithWrongOldPassword() {
-        try {
-            registrationService.editVisitorInformation(FIRST_VISITOR_ID, null, INVALID_PASSWORD,
-                    VALID_PASSWORD, null);
-        } catch (Exception e) {
-            assertEquals("Old password incorrect", e.getMessage());
-        }
-    }
-
-    // @Test
-    // public void testEditVisitorWithExistingUsername() {
-    // try {
-    // registrationService.editVisitorInformation(FIRST_VISITOR_ID, null, null, null,
-    // FIRST_VALID_VISITOR_NAME);
-    // registrationService.editVisitorInformation(FIRST_VISITOR_ID + 1, null, null, null,
-    // EMPLOYEE_VALID_NAME);
-    // } catch (Exception e) {
-    // assertEquals("Please choose another username. " + FIRST_VALID_VISITOR_NAME
-    // + " already exists. ", e.getMessage());
-    // }
-    // }
-
-    @Test
-    public void testCreateEmployee() {
-        Employee employee = null;
-        try {
-            employee = new Employee();
-            employee.setName("Lando Norris");
-            employee = registrationService.createEmployee(employee.getName());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-
-        assertEquals("Lando Norris", employee.getName());
-        assertEquals("lando.norris@museum.ca", employee.getEmail());
-    }
-
-    @Test
-    public void testCreateEmployeeWithInvalidName() {
-        try {
+    lenient().when(employeeRepository.findEmployeeByEmail(anyString()))
+        .thenAnswer((InvocationOnMock invocation) -> {
+          if (invocation.getArgument(0).equals(EMPLOYEE_VALID_EMAIL)) {
             Employee employee = new Employee();
-            employee.setName("LandoNorris");
-            registrationService.createEmployee(employee.getName());
-        } catch (Exception e) {
-            assertEquals("Name must be in the format of Firstname Lastname", e.getMessage());
-        }
+            employee.setEmail(EMPLOYEE_VALID_EMAIL);
+            employee.setPassword(VALID_PASSWORD);
+            employee.setMuseumUserId(EMPLOYEE_ID);
+            return employee;
+          } else {
+            return null;
+          }
+        });
+
+    lenient().when(employeeRepository.findEmployeeByName(anyString()))
+        .thenAnswer((InvocationOnMock invocation) -> {
+          if (invocation.getArgument(0).equals(EMPLOYEE_VALID_NAME)) {
+            Employee employee = new Employee();
+            employee.setEmail(EMPLOYEE_VALID_EMAIL);
+            employee.setMuseumUserId(EMPLOYEE_ID);
+            employee.setPassword(VALID_PASSWORD);
+            employee.setName(EMPLOYEE_VALID_NAME);
+            return employee;
+          } else {
+            return null;
+          }
+        });
+
+
+    lenient().when(employeeRepository.findEmployeeByMuseumUserId(anyLong()))
+        .thenAnswer((InvocationOnMock invocation) -> {
+          if (invocation.getArgument(0).equals(EMPLOYEE_ID)) {
+            Employee employee = new Employee();
+            employee.setEmail(EMPLOYEE_VALID_EMAIL);
+            employee.setMuseumUserId(EMPLOYEE_ID);
+            employee.setPassword(VALID_PASSWORD);
+            employee.setName(EMPLOYEE_VALID_NAME);
+            return employee;
+          } else {
+            return null;
+          }
+        });
+
+    lenient().when(employeeRepository.save(any(Employee.class)))
+        .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
+
+    lenient().when(visitorRepository.save(any(Visitor.class)))
+        .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
+  }
+
+  @Test
+  public void createValidVisitor() {
+    VisitorDto visitorDto = null;
+    try {
+      visitorDto = new VisitorDto();
+      visitorDto.setEmail("lewis@mail.com");
+      visitorDto.setPassword("Speed123#$");
+      visitorDto.setName("lewis");
+
+      registrationService.createVisitor(visitorDto.getEmail(), visitorDto.getPassword(),
+          visitorDto.getName());
+    } catch (Exception e) {
+      fail(e.getMessage());
     }
 
-    @Test
-    public void testCreateEmployeeEmail() {
-        Employee employee = null;
-        try {
-            employee = new Employee();
-            employee.setName("Sergio Perez");
-            employee = registrationService.createEmployee(employee.getName());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+    assertEquals("lewis@mail.com", visitorDto.getEmail());
+    assertEquals("Speed123#$", visitorDto.getPassword());
+    assertEquals("lewis", visitorDto.getName());
+  }
 
-        assertEquals("sergio.perez1@museum.ca", employee.getEmail());
-    }
-
-    @Test
-    public void testEditEmployee() {
-        Employee employee = null;
-        String newPassword = "#BrazilGP2022";
-
-        try {
-            employee = registrationService.editEmployeeInformation(EMPLOYEE_ID, VALID_PASSWORD,
-                    newPassword);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-
-        assertEquals(newPassword, employee.getPassword());
-    }
-
-    @Test
-    public void testGetEmployeePersonalInformation() {
-        Employee employee = new Employee();
-        try {
-            employee = registrationService.getEmployeePersonalInformation(EMPLOYEE_ID);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-
-        assertEquals(EMPLOYEE_VALID_EMAIL, employee.getEmail());
-        assertEquals(EMPLOYEE_VALID_NAME, employee.getName());
-        assertEquals(EMPLOYEE_ID, employee.getMuseumUserId());
+  @Test
+  public void testCreateVisitorWithNullFields() {
+    Visitor visitor = new Visitor();
+    visitor.setEmail(null);
+    visitor.setPassword(null);
+    visitor.setName(null);
+    try {
+      registrationService.createVisitor(visitor.getEmail(), visitor.getPassword(),
+          visitor.getName());
+    } catch (Exception e) {
+      assertEquals("Email, password and name must be filled", e.getMessage());
 
     }
+  }
 
-    @Test
-    public void testGetEmployeePersonalInformationWithInvalidId() {
-        try {
-            registrationService.getEmployeePersonalInformation(EMPLOYEE_ID + 1);
-        } catch (Exception e) {
-            assertEquals("Account was not found in out system. ", e.getMessage());
-        }
+  @Test
+  public void testCreateVisitorWithInvalidEmail() {
+    Visitor visitor = new Visitor();
+    visitor.setEmail(INVALID_EMAIL);
+    visitor.setPassword(VALID_PASSWORD);
+    visitor.setName(FIRST_VALID_VISITOR_NAME);
+    try {
+      registrationService.createVisitor(visitor.getEmail(), visitor.getPassword(),
+          visitor.getName());
+    } catch (Exception e) {
+      assertEquals("Invalid email. ", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testCreateVisitorWithInvalidPassword() {
+    Visitor visitor = new Visitor();
+    visitor.setEmail(FIRST_VISITOR_VALID_EMAIL);
+    visitor.setPassword(INVALID_PASSWORD);
+    visitor.setName(FIRST_VALID_VISITOR_NAME);
+    try {
+      registrationService.createVisitor(visitor.getEmail(), visitor.getPassword(),
+          visitor.getName());
+    } catch (Exception e) {
+      assertEquals(
+          "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special character. ",
+          e.getMessage());
+    }
+  }
+
+  @Test
+  public void testCreateVisitorWithExistingEmail() {
+    try {
+      Visitor visitor = new Visitor();
+      visitor.setEmail(SECOND_VISITOR_VALID_EMAIL);
+      visitor.setPassword(VALID_PASSWORD);
+      visitor.setName("Lewis Hamilton");
+      registrationService.createVisitor(visitor.getEmail(), visitor.getPassword(),
+          visitor.getName());
+    } catch (Exception e) {
+      assertEquals("An account with the email " + SECOND_VISITOR_VALID_EMAIL + " already exists.",
+          e.getMessage());
     }
 
+    try {
+      Visitor visitor = new Visitor();
+      visitor.setEmail(EMPLOYEE_VALID_EMAIL);
+      visitor.setPassword(VALID_PASSWORD);
+      visitor.setName(FIRST_VALID_VISITOR_NAME);
+      registrationService.createVisitor(visitor.getEmail(), visitor.getPassword(),
+          visitor.getName());
+    } catch (Exception e) {
+      assertEquals("An account with the email " + EMPLOYEE_VALID_EMAIL + " already exists.",
+          e.getMessage());
+    }
+  }
 
-    @Test
-    public void testEditEmployeeWithInvalidId() {
-        try {
-            registrationService.editEmployeeInformation(EMPLOYEE_ID + 1, null, null);
-        } catch (Exception e) {
-            assertEquals("Account was not found in the system. ", e.getMessage());
-        }
+  // @Test
+  // public void testRegisterVisitorWithExistingUsername() {
+  // try {
+  // Visitor visitor = new Visitor();
+  // visitor.setEmail("test@mail.com");
+  // visitor.setPassword(VALID_PASSWORD);
+  // visitor.setName(FIRST_VALID_VISITOR_NAME);
+  // registrationService.createVisitor(visitor.getEmail(), visitor.getPassword(),
+  // visitor.getName());
+  // } catch (Exception e) {
+  // assertEquals("Please choose another username. " + FIRST_VALID_VISITOR_NAME
+  // + " already exists. ", e.getMessage());
+  // }
+  // }
+
+  @Test
+  public void testGetVisitorPersonalInformation() {
+    Visitor visitor = new Visitor();
+    try {
+      visitor = registrationService.getVisitorPersonalInformation(FIRST_VISITOR_ID);
+    } catch (Exception e) {
+      fail(e.getMessage());
     }
 
-    @Test
-    public void testEditEmployeeWithInvalidNewPassword() {
-        try {
-            registrationService.editEmployeeInformation(EMPLOYEE_ID, VALID_PASSWORD,
-                    INVALID_PASSWORD);
-        } catch (Exception e) {
-            assertEquals(
-                    "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special character. ",
-                    e.getMessage());
-        }
+    assertEquals(FIRST_VISITOR_VALID_EMAIL, visitor.getEmail());
+    assertEquals(FIRST_VALID_VISITOR_NAME, visitor.getName());
+    assertEquals(FIRST_VISITOR_ID, visitor.getMuseumUserId());
+  }
+
+  @Test
+  public void testGetVisitorPersonalInformationWithInvalidId() {
+    try {
+      registrationService.getVisitorPersonalInformation(FIRST_VISITOR_ID + 1);
+    } catch (Exception e) {
+      assertEquals("Account was not found in out system. ", e.getMessage());
     }
+  }
+
+  @Test
+  public void testEditVisitor() {
+    Visitor visitor = new Visitor();
+    String newPassword = "#BrazilGP2022";
+    String newEmail = "pierre.gasly@mail.com";
+    String newUserName = "Alonso";
+
+    try {
+      visitor = registrationService.editVisitorInformation(FIRST_VISITOR_ID, newEmail,
+          VALID_PASSWORD, newPassword, newUserName);
+    } catch (Exception e) {
+      fail(e.getMessage());
+    }
+
+    assertEquals(newPassword, visitor.getPassword());
+    assertEquals(newEmail, visitor.getEmail());
+    assertEquals(newUserName, visitor.getName());
+  }
+
+  @Test
+  public void testEditVisitorWithInvalidId() {
+    try {
+      registrationService.editVisitorInformation(2, null, null, null, null);
+    } catch (Exception e) {
+      assertEquals("Account was not found in the system. ", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testEditVisitorWithInvalidEmail() {
+    try {
+      registrationService.editVisitorInformation(FIRST_VISITOR_ID, INVALID_EMAIL, null, null, null);
+    } catch (Exception e) {
+      assertEquals("Invalid email. ", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testEditVisitorExistingEmail() {
+    try {
+      registrationService.editVisitorInformation(FIRST_VISITOR_ID, SECOND_VISITOR_VALID_EMAIL, null,
+          null, null);
+    } catch (Exception e) {
+      assertEquals("An account with the email " + SECOND_VISITOR_VALID_EMAIL + " already exists.",
+          e.getMessage());
+    }
+  }
+
+  @Test
+  public void testEditVisitorWithInvalidNewPassword() {
+    try {
+      registrationService.editVisitorInformation(FIRST_VISITOR_ID, null, VALID_PASSWORD,
+          INVALID_PASSWORD, null);
+    } catch (Exception e) {
+      assertEquals(
+          "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special character. ",
+          e.getMessage());
+    }
+  }
+
+  @Test
+  public void testEditVisitorWithWrongOldPassword() {
+    try {
+      registrationService.editVisitorInformation(FIRST_VISITOR_ID, null, INVALID_PASSWORD,
+          VALID_PASSWORD, null);
+    } catch (Exception e) {
+      assertEquals("Old password incorrect", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testCreateEmployee() {
+    Employee employee = null;
+    try {
+      employee = new Employee();
+      employee.setName("Lando Norris");
+      employee = registrationService.createEmployee(employee.getName());
+    } catch (Exception e) {
+      fail(e.getMessage());
+    }
+
+    assertEquals("Lando Norris", employee.getName());
+    assertEquals("lando.norris@museum.ca", employee.getEmail());
+  }
+
+  @Test
+  public void testCreateEmployeeWithInvalidName() {
+    try {
+      Employee employee = new Employee();
+      employee.setName("LandoNorris");
+      registrationService.createEmployee(employee.getName());
+    } catch (Exception e) {
+      assertEquals("Name must be in the format of Firstname Lastname", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testCreateEmployeeEmail() {
+    Employee employee = null;
+    try {
+      employee = new Employee();
+      employee.setName("Sergio Perez");
+      employee = registrationService.createEmployee(employee.getName());
+    } catch (Exception e) {
+      fail(e.getMessage());
+    }
+
+    assertEquals("sergio.perez1@museum.ca", employee.getEmail());
+  }
+
+  @Test
+  public void testEditEmployee() {
+    Employee employee = null;
+    String newPassword = "#BrazilGP2022";
+
+    try {
+      employee =
+          registrationService.editEmployeeInformation(EMPLOYEE_ID, VALID_PASSWORD, newPassword);
+    } catch (Exception e) {
+      fail(e.getMessage());
+    }
+
+    assertEquals(newPassword, employee.getPassword());
+  }
+
+  @Test
+  public void testGetEmployeePersonalInformation() {
+    Employee employee = new Employee();
+    try {
+      employee = registrationService.getEmployeePersonalInformation(EMPLOYEE_ID);
+    } catch (Exception e) {
+      fail(e.getMessage());
+    }
+
+    assertEquals(EMPLOYEE_VALID_EMAIL, employee.getEmail());
+    assertEquals(EMPLOYEE_VALID_NAME, employee.getName());
+    assertEquals(EMPLOYEE_ID, employee.getMuseumUserId());
+
+  }
+
+  @Test
+  public void testGetEmployeePersonalInformationWithInvalidId() {
+    try {
+      registrationService.getEmployeePersonalInformation(EMPLOYEE_ID + 1);
+    } catch (Exception e) {
+      assertEquals("Account was not found in out system. ", e.getMessage());
+    }
+  }
+
+
+  @Test
+  public void testEditEmployeeWithInvalidId() {
+    try {
+      registrationService.editEmployeeInformation(EMPLOYEE_ID + 1, null, null);
+    } catch (Exception e) {
+      assertEquals("Account was not found in the system. ", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testEditEmployeeWithInvalidNewPassword() {
+    try {
+      registrationService.editEmployeeInformation(EMPLOYEE_ID, VALID_PASSWORD, INVALID_PASSWORD);
+    } catch (Exception e) {
+      assertEquals(
+          "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special character. ",
+          e.getMessage());
+    }
+  }
 }
 
 
