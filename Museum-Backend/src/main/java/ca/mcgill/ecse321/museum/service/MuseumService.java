@@ -26,8 +26,6 @@ public class MuseumService {
   private ScheduleOfTimePeriodRepository scheduleOfTimePeriodRepository;
   @Autowired
   private TimePeriodRepository timePeriodRepository;
-  @Autowired
-  private TimePeriodService timePeriodService;
 
   /**
    * Method to view a museum
@@ -71,6 +69,7 @@ public class MuseumService {
   /**
    * Method to edit a museum's name, visit fee or schedule given the museum's id.
    * 
+   * @author VZ
    * @param museumId
    * @param name
    * @param visitFee
@@ -135,6 +134,9 @@ public class MuseumService {
       throw new IllegalArgumentException("Schedule doesn't exist!");
     }
     List<TimePeriod> timePeriods = getTimePeriodsOfSchedule(schedule);
+    if (timePeriods == null) {
+      throw new IllegalArgumentException("Museum's schedule has no shift!");
+    }
     return timePeriods;
   }
 
@@ -219,7 +221,7 @@ public class MuseumService {
   /**
    * Method to get all the museums in the database
    * 
-   * @return List of all museums 
+   * @return List of all museums
    * @author Siger
    */
   @Transactional
@@ -227,25 +229,27 @@ public class MuseumService {
     return toList(museumRepository.findAll());
   }
 
-      /**
-     * Helper method to get the time periods of a schedule
-     * 
-     * @author VZ
-     * @param schedule
-     * @return
-     */
+  /**
+   * Helper method to get the time periods of a schedule
+   * 
+   * @author VZ
+   * @param schedule
+   * @return
+   */
 
-    public List<TimePeriod> getTimePeriodsOfSchedule(Schedule schedule) {
+  public List<TimePeriod> getTimePeriodsOfSchedule(Schedule schedule) {
 
-      List<ScheduleOfTimePeriod> scheduleOfTimePeriods = scheduleOfTimePeriodRepository
-              .findScheduleOfTimePeriodBySchedule(schedule);
+    List<ScheduleOfTimePeriod> scheduleOfTimePeriods = scheduleOfTimePeriodRepository
+        .findScheduleOfTimePeriodBySchedule(schedule);
+    if (scheduleOfTimePeriods == null) {
+      return null;
+    }
+    List<TimePeriod> timePeriods = new ArrayList<TimePeriod>();
+    for (ScheduleOfTimePeriod scheduleOfTimePeriod : scheduleOfTimePeriods) {
+      timePeriods.add(scheduleOfTimePeriod.getTimePeriod());
+    }
 
-      List<TimePeriod> timePeriods = new ArrayList<TimePeriod>();
-      for (ScheduleOfTimePeriod scheduleOfTimePeriod : scheduleOfTimePeriods) {
-          timePeriods.add(scheduleOfTimePeriod.getTimePeriod());
-      }
-
-      return timePeriods;
+    return timePeriods;
   }
 
 }

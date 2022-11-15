@@ -105,6 +105,9 @@ public class EmployeeService {
     }
 
     List<TimePeriod> timePeriods = getTimePeriodsOfSchedule(schedule);
+    if (timePeriods == null) {
+      throw new IllegalArgumentException("Employee has no shift");
+    }
     return timePeriods;
   }
 
@@ -239,7 +242,9 @@ public class EmployeeService {
 
     List<ScheduleOfTimePeriod> scheduleOfTimePeriods = scheduleOfTimePeriodRepository
         .findScheduleOfTimePeriodBySchedule(schedule);
-
+    if (scheduleOfTimePeriods == null) {
+      return null;
+    }
     List<TimePeriod> timePeriods = new ArrayList<TimePeriod>();
     for (ScheduleOfTimePeriod scheduleOfTimePeriod : scheduleOfTimePeriods) {
       timePeriods.add(scheduleOfTimePeriod.getTimePeriod());
