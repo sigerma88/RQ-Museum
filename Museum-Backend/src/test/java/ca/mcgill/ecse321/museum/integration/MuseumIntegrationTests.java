@@ -100,6 +100,35 @@ public class MuseumIntegrationTests {
     }
 
     /**
+     * Test to unsuccessfully create an invalid museum without a visit fee
+     * 
+     * @author VZ
+     */
+    @Test
+    public void testCreateInvalidMuseumWithoutVisitFee(){
+        ResponseEntity<MuseumDto> response = 
+        client.postForEntity("/museum/app?name=Museum", new MuseumDto() , MuseumDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertEquals(0.0, response.getBody().getVisitFee());
+    }
+
+    /**
+     * Test to unsuccessfully create an invalid museum with an visit fee
+     * 
+     * @author VZ
+     */
+    @Test
+    public void testCreateInvalidMuseumWithInvalidVisitFee(){
+        ResponseEntity<MuseumDto> response = 
+        client.postForEntity("/museum/app?name=Museum&visitFee=%2D10", new MuseumDto() , MuseumDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertEquals(0.0, response.getBody().getVisitFee());
+    }
+    /**
      * Test to unsuccessfully edit an invalid museum without a name
      * 
      * @author VZ
@@ -116,7 +145,55 @@ public class MuseumIntegrationTests {
         assertNotNull(response.getBody(), "Response has body");
         assertEquals(null, response.getBody().getMuseumName());
     }
+    /**
+     * Test to unsuccessfully edit an invalid museum without a visit fee
+     */
+    @Test
+    public void testEditInvalidMuseumWithoutVisitFee(){
+        Long id = testCreateMuseum();
+        MuseumDto museumDto = new MuseumDto();
+        museumDto.setMuseumId(id);
+        ResponseEntity<MuseumDto> response = 
+        client.postForEntity("/museum/app/edit/"+ id+"/?name=RQ", museumDto , MuseumDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertEquals(0.0, response.getBody().getVisitFee());
+    }
 
+    /**
+     * Test to unsuccessfully edit an invalid museum with an invalid visit fee
+     * 
+     * @author VZ
+     */
+    @Test
+    public void testEditInvalidMuseumWithInvalidVisitFee(){
+        Long id = testCreateMuseum();
+        MuseumDto museumDto = new MuseumDto();
+        museumDto.setMuseumId(id);
+        ResponseEntity<MuseumDto> response = 
+        client.postForEntity("/museum/app/edit/"+ id+"/?name=RQ&visitFee=%2D10", museumDto , MuseumDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertEquals(0.0, response.getBody().getVisitFee());
+    }
+    /**
+     * Test get all museums successfully
+     * @author VZ
+     */
+    @Test
+    public void testGetAllMuseums() {
+        testCreateMuseum();
+        testCreateMuseum();
+        testCreateMuseum();
+        ResponseEntity<MuseumDto[]> response = 
+        client.getForEntity("/museums", MuseumDto[].class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertEquals(3, response.getBody().length, "Response has correct number of museums");
+    }
 
     
 
