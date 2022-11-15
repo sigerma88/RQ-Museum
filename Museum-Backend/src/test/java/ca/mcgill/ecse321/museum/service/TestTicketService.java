@@ -48,10 +48,10 @@ public class TestTicketService {
   private static final String VISITOR_NAME_2 = "Marie B";
   private static final String VISITOR_PASSWORD_2 = "password";
 
-  private static final String VISIT_DATE_1 = "10/05/2023";
+  private static final String VISIT_DATE_1 = "2023-10-05";
   private static final String VISIT_DATE_2 = "2023-04-20";
   private static final String INVALID_DATE = "2020-10-03";
-  private static final int TICKETS_VISITOR_2 = 4;
+  private static final int TICKETS_VISITOR_2 = 2;
   private static final long TICKET_ID_2 = 666;
   private static final long TICKET_ID_1 = 555;
   private static final long TICKET_ID_3 = 444;
@@ -79,10 +79,10 @@ public class TestTicketService {
         visitor2.setPassword(VISITOR_PASSWORD_2);
         visitor2.setMuseumUserId(VISITOR_ID_2);
 
-        Ticket ticket = new Ticket();
+       /* Ticket ticket = new Ticket();
         ticket.setTicketId(TICKET_ID_2);
         ticket.setVisitDate(Date.valueOf(VISIT_DATE_2));
-        ticket.setVisitor(visitor2);
+        ticket.setVisitor(visitor2);*/
         // ticketService.createTickets(VISITOR_ID_2, Date.valueOf(VISIT_DATE_2), TICKETS_VISITOR_2);
         return visitor2;
       } else {
@@ -91,7 +91,7 @@ public class TestTicketService {
 
     });
 
-    lenient().when(ticketRepository.findTicketByTicketId(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
+    /*lenient().when(ticketRepository.findTicketByTicketId(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
       if (invocation.getArgument(0).equals(TICKET_ID_1)) {
         Ticket ticket = new Ticket();
         ticket.setTicketId(TICKET_ID_1);
@@ -101,10 +101,32 @@ public class TestTicketService {
         return null;
       }
 
+    });*/
+
+
+    lenient().when(ticketRepository.findAll()).thenAnswer((InvocationOnMock invocation) -> {
+      List<Ticket> allTickets = new ArrayList<>();
+      Ticket ticket1 = new Ticket();
+      ticket1.setTicketId(TICKET_ID_1);
+      ticket1.setVisitor(visitorRepository.findVisitorByMuseumUserId(VISITOR_ID_1));
+      ticket1.setVisitDate(Date.valueOf(VISIT_DATE_1));
+      allTickets.add(ticket1);
+
+      Ticket ticket2 = new Ticket();
+      ticket2.setTicketId(TICKET_ID_2);
+      ticket2.setVisitDate(Date.valueOf(VISIT_DATE_2));
+      ticket2.setVisitor(visitorRepository.findVisitorByMuseumUserId(VISITOR_ID_2));
+      allTickets.add(ticket2);
+
+      Ticket ticket3 = new Ticket();
+      ticket3.setTicketId(TICKET_ID_3);
+      ticket3.setVisitor(visitorRepository.findVisitorByMuseumUserId(VISITOR_ID_2));
+      ticket3.setVisitDate(Date.valueOf(VISIT_DATE_2));
+      allTickets.add(ticket3);
+
+
+      return allTickets;
     });
-
-
-    //lenient().when(ticketRepository.save(any(Ticket.class))).thenAnswer( );
 
   }
 
@@ -265,7 +287,7 @@ public class TestTicketService {
 
   @Test
   public void getTicketsByVisitor() {
-    List<Ticket> allTicketsOfVisitor = new ArrayList<>();
+    List<Ticket> allTicketsOfVisitor = null;
     long visitorId = VISITOR_ID_2;
 
     allTicketsOfVisitor = ticketService.getTicketsByVisitor(visitorRepository.findVisitorByMuseumUserId(visitorId));
@@ -273,6 +295,8 @@ public class TestTicketService {
 
     assertNotNull(allTicketsOfVisitor);
     assertEquals(TICKETS_VISITOR_2, allTicketsOfVisitor.size());
+    assertEquals(VISIT_DATE_2, allTicketsOfVisitor.get(1).getVisitDate());
+
     /*for (int i = 0; i <= allTicketsOfVisitor.size(); i++)
       assertEquals(VISIT_DATE_2, allTicketsOfVisitor.get(i).getVisitDate());*/
 

@@ -50,7 +50,7 @@ public class TicketRestController {
    * @author Zahra
    */
   @GetMapping(value = {"/tickets/{visitor}", "/tickets/{visitor}/"})
-  public ResponseEntity<?> getAllTicketsByVisitor(@PathVariable("visitor") Visitor visitor) {
+  public ResponseEntity<?> getTicketsByVisitor(@PathVariable("visitor") Visitor visitor) {
     try {
       List<TicketDto> allTicketsOfVisitor = new ArrayList<>();
       for (Ticket ticket : ticketService.getTicketsByVisitor(visitor)) {
