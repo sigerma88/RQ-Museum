@@ -89,7 +89,7 @@ public class TicketService {
     List<Ticket> allTickets = toList(ticketRepository.findAll());
     for (Ticket ticket : allTickets) {
 
-      if (ticket != null && ticket.getVisitor().equals(visitor)) {
+      if (ticket != null && ticket.getVisitor().getMuseumUserId() == visitor.getMuseumUserId()) {
         allTicketsOfVisitor.add(ticket);
       }
 

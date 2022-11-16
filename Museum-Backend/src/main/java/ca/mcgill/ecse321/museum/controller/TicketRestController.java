@@ -28,7 +28,7 @@ public class TicketRestController {
    * @param visitorID
    * @return boughtTickets
    */
-  @PostMapping(value = {"/tickets/purchase", "/tickets/purchase/"})
+  @PostMapping(value = {"/tickets/purchase", "/tickets/purchase/"}, produces = "application/json")
   public ResponseEntity<?> buyTickets(@RequestParam(name = "visitor") Long visitorID, @RequestParam Date visitDate, @RequestParam(name = "number") int numberOfTickets) {
     try {
       List<TicketDto> boughtTickets = new ArrayList<>();
