@@ -13,6 +13,10 @@ import ca.mcgill.ecse321.museum.dao.RoomRepository;
 import ca.mcgill.ecse321.museum.model.Artwork;
 import ca.mcgill.ecse321.museum.model.Loan;
 import ca.mcgill.ecse321.museum.model.Room;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class ArtworkService {
@@ -128,20 +132,54 @@ public class ArtworkService {
    */
   @Transactional
   public List<Artwork> getAllArtworksByRoom(Room room) {
+
+    if (room == null) {
+      throw new IllegalArgumentException("Room doesn't exist");
+    }
     List<Artwork> artworksInRoom = new ArrayList<>();
+
     for (Artwork artwork : getAllArtworks()) {
-      if (artwork.getRoom().equals(room)) artworksInRoom.add(artwork);
+      if (artwork.getRoom().getRoomId() == room.getRoomId()) artworksInRoom.add(artwork);
     }
     return artworksInRoom;
   }
 
+  /**
+   * Method to get all artworks with their
+   * corresponding availability for loan
+   *
+   * @return artworksWithAvailability
+   * @author Zahra
+   */
+  @Transactional
+  public Map<String, String> getArtworkwithAvailabilityForLoan() {
+    Map<String, String> artworksWithAvailability = new HashMap<>();
 
-  public boolean getArtworkAvailabilityForLoan(Artwork artwork) {
-    return artwork.getIsAvailableForLoan();
+    for (Artwork artwork : getAllArtworks()) {
+      if (artwork.getIsAvailableForLoan() == true) {
+        artworksWithAvailability.put(artwork.getName(), "Available");
+      } else if (artwork.getIsAvailableForLoan() == false) {
+        artworksWithAvailability.put(artwork.getName(), "Unavailable");
+      }
+
+    }
+    return artworksWithAvailability;
   }
 
-  public double getArtworkLoanFee(Artwork artwork) {
-    return artwork.getLoanFee();
+
+  /**
+   * Method to
+   *
+   * @return
+   * @author Zahra
+   */
+  @Transactional
+  public Map<String, Double> getArtworkWithLoanFee() {
+    Map<String, Double> artworksWithLoanFee = new HashMap<>();
+    for (Artwork artwork : getAllArtworks()) {
+      artworksWithLoanFee.put(artwork.getName(), artwork.getLoanFee());
+    }
+    return artworksWithLoanFee;
   }
 
   /**
