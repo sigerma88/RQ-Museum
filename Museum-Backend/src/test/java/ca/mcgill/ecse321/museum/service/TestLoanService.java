@@ -53,4 +53,27 @@ public class TestLoanService {
     @InjectMocks
     private LoanService loanService;
 
+    private static final long LOAN_ID = 1;
+    private static final boolean LOAN_REQUESTACCEPTED = false;
+    
+
+
+    @BeforeEach
+    public void setMockOutput() {
+        Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
+          return invocation.getArgument(0);
+        };
+        
+        lenient().when()
+    }
+
+    @Test
+    public void testGetLoan() {
+        Loan loan = loanService.getLoanById(LOAN_ID);
+        assertEquals(LOAN_ID, loan.getLoanId());
+        assertEquals(LOAN_REQUESTACCEPTED, loan.getRequestAccepted());
+        assertEquals(VISITOR_ID, loan.getVisitor());
+        assertEquals(ARTWORK_ID, loan.getArtwork());
+    }
+
 }

@@ -6,6 +6,7 @@ import ca.mcgill.ecse321.museum.model.Loan;
 import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.model.Schedule;
+import ca.mcgill.ecse321.museum.model.Visitor;
 import ca.mcgill.ecse321.museum.dto.ArtworkDto;
 import ca.mcgill.ecse321.museum.dto.EmployeeDto;
 import ca.mcgill.ecse321.museum.dto.MuseumDto;
@@ -132,5 +133,24 @@ public class DtoUtility {
     return new MuseumDto(museum.getMuseumId(), museum.getName(), museum.getVisitFee(), scheduleDto);
   }
 
+    /**
+   * Method to convert an visitor to a DTO
+   * 
+   * @param museumUser - Visitor
+   * @return visitor DTO
+   * @author Kevin
+   */
+  public static VisitorDto convertToDto(Visitor visitor) {
+    if (visitor == null) {
+      throw new IllegalArgumentException("There is no such employee");
+    }
+
+    VisitorDto visitorDto = new VisitorDto();
+    visitorDto.setEmail(visitor.getEmail());
+    visitorDto.setName(visitor.getName());
+    visitorDto.setPassword(visitor.getPassword());
+    visitorDto.setUserId(visitor.getMuseumUserId());
+    return visitorDto;
+  }
 
 }
