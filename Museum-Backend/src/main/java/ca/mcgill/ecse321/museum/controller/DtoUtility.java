@@ -131,4 +131,6 @@ public class DtoUtility {
     // Convert museum to DTO
     return new MuseumDto(museum.getMuseumId(), museum.getName(), museum.getVisitFee(), scheduleDto);
   }
+
+
 }

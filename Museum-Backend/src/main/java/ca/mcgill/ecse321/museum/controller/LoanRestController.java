@@ -106,7 +106,7 @@ public class LoanRestController {
     public ResponseEntity<?> postLoan(@RequestBody Loan loan, @PathVariable Long artworkId, @PathVariable Long visitorId) {
         try {
             Loan persistedLoan = loanService.createLoan(loan, artworkId, visitorId);
-
+            
             LoanDto loanDto = DtoUtility.convertToDto(persistedLoan);
 
             // Send email notification to visitor that the request was successful
