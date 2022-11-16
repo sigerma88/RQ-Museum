@@ -39,14 +39,14 @@ public class TestArtworkService {
   private ArtworkService artworkService;
 
   // Artwork
-  private static final long ARTWORK_ID = 678;
-  private static final String ARTWORK_NAME = "La Peur";
-  private static final String ARTWORK_ARTIST = "Ernest";
+  private static final long ARTWORK_ID_1 = 678;
+  private static final String ARTWORK_NAME_1 = "La Peur";
+  private static final String ARTWORK_ARTIST_1 = "Ernest";
   private static final Boolean IS_AVAILABLE_FOR_LOAN = true;
   private static final double LOAN_FEE_1 = 100.00;
   private static final String IMAGE_1 = "ooo";
   private static final Boolean IS_ON_LOAN_1 = false;
-  private static final String AVAILABILITY = "Available";
+  private static final String AVAILABILITY_1 = "Available";
 
 
   private static final long ARTWORK_ID_2 = 456;
@@ -86,17 +86,15 @@ public class TestArtworkService {
       room2.setRoomName(ROOM_NAME_2);
       room2.setCurrentNumberOfArtwork(ROOM2_NUMBER_OF_ARTWORKS);
 
-
       Artwork artwork1 = new Artwork();
-      artwork1.setArtworkId(ARTWORK_ID);
-      artwork1.setArtist(ARTWORK_ARTIST);
-      artwork1.setName(ARTWORK_NAME);
+      artwork1.setArtworkId(ARTWORK_ID_1);
+      artwork1.setArtist(ARTWORK_ARTIST_1);
+      artwork1.setName(ARTWORK_NAME_1);
       artwork1.setRoom(room1);
       artwork1.setImage(IMAGE_1);
       artwork1.setLoanFee(LOAN_FEE_1);
       artwork1.setIsOnLoan(IS_ON_LOAN_1);
       artwork1.setIsAvailableForLoan(IS_AVAILABLE_FOR_LOAN);
-
       allArtworks.add(artwork1);
 
       Artwork artwork2 = new Artwork();
@@ -105,9 +103,9 @@ public class TestArtworkService {
       artwork2.setName(ARTWORK_NAME_2);
       artwork2.setRoom(room2);
       artwork2.setImage(IMAGE_2);
-      artwork1.setLoanFee(LOAN_FEE_2);
-      artwork1.setIsOnLoan(IS_ON_LOAN_2);
-      artwork1.setIsAvailableForLoan(IS_AVAILABLE_FOR_LOAN_2);
+      artwork2.setLoanFee(LOAN_FEE_2);
+      artwork2.setIsOnLoan(IS_ON_LOAN_2);
+      artwork2.setIsAvailableForLoan(IS_AVAILABLE_FOR_LOAN_2);
       allArtworks.add(artwork2);
       return allArtworks;
 
@@ -132,9 +130,13 @@ public class TestArtworkService {
   }
 
 
+  /**
+   * Test for getAllArtworksByRoom
+   *
+   * @author Zahra
+   */
   @Test
   public void testGetAllArtworks() {
-
     List<Artwork> foundArtworks = null;
     try {
       foundArtworks = artworkService.getAllArtworks();
@@ -147,10 +149,14 @@ public class TestArtworkService {
   }
 
 
+  /**
+   * Test for getAllArtworksByRoom
+   *
+   * @author Zahra
+   */
   @Test
   public void testGetArtworksByRooom() {
     List<Artwork> artworksInRoom = null;
-
     artworksInRoom = artworkService.getAllArtworksByRoom(roomRepository.findRoomByRoomId(ROOM_ID_1));
     assertNotNull(artworksInRoom);
     assertEquals(ROOM1_NUMBER_OF_ARTWORKS, artworksInRoom.size());
@@ -158,10 +164,14 @@ public class TestArtworkService {
 
   }
 
-  //DONE
+  /**
+   * Test for getAllArtworksByRoom using
+   * a non existing room
+   *
+   * @author Zahra
+   */
   @Test
   public void testGetArtworksWithNonExistingRoom() {
-
     List<Artwork> artworksInRoom = null;
     Room room = null;
     String error = "";
@@ -175,22 +185,32 @@ public class TestArtworkService {
 
   }
 
+  /**
+   * Test for getArtworkWithAvailabilityForLoan
+   *
+   * @author Zahra
+   */
   @Test
-  public void testDisplayArtworkWithAvailabilityForLoan() {
-
+  public void testGetArtworkWithAvailabilityForLoan() {
     Map<String, String> artworkWithAvailability = new HashMap<>();
     artworkWithAvailability = artworkService.getArtworkwithAvailabilityForLoan();
     assertEquals(NUMBER_OF_ARTWORKS, artworkWithAvailability.size());
-    assertEquals(AVAILABILITY, artworkWithAvailability.get(ARTWORK_NAME));
+    assertEquals(AVAILABILITY_1, artworkWithAvailability.get(ARTWORK_NAME_1));
 
   }
 
+
+  /**
+   * Test for getArtworkWithLoanFee
+   *
+   * @author Zahra
+   */
   @Test
   public void testGetArtworkWithLoanFee() {
     Map<String, Double> artworkWithLoanFee = new HashMap<>();
     artworkWithLoanFee = artworkService.getArtworkWithLoanFee();
     assertEquals(NUMBER_OF_ARTWORKS, artworkWithLoanFee.size());
-    assertEquals(LOAN_FEE_1, artworkWithLoanFee.get(ARTWORK_NAME));
+    assertEquals(LOAN_FEE_2, artworkWithLoanFee.get(ARTWORK_NAME_2)); //check if the mapping is correct
 
   }
 

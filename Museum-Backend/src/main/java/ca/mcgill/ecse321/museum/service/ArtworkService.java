@@ -50,7 +50,7 @@ public class ArtworkService {
     List<Artwork> artworksInRoom = new ArrayList<>();
 
     for (Artwork artwork : getAllArtworks()) {
-      if (artwork.getRoom().equals(room)) artworksInRoom.add(artwork);
+      if (artwork.getRoom().getRoomId() == room.getRoomId()) artworksInRoom.add(artwork);
     }
     return artworksInRoom;
   }
