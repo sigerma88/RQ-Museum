@@ -36,8 +36,12 @@ public class MuseumRestController {
    * @return
    */
   @GetMapping(value = { "/museum/{id}", "/museum/{id}/" })
-  public MuseumDto getMuseum(@PathVariable("id") long id) {
-    return DtoUtility.convertToDto(museumService.getMuseum(id));
+  public ResponseEntity<?> getMuseum(@PathVariable("id") long id) {
+    try {
+      return new ResponseEntity<>(DtoUtility.convertToDto(museumService.getMuseum(id)), HttpStatus.OK);
+    } catch (Exception e) {
+      return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
   }
 
   /**
@@ -64,6 +68,7 @@ public class MuseumRestController {
 
   /**
    * API to edit the museum's name or visit fee
+   * 
    * @param id
    * @param name
    * @param visitFee
@@ -85,10 +90,11 @@ public class MuseumRestController {
 
   /**
    * API to get all museums
+   * 
    * @author VZ
    * @return
    */
-  @GetMapping(value = {"/museums", "/museums/"})
+  @GetMapping(value = { "/museums", "/museums/" })
   public ResponseEntity<?> getAllMuseums() {
     try {
       List<MuseumDto> museums = new ArrayList<>();

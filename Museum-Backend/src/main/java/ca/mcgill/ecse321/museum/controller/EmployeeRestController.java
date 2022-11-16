@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,17 +25,18 @@ public class EmployeeRestController {
 
   /**
    * RESTful api to get an employee
+   * 
    * @author VZ
    * @param id
    * @return
    */
   @GetMapping(value = { "/employee/{id}", "/employee/{id}/" })
   public ResponseEntity<?> getEmployee(@PathVariable("id") long id) {
-    try {
-      EmployeeDto employeeDto = DtoUtility.convertToDto(service.getEmployee(id));
-      return ResponseEntity.ok(employeeDto);
+    try{
+      return new ResponseEntity<>(DtoUtility.convertToDto(service.getEmployee(id)), HttpStatus.OK);
+      
     } catch (Exception e) {
-      return ResponseEntity.badRequest().body(e.getMessage());
+      return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
   }
 

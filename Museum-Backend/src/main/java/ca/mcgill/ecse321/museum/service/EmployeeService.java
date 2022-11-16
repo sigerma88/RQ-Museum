@@ -45,8 +45,11 @@ public class EmployeeService {
     if (employeeId == null) {
       throw new IllegalArgumentException("Employee id cannot be null");
     }
-
-    return employeeRepository.findEmployeeByMuseumUserId(employeeId);
+    Employee employee = employeeRepository.findEmployeeByMuseumUserId(employeeId);
+    if (employee == null) {
+      throw new IllegalArgumentException("Employee does not exist");
+    }
+    return employee;
   }
 
   /**

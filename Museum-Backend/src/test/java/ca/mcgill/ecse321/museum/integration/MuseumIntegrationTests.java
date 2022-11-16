@@ -37,7 +37,7 @@ public class MuseumIntegrationTests {
     }
 
     /**
-     * Test to successfully create and get a museum
+     * Test to successfully create, get and edit a museum
      * 
      * @author VZ
      */
@@ -82,6 +82,36 @@ public class MuseumIntegrationTests {
         assertEquals("RQ", response.getBody().getMuseumName(), "Response has correct name");
         assertEquals(20, response.getBody().getVisitFee(), "Response has correct visit fee");
         assertEquals(id, response.getBody().getMuseumId());
+    }
+
+    /**
+     * Test to unsuccessfully get a museum with an invalid id
+     * 
+     * @author VZ
+     */
+    @Test
+    public void testGetMuseumWithInvalidId() {
+        ResponseEntity<String> response = 
+        client.getForEntity("/museum/1", String.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertEquals("Museum does not exist", response.getBody());
+    }
+
+    /**
+     * Test to unsuccessfuly create a museum with no name
+     * 
+     * @author VZ
+     */
+    @Test
+    public void testCreateMuseumWithInvalidName() {
+        ResponseEntity<String> response = 
+        client.postForEntity("/museum/app?name=&visitFee=10", new MuseumDto() , String.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertEquals("Name cannot be empty!", response.getBody());
     }
  
     /**

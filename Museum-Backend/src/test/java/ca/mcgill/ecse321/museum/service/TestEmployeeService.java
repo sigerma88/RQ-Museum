@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -217,11 +218,13 @@ public class TestEmployeeService {
   /**
    * Test method for getting an employee by id when the employee does not exist.
    * 
-   * @author Siger
+   * @author Siger and VZ
+   * 
    */
   @Test
   public void testGetEmployeeNonExisting() {
-    assertNull(employeeService.getEmployee(NON_EXISTING_EMPLOYEE_ID));
+    //assertNull(employeeService.getEmployee(NON_EXISTING_EMPLOYEE_ID));
+    assertThrows(IllegalArgumentException.class, () -> employeeService.getEmployee(NON_EXISTING_EMPLOYEE_ID));
   }
 
   /**

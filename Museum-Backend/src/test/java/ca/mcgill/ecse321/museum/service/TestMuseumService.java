@@ -6,6 +6,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -254,7 +255,8 @@ public class TestMuseumService {
      */
     @Test
     public void testCreateNonExistingMuseum() {
-        assertNull(museumService.getMuseum(NON_EXISTING_MUSEUM_ID));
+        assertThrows(IllegalArgumentException.class, () -> museumService.getMuseum(NON_EXISTING_MUSEUM_ID));
+        //assertNull(museumService.getMuseum(NON_EXISTING_MUSEUM_ID));
     }
 
     /**

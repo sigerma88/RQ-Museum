@@ -36,8 +36,15 @@ public class MuseumService {
    */
 
   @Transactional
-  public Museum getMuseum(long museumId) {
-    return museumRepository.findMuseumByMuseumId(museumId);
+  public Museum getMuseum(Long museumId) {
+    if (museumId == null) {
+      throw new IllegalArgumentException("Museum id cannot be null");
+    }
+    Museum museum = museumRepository.findMuseumByMuseumId(museumId);
+    if (museum == null) {
+      throw new IllegalArgumentException("Museum does not exist");
+    }
+    return museum;
   }
 
   /**

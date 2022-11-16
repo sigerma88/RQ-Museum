@@ -31,7 +31,7 @@ public class DtoUtility {
    * @return employee DTO
    * @author Siger
    */
-  static EmployeeDto convertToDto(Employee employee) {
+  public static EmployeeDto convertToDto(Employee employee) {
     if (employee == null) {
       throw new IllegalArgumentException("There is no such employee");
     }
