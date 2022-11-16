@@ -101,6 +101,13 @@ public class ArtworkRestController {
   //   return artworkInRoomDtos;
   // }
 
+  /**
+   * RESTful API to get all artworks in a room
+   *
+   * @param roomId - The id of a room we want to get all the artworks in
+   * @return A list of all the artworks in a specific room
+   * @author kieyanmamiche
+   */
   @GetMapping(value = "/getAllArtworksInRoom/{roomId}")
   public ResponseEntity<?> getAllArtworksInRoom(@PathVariable("roomId") long roomId) {
     try {
@@ -174,24 +181,36 @@ public class ArtworkRestController {
   }
 
   // Getting artwork status - FR7
-  // Returns a status string of 4 options: loan/on display/in storage
-  // 1. "none" -> The artwork doesn't exist
-  // 2. "loan" -> The artwork is on loan
-  // 3. "display" -> The artwork is on Display
-  // 4. "storage" -> The artwork is in storage
+  /**
+   * RESTful API to get the artwork status
+   *
+   * Note:
+   *    Returns a status string of 4 options: loan/on display/in storage
+   *    1. "loan" -> The artwork is on loan
+   *    2. "display" -> The artwork is on Display
+   *    3. "storage" -> The artwork is in storage
+   *
+   * @param id - The id of the artwork we want to get the status of
+   * @return The status of the artwork
+   * @author kieyanmamiche
+   */
   @GetMapping(value = "/getArtworkStatus/{id}")
   public ResponseEntity<?> getArtworkStatus(@PathVariable("id") long id) {
     try {
       String status = artworkService.getArtworkStatus(id);
-      if (status.equals("none")){
-        return new ResponseEntity<>("Error getting status", HttpStatus.BAD_REQUEST);
-      }
       return new ResponseEntity<>(status, HttpStatus.OK);
     }catch (Exception e){
       return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
   }
 
+  /**
+   * RESTful API to get number of artworks in a room
+   *
+   * @param roomId - The id of a room we want to get the number artworks in
+   * @return Number of artworks in specific room
+   * @author kieyanmamiche
+   */
   @GetMapping(value = "/getNumberOfArtworksInRoom/{roomId}")
   public ResponseEntity<?> getNumberOfArtworksInRoom(@PathVariable("roomId") long roomId) {
     try {
@@ -203,17 +222,20 @@ public class ArtworkRestController {
     }
   }
 
+  /**
+   * RESTful API to move artwork to different room
+   *
+   * @param artworkId - The id of the artwork we want to move
+   * @param roomId - The id of a room we want to move the artwork to
+   * @return The artwork which has been moved
+   * @author kieyanmamiche
+   */
   @PutMapping(value = "/moveArtworkToRoom/{artworkId}/{roomId}")
   public ResponseEntity<?> moveArtworkToRoom(@PathVariable("artworkId") long artworkId, @PathVariable("roomId") long roomId){
     try{
-      int result = artworkService.moveArtworkToRoom(artworkId, roomId);
-      if (result == 0){
-        return new ResponseEntity<>("Successfully moved artwork to room", HttpStatus.OK);
-      } else if (result ==- 2) {
-        return new ResponseEntity<>("Room has no capacity left", HttpStatus.BAD_REQUEST);
-      }else {
-        return new ResponseEntity<>("There was an error", HttpStatus.BAD_REQUEST);
-      }
+      Artwork artwork = artworkService.moveArtworkToRoom(artworkId, roomId);
+      ArtworkDto artworkDto = DtoUtility.convertToDto(artwork);
+      return new ResponseEntity<>(artworkDto, HttpStatus.OK);
     }catch (Exception e){
       return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }

@@ -219,13 +219,24 @@ public class RoomService {
     return maxNumberOfArtwork;
   }
 
+  /**
+   * Method to get room capacity
+   *
+   * @param id - ID of room we want to capacity of
+   * @return The capacity of a room
+   * @author kieyanmamiche
+   */
   @Transactional
   public int getRoomCapacity(long id) {
+
     Optional<Room> roomOptional = roomRepository.findById(id);
 
-    // The room is not in the DB so capacity is 0
+    // The room is not in the DB
+    if (roomOptional == null){
+      throw new IllegalArgumentException("Room does not exist");
+    }
     if (roomOptional.isPresent() == false){
-      return -1;
+      throw new IllegalArgumentException("Room does not exist");
     }
     Room room = roomOptional.get();
     RoomType roomType = room.getRoomType();
@@ -261,8 +272,8 @@ public class RoomService {
       return 999999;
     }
 
-    // Error returns -1
-    return -1;
+    // Error, since no room capacity has been given
+    throw new IllegalArgumentException("Room doesn't have capacity, error in initialization");
 
   }
 

@@ -24,13 +24,17 @@ public class RoomRestController {
 
 
     // FR3 -> View room capacity
+    /**
+     * RESTful API to view the capacity of a certain room
+     *
+     * @param id - The id of a room we want to get the capacity of
+     * @return The capacity of the room
+     * @author kieyanmamiche
+     */
     @GetMapping(value = "/getRoomCapacity/{id}")
     public ResponseEntity<?> getRoomCapacity(@PathVariable("id") long id) {
         try{
             int capacity = roomService.getRoomCapacity(id);
-            if (capacity == -1){
-                return new ResponseEntity<>("Error getting the capacity", HttpStatus.BAD_REQUEST);
-            }
             return new ResponseEntity<>(capacity, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
