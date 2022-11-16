@@ -37,6 +37,15 @@ public class AuthenticationUtility {
 		return false;
 	}
 
+	public static boolean isEmployee(HttpSession session) {
+		if (session.getAttribute("role") != null) {
+			if (session.getAttribute("role").equals("employee")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Method to check if the user is a visitor
 	 * 
@@ -99,4 +108,6 @@ public class AuthenticationUtility {
 		}
 		return false;
 	}
+
+
 }

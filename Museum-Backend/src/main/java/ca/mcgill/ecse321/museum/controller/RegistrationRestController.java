@@ -42,8 +42,6 @@ public class RegistrationRestController {
       @RequestBody VisitorDto visitor) {
     try {
       HttpSession session = request.getSession();
-      System.out.println(session.getAttribute("user_id"));
-      System.out.println(AuthenticationUtility.isLoggedIn(session));
       if (AuthenticationUtility.isLoggedIn(session)) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body("Cannot register a visitor while logged in");
@@ -135,7 +133,7 @@ public class RegistrationRestController {
     }
   }
 
-  @PostMapping(value = "/register", produces = "application/json")
+  @PostMapping(value = "employee/register", produces = "application/json")
   public ResponseEntity<?> register(HttpServletRequest request, @RequestBody EmployeeDto employee) {
     try {
       HttpSession session = request.getSession();
@@ -157,7 +155,7 @@ public class RegistrationRestController {
     }
   }
 
-  @PostMapping(value = "/edit/{id}", produces = "application/json")
+  @PostMapping(value = "employee/edit/{id}", produces = "application/json")
   public ResponseEntity<?> editEmployeeInformation(HttpServletRequest request,
       @PathVariable long id, @RequestBody Map<String, String> updatedEmployeeCredential) {
     try {
@@ -169,9 +167,7 @@ public class RegistrationRestController {
       } else if (!AuthenticationUtility.isStaffMember(session)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body("You must be a staff member to edit an employee");
-      }
-
-      if (!AuthenticationUtility.checkUserId(session, id)) {
+      } else if (!AuthenticationUtility.checkUserId(session, id)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body("You can only edit your own information");
       }
@@ -185,5 +181,4 @@ public class RegistrationRestController {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
-
 }

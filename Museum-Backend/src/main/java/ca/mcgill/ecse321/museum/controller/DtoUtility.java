@@ -1,7 +1,6 @@
 package ca.mcgill.ecse321.museum.controller;
 
 import ca.mcgill.ecse321.museum.model.Employee;
-import ca.mcgill.ecse321.museum.model.MuseumUser;
 import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.Visitor;
 import ca.mcgill.ecse321.museum.dto.EmployeeDto;
