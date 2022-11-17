@@ -402,7 +402,6 @@ public class ArtworkService {
 
     // decrement number of artworks in room by 1
     Room room = artwork.getRoom();
-//    RoomService roomService = new RoomService();
     if (room != null){
       roomService.changeCurrentNumberOfArtwork(room.getRoomId(), room.getCurrentNumberOfArtwork() - 1);
     }

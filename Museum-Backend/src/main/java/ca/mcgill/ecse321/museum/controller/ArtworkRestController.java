@@ -230,7 +230,7 @@ public class ArtworkRestController {
    * @return The artwork which has been moved
    * @author kieyanmamiche
    */
-  @PutMapping(value = "/moveArtworkToRoom/{artworkId}/{roomId}")
+  @PostMapping(value = "/moveArtworkToRoom/{artworkId}/{roomId}")
   public ResponseEntity<?> moveArtworkToRoom(@PathVariable("artworkId") long artworkId, @PathVariable("roomId") long roomId){
     try{
       Artwork artwork = artworkService.moveArtworkToRoom(artworkId, roomId);

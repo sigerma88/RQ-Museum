@@ -57,7 +57,7 @@ public class DtoUtility {
    * @author Zahra
    * @author Siger
    */
-  static ArtworkDto convertToDto(Artwork artwork) {
+  public static ArtworkDto convertToDto(Artwork artwork) {
     // Error handling
     if (artwork == null) {
       throw new IllegalArgumentException("There is no such artwork");
@@ -80,7 +80,7 @@ public class DtoUtility {
    * @return room DTO
    * @author Siger
    */
-  static RoomDto convertToDto(Room room) {
+  public static RoomDto convertToDto(Room room) {
     // Error handling
     if (room == null) {
       throw new IllegalArgumentException("There is no such room");
