@@ -223,7 +223,6 @@ public class TestEmployeeService {
    */
   @Test
   public void testGetEmployeeNonExisting() {
-    //assertNull(employeeService.getEmployee(NON_EXISTING_EMPLOYEE_ID));
     assertThrows(IllegalArgumentException.class, () -> employeeService.getEmployee(NON_EXISTING_EMPLOYEE_ID));
   }
 

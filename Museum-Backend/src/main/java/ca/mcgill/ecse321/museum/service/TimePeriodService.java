@@ -31,7 +31,11 @@ public class TimePeriodService {
      */
     @Transactional
     public TimePeriod getTimePeriod(long timePeriodId) {
-        return timePeriodRepository.findTimePeriodByTimePeriodId(timePeriodId);
+        TimePeriod timePeriod = timePeriodRepository.findTimePeriodByTimePeriodId(timePeriodId);
+        if (timePeriod == null) {
+            throw new IllegalArgumentException("Time period does not exist");
+        }
+        return timePeriod;
     }
 
     // CREATE
@@ -72,7 +76,10 @@ public class TimePeriodService {
      */
     @Transactional
     public void deleteTimePeriod(long timePeriodId) {
-
+        TimePeriod timePeriod = timePeriodRepository.findTimePeriodByTimePeriodId(timePeriodId);
+        if (timePeriod == null) {
+            throw new IllegalArgumentException("Time period does not exist");
+        }
         timePeriodRepository.deleteById(timePeriodId);
     }
 

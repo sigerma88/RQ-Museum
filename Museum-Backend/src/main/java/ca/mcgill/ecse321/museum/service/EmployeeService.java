@@ -80,7 +80,7 @@ public class EmployeeService {
 
     Schedule schedule = employee.getSchedule();
     if (schedule == null) {
-      System.out.println("No schedule found");
+      throw new IllegalArgumentException("No schedule found");
     }
     return schedule;
   }
@@ -245,7 +245,7 @@ public class EmployeeService {
 
     List<ScheduleOfTimePeriod> scheduleOfTimePeriods = scheduleOfTimePeriodRepository
         .findScheduleOfTimePeriodBySchedule(schedule);
-    if (scheduleOfTimePeriods == null) {
+    if (scheduleOfTimePeriods == null || scheduleOfTimePeriods.isEmpty()) {
       return null;
     }
     List<TimePeriod> timePeriods = new ArrayList<TimePeriod>();

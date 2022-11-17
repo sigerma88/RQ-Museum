@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -43,10 +44,13 @@ public class SchedulingRestController {
      * @return
      */
     @GetMapping(value = { "/employee/schedule/{id}", "/employee/schedule/{id}/" })
-    public ScheduleDto getScheduleByEmployee(@PathVariable("id") long id) {
-
-        return DtoUtility.convertToDto(employeeService.getEmployeeSchedule(id));
-
+    public ResponseEntity<?> getScheduleByEmployee(@PathVariable("id") long id) {
+        try {
+            return new ResponseEntity<>(DtoUtility.convertToDto(employeeService.getEmployeeSchedule(id)),
+                    HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -57,13 +61,17 @@ public class SchedulingRestController {
      * @return
      */
     @GetMapping(value = { "/employee/shifts/{id}", "/employee/shifts/{id}/" })
-    public List<TimePeriodDto> getAllShiftsByEmployee(@PathVariable("id") long id) {
+    public ResponseEntity<?> getAllShiftsByEmployee(@PathVariable("id") long id) {
 
-        List<TimePeriodDto> timePeriodDtos = new ArrayList<TimePeriodDto>();
-        for (TimePeriod tp : employeeService.getEmployeeTimePeriods(id)) {
-            timePeriodDtos.add(DtoUtility.convertToDto(tp));
+        try {
+            List<TimePeriodDto> timePeriodDtos = new ArrayList<TimePeriodDto>();
+            for (TimePeriod tp : employeeService.getEmployeeTimePeriods(id)) {
+                timePeriodDtos.add(DtoUtility.convertToDto(tp));
+            }
+            return new ResponseEntity<>(timePeriodDtos, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
-        return timePeriodDtos;
     }
 
     /**
@@ -73,9 +81,12 @@ public class SchedulingRestController {
      * @return
      */
     @GetMapping(value = { "/museum/schedule/{id}", "/museum/schedule/{id}/" })
-    public ScheduleDto getScheduleByMuseum(@PathVariable("id") long id) {
-
-        return DtoUtility.convertToDto(museumService.getMuseumSchedule(id));
+    public ResponseEntity<?> getScheduleByMuseum(@PathVariable("id") long id) {
+        try {
+            return new ResponseEntity<>(DtoUtility.convertToDto(museumService.getMuseumSchedule(id)), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
 
     }
 
@@ -87,14 +98,17 @@ public class SchedulingRestController {
      * @return
      */
     @GetMapping(value = { "/museum/shifts/{id}", "/museum/shifts/{id}/" })
-    public List<TimePeriodDto> getAllShiftsByMuseum(@PathVariable("id") long id) {
+    public ResponseEntity<?> getAllShiftsByMuseum(@PathVariable("id") long id) {
 
-        List<TimePeriodDto> timePeriodDtos = new ArrayList<TimePeriodDto>();
-        for (TimePeriod tp : museumService.getMuseumTimePeriods(id)) {
-            timePeriodDtos.add(DtoUtility.convertToDto(tp));
+        try {
+            List<TimePeriodDto> timePeriodDtos = new ArrayList<TimePeriodDto>();
+            for (TimePeriod tp : museumService.getMuseumTimePeriods(id)) {
+                timePeriodDtos.add(DtoUtility.convertToDto(tp));
+            }
+            return new ResponseEntity<>(timePeriodDtos, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
-
-        return timePeriodDtos;
     }
 
     /**
@@ -107,14 +121,34 @@ public class SchedulingRestController {
 
     @PostMapping(value = { "/shift/create", "/shift/create/" })
     public ResponseEntity<?> createTimePeriod(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "yyyy/MM/dd hh:mm") Timestamp startDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "yyyy/MM/dd hh:mm") Timestamp endDate) {
-        if (isTimePeriodValid(startDate, endDate)) {
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "yyyy-MM-dd'T'HH:mm") Timestamp startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "yyyy-MM-dd'T'HH:mm") Timestamp endDate) {
+        try {
             TimePeriod timePeriod = timePeriodService.createTimePeriod(startDate, endDate);
             return new ResponseEntity<>(DtoUtility.convertToDto(timePeriod), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Invalid time period", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    /**
+     * RESTful api to get a timeperiod from the database
+     * 
+     * @param id
+     * @return
+     * @author VZ
+     */
+
+    @GetMapping(value = { "/shift/{id}", "/shift/{id}/" })
+    public ResponseEntity<?> getTimePeriod(
+            @PathVariable("id") long id) {
+        try {
+            TimePeriod timePeriod = timePeriodService.getTimePeriod(id);
+            return new ResponseEntity<>(DtoUtility.convertToDto(timePeriod), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
     }
 
     /**
@@ -126,15 +160,18 @@ public class SchedulingRestController {
      */
     @DeleteMapping(value = { "/shift/{id}", "/shift/{id}/" })
     public ResponseEntity<?> deleteTimePeriod(@PathVariable("id") long id) {
-        if (timePeriodService.getTimePeriod(id) == null) {
-            return new ResponseEntity<>("Cannot delete null time period", HttpStatus.BAD_REQUEST);
+        try {
+            timePeriodService.deleteTimePeriod(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
-        timePeriodService.deleteTimePeriod(id);
-        return new ResponseEntity<>("The time period has been successfully deleted", HttpStatus.OK);
 
     }
+
     /**
      * RESTful api to assign edit a timeperiod in the database
+     * 
      * @author VZ
      * @param id
      * @param startDate
@@ -145,19 +182,17 @@ public class SchedulingRestController {
     public ResponseEntity<?> editTimePeriod(@PathVariable("id") long id,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "yyyy/MM/dd hh:mm") Timestamp startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "yyyy/MM/dd hh:mm") Timestamp endDate) {
-        if (timePeriodService.getTimePeriod(id) == null) {
-            return new ResponseEntity<>("Cannot edit null time period", HttpStatus.BAD_REQUEST);
-        }
-        if (isTimePeriodValid(startDate, endDate)) {
+        try {
             TimePeriod timePeriod = timePeriodService.editTimePeriod(id, startDate, endDate);
             return new ResponseEntity<>(DtoUtility.convertToDto(timePeriod), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Invalid time period", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     /**
      * RESTful api to add a time period to an employee
+     * 
      * @author VZ
      * @param employeeDto
      * @param timePeriodDto
@@ -167,34 +202,37 @@ public class SchedulingRestController {
     public ResponseEntity<?> addTimePeriodToEmployeeSchedule(
             @PathVariable("employeeId") long employeeId,
             @PathVariable("tpId") long tpId) {
-        if ((employeeService.getEmployee(employeeId) == null) || (timePeriodService.getTimePeriod(tpId) == null)) {
-            return new ResponseEntity<>("Cannot add null time period to null employee", HttpStatus.BAD_REQUEST);
+        try {
+            Employee employee = employeeService.addEmployeeTimePeriodAssociation(employeeId, tpId);
+            return new ResponseEntity<>(DtoUtility.convertToDto(employee), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        Employee employee = employeeService.addEmployeeTimePeriodAssociation(employeeId, tpId);
-
-        return new ResponseEntity<>(DtoUtility.convertToDto(employee), HttpStatus.OK);
-
     }
 
     /**
-     * RESTful api to add a time period to an employee's schedule
+     * RESTful api to remove a time period to an employee's schedule
+     * 
      * @author VZ
      * @param employeeId
      * @param tpId
      * @return
      */
-    @DeleteMapping(value = {"/employee/{employeeId}/shift/{tpId}", "/employee/{employeeId}/shift/{tpId}/"})
+    @DeleteMapping(value = { "/employee/{employeeId}/shift/{tpId}", "/employee/{employeeId}/shift/{tpId}/" })
     public ResponseEntity<?> deleteTimePeriodFromEmployeeSchedule(
             @PathVariable("employeeId") long employeeId,
             @PathVariable("tpId") long tpId) {
-        if ((employeeService.getEmployee(employeeId) == null) || (timePeriodService.getTimePeriod(tpId) == null)) {
-            return new ResponseEntity<>("Cannot delete null time period from null employee", HttpStatus.BAD_REQUEST);
+        try {
+            employeeService.deleteEmployeeTimePeriodAssociation(employeeId, tpId);
+            return new ResponseEntity<>("Shift deleted", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        Employee employee = employeeService.deleteEmployeeTimePeriodAssociation(employeeId, tpId);
-        return new ResponseEntity<>(DtoUtility.convertToDto(employee), HttpStatus.OK);
     }
+
     /**
      * RESTful api to add a time period to a museum
+     * 
      * @author VZ
      * @param museumId
      * @param tpId
@@ -204,17 +242,17 @@ public class SchedulingRestController {
     public ResponseEntity<?> addTimePeriodToMuseumSchedule(
             @PathVariable("museumId") long museumId,
             @PathVariable("tpId") long tpId) {
-        if ((museumService.getMuseum(museumId) == null) || (timePeriodService.getTimePeriod(tpId) == null)) {
-            return new ResponseEntity<>("Cannot add null time period to null museum", HttpStatus.BAD_REQUEST);
+        try {
+            Museum museum = museumService.addMuseumTimePeriodAssociation(museumId, tpId);
+            return new ResponseEntity<>(DtoUtility.convertToDto(museum), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        Museum museum = museumService.addMuseumTimePeriodAssociation(museumId, tpId);
-
-        return new ResponseEntity<>(DtoUtility.convertToDto(museum), HttpStatus.OK);
-
     }
 
     /**
      * RESTful api to remove a time period from a museum
+     * 
      * @author VZ
      * @param museumId
      * @param tpId
@@ -224,25 +262,11 @@ public class SchedulingRestController {
     public ResponseEntity<?> removeTimePeriodFromMuseumSchedule(
             @PathVariable("museumId") long museumId,
             @PathVariable("tpId") long tpId) {
-        if ((museumService.getMuseum(museumId) == null) || (timePeriodService.getTimePeriod(tpId) == null)) {
-            return new ResponseEntity<>("Cannot delete null time period from null museum", HttpStatus.BAD_REQUEST);
+        try {
+            museumService.removeMuseumTimePeriodAssociation(museumId, tpId);
+            return new ResponseEntity<>("Shift deleted", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        Museum museum = museumService.removeMuseumTimePeriodAssociation(museumId, tpId);
-
-        return new ResponseEntity<>(DtoUtility.convertToDto(museum), HttpStatus.OK);
-    }
-
-    /**
-     * Helper method to check if a time period is valid
-     * @author VZ
-     * @param startDate
-     * @param endDate
-     * @return
-     */
-    private boolean isTimePeriodValid(Timestamp startDate, Timestamp endDate) {
-        if (startDate.after(endDate)) {
-            return false;
-        }
-        return true;
     }
 }

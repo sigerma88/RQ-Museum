@@ -248,7 +248,7 @@ public class MuseumService {
 
     List<ScheduleOfTimePeriod> scheduleOfTimePeriods = scheduleOfTimePeriodRepository
         .findScheduleOfTimePeriodBySchedule(schedule);
-    if (scheduleOfTimePeriods == null) {
+    if (scheduleOfTimePeriods == null || scheduleOfTimePeriods.isEmpty()) {
       return null;
     }
     List<TimePeriod> timePeriods = new ArrayList<TimePeriod>();

@@ -48,6 +48,11 @@ public class MuseumIntegrationTests {
          testEditMuseum(id);
     }
 
+    /**
+     * helper test method that returns the id of the created museum
+     * @return
+     * @author VZ
+     */
     public Long testCreateMuseum() {
         ResponseEntity<MuseumDto> response = 
         client.postForEntity("/museum/app?name=Museum&visitFee=10", new MuseumDto() , MuseumDto.class);
@@ -60,6 +65,11 @@ public class MuseumIntegrationTests {
         return response.getBody().getMuseumId();
     }
 
+    /**
+     * helper test method gets a museum by id
+     * @param id
+     * @author VZ
+     */
     public void testGetMuseum(Long id) {
         ResponseEntity<MuseumDto> response = 
         client.getForEntity("/museum/" + id, MuseumDto.class);
@@ -71,6 +81,11 @@ public class MuseumIntegrationTests {
         assertEquals(id, response.getBody().getMuseumId());
     }
 
+    /**
+     * helper test method that edits a museum given its id
+     * @param id
+     * @author VZ
+     */
     public void testEditMuseum(Long id) {
         MuseumDto museumDto = new MuseumDto();
         museumDto.setMuseumId(id);
