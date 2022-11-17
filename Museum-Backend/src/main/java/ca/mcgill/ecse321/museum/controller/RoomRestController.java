@@ -1,11 +1,7 @@
 package ca.mcgill.ecse321.museum.controller;
 
-import ca.mcgill.ecse321.museum.dto.RoomDto;
-import ca.mcgill.ecse321.museum.model.Museum;
-import ca.mcgill.ecse321.museum.model.Room;
-import ca.mcgill.ecse321.museum.model.RoomType;
-import ca.mcgill.ecse321.museum.service.MuseumService;
-import ca.mcgill.ecse321.museum.service.RoomService;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +14,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
+import ca.mcgill.ecse321.museum.dto.RoomDto;
+import ca.mcgill.ecse321.museum.model.Museum;
+import ca.mcgill.ecse321.museum.model.Room;
+import ca.mcgill.ecse321.museum.model.RoomType;
+import ca.mcgill.ecse321.museum.service.MuseumService;
+import ca.mcgill.ecse321.museum.service.RoomService;
 
 @CrossOrigin(origins = "*")
 @RestController

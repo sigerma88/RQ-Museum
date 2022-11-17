@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
 import ca.mcgill.ecse321.museum.dao.LoanRepository;
-import ca.mcgill.ecse321.museum.dao.RoomRepository;
 import ca.mcgill.ecse321.museum.model.Artwork;
 import ca.mcgill.ecse321.museum.model.Loan;
 import ca.mcgill.ecse321.museum.model.Room;
@@ -19,9 +18,6 @@ public class ArtworkService {
 
   @Autowired
   ArtworkRepository artworkRepository;
-
-  @Autowired
-  RoomRepository roomRepository;
 
   @Autowired
   LoanRepository loanRepository;
