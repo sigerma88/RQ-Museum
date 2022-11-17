@@ -56,6 +56,15 @@ public class TestArtworkService {
     private static final String IMAGE_2 = "https://source.unsplash.com/C54OKBaasdad99iuw";
     private static final Boolean IS_ON_LOAN_2 = false;
 
+    // Artwork 3
+    private static final long ARTWORK_ID_3 = 8;
+    private static final String NAME_3 = "Mona Lisa 3";
+    private static final String ARTIST_3 = "Kian 3";
+    private static final Boolean IS_AVAILABLE_FOR_LOAN_3 = false;
+    private static final double LOAN_FEE_3 = 12345;
+    private static final String IMAGE_3 = "https://source.unsplash.com/C54OKBaasdad99iuw";
+    private static final Boolean IS_ON_LOAN_3 = true;
+
     // Room 1
     private static final long ROOM_ID_1 = 3;
     private static final String ROOM_NAME_1 = "Clark Room";
@@ -114,7 +123,20 @@ public class TestArtworkService {
                 Optional<Room> roomOptional = roomRepository.findById(ROOM_ID_2);
                 artwork.setRoom(roomOptional.get());
                 return Optional.of(artwork);
-            }else {
+            }else if(invocation.getArgument(0).equals(ARTWORK_ID_3)){
+                Artwork artwork = new Artwork();
+                artwork.setArtworkId(ARTWORK_ID_3);
+                artwork.setImage(IMAGE_3);
+                artwork.setLoanFee(LOAN_FEE_3);
+                artwork.setArtist(ARTIST_3);
+                artwork.setName(NAME_3);
+                artwork.setIsOnLoan(IS_ON_LOAN_3);
+                artwork.setIsAvailableForLoan(IS_AVAILABLE_FOR_LOAN_3);
+                Optional<Room> roomOptional = roomRepository.findById(ROOM_ID_3);
+                artwork.setRoom(roomOptional.get());
+                return Optional.of(artwork);
+            }
+            else {
                 return null;
             }
         });
@@ -201,6 +223,22 @@ public class TestArtworkService {
             artwork2.setRoom(room2);
             ((ArrayList<Artwork>) artworks).add(artwork2);
 
+            Artwork artwork3 = new Artwork();
+            artwork3.setArtworkId(ARTWORK_ID_3);
+            artwork3.setImage(IMAGE_3);
+            artwork3.setLoanFee(LOAN_FEE_3);
+            artwork3.setName(NAME_3);
+            artwork3.setArtist(ARTIST_3);
+            artwork3.setIsOnLoan(IS_ON_LOAN_3);
+            artwork3.setIsAvailableForLoan(IS_AVAILABLE_FOR_LOAN_3);
+            Room room3 = new Room();
+            room3.setRoomName(ROOM_NAME_3);
+            room3.setRoomType(ROOM_TYPE_3);
+            room3.setCurrentNumberOfArtwork(CURRENT_NUMBER_OF_ARTWORK_3);
+            room3.setRoomId(ROOM_ID_3);
+            artwork3.setRoom(room3);
+            ((ArrayList<Artwork>) artworks).add(artwork3);
+
             return artworks;
         });
 
@@ -218,6 +256,7 @@ public class TestArtworkService {
     public void testGetArtworkStatus() {
         assertEquals("display", artworkService.getArtworkStatus(ARTWORK_ID_1));
         assertEquals("storage", artworkService.getArtworkStatus(ARTWORK_ID_2));
+        assertEquals("loan", artworkService.getArtworkStatus(ARTWORK_ID_3));
     }
 
     /**
