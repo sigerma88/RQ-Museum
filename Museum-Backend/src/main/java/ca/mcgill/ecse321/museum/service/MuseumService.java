@@ -43,6 +43,17 @@ public class MuseumService {
   }
 
   /**
+   * Method to get all the museums in the database
+   * 
+   * @return List of all museums
+   * @author Siger
+   */
+  @Transactional
+  public List<Museum> getAllMuseums() {
+    return toList(museumRepository.findAll());
+  }
+
+  /**
    * Method to create a museum
    * 
    * @author VZ
@@ -212,16 +223,4 @@ public class MuseumService {
     }
     return resultList;
   }
-
-  /**
-   * Method to get all the museums in the database
-   * 
-   * @return List of all museums
-   * @author Siger
-   */
-  @Transactional
-  public List<Museum> getAllMuseums() {
-    return toList(museumRepository.findAll());
-  }
-
 }

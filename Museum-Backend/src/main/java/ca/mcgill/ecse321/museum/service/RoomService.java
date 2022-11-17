@@ -70,8 +70,7 @@ public class RoomService {
     }
 
     // Get room
-    Room room = roomRepository.findRoomByRoomId(roomId);
-    return room;
+    return roomRepository.findRoomByRoomId(roomId);
   }
 
   /**
@@ -136,41 +135,6 @@ public class RoomService {
   }
 
   /**
-   * Method to change current number of artworks in a room
-   * 
-   * @param roomId                 - id of the room
-   * @param currentNumberOfArtwork - number of artworks in the room
-   * @return room
-   * @author Siger
-   */
-  public Room changeCurrentNumberOfArtwork(Long roomId, Integer currentNumberOfArtwork) {
-    // Get room and check if it exists and error handling
-    Room room = roomRepository.findRoomByRoomId(roomId);
-    if (room == null) {
-      throw new IllegalArgumentException("Room does not exist");
-    }
-
-    if (currentNumberOfArtwork == null) {
-      throw new IllegalArgumentException("Current number of artworks cannot be empty");
-    } else if (currentNumberOfArtwork < 0) {
-      throw new IllegalArgumentException("Current number of artworks cannot be negative");
-    }
-
-    // Check if current number of artworks is less than the maximum number of
-    // artworks
-    int maxNumberOfArtwork = getMaxNumberOfArtwork(room.getRoomType());
-    if (maxNumberOfArtwork != -1 && currentNumberOfArtwork > maxNumberOfArtwork) {
-      throw new IllegalArgumentException("Current number of artworks " + currentNumberOfArtwork
-          + " cannot be greater than the maximum number of artworks " + maxNumberOfArtwork);
-    }
-
-    // Set new value
-    room.setCurrentNumberOfArtwork(currentNumberOfArtwork);
-    roomRepository.save(room);
-    return room;
-  }
-
-  /**
    * Method to delete a room
    * 
    * @param roomId - id of the room
@@ -224,6 +188,41 @@ public class RoomService {
     }
 
     return maxNumberOfArtwork;
+  }
+
+  /**
+   * Method to change current number of artworks in a room
+   * 
+   * @param roomId                 - id of the room
+   * @param currentNumberOfArtwork - number of artworks in the room
+   * @return room
+   * @author Siger
+   */
+  public Room changeCurrentNumberOfArtwork(Long roomId, Integer currentNumberOfArtwork) {
+    // Get room and check if it exists and error handling
+    Room room = roomRepository.findRoomByRoomId(roomId);
+    if (room == null) {
+      throw new IllegalArgumentException("Room does not exist");
+    }
+
+    if (currentNumberOfArtwork == null) {
+      throw new IllegalArgumentException("Current number of artworks cannot be empty");
+    } else if (currentNumberOfArtwork < 0) {
+      throw new IllegalArgumentException("Current number of artworks cannot be negative");
+    }
+
+    // Check if current number of artworks is less than the maximum number of
+    // artworks
+    int maxNumberOfArtwork = getMaxNumberOfArtwork(room.getRoomType());
+    if (maxNumberOfArtwork != -1 && currentNumberOfArtwork > maxNumberOfArtwork) {
+      throw new IllegalArgumentException("Current number of artworks " + currentNumberOfArtwork
+          + " cannot be greater than the maximum number of artworks " + maxNumberOfArtwork);
+    }
+
+    // Set new value
+    room.setCurrentNumberOfArtwork(currentNumberOfArtwork);
+    roomRepository.save(room);
+    return room;
   }
 
   /**

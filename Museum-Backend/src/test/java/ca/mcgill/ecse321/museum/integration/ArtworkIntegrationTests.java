@@ -61,6 +61,8 @@ public class ArtworkIntegrationTests {
     scheduleRepository.deleteAll();
 
     // Create stubs
+
+    // Create a schedule
     Schedule schedule = new Schedule();
 
     // Creating a museum
@@ -265,7 +267,7 @@ public class ArtworkIntegrationTests {
    */
   @Test
   public void testGetArtworkById() {
-    // Get artwork id
+    // Get artwork and its id
     Artwork artwork = artworkService.getAllArtworks().get(0);
 
     // Test controller GET RESTful API

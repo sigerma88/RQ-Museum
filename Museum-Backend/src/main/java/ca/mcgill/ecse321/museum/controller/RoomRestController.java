@@ -175,11 +175,16 @@ public class RoomRestController {
    * RESTful API to get the maximum number of artworks of a room
    * 
    * @param roomId - id of the room
+   * @return maximum number of artworks of the room with the given id
+   * @author Siger
    */
-  @GetMapping(value = { "/room/{roomId}/maxArtworks", "/room/{roomId}/maxArtworks/" })
+  @GetMapping(value = { "/room/maxArtworks/{roomId}", "/room/maxArtworks/{roomId}/" })
   public ResponseEntity<?> getMaxArtworks(@PathVariable("roomId") Long roomId) {
     try {
       Room room = roomService.getRoomById(roomId);
+      if (room == null) {
+        return ResponseEntity.badRequest().body("Room with id " + roomId + " does not exist");
+      }
       return ResponseEntity.ok(roomService.getMaxNumberOfArtwork(room.getRoomType()));
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
