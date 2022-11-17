@@ -123,7 +123,7 @@ public class ArtworkRestController {
    * @return edited artwork
    * @author Siger
    */
-  @PutMapping(value = { "/artwork/{artworkId}", "/artwork/{artworkId}/" }, produces = "application/json")
+  @PutMapping(value = { "/artwork/info/{artworkId}", "/artwork/info/{artworkId}/" }, produces = "application/json")
   public ResponseEntity<?> editArtworkInfo(@PathVariable("artworkId") Long artworkId,
       @RequestParam(name = "name", required = false) String name,
       @RequestParam(name = "artist", required = false) String artist,
