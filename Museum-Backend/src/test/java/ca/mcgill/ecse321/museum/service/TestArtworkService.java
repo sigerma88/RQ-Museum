@@ -292,10 +292,41 @@ public class TestArtworkService {
     }
 
     /**
+     * Test method for getting all artworks in a room when room doesn't exist
+     *
+     * @author kieyanmamiche
+     */
+    @Test
+    public void testGetAllArtworksInRoom_NoRoom() {
+        try{
+            List<Artwork> artworkList = artworkService.getAllArtworksInRoom(12345);
+            assertEquals(0, artworkList.size());
+        }catch (Exception e){
+            fail();
+        }
+    }
+
+    /**
+     * Test method for getting the number of artworks in a room when room doesn't exist
+     *
+     * @author kieyanmamiche
+     */
+    @Test
+    public void testGetNumberOfArtworksInRoom_NoRoom() {
+        try{
+            int numberOfArtworksInRoom = artworkService.getNumberOfArtworksInRoom(123456);
+            assertEquals(0, numberOfArtworksInRoom);
+        }catch (Exception e){
+            fail();
+        }
+    }
+
+    /**
      * Test method for moving an artwork to a room where the artwork doesn't exist
      *
      * @author kieyanmamiche
      */
+
     @Test
     public void testMoveArtworkToRoom_ArtworkNonExisting() {
         String error = null;

@@ -49,6 +49,11 @@ public class ArtworkIntegrationTests {
 
     }
 
+    /**
+     * Integration test method for getting all artworks in a given room by using TEST REST TEMPLATE
+     *
+     * @author kieyanmamiche
+     */
     @Test
     public void testGetAllArtworksInRoom() {
         // We created an artwork in the DB
@@ -63,6 +68,11 @@ public class ArtworkIntegrationTests {
         assertEquals(2, response.getBody().length, "Response has correct number of Artworks");
     }
 
+    /**
+     * Integration test method for getting the specific artworks status by using TEST REST TEMPLATE
+     *
+     * @author kieyanmamiche
+     */
     @Test
     public void testGetArtworkStatus() {
         // We created an artwork in the DB
@@ -85,6 +95,11 @@ public class ArtworkIntegrationTests {
         assertEquals("display", response2.getBody(), "Response correctly said that artwork is on display");
     }
 
+    /**
+     * Integration test method for getting the number of artworks in a room by using TEST REST TEMPLATE
+     *
+     * @author kieyanmamiche
+     */
     @Test
     public void testGetNumberOfArtworksInRoom() {
         // We created an artwork in the DB
@@ -100,6 +115,11 @@ public class ArtworkIntegrationTests {
         assertEquals(2, response.getBody(), "Response correctly said that there are two artworks in room");
     }
 
+    /**
+     * Integration test method for moving artwork to particular room using TEST REST TEMPLATE
+     *
+     * @author kieyanmamiche
+     */
     @Test
     public void testMoveArtworkToRoom() {
         List<ArtworkDto> artworkDtoList = createArtworkDtos();
@@ -126,6 +146,11 @@ public class ArtworkIntegrationTests {
     }
 
 
+    /**
+     * Integration test method for getting the artwork status when the artwork doesn't exist
+     *
+     * @author kieyanmamiche
+     */
     @Test
     public void testGetArtworkStatusNonExisting() {
         // We do a get request to see if our controller handles bad request well
@@ -137,54 +162,122 @@ public class ArtworkIntegrationTests {
     }
 
 
+    /**
+     * Integration test method for getting all artworks in a room when there is no room
+     *
+     * @author kieyanmamiche
+     */
     @Test
     public void testGetAllArtworksInRoom_NoRoom() {
-        // We created an artwork in the DB
-        List<ArtworkDto> artworkDtos = createArtworkDtos();
-        Long roomId = artworkDtos.get(0).getRoom().getRoomId();
+
+        String roomId = "1234";
 
         // We do a get request to see if our controller method works
-        ResponseEntity<ArtworkDto[]> response = client.getForEntity("/getAllArtworksInRoom/" + roomId.toString(), ArtworkDto[].class);
+        ResponseEntity<ArtworkDto[]> response = client.getForEntity("/getAllArtworksInRoom/" + roomId, ArtworkDto[].class);
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody(), "Response has body");
-        assertEquals(2, response.getBody().length, "Response has correct number of Artworks");
+        assertEquals(0, response.getBody().length, "Response has correct number of Artworks");
     }
 
-
+    /**
+     * Integration test method for getting the number of artworks in a given room
+     * when the room doesn't exist
+     *
+     * @author kieyanmamiche
+     */
     @Test
     public void testGetNumberOfArtworksInRoom_NoRoom() {
 
-        // We do a get request to see if our controller handles bad request well
-        ResponseEntity<String> response = client.getForEntity("/getAllArtworksInRoom/" + "1234", String.class);
+        String roomId = "1234";
+
+        // We do a get request to see if our controller method works
+        ResponseEntity<Integer> response = client.getForEntity("/getNumberOfArtworksInRoom/" + roomId, Integer.class);
         assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertEquals(0, response.getBody(), "Response has correct number of Artworks");
+
+
+    }
+
+    /**
+     * Integration test method for moving a specific artwork to a different room
+     * when the artwork doesn't exist
+     *
+     * @author kieyanmamiche
+     */
+    @Test
+    public void testMoveArtworkToRoom_ArtworkNonExisting() {
+
+        List<ArtworkDto> artworkDtoList = createArtworkDtos();
+        Long roomId = artworkDtoList.get(0).getRoom().getRoomId();
+        String artworkIdBad = "123214";
+
+        // We do a get request to see if our controller handles bad request well
+        ResponseEntity<String> response = client.postForEntity("/moveArtworkToRoom/" + artworkIdBad + "/" + roomId,null, String.class);
+        assertNotNull(response);
+        System.out.println(response.getBody());
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(response.getBody(), "Response has body");
         assertEquals("Artwork does not exist", response.getBody(), "Response has correct error message");
 
     }
 
-    @Test
-    public void testMoveArtworkToRoom_ArtworkNonExisting() {
-
-    }
-
+    /**
+     * Integration test method for moving a specific artwork to a different room
+     * when the room doesn't exist
+     *
+     * @author kieyanmamiche
+     */
     @Test
     public void testMoveArtworkToRoom_RoomNonExisting() {
 
+        List<ArtworkDto> artworkDtoList = createArtworkDtos();
+        Long artworkId = artworkDtoList.get(0).getArtworkId();
+        String roomIdBad = "123214";
+
+        // We do a get request to see if our controller handles bad request well
+        ResponseEntity<String> response = client.postForEntity("/moveArtworkToRoom/" + artworkId + "/" + roomIdBad,null, String.class);
+        assertNotNull(response);
+        System.out.println(response.getBody());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertEquals("Room does not exist", response.getBody(), "Response has correct error message");
+
+
     }
 
+    /**
+     * Integration test method for moving a specific artwork to a different room
+     * when the room is at full capacity
+     *
+     * @author kieyanmamiche
+     */
     @Test
     public void testMoveArtworkToRoom_FullCapacity() {
 
+        List<ArtworkDto> artworkDtoList = createArtworkDtos();
+        Long artworkId = artworkDtoList.get(1).getArtworkId();
+        Long roomIdFull = artworkDtoList.get(3).getRoom().getRoomId();
+
+
+        // We do a get request to see if our controller handles bad request well
+        ResponseEntity<String> response = client.postForEntity("/moveArtworkToRoom/" + artworkId + "/" + roomIdFull,null, String.class);
+        assertNotNull(response);
+        System.out.println(response.getBody());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertEquals("Room is full capacity", response.getBody(), "Response has correct error message");
+
     }
 
 
-    @Test
-    public void testRemoveArtworkFromRoomNonExisting() {}
-
-
-
+    /**
+     * An initialization method which helps populate the database so that the integration tests work properly
+     *
+     * @author kieyanmamiche
+     */
     public List<ArtworkDto> createArtworkDtos(){
         List<ArtworkDto> artworkDtos = new ArrayList<ArtworkDto>();
 
@@ -238,6 +331,14 @@ public class ArtworkIntegrationTests {
         room2.setMuseum(museum);
         roomRepository.save(room2);
 
+        // Creating room 3
+        Room room3 = new Room();
+        room3.setRoomName("Room 3 - Full capacity");
+        room3.setRoomType(RoomType.Small);
+        room3.setCurrentNumberOfArtwork(200);
+        room3.setMuseum(museum);
+        roomRepository.save(room3);
+
         // Initialize artwork 1
         Artwork artwork = new Artwork();
         artwork.setName(artworkName);
@@ -271,12 +372,25 @@ public class ArtworkIntegrationTests {
         artwork3.setRoom(room2);
         artworkRepository.save(artwork3);
 
+        // Initialize artwork 4 - duplicate of artwork 3 except different room
+        Artwork artwork4 = new Artwork();
+        artwork4.setName(artworkName3);
+        artwork4.setArtist(artist3);
+        artwork4.setIsAvailableForLoan(isAvailableForLoan3);
+        artwork4.setIsOnLoan(isOnLoan3);
+        artwork4.setLoanFee(loanFee3);
+        artwork4.setImage(image3);
+        artwork4.setRoom(room3);
+        artworkRepository.save(artwork4);
+
         ArtworkDto artworkDto1 = DtoUtility.convertToDto(artwork);
         ArtworkDto artworkDto2 = DtoUtility.convertToDto(artwork2);
         ArtworkDto artworkDto3 = DtoUtility.convertToDto(artwork3);
+        ArtworkDto artworkDto4 = DtoUtility.convertToDto(artwork4);
         artworkDtos.add(artworkDto1);
         artworkDtos.add(artworkDto2);
         artworkDtos.add(artworkDto3);
+        artworkDtos.add(artworkDto4);
 
         return artworkDtos;
     }

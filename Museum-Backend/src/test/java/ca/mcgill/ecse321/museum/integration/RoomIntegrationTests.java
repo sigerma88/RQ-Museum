@@ -49,6 +49,11 @@ public class RoomIntegrationTests {
 
     }
 
+    /**
+     * Integration test method for getting the room capacity by using TEST REST TEMPLATE
+     *
+     * @author kieyanmamiche
+     */
     @Test
     public void testGetRoomCapacity() {
         List<ArtworkDto> artworkDtoList = createArtworkDtos();
@@ -81,7 +86,32 @@ public class RoomIntegrationTests {
         assertTrue(90000 < response3.getBody(), "Response correctly said that the capacity is arbitrarily large");
     }
 
+    /**
+     * Integration test method for getting the room capacity by using TEST REST TEMPLATE
+     * - When room doesn't exist
+     *
+     * @author kieyanmamiche
+     */
+    @Test
+    public void testGetRoomCapacity_NonExistingRoom() {
 
+        String roomIdBad = "1232445";
+
+        // We do a get request to see if our controller handles bad request well
+        ResponseEntity<String> response = client.getForEntity("/getRoomCapacity/" + roomIdBad, String.class);
+        assertNotNull(response);
+        System.out.println(response.getBody());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertEquals("Room does not exist", response.getBody(), "Response has correct error message");
+
+    }
+
+    /**
+     * An initialization method which helps populate the database so that the integration tests work properly
+     *
+     * @author kieyanmamiche
+     */
     public List<ArtworkDto> createArtworkDtos(){
         List<ArtworkDto> artworkDtos = new ArrayList<ArtworkDto>();
 
