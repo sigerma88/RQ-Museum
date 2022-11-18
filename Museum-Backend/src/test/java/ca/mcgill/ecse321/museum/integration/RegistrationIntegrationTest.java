@@ -19,8 +19,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import ca.mcgill.ecse321.museum.controller.DtoUtility;
 import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
+import ca.mcgill.ecse321.museum.dao.ManagerRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
+import ca.mcgill.ecse321.museum.dto.EmployeeDto;
+import ca.mcgill.ecse321.museum.dto.ManagerDto;
 import ca.mcgill.ecse321.museum.dto.VisitorDto;
+import ca.mcgill.ecse321.museum.model.Employee;
+import ca.mcgill.ecse321.museum.model.Manager;
+import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.Visitor;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -31,6 +37,14 @@ public class RegistrationIntegrationTest {
 
   private static final String SECOND_VISITOR_VALID_EMAIL = "george.russel@gmail.com";
   private static final String SECOND_VALID_VISITOR_NAME = "George Russel";
+
+  private static final String FIRST_VALID_EMPLOYEE_NAME = "Valterri Bottas";
+  private static final String FIRST_VALID_EMPLOYEE_EMAIL = "valterri.bottas@museum.ca";
+
+  private static final String INVALID_EMPLOYEE_NAME = "OscarPiastri";
+
+  private static final String FIRST_VALID_MANAGER_NAME = "admin";
+  private static final String FIRST_VALID_MANAGER_EMAIL = "admin@mail.ca";
 
   private static final String VALID_PASSWORD = "#BrazilGp2022";
 
@@ -44,11 +58,15 @@ public class RegistrationIntegrationTest {
   @Autowired
   private VisitorRepository visitorRepository;
 
+  @Autowired
+  private ManagerRepository managerRepository;
+
   @BeforeEach
   @AfterEach
   public void clearDatabase() {
     employeeRepository.deleteAll();
     visitorRepository.deleteAll();
+    managerRepository.deleteAll();
   }
 
   @Test
@@ -311,6 +329,202 @@ public class RegistrationIntegrationTest {
     assertEquals("Old password incorrect", response.getBody(), "Response has correct message");
   }
 
+  @Test
+  public void testEmployeeRegister() {
+    ManagerDto manager = createManagerAndLogin(
+        createManager(FIRST_VALID_MANAGER_NAME, FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", manager.getSessionId());
+    HttpEntity<String> entity = new HttpEntity<>(FIRST_VALID_EMPLOYEE_NAME, headers);
+
+    ResponseEntity<EmployeeDto> response = client.exchange("/api/profile/employee/register",
+        HttpMethod.POST, entity, EmployeeDto.class);
+
+    assertNotNull(response);
+    assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
+    assertNotNull(response.getBody(), "Response has body");
+    assertEquals(FIRST_VALID_EMPLOYEE_NAME, response.getBody().getName(),
+        "Response has correct name");
+    assertEquals(FIRST_VALID_EMPLOYEE_EMAIL, response.getBody().getEmail(),
+        "Response has correct email");
+  }
+
+  @Test
+  public void testEmployeeRegisterWithInvalidName() {
+    ManagerDto manager = createManagerAndLogin(
+        createManager(FIRST_VALID_MANAGER_NAME, FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", manager.getSessionId());
+    HttpEntity<String> entity = new HttpEntity<>(INVALID_EMPLOYEE_NAME, headers);
+
+    ResponseEntity<String> response =
+        client.exchange("/api/profile/employee/register", HttpMethod.POST, entity, String.class);
+
+    assertNotNull(response);
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
+    assertNotNull(response.getBody(), "Response has body");
+    assertEquals("Name must be in the format of Firstname Lastname", response.getBody(),
+        "Response has correct message");
+  }
+
+  @Test
+  public void testUnauthorizedRegisterEmployee() {
+    VisitorDto visitor = createVisitorAndLogin(
+        createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", visitor.getSessionId());
+    HttpEntity<String> entity = new HttpEntity<>(FIRST_VALID_EMPLOYEE_NAME, headers);
+
+    ResponseEntity<String> response =
+        client.exchange("/api/profile/employee/register", HttpMethod.POST, entity, String.class);
+
+    assertNotNull(response);
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
+    assertNotNull(response.getBody(), "Response has body");
+    assertEquals("You must be a manager to register an employee", response.getBody(),
+        "Response has correct message");
+  }
+
+  @Test
+  public void testRegisterEmployeeWithoutLogin() {
+    HttpEntity<String> entity = new HttpEntity<>(FIRST_VALID_EMPLOYEE_NAME);
+
+    ResponseEntity<String> response =
+        client.exchange("/api/profile/employee/register", HttpMethod.POST, entity, String.class);
+
+    assertNotNull(response);
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
+    assertNotNull(response.getBody(), "Response has body");
+    assertEquals("You must be logged in to register an employee", response.getBody(),
+        "Response has correct message");
+  }
+
+  @Test
+  public void testEditEmployee() {
+    EmployeeDto employee = createEmployeeAndLogin(
+        createEmployee(FIRST_VALID_EMPLOYEE_NAME, FIRST_VALID_EMPLOYEE_EMAIL, VALID_PASSWORD));
+
+    Map<String, String> updatedCredentials = new HashMap<>();
+    updatedCredentials.put("oldPassword", employee.getPassword());
+    updatedCredentials.put("newPassword", "#AbuDhabiGp2022");
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", employee.getSessionId());
+    HttpEntity<Map<String, String>> entity = new HttpEntity<>(updatedCredentials, headers);
+
+    ResponseEntity<EmployeeDto> response =
+        client.exchange("/api/profile/employee/edit/" + employee.getMuseumUserId(), HttpMethod.POST,
+            entity, EmployeeDto.class);
+
+    assertNotNull(response);
+    assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
+    assertNotNull(response.getBody(), "Response has body");
+    assertEquals(FIRST_VALID_EMPLOYEE_NAME, response.getBody().getName(),
+        "Response has correct name");
+    assertEquals(FIRST_VALID_EMPLOYEE_EMAIL, response.getBody().getEmail(),
+        "Response has correct email");
+    assertEquals("#AbuDhabiGp2022", response.getBody().getPassword(),
+        "Response has correct password");
+  }
+
+  @Test
+  public void testEditEmployeeWithInvalidId() {
+    EmployeeDto employee = createEmployeeAndLogin(
+        createEmployee(FIRST_VALID_EMPLOYEE_NAME, FIRST_VALID_EMPLOYEE_EMAIL, VALID_PASSWORD));
+
+    Map<String, String> updatedCredentials = new HashMap<>();
+    updatedCredentials.put("oldPassword", employee.getPassword());
+    updatedCredentials.put("newPassword", "#AbuDhabiGp2022");
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", employee.getSessionId());
+    HttpEntity<Map<String, String>> entity = new HttpEntity<>(updatedCredentials, headers);
+
+    Long invalidId = employee.getMuseumUserId() + 1;
+
+    ResponseEntity<String> response = client.exchange("/api/profile/employee/edit/" + invalidId,
+        HttpMethod.POST, entity, String.class);
+
+    assertNotNull(response);
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
+    assertNotNull(response.getBody(), "Response has body");
+    assertEquals("You can only edit your own information", response.getBody(),
+        "Response has correct message");
+  }
+
+  @Test
+  public void testEditEmployeeWithInvalidOldPassword() {
+    EmployeeDto employee = createEmployeeAndLogin(
+        createEmployee(FIRST_VALID_EMPLOYEE_NAME, FIRST_VALID_EMPLOYEE_EMAIL, VALID_PASSWORD));
+
+    Map<String, String> updatedCredentials = new HashMap<>();
+    updatedCredentials.put("oldPassword", "invalidPassword");
+    updatedCredentials.put("newPassword", "#AbuDhabiGp2022");
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", employee.getSessionId());
+    HttpEntity<Map<String, String>> entity = new HttpEntity<>(updatedCredentials, headers);
+
+    ResponseEntity<String> response =
+        client.exchange("/api/profile/employee/edit/" + employee.getMuseumUserId(), HttpMethod.POST,
+            entity, String.class);
+
+    assertNotNull(response);
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
+    assertNotNull(response.getBody(), "Response has body");
+    assertEquals("Old password incorrect", response.getBody(), "Response has correct message");
+  }
+
+  @Test
+  public void testEditEmployeeWithInvalidNewPassword() {
+    EmployeeDto employee = createEmployeeAndLogin(
+        createEmployee(FIRST_VALID_EMPLOYEE_NAME, FIRST_VALID_EMPLOYEE_EMAIL, VALID_PASSWORD));
+
+    Map<String, String> updatedCredentials = new HashMap<>();
+    updatedCredentials.put("oldPassword", employee.getPassword());
+    updatedCredentials.put("newPassword", "AbuDhabiGp2022");
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", employee.getSessionId());
+    HttpEntity<Map<String, String>> entity = new HttpEntity<>(updatedCredentials, headers);
+
+    ResponseEntity<String> response =
+        client.exchange("/api/profile/employee/edit/" + employee.getMuseumUserId(), HttpMethod.POST,
+            entity, String.class);
+
+    assertNotNull(response);
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
+    assertNotNull(response.getBody(), "Response has body");
+    assertEquals(
+        "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special character. ",
+        response.getBody(), "Response has correct message");
+  }
+
+  @Test
+  public void testEditEmployeeWithoutLogin() {
+    EmployeeDto employee = createEmployeeDto(
+        createEmployee(FIRST_VALID_EMPLOYEE_NAME, FIRST_VALID_EMPLOYEE_EMAIL, VALID_PASSWORD));
+
+    Map<String, String> updatedCredentials = new HashMap<>();
+    updatedCredentials.put("oldPassword", employee.getPassword());
+    updatedCredentials.put("newPassword", "#AbuDhabiGp2022");
+
+    HttpEntity<Map<String, String>> entity = new HttpEntity<>(updatedCredentials);
+
+    ResponseEntity<String> response =
+        client.exchange("/api/profile/employee/edit/" + employee.getMuseumUserId(), HttpMethod.POST,
+            entity, String.class);
+
+    assertNotNull(response);
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
+    assertNotNull(response.getBody(), "Response has body");
+    assertEquals("You must be logged in to edit an employee", response.getBody(),
+        "Response has correct message");
+  }
+
   public VisitorDto createVisitorDto(Visitor visitor) {
     return DtoUtility.convertToDto(visitor);
   }
@@ -341,4 +555,64 @@ public class RegistrationIntegrationTest {
     return visitor;
   }
 
+  public EmployeeDto createEmployeeDto(Employee employee) {
+    return DtoUtility.convertToDto(employee);
+  }
+
+  public Employee createEmployee(String name, String email, String password) {
+    Employee employee = new Employee();
+    employee.setName(name);
+    employee.setEmail(email);
+    employee.setPassword(password);
+    employee.setSchedule(new Schedule());
+
+    return employee;
+  }
+
+  public Employee createEmployeeAndSave(Employee employee) {
+    employeeRepository.save(employee);
+    return employee;
+  }
+
+  public EmployeeDto createEmployeeAndLogin(Employee newEmployee) {
+    EmployeeDto employee = createEmployeeDto(createEmployeeAndSave(newEmployee));
+    ResponseEntity<String> response =
+        client.postForEntity("/api/auth/login", employee, String.class);
+    List<String> session = response.getHeaders().get("Set-Cookie");
+
+    String sessionId = session.get(0);
+    employee.setSessionId(sessionId);
+
+    return employee;
+  }
+
+  public ManagerDto createManagerDto(Manager manager) {
+    return DtoUtility.convertToDto(manager);
+  }
+
+  public Manager createManager(String name, String email, String password) {
+    Manager manager = new Manager();
+    manager.setName(name);
+    manager.setEmail(email);
+    manager.setPassword(password);
+
+    return manager;
+  }
+
+  public Manager createManagerAndSave(Manager manager) {
+    managerRepository.save(manager);
+    return manager;
+  }
+
+  public ManagerDto createManagerAndLogin(Manager newManager) {
+    ManagerDto manager = createManagerDto(createManagerAndSave(newManager));
+    ResponseEntity<String> response =
+        client.postForEntity("/api/auth/login", manager, String.class);
+    List<String> session = response.getHeaders().get("Set-Cookie");
+
+    String sessionId = session.get(0);
+    manager.setSessionId(sessionId);
+
+    return manager;
+  }
 }

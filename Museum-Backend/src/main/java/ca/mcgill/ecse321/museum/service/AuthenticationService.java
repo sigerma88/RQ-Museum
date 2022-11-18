@@ -1,9 +1,7 @@
 package ca.mcgill.ecse321.museum.service;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
 
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
@@ -54,12 +52,5 @@ public class AuthenticationService {
         }
 
         throw new Exception("No account with the email " + email + " exists.");
-    }
-
-    @Transactional
-    public boolean logout(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        session.invalidate();
-        return true;
     }
 }

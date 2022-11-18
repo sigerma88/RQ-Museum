@@ -57,7 +57,7 @@ public class AuthenticationIntegrationTest {
   }
 
   @Test
-  public void testLoginInvalidPassword() {
+  public void testLoginWrongPassword() {
     Visitor visitor = createVisitor();
     visitor.setPassword("Speed123#$");
 
@@ -99,6 +99,34 @@ public class AuthenticationIntegrationTest {
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Cannot login while logged in");
   }
 
+  @Test
+  public void testLogout() {
+    VisitorDto visitor = createVisitorAndLogin();
+    HttpHeaders headers = new HttpHeaders();
+
+    headers.set("Cookie", visitor.getSessionId());
+    HttpEntity<?> entity = new HttpEntity<>(headers);
+
+    ResponseEntity<String> response =
+        client.exchange("/api/auth/logout", HttpMethod.POST, entity, String.class);
+    assertNotNull(response);
+    assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
+    assertNotNull(response.getBody(), "Response has body");
+    assertEquals("logged out", response.getBody(), "Response has correct name");
+  }
+
+  @Test
+  public void testLogoutWhenNotLoggedin() {
+    VisitorDto visitor = createVisitorAndLogin();
+
+    ResponseEntity<String> response =
+        client.postForEntity("/api/auth/logout", visitor, String.class);
+
+    assertNotNull(response);
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
+    assertEquals("Cannot logout when not logged in", response.getBody(),
+        "Response has correct name");
+  }
 
   public VisitorDto createVisitorDto(Visitor visitor) {
     return DtoUtility.convertToDto(visitor);
@@ -126,7 +154,6 @@ public class AuthenticationIntegrationTest {
     List<String> session = response.getHeaders().get("Set-Cookie");
 
     String sessionId = session.get(0);
-    System.out.println(sessionId);
     visitor.setSessionId(sessionId);
 
     return visitor;

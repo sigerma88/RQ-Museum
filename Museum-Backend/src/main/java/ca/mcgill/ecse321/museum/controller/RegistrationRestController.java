@@ -134,20 +134,20 @@ public class RegistrationRestController {
   }
 
   @PostMapping(value = "employee/register", produces = "application/json")
-  public ResponseEntity<?> register(HttpServletRequest request, @RequestBody EmployeeDto employee) {
+  public ResponseEntity<?> register(HttpServletRequest request, @RequestBody String employeeName) {
     try {
       HttpSession session = request.getSession();
 
       if (!AuthenticationUtility.isLoggedIn(session)) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body("You must be logged in to register an employee");
       } else if (!AuthenticationUtility.isManager(session)) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body("You must be a manager to register an employee");
       }
 
       EmployeeDto employeeDto =
-          DtoUtility.convertToDto(registrationService.createEmployee(employee.getName()));
+          DtoUtility.convertToDto(registrationService.createEmployee(employeeName));
 
       return ResponseEntity.ok(employeeDto);
     } catch (Exception e) {
@@ -162,13 +162,13 @@ public class RegistrationRestController {
       HttpSession session = request.getSession();
 
       if (!AuthenticationUtility.isLoggedIn(session)) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body("You must be logged in to edit an employee");
       } else if (!AuthenticationUtility.isStaffMember(session)) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body("You must be a staff member to edit an employee");
       } else if (!AuthenticationUtility.checkUserId(session, id)) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body("You can only edit your own information");
       }
 

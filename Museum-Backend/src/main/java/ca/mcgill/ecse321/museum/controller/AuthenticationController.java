@@ -67,7 +67,7 @@ public class AuthenticationController {
 
       if (AuthenticationUtility.isLoggedIn(session)
           && AuthenticationUtility.isMuseumUser(session)) {
-        authenticationService.logout(request);
+        session.invalidate();
         return ResponseEntity.ok("logged out");
       }
       return new ResponseEntity<>("Cannot logout when not logged in", HttpStatus.BAD_REQUEST);

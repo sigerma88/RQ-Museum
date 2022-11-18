@@ -154,18 +154,6 @@ public class TestAuthenticationService {
       authenticationService.authenticateUser(visitorDto.getEmail(), visitorDto.getPassword());
     });
   }
-
-  // @Test
-  // public void logoutMuseumUser() {
-  // try {
-  // MuseumUserDto museumUserDto = new MuseumUserDto();
-  // museumUserDto.setEmail(VISITOR_VALID_EMAIL);
-  // museumUserDto.setPassword(VALID_PASSWORD);
-  // authenticationService.logout(museumUserDto.getEmail());
-  // } catch (Exception e) {
-  // fail();
-  // }
-  // }
 }
 
 

@@ -12,11 +12,12 @@ public class EmployeeDto {
   private String name;
   private String password;
   private ScheduleDto schedule;
+  private String sessionId;
 
-  public EmployeeDto() {
-  }
+  public EmployeeDto() {}
 
-  public EmployeeDto(Long museumUserId, String email, String name, String password, ScheduleDto schedule) {
+  public EmployeeDto(Long museumUserId, String email, String name, String password,
+      ScheduleDto schedule) {
     this.museumUserId = museumUserId;
     this.email = email;
     this.name = name;
@@ -62,5 +63,13 @@ public class EmployeeDto {
 
   public void setSchedule(ScheduleDto schedule) {
     this.schedule = schedule;
+  }
+
+  public String getSessionId() {
+    return sessionId;
+  }
+
+  public void setSessionId(String sessionId) {
+    this.sessionId = sessionId;
   }
 }
