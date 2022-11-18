@@ -66,10 +66,10 @@ public class TestLoanService {
     private ArtworkService artworkService;
 
     private static final long LOAN_ID = 1;
-    private static final boolean LOAN_REQUESTACCEPTED = false;
+    private static final Boolean LOAN_REQUESTACCEPTED = null;
 
     private static final long SECOND_LOAN_ID = 2;
-    private static final boolean SECOND_LOAN_REQUESTACCEPTED = false;
+    private static final Boolean SECOND_LOAN_REQUESTACCEPTED = null;
 
     // Loan that should fail because associations with bad artwork or visitor
     private static final long THIRD_LOAN_ID = 3;
@@ -564,6 +564,19 @@ public class TestLoanService {
         Loan patchedLoan = loanService.patchLoanById(loan.getLoanId(), true);
         assertEquals(true, patchedLoan.getRequestAccepted());
         assertNull(loan.getArtwork().getRoom());   
+    }
+
+    /**
+     * Test method for patching a loan to reject the loan request
+     * 
+     * @author Eric
+     */
+    @Test
+    public void testPatchLoanRefuseRequest() {
+        Loan loan = loanService.getLoanById(LOAN_ID);
+        Loan patchedLoan = loanService.patchLoanById(loan.getLoanId(), false);
+        assertEquals(true, patchedLoan.getRequestAccepted());
+        assertNotNull(loan.getArtwork().getRoom());   
     }
 
 
