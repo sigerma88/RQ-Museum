@@ -4,6 +4,9 @@ import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.TimePeriod;
+
+import java.text.SimpleDateFormat;
+
 import ca.mcgill.ecse321.museum.dto.EmployeeDto;
 import ca.mcgill.ecse321.museum.dto.MuseumDto;
 import ca.mcgill.ecse321.museum.dto.ScheduleDto;
@@ -54,12 +57,20 @@ public class DtoUtility {
     return new MuseumDto(museum.getMuseumId(), museum.getName(), museum.getVisitFee(), scheduleDto);
   
   }
+  /**
+   * Method to convert a time period to a DTO.
+   * It converts the start and end date to a String.
+   * @author VZ
+   * @param timePeriod
+   * @return
+   */
 
   static TimePeriodDto convertToDto(TimePeriod timePeriod) {
     if(timePeriod == null) {
       throw new IllegalArgumentException("There is no such time period");
     }
-    return new TimePeriodDto(timePeriod.getTimePeriodId(), timePeriod.getStartDate(), timePeriod.getEndDate());
+    String startDateString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timePeriod.getStartDate());
+    String endDateString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timePeriod.getEndDate());
+    return new TimePeriodDto(timePeriod.getTimePeriodId(), startDateString, endDateString);
   }
-  
 }

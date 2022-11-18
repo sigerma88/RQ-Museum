@@ -1,25 +1,18 @@
 package ca.mcgill.ecse321.museum.service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ca.mcgill.ecse321.museum.dao.ScheduleOfTimePeriodRepository;
 import ca.mcgill.ecse321.museum.dao.TimePeriodRepository;
-import ca.mcgill.ecse321.museum.model.Schedule;
-import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
 import ca.mcgill.ecse321.museum.model.TimePeriod;
 
 @Service
 public class TimePeriodService {
     @Autowired
     private TimePeriodRepository timePeriodRepository;
-    @Autowired
-    private ScheduleOfTimePeriodRepository scheduleOfTimePeriodRepository;
 
     // GET
     /**
@@ -105,7 +98,7 @@ public class TimePeriodService {
         // find TimePeriod
         TimePeriod timePeriod = timePeriodRepository.findTimePeriodByTimePeriodId(timePeriodId);
         if (timePeriod == null) {
-            throw new IllegalArgumentException("TimePeriod does not exist");
+            throw new IllegalArgumentException("Time period does not exist");
         }
         // edit TimePeriod
         timePeriod.setStartDate(startDate);

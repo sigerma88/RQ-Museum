@@ -4,9 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,13 +12,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.TimePeriod;
-import ca.mcgill.ecse321.museum.dto.ScheduleDto;
 import ca.mcgill.ecse321.museum.dto.TimePeriodDto;
 import ca.mcgill.ecse321.museum.service.EmployeeService;
 import ca.mcgill.ecse321.museum.service.MuseumService;
@@ -113,6 +110,9 @@ public class SchedulingRestController {
 
     /**
      * RESTful api to create a new time period in the database
+     * We pass in a Dto object, we could also pass in strings to represent start and
+     * enddates, but
+     * that requires object mapper to parse into json.
      * 
      * @author VZ
      * @param timePeriodDto
@@ -120,15 +120,16 @@ public class SchedulingRestController {
      */
 
     @PostMapping(value = { "/shift/create", "/shift/create/" })
-    public ResponseEntity<?> createTimePeriod(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "yyyy-MM-dd'T'HH:mm") Timestamp startDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "yyyy-MM-dd'T'HH:mm") Timestamp endDate) {
+    public ResponseEntity<?> createTimePeriod(@RequestBody TimePeriodDto timePeriodDto) {
         try {
-            TimePeriod timePeriod = timePeriodService.createTimePeriod(startDate, endDate);
+            TimePeriod timePeriod = timePeriodService.createTimePeriod(
+                    Timestamp.valueOf(timePeriodDto.getStartDate()),
+                    Timestamp.valueOf(timePeriodDto.getEndDate()));
             return new ResponseEntity<>(DtoUtility.convertToDto(timePeriod), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+
     }
 
     /**
@@ -158,7 +159,7 @@ public class SchedulingRestController {
      * @param id
      * @return
      */
-    @DeleteMapping(value = { "/shift/{id}", "/shift/{id}/" })
+    @DeleteMapping(value = { "/shift/delete/{id}", "/shift/delete/{id}/" })
     public ResponseEntity<?> deleteTimePeriod(@PathVariable("id") long id) {
         try {
             timePeriodService.deleteTimePeriod(id);
@@ -166,7 +167,6 @@ public class SchedulingRestController {
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
-
     }
 
     /**
@@ -178,15 +178,16 @@ public class SchedulingRestController {
      * @param endDate
      * @return
      */
-    @PostMapping(value = { "/shift/edit", "/shift/edit/" })
+    @PostMapping(value = { "/shift/edit/{id}", "/shift/edit/{id}/" })
     public ResponseEntity<?> editTimePeriod(@PathVariable("id") long id,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "yyyy/MM/dd hh:mm") Timestamp startDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "yyyy/MM/dd hh:mm") Timestamp endDate) {
+            @RequestBody TimePeriodDto timePeriodDto) {
         try {
-            TimePeriod timePeriod = timePeriodService.editTimePeriod(id, startDate, endDate);
+            TimePeriod timePeriod = timePeriodService.editTimePeriod(id,
+                    Timestamp.valueOf(timePeriodDto.getStartDate()),
+                    Timestamp.valueOf(timePeriodDto.getEndDate()));
             return new ResponseEntity<>(DtoUtility.convertToDto(timePeriod), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -198,7 +199,7 @@ public class SchedulingRestController {
      * @param timePeriodDto
      * @return
      */
-    @PostMapping(value = { "/employee/{employeeId}/shift/{tpId}", "/employee/{employeeId}/shift/{tpId}/" })
+    @PostMapping(value = { "/employee/{employeeId}/add/shift/{tpId}", "/employee/{employeeId}/add/shift/{tpId}/" })
     public ResponseEntity<?> addTimePeriodToEmployeeSchedule(
             @PathVariable("employeeId") long employeeId,
             @PathVariable("tpId") long tpId) {
@@ -206,7 +207,7 @@ public class SchedulingRestController {
             Employee employee = employeeService.addEmployeeTimePeriodAssociation(employeeId, tpId);
             return new ResponseEntity<>(DtoUtility.convertToDto(employee), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -218,7 +219,7 @@ public class SchedulingRestController {
      * @param tpId
      * @return
      */
-    @DeleteMapping(value = { "/employee/{employeeId}/shift/{tpId}", "/employee/{employeeId}/shift/{tpId}/" })
+    @DeleteMapping(value = { "/employee/{employeeId}/remove/shift/{tpId}", "/employee/{employeeId}/remove/shift/{tpId}/" })
     public ResponseEntity<?> deleteTimePeriodFromEmployeeSchedule(
             @PathVariable("employeeId") long employeeId,
             @PathVariable("tpId") long tpId) {
@@ -238,7 +239,7 @@ public class SchedulingRestController {
      * @param tpId
      * @return
      */
-    @PostMapping(value = { "/museum/{museumId}/shift/{tpId}", "/museum/{museumId}/shift/{tpId}/" })
+    @PostMapping(value = { "/museum/{museumId}/add/shift/{tpId}", "/museum/{museumId}/add/shift/{tpId}/" })
     public ResponseEntity<?> addTimePeriodToMuseumSchedule(
             @PathVariable("museumId") long museumId,
             @PathVariable("tpId") long tpId) {
@@ -258,12 +259,12 @@ public class SchedulingRestController {
      * @param tpId
      * @return
      */
-    @DeleteMapping(value = { "/museum/{museumId}/shift/{tpId}", "/museum/{museumId}/shift/{tpId}/" })
+    @DeleteMapping(value = { "/museum/{museumId}/remove/shift/{tpId}", "/museum/{museumId}/remove/shift/{tpId}/" })
     public ResponseEntity<?> removeTimePeriodFromMuseumSchedule(
             @PathVariable("museumId") long museumId,
             @PathVariable("tpId") long tpId) {
         try {
-            museumService.removeMuseumTimePeriodAssociation(museumId, tpId);
+            museumService.deleteMuseumTimePeriodAssociation(museumId, tpId);
             return new ResponseEntity<>("Shift deleted", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

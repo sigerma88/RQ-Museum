@@ -63,4 +63,5 @@ public class EmployeeDto {
   public void setSchedule(ScheduleDto schedule) {
     this.schedule = schedule;
   }
+  
 }

@@ -1,13 +1,14 @@
 package ca.mcgill.ecse321.museum.dto;
 
-import java.sql.Timestamp;
+
 
 public class TimePeriodDto {
 
     // TimePeriod Attributes
+    // startDate and endDate are strings, but we convert them to Timestamps in the integration tests
     private Long timePeriodId;
-    private Timestamp startDate;
-    private Timestamp endDate;
+    private String startDate;
+    private String endDate;
 
     // ------------------------
     // CONSTRUCTOR
@@ -16,7 +17,13 @@ public class TimePeriodDto {
     public TimePeriodDto() {
     }
 
-    public TimePeriodDto(Long timePeriodId, Timestamp startDate, Timestamp endDate) {
+    public TimePeriodDto(Long timePeriodId, String startDate, String endDate) {
+        this.timePeriodId = timePeriodId;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    public TimePeriodDto(String startDate, String endDate) {
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -25,15 +32,15 @@ public class TimePeriodDto {
         return timePeriodId;
     }
 
-    public void setId(Long timePeriodId){
+    public void setTimePeriodId(Long timePeriodId){
         this.timePeriodId = timePeriodId;
     }
 
-    public Timestamp getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public Timestamp getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 

@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -101,7 +100,7 @@ public class SchedulingIntegrationTests {
     public void testGetAllShiftsByEmployee() {
         EmployeeDto employeeDto = createEmployeeDto(createEmployeeWithShifts());
         Long id = employeeDto.getMuseumUserId();
-        ResponseEntity<TimePeriod[]> response = client.getForEntity("/employee/shifts/" + id, TimePeriod[].class);
+        ResponseEntity<TimePeriodDto[]> response = client.getForEntity("/employee/shifts/" + id, TimePeriodDto[].class);
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody(), "Response has body");
@@ -141,6 +140,7 @@ public class SchedulingIntegrationTests {
 
     /**
      * Test to successfully get the schedule of a museum
+     * 
      * @author VZ
      */
     @Test
@@ -158,6 +158,7 @@ public class SchedulingIntegrationTests {
 
     /**
      * Test to get the schedule of a museum that doesn't exist
+     * 
      * @author VZ
      */
     @Test
@@ -171,13 +172,14 @@ public class SchedulingIntegrationTests {
 
     /**
      * Test to successfully get the shifts of a museum
+     * 
      * @author VZ
      */
     @Test
     public void testGetAllShiftsByMuseum() {
         MuseumDto museumDto = createMuseumDto(createMuseumWithShifts());
         Long id = museumDto.getMuseumId();
-        ResponseEntity<TimePeriod[]> response = client.getForEntity("/museum/shifts/" + id, TimePeriod[].class);
+        ResponseEntity<TimePeriodDto[]> response = client.getForEntity("/museum/shifts/" + id, TimePeriodDto[].class);
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody(), "Response has body");
@@ -186,6 +188,7 @@ public class SchedulingIntegrationTests {
 
     /**
      * Test to get the shifts of a museum that doesn't exist
+     * 
      * @author VZ
      */
     @Test
@@ -199,6 +202,7 @@ public class SchedulingIntegrationTests {
 
     /**
      * Test to get the shifts of a museum that doesn't have any shifts
+     * 
      * @author VZ
      */
     @Test
@@ -212,23 +216,298 @@ public class SchedulingIntegrationTests {
         assertEquals(response.getBody(), "Museum's schedule has no shift!");
     }
 
-    // /**
-    //  * Test to successfully create a time period 
-    //  * @author VZ
-    //  */
+    /**
+     * Test to successfully create, get, edit and delete a time period
+     * 
+     * @author VZ
+     */
+    @Test
+    public void testCreateGetAndEditTimePeriod() {
+        Long id = testCreateTimePeriod();
+        testGetTimePeriod(id);
+        testEditTimePeriod(id);
+        testDeleteTimePeriod(id);
+    }
 
-    // @Test
-    // public void testCreateTimePeriod() {
-    //     ResponseEntity<TimePeriodDto> response = 
-    //     client.postForEntity("/shift/create?startDate=2022-11-16T08:30:00&endDate=2022-11-16T17:35:00", new TimePeriodDto(), TimePeriodDto.class);
-    //     assertNotNull(response);
-    //     assertEquals(HttpStatus.OK, response.getStatusCode());
-    //     assertNotNull(response.getBody(), "Response has body");
-    //     assertEquals("2022-11-16T08:30", response.getBody().getStartDate().toString(), "Response has correct start time");
-    //     assertEquals("2022-11-16T17:35", response.getBody().getEndDate().toString(), "Response has correct end time");
+    /**
+     * helper method to successfully create a time period
+     * 
+     * @return
+     */
+    public Long testCreateTimePeriod() {
+        ResponseEntity<TimePeriodDto> response = client.postForEntity("/shift/create",
+                new TimePeriodDto("2022-11-17 08:30:00", "2022-11-17 17:35:00"), TimePeriodDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertEquals("2022-11-17 08:30:00", response.getBody().getStartDate().toString(),
+                "Response has correct start time");
+        assertEquals("2022-11-17 17:35:00", response.getBody().getEndDate().toString(),
+                "Response has correct end time");
+        return response.getBody().getTimePeriodId();
+    }
 
-    // }
+    /**
+     * helper method to successfully get a time period
+     * 
+     * @param id
+     */
 
+    public void testGetTimePeriod(Long id) {
+        ResponseEntity<TimePeriodDto> response = client.getForEntity("/shift/" + id, TimePeriodDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertEquals("2022-11-17 08:30:00", response.getBody().getStartDate().toString(),
+                "Response has correct start time");
+        assertEquals("2022-11-17 17:35:00", response.getBody().getEndDate().toString(),
+                "Response has correct end time");
+    }
+
+    /**
+     * helper method to successfully edit a time period
+     * 
+     * @param id
+     */
+    public void testEditTimePeriod(Long id) {
+        ResponseEntity<TimePeriodDto> response = client.postForEntity("/shift/edit/" + id,
+                new TimePeriodDto(id, "2023-12-12 08:30:00", "2023-12-12 17:35:00"), TimePeriodDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertEquals("2023-12-12 08:30:00", response.getBody().getStartDate().toString(),
+                "Response has correct start time");
+        assertEquals("2023-12-12 17:35:00", response.getBody().getEndDate().toString(),
+                "Response has correct end time");
+        assertEquals(id, response.getBody().getTimePeriodId(), "Response has correct time period ID");
+    }
+
+    /**
+     * helper method to successfully delete a time period
+     * 
+     * @param id
+     */
+    public void testDeleteTimePeriod(Long id) {
+        client.delete(("/shift/delete/" + id), TimePeriodDto.class);
+        ResponseEntity<String> response = client.getForEntity("/shift/" + id, String.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertTrue(response.getBody().contains("Time period does not exist"));
+    }
+
+    /**
+     * Test to create an invalid time period with start date after end date
+     * 
+     * @author VZ
+     */
+
+    @Test
+    public void testCreateInvalidTimePeriod() {
+        ResponseEntity<String> response = client.postForEntity("/shift/create",
+                new TimePeriodDto("2022-11-17 08:30:00", "2022-11-17 07:35:00"), String.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertTrue(response.getBody().contains("Start date cannot be after end date"));
+    }
+
+    /**
+     * Test to get a time period that doesn't exist
+     * 
+     * @author VZ
+     */
+    @Test
+    public void testGetInvalidTimePeriod() {
+        ResponseEntity<String> response = client.getForEntity("/shift/" + -1, String.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertTrue(response.getBody().contains("Time period does not exist"));
+    }
+
+    /**
+     * Test to edit a time period that doesn't exist
+     * 
+     * @author VZ
+     */
+    @Test
+    public void testEditInvalidTimePeriod() {
+        ResponseEntity<String> response = client.postForEntity("/shift/edit/" + 1,
+                new TimePeriodDto(1L, "2023-12-12 08:30:00", "2023-12-12 17:35:00"), String.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertTrue(response.getBody().contains("Time period does not exist"));
+    }
+
+    /**
+     * Test to delete a time period that doesn't exist
+     * 
+     * @author VZ
+     */
+    @Test
+    public void testDeleteInvalidTimePeriod() {
+        ResponseEntity<String> response = client.exchange("/shift/delete/" + -1, HttpMethod.DELETE, null, String.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertTrue(response.getBody().contains("Time period does not exist"));
+    }
+
+    /**
+     * Test to add a time period to an employee schedule
+     * 
+     * @author VZ
+     */
+    @Test
+    public void testAddTimePeriodToEmployeeSchedule() {
+        EmployeeDto employeeDto = createEmployeeDto(createEmployeeWithShifts());
+        Long employeeId = employeeDto.getMuseumUserId();
+        Long timePeriodId = testCreateTimePeriod();
+        ResponseEntity<EmployeeDto> response = client.postForEntity("/employee/" + employeeId + "/add/shift/" + timePeriodId, null,
+                EmployeeDto.class);
+                    
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertEquals(employeeId, response.getBody().getMuseumUserId(), "Response has correct employee ID");
+    }
+
+    /**
+     * Test to add a time period that doesn't exist to an employee schedule 
+     * @author VZ
+     */
+    @Test
+    public void testAddTimePeriodToEmployeeScheduleInvalidTimePeriod() {
+        EmployeeDto employeeDto = createEmployeeDto(createEmployeeWithShifts());
+        Long employeeId = employeeDto.getMuseumUserId();
+        Long timePeriodId = 1L;
+        ResponseEntity<String> response = client.postForEntity("/employee/" + employeeId + "/add/shift/" + timePeriodId, null,
+                String.class);
+                    
+        assertNotNull(response);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertTrue(response.getBody().contains("There is no such time period"));
+    }
+
+    /**
+     * Test to delete a time period from an employee's schedule
+     * 
+     * @author VZ
+     */
+    @Test
+    public void testDeleteTimePeriodFromEmployeeSchedule(){
+        EmployeeDto employeeDto = createEmployeeDto(createEmployeeWithShifts());
+        Long employeeId = employeeDto.getMuseumUserId();
+        Long timePeriodId = testCreateTimePeriod();
+        ResponseEntity<EmployeeDto> response = client.postForEntity("/employee/" + employeeId + "/add/shift/" + timePeriodId, null,
+                EmployeeDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertEquals(employeeId, response.getBody().getMuseumUserId(), "Response has correct employee ID");
+        ResponseEntity<String> response2 = client.exchange("/employee/" + employeeId + "/remove/shift/" + timePeriodId, 
+        HttpMethod.DELETE, null, String.class);
+        assertNotNull(response2);
+        assertEquals(HttpStatus.OK, response2.getStatusCode());
+        assertNotNull(response2.getBody(), "Response has body");
+        assertTrue(response2.getBody().contains("Shift deleted"));
+    }
+
+    /**
+     * Test to delete a time period that doesn't exist from an employee's schedule
+     * @author VZ
+     */
+    @Test
+    public void testDeleteTimePeriodFromEmployeeScheduleInvalidTimePeriod() {
+        EmployeeDto employeeDto = createEmployeeDto(createEmployeeWithShifts());
+        Long employeeId = employeeDto.getMuseumUserId();
+        Long timePeriodId = -1L;
+        ResponseEntity<String> response = client.exchange("/employee/" + employeeId + "/remove/shift/" + timePeriodId, 
+        HttpMethod.DELETE, null, String.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertTrue(response.getBody().contains("There is no such time period"));
+    }
+
+    /**
+     * Test to add a time period to a museum's schedule 
+     * @author VZ
+     */
+    @Test
+    public void testAddTimePeriodToMuseumSchedule() {
+        MuseumDto museumDto = createMuseumDto(createMuseumWithShifts());
+        Long museumId = museumDto.getMuseumId();
+        Long timePeriodId = testCreateTimePeriod();
+        ResponseEntity<MuseumDto> response = client.postForEntity("/museum/" + museumId + "/add/shift/" + timePeriodId, null,
+                MuseumDto.class);
+                    
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertEquals(museumId, response.getBody().getMuseumId(), "Response has correct museum ID");
+    }
+
+    /**
+     * Test to add a time period that doesn't exist to a museum's schedule
+     * @author VZ
+     */
+    @Test
+    public void testAddTimePeriodToMuseumScheduleInvalidTimePeriod() { 
+        MuseumDto museumDto = createMuseumDto(createMuseumWithShifts());
+        Long museumId = museumDto.getMuseumId();
+        Long timePeriodId = 1L;
+        ResponseEntity<String> response = client.postForEntity("/museum/" + museumId + "/add/shift/" + timePeriodId, null,
+                String.class);
+                    
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertTrue(response.getBody().contains("Time period doesn't exist!"));
+    } 
+
+    /**
+     * Test to delete a time period from a museum's schedule
+     * @author VZ
+     */
+    @Test
+    public void testRemoveTimePeriodFromMuseumSchedule(){
+        MuseumDto museumDto = createMuseumDto(createMuseumWithShifts());
+        Long museumId = museumDto.getMuseumId();
+        Long timePeriodId = testCreateTimePeriod();
+        ResponseEntity<MuseumDto> response = client.postForEntity("/museum/" + museumId + "/add/shift/" + timePeriodId, null,
+                MuseumDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertEquals(museumId, response.getBody().getMuseumId(), "Response has correct museum ID");
+        ResponseEntity<String> response2 = client.exchange("/museum/" + museumId + "/remove/shift/" + timePeriodId, 
+        HttpMethod.DELETE, null, String.class);
+        assertNotNull(response2);
+        assertEquals(HttpStatus.OK, response2.getStatusCode());
+        assertNotNull(response2.getBody(), "Response has body");
+        assertTrue(response2.getBody().contains("Shift deleted"));
+    }
+
+    /**
+     * Test to delete a time period that doesn't exist from a museum's schedule
+     * @author VZ
+     */
+    @Test
+    public void testRemoveTimePeriodFromMuseumScheduleInvalidTimePeriod() {
+        MuseumDto museumDto = createMuseumDto(createMuseumWithShifts());
+        Long museumId = museumDto.getMuseumId();
+        Long timePeriodId = -1L;
+        ResponseEntity<String> response = client.exchange("/museum/" + museumId + "/remove/shift/" + timePeriodId, 
+        HttpMethod.DELETE, null, String.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody(), "Response has body");
+        assertTrue(response.getBody().contains("Time period doesn't exist!"));
+    }
 
     /**
      * helper method to convert an employee to an employeeDto
@@ -328,6 +607,7 @@ public class SchedulingIntegrationTests {
 
     /**
      * Helper method to create a museum with 2 shifts
+     * 
      * @return
      */
 
@@ -341,8 +621,10 @@ public class SchedulingIntegrationTests {
         museum = addTimePeriodsToMuseum(museum);
         return museum;
     }
+
     /**
      * helper method to create a museum without shifts
+     * 
      * @author VZ
      * @return
      */
@@ -359,6 +641,7 @@ public class SchedulingIntegrationTests {
 
     /**
      * helper method to add 2 shifts to a museum
+     * 
      * @author VZ
      * @param museum
      * @return

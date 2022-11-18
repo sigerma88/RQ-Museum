@@ -713,7 +713,7 @@ public class TestMuseumService {
         when(scheduleOfTimePeriodRepository.findScheduleOfTimePeriodByScheduleAndTimePeriod(schedule, tp))
                 .thenAnswer((InvocationOnMock invocation) -> sotp);
         // test that we get back a museum
-        testMuseum = museumService.removeMuseumTimePeriodAssociation(MUSEUM_ID, TIMEPERIOD_ID);
+        testMuseum = museumService.deleteMuseumTimePeriodAssociation(MUSEUM_ID, TIMEPERIOD_ID);
         assertNotNull(testMuseum);
         // test that service actually saved museum
         verify(museumRepository, times(1)).save(museum);
@@ -750,7 +750,7 @@ public class TestMuseumService {
                 .thenAnswer((InvocationOnMock invocation) -> null);
 
         try {
-            testMuseum = museumService.removeMuseumTimePeriodAssociation(MUSEUM_ID, TIMEPERIOD_ID);
+            testMuseum = museumService.deleteMuseumTimePeriodAssociation(MUSEUM_ID, TIMEPERIOD_ID);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -771,7 +771,7 @@ public class TestMuseumService {
         String error = "";
         when(museumRepository.findMuseumByMuseumId(invalidId)).thenAnswer((InvocationOnMock invocation) -> null);
         try {
-            museumService.removeMuseumTimePeriodAssociation(invalidId, timePeriodId);
+            museumService.deleteMuseumTimePeriodAssociation(invalidId, timePeriodId);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -798,7 +798,7 @@ public class TestMuseumService {
                 .thenAnswer((InvocationOnMock invocation) -> null);
 
         try {
-            museumService.removeMuseumTimePeriodAssociation(MUSEUM_ID, invalidId);
+            museumService.deleteMuseumTimePeriodAssociation(MUSEUM_ID, invalidId);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }

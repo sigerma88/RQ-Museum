@@ -186,7 +186,7 @@ public class MuseumService {
    * @return
    */
   @Transactional
-  public Museum removeMuseumTimePeriodAssociation(long museumId, long timePeriodId) {
+  public Museum deleteMuseumTimePeriodAssociation(long museumId, long timePeriodId) {
 
     Museum museum = museumRepository.findMuseumByMuseumId(museumId);
     if (museum == null) {
