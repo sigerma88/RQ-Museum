@@ -320,7 +320,7 @@ public class TestLoanService {
     @Test
     public void testCreateLoan() {
         String exceptionMessage = null;
-        Loan createdLoan = null;
+        Loan createdLoan = new Loan();
         Visitor visitor = new Visitor();
         Artwork artwork = new Artwork();
 
@@ -347,8 +347,9 @@ public class TestLoanService {
             exceptionMessage = e.getMessage();
         }
         assertNotNull(createdLoan);
-        assertEquals(createdLoan.getArtwork().getArtworkId(), artwork.getArtworkId());
-        assertEquals(createdLoan.getVisitor().getMuseumUserId(), visitor.getMuseumUserId());   
+        assertEquals(null, createdLoan.getRequestAccepted());
+        assertEquals(artwork.getArtworkId(), createdLoan.getArtwork().getArtworkId());
+        assertEquals(visitor.getMuseumUserId(), createdLoan.getVisitor().getMuseumUserId());   
     }
     
     /**
@@ -575,7 +576,7 @@ public class TestLoanService {
     public void testPatchLoanRefuseRequest() {
         Loan loan = loanService.getLoanById(LOAN_ID);
         Loan patchedLoan = loanService.patchLoanById(loan.getLoanId(), false);
-        assertEquals(true, patchedLoan.getRequestAccepted());
+        assertEquals(false, patchedLoan.getRequestAccepted());
         assertNotNull(loan.getArtwork().getRoom());   
     }
 
