@@ -20,13 +20,13 @@ import ca.mcgill.ecse321.museum.model.Visitor;
 public class LoanService {
 
     @Autowired
-    LoanRepository loanRepository;
+    private LoanRepository loanRepository;
     @Autowired
-    ArtworkRepository artworkRepository;
+    private ArtworkRepository artworkRepository;
     @Autowired 
-    VisitorRepository visitorRepository;
+    private VisitorRepository visitorRepository;
     @Autowired
-    ArtworkService artworkService;
+    private ArtworkService artworkService;
 
     @Transactional
     public Loan getLoanById(Long loanId) {

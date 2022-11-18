@@ -23,16 +23,16 @@ import java.util.Optional;
 public class ArtworkService {
 
   @Autowired
-  ArtworkRepository artworkRepository;
+  private ArtworkRepository artworkRepository;
 
   @Autowired
-  RoomRepository roomRepository;
+  private RoomRepository roomRepository;
 
   @Autowired
-  LoanRepository loanRepository;
+  private LoanRepository loanRepository;
 
   @Autowired
-  RoomService roomService;
+  private RoomService roomService;
 
   /**
    * Method to create an artwork

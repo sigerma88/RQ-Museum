@@ -3,6 +3,8 @@ package ca.mcgill.ecse321.museum.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,13 +20,13 @@ import ca.mcgill.ecse321.museum.model.RoomType;
 public class RoomService {
 
   @Autowired
-  RoomRepository roomRepository;
+  private RoomRepository roomRepository;
 
   @Autowired
-  ArtworkRepository artworkRepository;
+  private ArtworkRepository artworkRepository;
 
   @Autowired
-  ArtworkService artworkService;
+  private ArtworkService artworkService;
 
   /**
    * Method to create a room

@@ -40,5 +40,30 @@ public class LoanIntegrationTest {
         artworkRepository.deleteAll();
         visitorRepository.deleteAll();
     }
+    @Test
+	public void testCreateAndGetLoan() {
+		int id = testCreatePerson();
+		testGetPerson(id);
+	}
+
+	private int testCreatePerson() {
+		ResponseEntity<PersonDto> response = client.postForEntity("/person", new PersonDto("Obi-Wan Kenobi"), PersonDto.class);
+
+		assertNotNull(response);
+		assertEquals(HttpStatus.CREATED, response.getStatusCode(), "Response has correct status");
+		assertNotNull(response.getBody(), "Response has body");
+		assertEquals("Obi-Wan Kenobi", response.getBody().getName(), "Response has correct name");
+		assertTrue(response.getBody().getId() > 0, "Response has valid ID");
+
+		return response.getBody().getId();
+	}
+
+	private void testGetPerson(int id) {
+		ResponseEntity<PersonDto> response = client.getForEntity("/person/" + id, PersonDto.class);
+
+		assertNotNull(response);
+		assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
+		assertNotNull(response.getBody(), "Response has body");
+		assertEquals("Obi-Wan Kenobi", response.getBody().getName(), "Response has correct name");
     
 }
