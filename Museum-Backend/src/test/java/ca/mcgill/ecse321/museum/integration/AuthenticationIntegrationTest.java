@@ -41,9 +41,14 @@ public class AuthenticationIntegrationTest {
     visitorRepository.deleteAll();
   }
 
+  /**
+   * Test to see if a visitor can login
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testLogin() {
-    // TODO
 
     Visitor visitor = createVisitorAndSave();
 
@@ -55,6 +60,12 @@ public class AuthenticationIntegrationTest {
     assertNotNull(response.getBody(), "Response has body");
     assertEquals("logged in", response.getBody(), "Response has correct name");
   }
+
+  /**
+   * Test whe visitor login with wrong password
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testLoginWrongPassword() {
@@ -68,6 +79,12 @@ public class AuthenticationIntegrationTest {
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
   }
 
+  /**
+   * Test login with invalid email
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testLoginInvalidEmail() {
     Visitor visitor = createVisitor();
@@ -80,6 +97,12 @@ public class AuthenticationIntegrationTest {
     assertNotNull(response);
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
   }
+
+  /**
+   * Test login when already logged in
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testLoginWhenLoggedin() {
@@ -99,6 +122,12 @@ public class AuthenticationIntegrationTest {
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Cannot login while logged in");
   }
 
+  /**
+   * Test user logout
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testLogout() {
     VisitorDto visitor = createVisitorAndLogin();
@@ -115,6 +144,12 @@ public class AuthenticationIntegrationTest {
     assertEquals("logged out", response.getBody(), "Response has correct name");
   }
 
+  /**
+   * Test logout when not logged in
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testLogoutWhenNotLoggedin() {
     VisitorDto visitor = createVisitorAndLogin();
@@ -128,9 +163,22 @@ public class AuthenticationIntegrationTest {
         "Response has correct name");
   }
 
+  /**
+   * Create a visitor Dto
+   * 
+   * @param visitor
+   * @return visitorDto
+   */
+
   public VisitorDto createVisitorDto(Visitor visitor) {
     return DtoUtility.convertToDto(visitor);
   }
+
+  /**
+   * Create a visitor
+   * 
+   * @return visitor
+   */
 
   public Visitor createVisitor() {
     Visitor visitor = new Visitor();
@@ -141,11 +189,23 @@ public class AuthenticationIntegrationTest {
     return visitor;
   }
 
+  /**
+   * Create a visitor and save it
+   * 
+   * @return visitor
+   */
+
   public Visitor createVisitorAndSave() {
     Visitor visitor = createVisitor();
     visitorRepository.save(visitor);
     return visitor;
   }
+
+  /**
+   * Create a visitor and login
+   * 
+   * @return visitorDto
+   */
 
   public VisitorDto createVisitorAndLogin() {
     VisitorDto visitor = createVisitorDto(createVisitorAndSave());

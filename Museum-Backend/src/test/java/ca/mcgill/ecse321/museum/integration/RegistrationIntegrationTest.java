@@ -69,6 +69,12 @@ public class RegistrationIntegrationTest {
     managerRepository.deleteAll();
   }
 
+  /**
+   * Test the creation of a visitor
+   * 
+   * @author Kev
+   */
+
   @Test
   public void testRegisterVisitor() {
     VisitorDto visitor = createVisitorDto(
@@ -87,6 +93,12 @@ public class RegistrationIntegrationTest {
         "Response has correct password");
   }
 
+  /**
+   * Test the creation of a visitor with an invalid email
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testRegisterVisitorInvalidEmail() {
     VisitorDto visitor = createVisitorDto(
@@ -101,6 +113,12 @@ public class RegistrationIntegrationTest {
     assertNotNull(response.getBody(), "Response has body");
   }
 
+  /**
+   * Test the creation of a visitor with empty fields
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testRegisterVisitorEmptyFields() {
     VisitorDto visitor = new VisitorDto();
@@ -111,6 +129,12 @@ public class RegistrationIntegrationTest {
     assertNotNull(response);
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
   }
+
+  /**
+   * Test the creation of a visitor with an invalid password
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testRegisterVisitorInvalidPassword() {
@@ -125,6 +149,11 @@ public class RegistrationIntegrationTest {
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
   }
 
+  /**
+   * Test the view visitor
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testViewVisitorProfile() {
@@ -145,8 +174,14 @@ public class RegistrationIntegrationTest {
     assertEquals(visitor.getPassword(), response.getBody().getPassword(),
         "Response has correct password");
 
-
   }
+
+  /**
+   * Test the view visitor without login
+   * 
+   * @author Kevin
+   */
+
 
   @Test
   public void testViewVisitorProfileWithoutLogin() {
@@ -162,6 +197,12 @@ public class RegistrationIntegrationTest {
     assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode(), "Response has correct status");
     assertEquals("You are not logged in.", response.getBody(), "Response has correct message");
   }
+
+  /**
+   * Test the view unauthorized visitor
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testViewUnauthorizedVisitor() {
@@ -184,6 +225,11 @@ public class RegistrationIntegrationTest {
         "Response has correct message");
   }
 
+  /**
+   * Test the update visitor
+   * 
+   * @author Kevin
+   */
   @Test
   public void testUpdateVisitorInformation() {
     VisitorDto visitor = createVisitorAndLogin(
@@ -213,6 +259,12 @@ public class RegistrationIntegrationTest {
         "Response has correct password");
   }
 
+  /**
+   * Test the update visitor without login
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testUpdateVisitorInformationWithoutLogin() {
     Visitor visitor = createVisitorAndSave(
@@ -233,6 +285,12 @@ public class RegistrationIntegrationTest {
     assertNotNull(response.getBody(), "Response has body");
     assertEquals("You are not logged in.", response.getBody(), "Response has correct message");
   }
+
+  /**
+   * Test the update unauthorized visitor
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testUpdateUnauthorizedVisitor() {
@@ -261,6 +319,12 @@ public class RegistrationIntegrationTest {
         "Response has correct message");
   }
 
+  /**
+   * Test the update visitor with invalid email
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testUpdateVisitorInformationWithInvalidEmail() {
     VisitorDto visitor = createVisitorAndLogin(
@@ -282,6 +346,12 @@ public class RegistrationIntegrationTest {
     assertNotNull(response.getBody(), "Response has body");
     assertEquals("Invalid email. ", response.getBody(), "Response has correct message");
   }
+
+  /**
+   * Test the update visitor with invalid password
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testUpdateVisitorInformationWithInvalidPassword() {
@@ -307,6 +377,12 @@ public class RegistrationIntegrationTest {
         response.getBody(), "Response has correct message");
   }
 
+  /**
+   * Test the update visitor with wrong old password
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testUpdateVisitorWithWrongPassword() {
     VisitorDto visitor = createVisitorAndLogin(
@@ -329,6 +405,12 @@ public class RegistrationIntegrationTest {
     assertEquals("Old password incorrect", response.getBody(), "Response has correct message");
   }
 
+  /**
+   * Test register employee
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testEmployeeRegister() {
     ManagerDto manager = createManagerAndLogin(
@@ -350,6 +432,12 @@ public class RegistrationIntegrationTest {
         "Response has correct email");
   }
 
+  /**
+   * Test register employee with invalid name
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testEmployeeRegisterWithInvalidName() {
     ManagerDto manager = createManagerAndLogin(
@@ -368,6 +456,12 @@ public class RegistrationIntegrationTest {
     assertEquals("Name must be in the format of Firstname Lastname", response.getBody(),
         "Response has correct message");
   }
+
+  /**
+   * Test user that are unauthorized to register employee
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testUnauthorizedRegisterEmployee() {
@@ -388,6 +482,12 @@ public class RegistrationIntegrationTest {
         "Response has correct message");
   }
 
+  /**
+   * Test get employee information without login
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testRegisterEmployeeWithoutLogin() {
     HttpEntity<String> entity = new HttpEntity<>(FIRST_VALID_EMPLOYEE_NAME);
@@ -401,6 +501,12 @@ public class RegistrationIntegrationTest {
     assertEquals("You must be logged in to register an employee", response.getBody(),
         "Response has correct message");
   }
+
+  /**
+   * Test edit employee information
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testEditEmployee() {
@@ -430,6 +536,12 @@ public class RegistrationIntegrationTest {
         "Response has correct password");
   }
 
+  /**
+   * Test edit employee information with invalid id
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testEditEmployeeWithInvalidId() {
     EmployeeDto employee = createEmployeeAndLogin(
@@ -455,6 +567,12 @@ public class RegistrationIntegrationTest {
         "Response has correct message");
   }
 
+  /**
+   * Test edit employee information with invalid old password
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testEditEmployeeWithInvalidOldPassword() {
     EmployeeDto employee = createEmployeeAndLogin(
@@ -477,6 +595,12 @@ public class RegistrationIntegrationTest {
     assertNotNull(response.getBody(), "Response has body");
     assertEquals("Old password incorrect", response.getBody(), "Response has correct message");
   }
+
+  /**
+   * Test edit employee information with invalid new password
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testEditEmployeeWithInvalidNewPassword() {
@@ -503,6 +627,12 @@ public class RegistrationIntegrationTest {
         response.getBody(), "Response has correct message");
   }
 
+  /**
+   * Test edit employee information without login
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testEditEmployeeWithoutLogin() {
     EmployeeDto employee = createEmployeeDto(
@@ -525,9 +655,28 @@ public class RegistrationIntegrationTest {
         "Response has correct message");
   }
 
+  /**
+   * Test create an visitorDto
+   * 
+   * @param visitor - the visitorDto to be created
+   * @return the created visitorDto
+   * @author Kevin
+   */
+
   public VisitorDto createVisitorDto(Visitor visitor) {
     return DtoUtility.convertToDto(visitor);
   }
+
+  /**
+   * Test create a visitor
+   * 
+   * @param name - name of the visitor
+   * @param email - email of the visitor
+   * @param password - password of the visitor
+   * 
+   * @return Visitor - the visitor created
+   * @author Kevin
+   */
 
   public Visitor createVisitor(String name, String email, String password) {
     Visitor visitor = new Visitor();
@@ -538,10 +687,26 @@ public class RegistrationIntegrationTest {
     return visitor;
   }
 
+  /**
+   * Test create a visitor and save
+   * 
+   * @param visitor - the visitor to save
+   * @return the saved visitor
+   * @author Kevin
+   */
+
   public Visitor createVisitorAndSave(Visitor visitor) {
     visitorRepository.save(visitor);
     return visitor;
   }
+
+  /**
+   * Test create a visitor and login
+   * 
+   * @author Kevin
+   * @param newVisitor - the visitor to login
+   * @return the logged in visitor
+   */
 
   public VisitorDto createVisitorAndLogin(Visitor newVisitor) {
     VisitorDto visitor = createVisitorDto(createVisitorAndSave(newVisitor));
@@ -554,6 +719,14 @@ public class RegistrationIntegrationTest {
 
     return visitor;
   }
+
+  /**
+   * Test create employeeDto
+   * 
+   * @param employee - employee
+   * @return employeeDto - the employeeDto created
+   * @author Kevin
+   */
 
   public EmployeeDto createEmployeeDto(Employee employee) {
     return DtoUtility.convertToDto(employee);
@@ -569,10 +742,26 @@ public class RegistrationIntegrationTest {
     return employee;
   }
 
+  /**
+   * Create employee and save
+   * 
+   * @param employee - employee to save
+   * @return employee - the saved employee
+   * @author Kevin
+   */
+
   public Employee createEmployeeAndSave(Employee employee) {
     employeeRepository.save(employee);
     return employee;
   }
+
+  /**
+   * Create employee and login
+   * 
+   * @param employee - employee to login
+   * @return EmployeeDto - the logged in employee
+   * @author Kevin
+   */
 
   public EmployeeDto createEmployeeAndLogin(Employee newEmployee) {
     EmployeeDto employee = createEmployeeDto(createEmployeeAndSave(newEmployee));
@@ -586,9 +775,28 @@ public class RegistrationIntegrationTest {
     return employee;
   }
 
+  /**
+   * Test create a managerDTO
+   * 
+   * @param manager - the manager to be created
+   * @return ManagerDto
+   * @author Kevin
+   */
+
   public ManagerDto createManagerDto(Manager manager) {
     return DtoUtility.convertToDto(manager);
   }
+
+  /**
+   * Test create a manager
+   * 
+   * @param name - name of the manager
+   * @param email - email of the manager
+   * @param password - password of the manager
+   * @return Manager
+   * @author Kevin
+   * 
+   */
 
   public Manager createManager(String name, String email, String password) {
     Manager manager = new Manager();
@@ -599,10 +807,28 @@ public class RegistrationIntegrationTest {
     return manager;
   }
 
+  /**
+   * Test create a manager and save
+   * 
+   * @param manager - the manager to save
+   * @return Manager - the saved manager
+   * @author Kevin
+   * 
+   */
+
   public Manager createManagerAndSave(Manager manager) {
     managerRepository.save(manager);
     return manager;
   }
+
+  /**
+   * Test create a manager and login
+   * 
+   * @param newManager - the manager to login
+   * @return managerDto
+   * @author Kevin
+   * 
+   */
 
   public ManagerDto createManagerAndLogin(Manager newManager) {
     ManagerDto manager = createManagerDto(createManagerAndSave(newManager));

@@ -20,6 +20,11 @@ import ca.mcgill.ecse321.museum.dto.EmployeeDto;
 import ca.mcgill.ecse321.museum.dto.VisitorDto;
 import ca.mcgill.ecse321.museum.service.RegistrationService;
 
+/**
+ * RESTful API to handle registration
+ * 
+ * @author Kevin
+ */
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("api/profile")
@@ -63,8 +68,12 @@ public class RegistrationRestController {
   }
 
   /**
-  * 
-  */
+   * POST method to create a new employee account
+   * 
+   * @param id - long (employee id)
+   * @return employeeDto
+   */
+
   @GetMapping(value = "/visitor/{id}", produces = "application/json")
   public ResponseEntity<?> viewVisitorInformation(HttpServletRequest request,
       @PathVariable long id) {
@@ -88,6 +97,13 @@ public class RegistrationRestController {
     }
   }
 
+  /**
+   * PUT method to update visitor information
+   * 
+   * @param Map<String,String> - map containing oldPassword, newPassword, email and name
+   * @return visitorDto
+   */
+
   @PutMapping(value = "/visitor/edit/{id}", produces = "application/json")
   public ResponseEntity<?> editVisitorInformation(HttpServletRequest request, @PathVariable long id,
       @RequestBody Map<String, String> updatedCredential) {
@@ -110,6 +126,12 @@ public class RegistrationRestController {
   }
 
 
+  /**
+   * GET method to view employee information
+   * 
+   * @param id - long (employee id)
+   * @return employeeDto
+   */
   @GetMapping(value = {"/employee/{id}", "/{id}/"}, produces = "application/json")
   public ResponseEntity<?> getEmployee(HttpServletRequest request, @PathVariable("id") long id) {
     try {
@@ -133,6 +155,13 @@ public class RegistrationRestController {
     }
   }
 
+  /**
+   * POST method to create a new employee account
+   * 
+   * @param employeeName - Name of new employee
+   * @return employeeDto
+   */
+
   @PostMapping(value = "employee/register", produces = "application/json")
   public ResponseEntity<?> register(HttpServletRequest request, @RequestBody String employeeName) {
     try {
@@ -154,6 +183,13 @@ public class RegistrationRestController {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
+
+  /**
+   * PUT method to update employee information
+   * 
+   * @param Map<String,String> - map containing oldPassword, newPassword
+   * @return employeeDto
+   */
 
   @PostMapping(value = "employee/edit/{id}", produces = "application/json")
   public ResponseEntity<?> editEmployeeInformation(HttpServletRequest request,

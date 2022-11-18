@@ -167,6 +167,12 @@ public class TestRegistrationService {
         .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
   }
 
+  /**
+   * Test that a visitor can be created successfully.
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void createValidVisitor() {
     VisitorDto visitorDto = null;
@@ -187,6 +193,12 @@ public class TestRegistrationService {
     assertEquals("lewis", visitorDto.getName());
   }
 
+  /**
+   * Test that a visitor cannot be created with null fields.
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testCreateVisitorWithNullFields() {
     Visitor visitor = new Visitor();
@@ -202,6 +214,12 @@ public class TestRegistrationService {
     }
   }
 
+  /**
+   * Test that a visitor cannot be created with an invalid email.
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testCreateVisitorWithInvalidEmail() {
     Visitor visitor = new Visitor();
@@ -215,6 +233,12 @@ public class TestRegistrationService {
       assertEquals("Invalid email. ", e.getMessage());
     }
   }
+
+  /**
+   * Test that a visitor cannot be created with an invalid password.
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testCreateVisitorWithInvalidPassword() {
@@ -231,6 +255,12 @@ public class TestRegistrationService {
           e.getMessage());
     }
   }
+
+  /**
+   * Test that a visitor cannot be created with an invalid email.
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testCreateVisitorWithExistingEmail() {
@@ -259,20 +289,11 @@ public class TestRegistrationService {
     }
   }
 
-  // @Test
-  // public void testRegisterVisitorWithExistingUsername() {
-  // try {
-  // Visitor visitor = new Visitor();
-  // visitor.setEmail("test@mail.com");
-  // visitor.setPassword(VALID_PASSWORD);
-  // visitor.setName(FIRST_VALID_VISITOR_NAME);
-  // registrationService.createVisitor(visitor.getEmail(), visitor.getPassword(),
-  // visitor.getName());
-  // } catch (Exception e) {
-  // assertEquals("Please choose another username. " + FIRST_VALID_VISITOR_NAME
-  // + " already exists. ", e.getMessage());
-  // }
-  // }
+  /**
+   * Test that getting an existing visitor.
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testGetVisitorPersonalInformation() {
@@ -288,6 +309,12 @@ public class TestRegistrationService {
     assertEquals(FIRST_VISITOR_ID, visitor.getMuseumUserId());
   }
 
+  /**
+   * Test that getting a non-existing visitor.
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testGetVisitorPersonalInformationWithInvalidId() {
     try {
@@ -296,6 +323,12 @@ public class TestRegistrationService {
       assertEquals("Account was not found in out system. ", e.getMessage());
     }
   }
+
+  /**
+   * Test that editing an existing employee.
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testEditVisitor() {
@@ -316,6 +349,12 @@ public class TestRegistrationService {
     assertEquals(newUserName, visitor.getName());
   }
 
+  /**
+   * Test that editing a non-existing employee.
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testEditVisitorWithInvalidId() {
     try {
@@ -325,6 +364,12 @@ public class TestRegistrationService {
     }
   }
 
+  /**
+   * Test that editing an employee with an invalid email.
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testEditVisitorWithInvalidEmail() {
     try {
@@ -333,6 +378,12 @@ public class TestRegistrationService {
       assertEquals("Invalid email. ", e.getMessage());
     }
   }
+
+  /**
+   * Test that editing an employee to an email that already exists.
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testEditVisitorExistingEmail() {
@@ -344,6 +395,12 @@ public class TestRegistrationService {
           e.getMessage());
     }
   }
+
+  /**
+   * Test that editing an employee with an invalid new password.
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testEditVisitorWithInvalidNewPassword() {
@@ -357,6 +414,12 @@ public class TestRegistrationService {
     }
   }
 
+  /**
+   * Test that editing an employee with an invalid old password.
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testEditVisitorWithWrongOldPassword() {
     try {
@@ -366,6 +429,12 @@ public class TestRegistrationService {
       assertEquals("Old password incorrect", e.getMessage());
     }
   }
+
+  /**
+   * Test that create new employee.
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testCreateEmployee() {
@@ -382,6 +451,12 @@ public class TestRegistrationService {
     assertEquals("lando.norris@museum.ca", employee.getEmail());
   }
 
+  /**
+   * Test that create employee with invalid name.
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testCreateEmployeeWithInvalidName() {
     try {
@@ -392,6 +467,12 @@ public class TestRegistrationService {
       assertEquals("Name must be in the format of Firstname Lastname", e.getMessage());
     }
   }
+
+  /**
+   * Test that generate employee email.
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testCreateEmployeeEmail() {
@@ -406,6 +487,12 @@ public class TestRegistrationService {
 
     assertEquals("sergio.perez1@museum.ca", employee.getEmail());
   }
+
+  /**
+   * Test that edit employee.
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testEditEmployee() {
@@ -422,6 +509,12 @@ public class TestRegistrationService {
     assertEquals(newPassword, employee.getPassword());
   }
 
+  /**
+   * Test that get employee information.
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testGetEmployeePersonalInformation() {
     Employee employee = new Employee();
@@ -437,6 +530,12 @@ public class TestRegistrationService {
 
   }
 
+  /**
+   * Test that get employee information with invalid id.
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testGetEmployeePersonalInformationWithInvalidId() {
     try {
@@ -446,6 +545,11 @@ public class TestRegistrationService {
     }
   }
 
+  /**
+   * Test that edit employee with invalid id.
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testEditEmployeeWithInvalidId() {
@@ -455,6 +559,12 @@ public class TestRegistrationService {
       assertEquals("Account was not found in the system. ", e.getMessage());
     }
   }
+
+  /**
+   * Test that edit employee with invalid new password.
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testEditEmployeeWithInvalidNewPassword() {

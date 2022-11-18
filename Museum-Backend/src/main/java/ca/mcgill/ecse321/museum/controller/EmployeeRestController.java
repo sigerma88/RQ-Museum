@@ -17,6 +17,7 @@ import ca.mcgill.ecse321.museum.controller.utilities.AuthenticationUtility;
 import ca.mcgill.ecse321.museum.dto.EmployeeDto;
 import ca.mcgill.ecse321.museum.service.EmployeeService;
 
+
 @CrossOrigin(origins = "*")
 @RequestMapping("api/employee")
 @RestController

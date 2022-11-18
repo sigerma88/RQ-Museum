@@ -12,12 +12,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.museum.controller.utilities.AuthenticationUtility;
 import ca.mcgill.ecse321.museum.dto.MuseumUserDto;
-import ca.mcgill.ecse321.museum.dto.VisitorDto;
 import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Manager;
 import ca.mcgill.ecse321.museum.model.MuseumUser;
 import ca.mcgill.ecse321.museum.model.Visitor;
 import ca.mcgill.ecse321.museum.service.AuthenticationService;
+
+/**
+ * RESTful API to handle authentication
+ * 
+ * @author Kevin
+ */
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -25,6 +30,14 @@ import ca.mcgill.ecse321.museum.service.AuthenticationService;
 public class AuthenticationController {
   @Autowired
   private AuthenticationService authenticationService;
+
+  /**
+   * POST to login a user
+   * 
+   * @param user - MuseumUserDto
+   * @return if the user was logged in (success)
+   * @author Kevin
+   */
 
   @PostMapping("/login")
   public ResponseEntity<?> login(HttpServletRequest request,
@@ -59,6 +72,14 @@ public class AuthenticationController {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
+
+  /**
+   * POST to logout a user
+   * 
+   * @param user - MuseumUserDto
+   * @return if the user was logged out (success)
+   * @author Kevin
+   */
 
 
   @PostMapping("/logout")

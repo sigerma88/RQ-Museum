@@ -20,6 +20,10 @@ import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Manager;
 import ca.mcgill.ecse321.museum.model.Visitor;
 
+/**
+ * This class tests the Authentication Service
+ * 
+ */
 @ExtendWith(MockitoExtension.class)
 public class TestAuthenticationService {
   @Mock
@@ -102,6 +106,11 @@ public class TestAuthenticationService {
   }
 
 
+  /**
+   * This test checks if the visitor can login with valid credentials
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testAuthenticateValidMuseumUser() {
@@ -115,6 +124,12 @@ public class TestAuthenticationService {
     }
   }
 
+  /**
+   * This test checks if the visitor can login with invalid credentials
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testAuthenticateInvalidPasswordMuseumUser() {
     assertThrows(Exception.class, () -> {
@@ -124,6 +139,12 @@ public class TestAuthenticationService {
       authenticationService.authenticateUser(visitorDto.getEmail(), visitorDto.getPassword());
     });
   }
+
+  /**
+   * This test checks if the visitor can login with invalid credentials
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testAuthenticateInvalidEmailMuseumUser() {
@@ -135,6 +156,12 @@ public class TestAuthenticationService {
     });
   }
 
+  /**
+   * This test checks if the employee can login with null credentials
+   * 
+   * @author Kevin
+   */
+
   @Test
   public void testNoEmailEntered() {
     assertThrows(Exception.class, () -> {
@@ -144,6 +171,12 @@ public class TestAuthenticationService {
       authenticationService.authenticateUser(visitorDto.getEmail(), visitorDto.getPassword());
     });
   }
+
+  /**
+   * This test checks if the employee can login with no password entered
+   * 
+   * @author Kevin
+   */
 
   @Test
   public void testNoPasswordEntered() {
