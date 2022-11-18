@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.museum.dto;
 
 public class LoanDto {
 
+    private Long loanId;
     private Boolean requestAccepted;
     private VisitorDto visitorDto;
     private ArtworkDto artworkDto;
@@ -21,12 +22,16 @@ public class LoanDto {
         visitorDto = aVisitorDto;
         artworkDto = aArtworkDto;
     }
+
+    public Long getLoanId() {
+        return loanId; 
+    }
     
     public Boolean getRequestAccepted() {
         return requestAccepted;
     }
 
-    public VisitorDto getVisitor() {
+    public VisitorDto getVisitorDto() {
         return visitorDto;
     }
 

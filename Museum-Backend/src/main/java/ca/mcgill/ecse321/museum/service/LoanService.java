@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
 import ca.mcgill.ecse321.museum.dao.LoanRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
+import ca.mcgill.ecse321.museum.dto.VisitorDto;
+import ca.mcgill.ecse321.museum.dto.ArtworkDto;
 import ca.mcgill.ecse321.museum.model.Artwork;
 import ca.mcgill.ecse321.museum.model.Loan;
 import ca.mcgill.ecse321.museum.model.Visitor;
@@ -40,10 +42,10 @@ public class LoanService {
     }
 
     @Transactional
-    public Loan createLoan(Loan loan, Long artworkId, Long visitorId) {
+    public Loan createLoan(Boolean requestAccepted, ArtworkDto artworkDto, VisitorDto visitorDto) {
         // Error handling associations
-        Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
-        Visitor visitor = visitorRepository.findVisitorByMuseumUserId(visitorId);
+        Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkDto.getArtworkId());
+        Visitor visitor = visitorRepository.findVisitorByMuseumUserId(visitorDto.getUserId());
         if (artwork == null) {
             throw new IllegalArgumentException("Artwork does not exist");
         }
@@ -56,14 +58,18 @@ public class LoanService {
         if (visitor == null) {
             throw new IllegalArgumentException("Visitor does not exist");
         }
+        
+
 
         // Error handling loan attributes
-        if (loan.getRequestAccepted() != null) {
-            throw new IllegalArgumentException("Loan getRequestAccepted must be null because only an employee can define ");
+        if (requestAccepted != null) {
+            throw new IllegalArgumentException("Loan getRequestAccepted must be null because only an employee can define");
         }
-        if (loanRepository.findLoanByArtworkAndVisitor(artwork, visitor) != null) {
+        if (loanRepository.findLoanByArtworkIdAndVisitorId(artwork.getArtworkId(), visitor.getMuseumUserId()) != null) {
             throw new IllegalArgumentException("Cannot create a duplicate loan request");
         }
+        Loan loan = new Loan();
+        loan.setRequestAccepted(requestAccepted);
         loan.setArtwork(artwork);
         loan.setVisitor(visitor);
         Loan persistedLoan = loanRepository.save(loan);

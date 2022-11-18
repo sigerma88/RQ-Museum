@@ -77,7 +77,7 @@ public class DtoUtility {
    * @author Zahra
    * @author Siger
    */
-  static ArtworkDto convertToDto(Artwork artwork) {
+  public static ArtworkDto convertToDto(Artwork artwork) {
     // Error handling
     if (artwork == null) {
       throw new IllegalArgumentException("There is no such artwork");

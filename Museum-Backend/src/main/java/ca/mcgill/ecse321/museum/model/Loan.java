@@ -71,7 +71,7 @@ public class Loan {
     return wasSet;
   }
 
-  public boolean setRequestAccepted(boolean aRequestAccepted) {
+  public Boolean setRequestAccepted(Boolean aRequestAccepted) {
     boolean wasSet = false;
     requestAccepted = aRequestAccepted;
     wasSet = true;

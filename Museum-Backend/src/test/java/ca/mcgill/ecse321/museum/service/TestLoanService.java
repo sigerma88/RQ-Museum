@@ -23,12 +23,15 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
+import ca.mcgill.ecse321.museum.controller.DtoUtility;
 import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
 import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
 import ca.mcgill.ecse321.museum.dao.LoanRepository;
 import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
 import ca.mcgill.ecse321.museum.dao.TimePeriodRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
+import ca.mcgill.ecse321.museum.dto.ArtworkDto;
+import ca.mcgill.ecse321.museum.dto.VisitorDto;
 import ca.mcgill.ecse321.museum.dao.ScheduleOfTimePeriodRepository;
 import ca.mcgill.ecse321.museum.model.Artwork;
 import ca.mcgill.ecse321.museum.model.Employee;
@@ -64,12 +67,18 @@ public class TestLoanService {
     private static final long SECOND_LOAN_ID = 2;
     private static final boolean SECOND_LOAN_REQUESTACCEPTED = false;
 
-    private static final long NONE_EXISTING_LOAN_ID = 3;
+    // Loan that should fail because associations with bad artwork or visitor
+    private static final long THIRD_LOAN_ID = 3;
+    private static final boolean THIRD_LOAN_REQUESTACCEPTED = true; 
+
+    private static final long NONE_EXISTING_LOAN_ID = 4;
 
     private static final long VISITOR_ID = 1;
     private static final String VISITOR_EMAIL = "IAMAVISITOR@email.com";
     private static final String VISITOR_NAME = "Steve";
     private static final String VISITOR_PASSWORD = "Password123";
+
+    private static final long NONE_EXISTING_VISITOR_ID = 2;
 
     // Artwork that can't be loaned
     private static final long ARTWORK_ID =1;
@@ -97,6 +106,8 @@ public class TestLoanService {
     private static final boolean THIRD_ARTWORK_ISONLOAN = true; 
     private static final double THIRD_ARTWORK_LOANFEE = 69.69;
     private static final String THIRD_ARTWORK_IMAGE = "bruuuuuuuuuuuuuuuuuh";
+
+    private static final long NONE_EXISTING_ARTWORK_ID = 4;
 
     @BeforeEach
     public void setMockOutput() {
@@ -140,6 +151,21 @@ public class TestLoanService {
                 loan2.setVisitor(visitorRepository.findVisitorByMuseumUserId(VISITOR_ID));
                 loan2.setArtwork(artworkRepository.findArtworkByArtworkId(SECOND_ARTWORK_ID));
                 return loan2;
+            } else {
+                return null;
+            }
+        });
+
+        lenient().when(loanRepository.findLoanByLoanId(THIRD_LOAN_ID)).thenAnswer((InvocationOnMock invocation) ->
+        {
+            if (invocation.getArgument(0).equals(THIRD_LOAN_ID)) {
+
+                Loan loan3 = new Loan();
+                loan3.setLoanId(THIRD_LOAN_ID);
+                loan3.setRequestAccepted(THIRD_LOAN_REQUESTACCEPTED);
+                loan3.setVisitor(visitorRepository.findVisitorByMuseumUserId(NONE_EXISTING_VISITOR_ID));
+                loan3.setArtwork(artworkRepository.findArtworkByArtworkId(NONE_EXISTING_ARTWORK_ID));
+                return loan3;
             } else {
                 return null;
             }
@@ -251,8 +277,8 @@ public class TestLoanService {
         Loan loan = loanService.getLoanById(LOAN_ID);
         assertEquals(LOAN_ID, loan.getLoanId());
         assertEquals(LOAN_REQUESTACCEPTED, loan.getRequestAccepted());
-        assertEquals(VISITOR_ID, loan.getVisitor());
-        assertEquals(SECOND_ARTWORK_ID, loan.getArtwork());
+        assertEquals(VISITOR_ID, loan.getVisitor().getMuseumUserId());
+        assertEquals(SECOND_ARTWORK_ID, loan.getArtwork().getArtworkId());
     }
 
     /**
@@ -279,9 +305,77 @@ public class TestLoanService {
     @Test
     public void testGetAllLoans() {
         List<Loan> loans = loanService.getAllLoans();
-        
+        assertEquals(2, loans.size());
     }
+    
+    /**
+     * Test method for creating a loan with invalid requestAccepted status at creation
+     * 
+     * @author Eric
+     */
+    @Test
+    public void testCreateLoanWithTrueRequestAccepted() {
+        String exceptionMessage = null;
+        try {
+            Visitor visitor = new Visitor();
+            visitor.setMuseumUserId(VISITOR_ID);
+            visitor.setName(VISITOR_NAME);
+            visitor.setEmail(VISITOR_EMAIL);
+            visitor.setPassword(VISITOR_PASSWORD);
+            VisitorDto visitorDto = DtoUtility.convertToDto(visitor);
 
+            Artwork artwork = new Artwork();
+            artwork.setArtworkId(SECOND_ARTWORK_ID);
+            artwork.setArtist(SECOND_ARTWORK_ARTIST);
+            artwork.setName(SECOND_ARTWORK_NAME);
+            artwork.setImage(SECOND_ARTWORK_IMAGE);
+            artwork.setLoanFee(SECOND_ARTWORK_LOANFEE);
+            artwork.setIsOnLoan(SECOND_ARTWORK_ISONLOAN);
+            artwork.setIsAvailableForLoan(SECOND_ARTWORK_ISAVAILABLEFORLOAN);
+            ArtworkDto artworkDto = DtoUtility.convertToDto(artwork);
+
+            Loan createdLoan = loanService.createLoan(true, artworkDto, visitorDto);
+        } catch (IllegalArgumentException e) {
+            exceptionMessage = e.getMessage();
+        }
+        assertEquals("Loan getRequestAccepted must be null because only an employee can define", exceptionMessage);
+    }
+    
+    /**
+     * Test method for creating a loan that was already created by a visitor for the same artwork
+     * 
+     * @author Eric
+     */
+    @Test
+    public void testCreateDuplicateLoan() {
+        String exceptionMessage = null;
+        try {
+            Visitor visitor = new Visitor();
+            visitor.setMuseumUserId(VISITOR_ID);
+            visitor.setName(VISITOR_NAME);
+            visitor.setEmail(VISITOR_EMAIL);
+            visitor.setPassword(VISITOR_PASSWORD);
+            VisitorDto visitorDto = DtoUtility.convertToDto(visitor);
+            visitorRepository.save(visitor);
+
+            Artwork artwork = new Artwork();
+            artwork.setArtworkId(SECOND_ARTWORK_ID);
+            artwork.setArtist(SECOND_ARTWORK_ARTIST);
+            artwork.setName(SECOND_ARTWORK_NAME);
+            artwork.setImage(SECOND_ARTWORK_IMAGE);
+            artwork.setLoanFee(SECOND_ARTWORK_LOANFEE);
+            artwork.setIsOnLoan(SECOND_ARTWORK_ISONLOAN);
+            artwork.setIsAvailableForLoan(SECOND_ARTWORK_ISAVAILABLEFORLOAN);
+            ArtworkDto artworkDto = DtoUtility.convertToDto(artwork);
+            artworkRepository.save(artwork);
+
+            Loan createdLoan = loanService.createLoan(null, artworkDto, visitorDto);
+            Loan duplicateLoan = loanService.createLoan(null, artworkDto, visitorDto);
+        } catch (IllegalArgumentException e) {
+            exceptionMessage = e.getMessage();
+        }
+        assertEquals("Cannot create a duplicate loan request", exceptionMessage);
+    }
 
 
 

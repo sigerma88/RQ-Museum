@@ -100,21 +100,21 @@ public class LoanRestController {
      * @return
      */
     @PostMapping(
-        value = { "/postLoan/{ArtworkId}/{VisitorId}", "/postLoan/{ArtworkId}/{VisitorId}/" },
+        value = { "/postLoan", "/postLoan/" },
         consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
         produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<?> postLoan(@RequestBody Loan loan, @PathVariable Long artworkId, @PathVariable Long visitorId) {
+    public ResponseEntity<?> postLoan(@RequestBody LoanDto loanDto) {
         try {
-            Loan persistedLoan = loanService.createLoan(loan, artworkId, visitorId);
+            Loan persistedLoan = loanService.createLoan(loanDto.getRequestAccepted(), loanDto.getArtworkDto(), loanDto.getVisitorDto());
             
-            LoanDto loanDto = DtoUtility.convertToDto(persistedLoan);
+            LoanDto persistedLoanDto = DtoUtility.convertToDto(persistedLoan);
 
             // Send email notification to visitor that the request was successful
             // TODO
 
 
 
-            return ResponseEntity.ok(loanDto);
+            return ResponseEntity.ok(persistedLoanDto);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -143,5 +143,4 @@ public class LoanRestController {
         ArtworkDto artworkDto = new ArtworkDto();
         return artworkDto;
     }
-
 }
