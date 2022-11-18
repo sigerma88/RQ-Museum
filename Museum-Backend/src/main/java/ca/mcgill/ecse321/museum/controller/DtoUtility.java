@@ -68,7 +68,7 @@ public class DtoUtility {
    * @return ticket DTO
    * @author Zahra
    */
-  static TicketDto convertToDto(Ticket ticket) {
+  public static TicketDto convertToDto(Ticket ticket) {
     if (ticket == null) {
       throw new IllegalArgumentException("There is no such ticket");
     }

@@ -80,16 +80,16 @@ public class TicketService {
    * Feature 6
    */
   @Transactional
-  public List<Ticket> getTicketsByVisitor(Visitor visitor) {
+  public List<Ticket> getTicketsByVisitor(long visitorId) {
 
-    if (visitor == null) {
+    if (visitorRepository.findVisitorByMuseumUserId(visitorId) == null) {
       throw new IllegalArgumentException("Visitor doesn't exist");
     }
     List<Ticket> allTicketsOfVisitor = new ArrayList<>();
     List<Ticket> allTickets = toList(ticketRepository.findAll());
     for (Ticket ticket : allTickets) {
 
-      if (ticket != null && ticket.getVisitor().equals(visitor)) {
+      if (ticket != null && ticket.getVisitor().getMuseumUserId() == visitorId) {
         allTicketsOfVisitor.add(ticket);
       }
 
