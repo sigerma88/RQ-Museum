@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class ArtworkService {
@@ -263,6 +264,41 @@ public class ArtworkService {
 
     // Check if artwork was deleted
     return getArtwork(artworkId) == null;
+  }
+
+  // FR3 Function which removes artwork from room
+  /**
+   * Method to remove artwork from a specific room
+   *
+   * @param artworkId - ID of artwork we want to remove
+   * @return The artwork we removed
+   * @author kieyanmamiche
+   */
+  @Transactional
+  public Artwork removeArtworkFromRoom(long artworkId){
+    // Find artwork
+    Optional<Artwork> artworkOptional = artworkRepository.findById(artworkId);
+
+    // corresponds to error
+    if (artworkOptional == null){
+      throw new IllegalArgumentException("Artwork does not exist");
+    }
+    if (artworkOptional.isPresent() == false){
+      throw new IllegalArgumentException("Artwork does not exist");
+    }
+    Artwork artwork = artworkOptional.get();
+
+    // decrement number of artworks in room by 1
+    Room room = artwork.getRoom();
+    if (room != null){
+      roomService.changeCurrentNumberOfArtwork(room.getRoomId(), room.getCurrentNumberOfArtwork() - 1);
+    }
+
+    // Update room
+    artwork.setRoom(null);
+    artworkRepository.save(artwork);
+
+    return artwork;
   }
 
   /**

@@ -79,12 +79,12 @@ public class LoanRestController {
     public ResponseEntity<?> patchLoan(@RequestBody LoanDto loanDto) {
         try {
             Loan patchedLoan = loanService.patchLoanById(loanDto.getLoanId(), loanDto.getRequestAccepted());
-            LoanDto loanDto = DtoUtility.convertToDto(patchedLoan);
+            LoanDto returnDto = DtoUtility.convertToDto(patchedLoan);
 
             // TODO: Send email to user about the status of their loan request
 
             // TODO: Update the room of the artwork to null
-            return ResponseEntity.ok(patchedLoan);
+            return ResponseEntity.ok(returnDto);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

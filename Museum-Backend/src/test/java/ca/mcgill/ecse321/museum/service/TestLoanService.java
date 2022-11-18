@@ -62,6 +62,9 @@ public class TestLoanService {
     @InjectMocks
     private LoanService loanService;
 
+    @InjectMocks
+    private ArtworkService artworkService;
+
     private static final long LOAN_ID = 1;
     private static final boolean LOAN_REQUESTACCEPTED = false;
 
@@ -548,6 +551,19 @@ public class TestLoanService {
             exceptionMessage = e.getMessage();
         }
         assertEquals("Cannot create a loan request for an artwork that is on loan", exceptionMessage);
+    }
+
+    /**
+     * Test method for patching a loan to accept the loan request
+     * 
+     * @author Eric
+     */
+    @Test
+    public void testPatchLoanAcceptRequest() {
+        Loan loan = loanService.getLoanById(LOAN_ID);
+        Loan patchedLoan = loanService.patchLoanById(loan.getLoanId(), true);
+        assertEquals(true, patchedLoan.getRequestAccepted());
+        assertNull(loan.getArtwork().getRoom());   
     }
 
 

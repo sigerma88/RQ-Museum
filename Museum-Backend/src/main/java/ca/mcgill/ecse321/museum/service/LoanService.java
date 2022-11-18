@@ -87,12 +87,12 @@ public class LoanService {
         if (loan == null) {
             throw new IllegalArgumentException("Loan does not exist");
         }
+        // If the patch is to accept the loan request, the artwork must be removed from the room it's in
         loan.setRequestAccepted(requestAccepted);
         if (requestAccepted == true) {
-            artworkService.
+            artworkService.removeArtworkFromRoom(loan.getArtwork().getArtworkId());
         }
-
-
+        loanRepository.save(loan);
         return loan;
     }
 
