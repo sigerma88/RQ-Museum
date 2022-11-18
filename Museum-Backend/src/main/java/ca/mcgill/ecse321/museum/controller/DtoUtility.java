@@ -6,12 +6,14 @@ import ca.mcgill.ecse321.museum.model.Loan;
 import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.model.Schedule;
+import ca.mcgill.ecse321.museum.model.TimePeriod;
 import ca.mcgill.ecse321.museum.model.Visitor;
 import ca.mcgill.ecse321.museum.dto.ArtworkDto;
 import ca.mcgill.ecse321.museum.dto.EmployeeDto;
 import ca.mcgill.ecse321.museum.dto.MuseumDto;
 import ca.mcgill.ecse321.museum.dto.RoomDto;
 import ca.mcgill.ecse321.museum.dto.ScheduleDto;
+import ca.mcgill.ecse321.museum.dto.TimePeriodDto;
 import ca.mcgill.ecse321.museum.dto.VisitorDto;
 import ca.mcgill.ecse321.museum.dto.LoanDto;;
 
@@ -50,7 +52,22 @@ public class DtoUtility {
     ScheduleDto scheduleDto = convertToDto(employee.getSchedule());
 
     // Convert employee to DTO
-    return new EmployeeDto(employee.getMuseumUserId(), employee.getEmail(), employee.getName(), employee.getPassword(), scheduleDto);
+    return new EmployeeDto(employee.getMuseumUserId(), employee.getEmail(), employee.getName(), employee.getPassword(),
+        scheduleDto);
+  }
+
+  /**
+   * Method to convert a time period to a DTO
+   *
+   * @param timePeriod - TimePeriod
+   * @return timePeriod DTO
+   * @author Victor
+   */
+  static TimePeriodDto convertToDto(TimePeriod timePeriod) {
+    if (timePeriod == null) {
+      throw new IllegalArgumentException("There is no such time period");
+    }
+    return new TimePeriodDto(timePeriod.getTimePeriodId(), timePeriod.getStartDate(), timePeriod.getEndDate());
   }
 
   /**
@@ -90,7 +107,8 @@ public class DtoUtility {
     }
 
     // Convert artwork to DTO
-    return new ArtworkDto(artwork.getArtworkId(), artwork.getName(), artwork.getArtist(), artwork.getIsAvailableForLoan(), artwork.getLoanFee(), artwork.getImage(), artwork.getIsOnLoan(), roomDto);
+    return new ArtworkDto(artwork.getArtworkId(), artwork.getName(), artwork.getArtist(),
+        artwork.getIsAvailableForLoan(), artwork.getLoanFee(), artwork.getImage(), artwork.getIsOnLoan(), roomDto);
   }
 
   /**
@@ -110,7 +128,8 @@ public class DtoUtility {
     MuseumDto museumDto = convertToDto(room.getMuseum());
 
     // Convert room to DTO
-    return new RoomDto(room.getRoomId(), room.getRoomName(), room.getRoomType(), room.getCurrentNumberOfArtwork(), museumDto);
+    return new RoomDto(room.getRoomId(), room.getRoomName(), room.getRoomType(), room.getCurrentNumberOfArtwork(),
+        museumDto);
   }
 
   /**
@@ -119,6 +138,7 @@ public class DtoUtility {
    * @param museum - Museum
    * @return museum DTO
    * @author Siger
+   * @author Victor
    */
   static MuseumDto convertToDto(Museum museum) {
     // Error handling
@@ -142,7 +162,7 @@ public class DtoUtility {
    */
   public static VisitorDto convertToDto(Visitor visitor) {
     if (visitor == null) {
-      throw new IllegalArgumentException("There is no such employee");
+      throw new IllegalArgumentException("There is no such visitor");
     }
 
     VisitorDto visitorDto = new VisitorDto();

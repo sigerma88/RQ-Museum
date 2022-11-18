@@ -43,6 +43,7 @@ public class EmployeeRepositoryTests {
     Schedule schedule = new Schedule();
 
     //associate employee to schedule
+
     employee.setSchedule(schedule);
 
     //save employee

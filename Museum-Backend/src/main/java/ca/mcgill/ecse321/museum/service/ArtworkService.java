@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
 import ca.mcgill.ecse321.museum.dao.LoanRepository;
-import ca.mcgill.ecse321.museum.dao.RoomRepository;
 import ca.mcgill.ecse321.museum.model.Artwork;
 import ca.mcgill.ecse321.museum.model.Loan;
 import ca.mcgill.ecse321.museum.model.Room;
@@ -37,18 +36,19 @@ public class ArtworkService {
   /**
    * Method to create an artwork
    * 
-   * @param name - name of the artwork
-   * @param artist - artist of the artwork
+   * @param name               - name of the artwork
+   * @param artist             - artist of the artwork
    * @param isAvailableForLoan - availability of the artwork
-   * @param loanFee - loan fee of the artwork
-   * @param image - image of the artwork
-   * @param isOnLoan - loan status of the artwork
-   * @param room - room of the artwork
+   * @param loanFee            - loan fee of the artwork
+   * @param image              - image of the artwork
+   * @param isOnLoan           - loan status of the artwork
+   * @param room               - room of the artwork
    * @return artwork
    * @author Siger
    */
   @Transactional
-  public Artwork createArtwork(String name, String artist, Boolean isAvailableForLoan, Double loanFee, String image, Boolean isOnLoan, Room room) {
+  public Artwork createArtwork(String name, String artist, Boolean isAvailableForLoan, Double loanFee, String image,
+      Boolean isOnLoan, Room room) {
     // Error handling
     if (name == null || name.trim().length() == 0) {
       throw new IllegalArgumentException("Artwork name cannot be empty");
@@ -70,7 +70,9 @@ public class ArtworkService {
       throw new IllegalArgumentException("Image cannot be empty");
     }
 
-    if (isOnLoan == true) {
+    if (isOnLoan == null) {
+      throw new IllegalArgumentException("Artwork must be either on loan or not on loan");
+    } else if (isOnLoan == true) {
       if (room != null) {
         throw new IllegalArgumentException("Room must be null if artwork is on loan");
       }
@@ -79,8 +81,6 @@ public class ArtworkService {
     } else if (isOnLoan == false && room != null) {
       // Update room artwork count
       roomService.changeCurrentNumberOfArtwork(room.getRoomId(), room.getCurrentNumberOfArtwork() + 1);
-    } else {
-      throw new IllegalArgumentException("Artwork must be either on loan or not on loan");
     }
 
     Artwork artwork = new Artwork();
@@ -90,7 +90,8 @@ public class ArtworkService {
     artwork.setLoanFee(loanFee);
     artwork.setImage(image);
     artwork.setIsOnLoan(isOnLoan);
-    if (room != null) artwork.setRoom(room);
+    if (room != null)
+      artwork.setRoom(room);
     artworkRepository.save(artwork);
     return artwork;
   }
@@ -167,6 +168,10 @@ public class ArtworkService {
     return artworksWithAvailability;
   }
 
+  public double getArtworkLoanFee(Artwork artwork) {
+    return artwork.getLoanFee();
+  }
+
 
   /**
    * Method to
@@ -187,9 +192,9 @@ public class ArtworkService {
    * Method to edit an artwork's information and image
    * 
    * @param artworkId - ID of artwork to be edited
-   * @param name - name of the artwork
-   * @param artist - artist of the artwork
-   * @param image - image of the artwork
+   * @param name      - name of the artwork
+   * @param artist    - artist of the artwork
+   * @param image     - image of the artwork
    * @return artwork
    * @author Siger
    */
@@ -201,28 +206,40 @@ public class ArtworkService {
       throw new IllegalArgumentException("Artwork does not exist");
     }
 
+    if ((name == null || name.trim().length() == 0) && (artist == null || artist.trim().length() == 0)
+        && (image == null || image.trim().length() == 0)) {
+      throw new IllegalArgumentException("Nothing to edit, all fields are empty");
+    }
+
     // Edit artwork information
-    if (name != null) artwork.setName(name);
-    if (artist != null) artwork.setArtist(artist);
-    if (image != null) artwork.setImage(image);
+    if (name != null)
+      artwork.setName(name);
+    if (artist != null)
+      artwork.setArtist(artist);
+    if (image != null)
+      artwork.setImage(image);
     return artworkRepository.save(artwork);
   }
 
   /**
    * Method to edit an artwork's loan availability and loan fee
    * 
-   * @param artworkId - ID of artwork to be edited
+   * @param artworkId          - ID of artwork to be edited
    * @param isAvailableForLoan - availability of the artwork
-   * @param loanFee - loan fee of the artwork
+   * @param loanFee            - loan fee of the artwork
    * @return artwork
    * @author Siger
    */
   @Transactional
-  public Artwork editArtworkLoan(Long artworkId, Boolean isAvailableForLoan, Double loanFee) {
+  public Artwork editArtworkLoanInfo(Long artworkId, Boolean isAvailableForLoan, Double loanFee) {
     // Get artwork and check if it exists and error handling
     Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
     if (artwork == null) {
       throw new IllegalArgumentException("Artwork does not exist");
+    }
+
+    if (isAvailableForLoan == null) {
+      isAvailableForLoan = artwork.getIsAvailableForLoan();
     }
     if (isAvailableForLoan == true) {
       if (loanFee == null) {
@@ -233,7 +250,7 @@ public class ArtworkService {
     }
 
     // Change loan availability
-    if (isAvailableForLoan != null) artwork.setIsAvailableForLoan(isAvailableForLoan);
+    artwork.setIsAvailableForLoan(isAvailableForLoan);
     artwork.setLoanFee(loanFee);
     return artworkRepository.save(artwork);
   }
@@ -246,7 +263,7 @@ public class ArtworkService {
    * @author Siger
    */
   @Transactional
-  public boolean deleteArtwork(Long artworkId) {
+  public Artwork deleteArtwork(Long artworkId) {
     // Get artwork and check if it exists and error handling
     Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
     if (artwork == null) {
@@ -262,8 +279,7 @@ public class ArtworkService {
     // Delete artwork
     artworkRepository.deleteArtworkByArtworkId(artworkId);
 
-    // Check if artwork was deleted
-    return getArtwork(artworkId) == null;
+    return artwork;
   }
 
   // FR3 Function which removes artwork from room
@@ -300,6 +316,8 @@ public class ArtworkService {
 
     return artwork;
   }
+
+  
 
   /**
    * Method to convert an Iterable to a List

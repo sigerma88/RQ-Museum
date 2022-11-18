@@ -25,14 +25,12 @@ public class RoomService {
   @Autowired
   private ArtworkRepository artworkRepository;
 
-  @Autowired
-  private ArtworkService artworkService;
-
   /**
    * Method to create a room
    * 
    * @param roomName - name of the room
-   * @param museum - museum of the room
+   * @param roomType - type of the room
+   * @param museum   - museum of the room
    * @return room
    * @author Siger
    */
@@ -74,8 +72,7 @@ public class RoomService {
     }
 
     // Get room
-    Room room = roomRepository.findRoomByRoomId(roomId);
-    return room;
+    return roomRepository.findRoomByRoomId(roomId);
   }
 
   /**
@@ -109,10 +106,10 @@ public class RoomService {
   /**
    * Method to edit a room
    * 
-   * @param roomId - id of the room
+   * @param roomId   - id of the room
    * @param roomName - name of the room
    * @param roomType - type of the room
-   * @param museum - museum of the room
+   * @param museum   - museum of the room
    * @return room
    * @author Siger
    */
@@ -124,44 +121,17 @@ public class RoomService {
       throw new IllegalArgumentException("Room does not exist");
     }
 
+    if ((roomName == null || roomName.trim().length() == 0) && roomType == null && museum == null) {
+      throw new IllegalArgumentException("Nothing to edit, all fields are empty");
+    }
+
     // Set new values
-    if (roomName != null) room.setRoomName(roomName);
-    if (roomType != null) room.setRoomType(roomType);
-    if (museum != null) room.setMuseum(museum);
-    roomRepository.save(room);
-    return room;
-  }
-
-  /**
-   * Method to change current number of artworks in a room
-   * 
-   * @param roomId - id of the room
-   * @param currentNumberOfArtwork - number of artworks in the room
-   * @return room
-   * @author Siger
-   */
-  @Transactional
-  public Room changeCurrentNumberOfArtwork(Long roomId, Integer currentNumberOfArtwork) {
-    // Get room and check if it exists and error handling
-    Room room = roomRepository.findRoomByRoomId(roomId);
-    if (room == null) {
-      throw new IllegalArgumentException("Room does not exist");
-    }
-
-    if (currentNumberOfArtwork == null) {
-      throw new IllegalArgumentException("Current number of artworks cannot be empty");
-    } else if (currentNumberOfArtwork < 0) {
-      throw new IllegalArgumentException("Current number of artworks cannot be negative");
-    }
-
-    // Check if current number of artworks is less than the maximum number of artworks
-    int maxNumberOfArtwork = getMaxNumberOfArtwork(room.getRoomType());
-    if (maxNumberOfArtwork != -1 && currentNumberOfArtwork > maxNumberOfArtwork) {
-      throw new IllegalArgumentException("Current number of artworks " + currentNumberOfArtwork + "cannot be greater than the maximum number of artworks" + maxNumberOfArtwork);
-    }
-
-    // Set new value
-    room.setCurrentNumberOfArtwork(currentNumberOfArtwork);
+    if (roomName != null)
+      room.setRoomName(roomName);
+    if (roomType != null)
+      room.setRoomType(roomType);
+    if (museum != null)
+      room.setMuseum(museum);
     roomRepository.save(room);
     return room;
   }
@@ -181,10 +151,10 @@ public class RoomService {
       throw new IllegalArgumentException("Room does not exist");
     }
 
-    // Delete artworks in the room
+    // Check if there are artworks in the room
     List<Artwork> artworks = toList(artworkRepository.findArtworkByRoom(room));
-    for (Artwork artwork : artworks) {
-      boolean b = artworkService.deleteArtwork(artwork.getArtworkId());
+    if (artworks.size() > 0) {
+      throw new IllegalArgumentException("There are still artworks in the room, remove them first");
     }
 
     // Delete room
@@ -223,13 +193,48 @@ public class RoomService {
   }
 
   /**
+   * Method to change current number of artworks in a room
+   * 
+   * @param roomId                 - id of the room
+   * @param currentNumberOfArtwork - number of artworks in the room
+   * @return room
+   * @author Siger
+   */
+  public Room changeCurrentNumberOfArtwork(Long roomId, Integer currentNumberOfArtwork) {
+    // Get room and check if it exists and error handling
+    Room room = roomRepository.findRoomByRoomId(roomId);
+    if (room == null) {
+      throw new IllegalArgumentException("Room does not exist");
+    }
+
+    if (currentNumberOfArtwork == null) {
+      throw new IllegalArgumentException("Current number of artworks cannot be empty");
+    } else if (currentNumberOfArtwork < 0) {
+      throw new IllegalArgumentException("Current number of artworks cannot be negative");
+    }
+
+    // Check if current number of artworks is less than the maximum number of
+    // artworks
+    int maxNumberOfArtwork = getMaxNumberOfArtwork(room.getRoomType());
+    if (maxNumberOfArtwork != -1 && currentNumberOfArtwork > maxNumberOfArtwork) {
+      throw new IllegalArgumentException("Current number of artworks " + currentNumberOfArtwork
+          + " cannot be greater than the maximum number of artworks " + maxNumberOfArtwork);
+    }
+
+    // Set new value
+    room.setCurrentNumberOfArtwork(currentNumberOfArtwork);
+    roomRepository.save(room);
+    return room;
+  }
+
+  /**
    * Method to convert an Iterable to a List
    * 
    * @param iterable - Iterable
    * @return List
    * @author From tutorial notes
    */
-  private <T> List<T> toList(Iterable<T> iterable){
+  private <T> List<T> toList(Iterable<T> iterable) {
     List<T> resultList = new ArrayList<T>();
     for (T t : iterable) {
       resultList.add(t);
