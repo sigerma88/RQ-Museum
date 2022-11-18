@@ -234,7 +234,7 @@ public class TestTicketService {
 
   /**
    * Creating  tickets
-   * Fail scenario 1 : the given visitor ID doesn't match an existing visitor
+   * Fail scenario  : the given visitor ID doesn't match an existing visitor
    *
    * @author Zahra
    */
@@ -255,7 +255,12 @@ public class TestTicketService {
     assertEquals("Visitor doesn't exist", error);
   }
 
-  //done
+  /**
+   * Creating tickets
+   * Fail scenario : given number of tickets is invalid
+   *
+   * @author Zahra
+   */
   @Test
   public void testCreateTicketsWithInvalidNumber() {
     List<Ticket> createdTickets = null;
@@ -275,6 +280,12 @@ public class TestTicketService {
 
   }
 
+  /**
+   * Creating tickets
+   * Fail scenario : given date is invalid
+   *
+   * @author Zahra
+   */
   @Test
   public void testCreateTicketsWithInvalidDate() {
     List<Ticket> createdTickets = null;
@@ -295,9 +306,11 @@ public class TestTicketService {
   }
 
   /**
-   * Success scenario : getting all tickets
+   * Getting all tickets
+   * Success scenario
+   *
+   * @author Zahra
    */
-
   @Test
   public void testGetTicketsByVisitor() {
     List<Ticket> allTicketsOfVisitor = null;
@@ -314,13 +327,13 @@ public class TestTicketService {
 
   /**
    * Getting all tickets
-   * Fail scenario 1 : visitor doesn't exist
-   * DONE
+   * Fail scenario : visitor doesn't exist
+   *
+   * @author Zahra
    */
-
   @Test
   public void testGetTicketsWithNonExistingVisitor() {
-    long visitorId = 00;
+    long visitorId = 0;
     String error = null;
     List<Ticket> allTicketsOfVisitor = new ArrayList<>();
     try {

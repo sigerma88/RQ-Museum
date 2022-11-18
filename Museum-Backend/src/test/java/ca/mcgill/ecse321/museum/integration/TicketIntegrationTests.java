@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.museum.integration;
 
-import ca.mcgill.ecse321.museum.controller.DtoUtility;
 import ca.mcgill.ecse321.museum.dao.TicketRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
 import ca.mcgill.ecse321.museum.dto.TicketDto;
@@ -18,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -56,7 +54,6 @@ public class TicketIntegrationTests {
 
   @AfterEach
   public void clearDatabase() {
-
     ticketRepository.deleteAll();
     visitorRepository.deleteAll();
   }
@@ -64,20 +61,18 @@ public class TicketIntegrationTests {
   @BeforeEach
   public void setUp() {
 
-    // List<TicketDto> ticketDtos = new ArrayList<>();
-
     Visitor visitor1 = new Visitor();
     visitor1.setName(VISITOR_NAME_1);
     visitor1.setPassword(VISITOR_PASSWORD_1);
     visitor1.setEmail(VISITOR_EMAIL_1);
-
+    visitor1.setMuseumUserId(VISITOR_ID_1);
+    visitorRepository.save(visitor1);
 
     Visitor visitor2 = new Visitor();
     visitor2.setEmail(VISITOR_EMAIL_2);
     visitor2.setName(VISITOR_NAME_2);
     visitor2.setPassword(VISITOR_PASSWORD_2);
-
-    visitorRepository.save(visitor1);
+    visitor2.setMuseumUserId(VISITOR_ID_2);
     visitorRepository.save(visitor2);
 
     Ticket ticket1 = new Ticket();
@@ -95,12 +90,14 @@ public class TicketIntegrationTests {
 
   }
 
+
   /**
    * Test for getTicketsByVisitor
    * Fail scenario : invalid user Id given
    *
    * @author Zahra
    */
+
   @Test
   public void testGetTicketByInvalidVisitor() {
     ResponseEntity<String> response = client.getForEntity("/visitor/tickets/" + -1, String.class);
@@ -134,7 +131,6 @@ public class TicketIntegrationTests {
    */
   @Test
   public void testCreateTickets() {
-    //  List<TicketDto> ticketDtoList = createTicketDto();
     int numOfTickets = 2;
     ResponseEntity<TicketDto[]> response = client.postForEntity("ticket/purchase/?visitorId=" + VISITOR_ID_2 + "&visitDate=" + Date.valueOf(VISIT_DATE_2) + "&number=" + numOfTickets, new ArrayList<TicketDto>(), TicketDto[].class);
     assertNotNull(response);
@@ -145,7 +141,12 @@ public class TicketIntegrationTests {
     assertEquals(VISITOR_ID_2, Arrays.stream(response.getBody()).toList().get(1).getVisitor().getUserId());
   }
 
-
+  /**
+   * Test for createTickets
+   * Fail scenario : given number of Tickets is invalid
+   *
+   * @author Zahra
+   */
   @Test
   public void testCreateicketsWithInvalidNumber() {
     ResponseEntity<String> response = client.postForEntity("ticket/purchase/?visitorId=" + VISITOR_ID_2 + "&visitDate=" + Date.valueOf(VISIT_DATE_2) + "&number=" + 0, new ArrayList<TicketDto>(), String.class);
@@ -154,8 +155,14 @@ public class TicketIntegrationTests {
     assertTrue(response.getBody().contains("Number of tickets must be at least 1"));
   }
 
+  /**
+   * Test for createTickets
+   * Fail scenario : given date is invalid
+   *
+   * @author Zahra
+   */
+  /*@Test
 
-  @Test
   public void testBuyTicketsWithInvalidDate() {
     int numberOfArtworks = 3;
     ResponseEntity<String> response = client.postForEntity("ticket/purchase/?visitorId=" + VISITOR_ID_2 + "&visitDate=" + Date.valueOf(INVALID_DATE) + "&number=" + numberOfArtworks, new ArrayList<TicketDto>(), String.class);
@@ -164,11 +171,7 @@ public class TicketIntegrationTests {
     assertTrue(response.getBody().contains("Number of tickets must be at least 1"));
 
   }
-
-  /*
-
-
-   */
+  */
 
 
 }
