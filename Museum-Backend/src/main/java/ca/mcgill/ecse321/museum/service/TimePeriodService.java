@@ -20,7 +20,7 @@ public class TimePeriodService {
      * 
      * @author VZ
      * @param timePeriodId - id of time period
-     * @return
+     * @return time period
      */
     @Transactional
     public TimePeriod getTimePeriod(long timePeriodId) {
@@ -36,9 +36,9 @@ public class TimePeriodService {
      * Create a TimePeriod and save to database
      * 
      * @author VZ
-     * @param startDate
-     * @param endDate
-     * @return
+     * @param startDate - start date of time period
+     * @param endDate  - end date of time period
+     * @return time period
      */
     @Transactional
     public TimePeriod createTimePeriod(Timestamp startDate, Timestamp endDate) {
@@ -65,7 +65,7 @@ public class TimePeriodService {
      * Delete a TimePeriod from database by ID
      * 
      * @author VZ
-     * @param timePeriodId
+     * @param timePeriodId - id of time period
      */
     @Transactional
     public void deleteTimePeriod(long timePeriodId) {
@@ -81,10 +81,10 @@ public class TimePeriodService {
      * Edit a TimePeriod by ID and save to database
      * 
      * @author VZ
-     * @param timePeriodId
-     * @param startDate
-     * @param endDate
-     * @return
+     * @param timePeriodId - id of time period
+     * @param startDate   - start date of time period
+     * @param endDate   - end date of time period
+     * @return edited time period
      */
     @Transactional
     public TimePeriod editTimePeriod(long timePeriodId, Timestamp startDate, Timestamp endDate) {

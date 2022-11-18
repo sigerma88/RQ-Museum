@@ -51,7 +51,10 @@ public class MuseumService {
    * Method to create a museum
    * 
    * @author VZ
-   * @return
+   * @param name - name of the museum
+   * @param visitFee - visit fee of the museum
+   * @param schedule - schedule of the museum
+   * @return museum
    */
   @Transactional
   public Museum createMuseum(String name, double visitFee, Schedule schedule) {
@@ -77,29 +80,37 @@ public class MuseumService {
    * Method to edit a museum's name, visit fee or schedule given the museum's id.
    * 
    * @author VZ
-   * @param museumId
-   * @param name
-   * @param visitFee
-   * @param schedule
+   * @param museumId - museum id
+   * @param name - new name of the museum
+   * @param visitFee - new visit fee of the museum
+   * @param schedule - new schedule of the museum
    * @return
    */
   @Transactional
-  public Museum editMuseum(long museumId, String name, double visitFee, Schedule schedule) {
-    if (name == null || name.trim().length() == 0) {
-      throw new IllegalArgumentException("Name cannot be empty!");
-    }
-    if (visitFee < 0) {
-      throw new IllegalArgumentException("Visit fee cannot be negative!");
-    }
-    if (schedule == null) {
-      throw new IllegalArgumentException("Schedule cannot be null!");
-    }
-
+  public Museum editMuseum(long museumId, String name, Double visitFee, Schedule schedule) {
     Museum museum = museumRepository.findMuseumByMuseumId(museumId);
-    museum.setName(name);
-    museum.setVisitFee(visitFee);
-    museum.setSchedule(schedule);
+    if (museum == null) {
+      throw new IllegalArgumentException("Museum does not exist");
+    }
 
+    if ((name == null || name.trim().length() == 0) && visitFee == null && schedule == null) {
+      throw new IllegalArgumentException("Nothing to edit, all fields are empty");
+    }
+    if (name != null) {
+      if(name.trim().length() == 0) {
+        throw new IllegalArgumentException("Name cannot be empty!");
+      }
+      museum.setName(name);
+    }
+    if (visitFee != null) {
+      if (visitFee < 0) {
+        throw new IllegalArgumentException("Visit fee cannot be negative!");
+      }
+      museum.setVisitFee(visitFee);
+    }
+    if (schedule != null) {
+      museum.setSchedule(schedule);
+    }
     return museumRepository.save(museum);
   }
 
@@ -107,8 +118,8 @@ public class MuseumService {
    * Method to get a museum's schedule
    * 
    * @author VZ
-   * @param museumId
-   * @return
+   * @param museumId - museum id
+   * @return schedule of museum
    */
   @Transactional
   public Schedule getMuseumSchedule(long museumId) {
@@ -127,8 +138,8 @@ public class MuseumService {
    * Method to get all of museum's shifts
    * 
    * @author VZ
-   * @param museumId
-   * @return
+   * @param museumId - museum id
+   * @return list of shifts of museum
    */
   @Transactional
   public List<TimePeriod> getMuseumTimePeriods(long museumId) {
@@ -150,10 +161,10 @@ public class MuseumService {
   /**
    * Method to add a time period to a museum's schedule
    * 
-   * @author VZ
-   * @param museumId
-   * @param timePeriodId
-   * @return
+   * @author VZ 
+   * @param museumId - museum id
+   * @param timePeriodId - time period id
+   * @return Museum with added time period
    */
   @Transactional
   public Museum addMuseumTimePeriodAssociation(long museumId, long timePeriodId) {
@@ -181,9 +192,9 @@ public class MuseumService {
    * Method to remove a time period from a museum's schedule
    * 
    * @author VZ
-   * @param museumId
-   * @param timePeriodId
-   * @return
+   * @param museumId - museum id
+   * @param timePeriodId - time period id
+   * @return Museum with removed time period
    */
   @Transactional
   public Museum deleteMuseumTimePeriodAssociation(long museumId, long timePeriodId) {
@@ -240,8 +251,8 @@ public class MuseumService {
    * Helper method to get the time periods of a schedule
    * 
    * @author VZ
-   * @param schedule
-   * @return
+   * @param schedule - schedule
+   * @return list of time periods of schedule
    */
 
   public List<TimePeriod> getTimePeriodsOfSchedule(Schedule schedule) {

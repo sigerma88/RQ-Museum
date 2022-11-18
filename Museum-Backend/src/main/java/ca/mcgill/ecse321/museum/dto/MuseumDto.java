@@ -1,5 +1,11 @@
 package ca.mcgill.ecse321.museum.dto;
 
+/**
+ * Museum DTO
+ * 
+ * @author VZ
+ */
+
 public class MuseumDto {
     private Long museumId;
     private String name;

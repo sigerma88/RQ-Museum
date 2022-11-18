@@ -48,7 +48,7 @@ public class EmployeeIntegrationTests {
         
         ResponseEntity<EmployeeDto> response = client.getForEntity("/employee/" + id, EmployeeDto.class);
         assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
         assertNotNull(response.getBody(), "Response has body");
         assertEquals(id, response.getBody().getMuseumUserId(), "Response has correct message");
     }
@@ -61,10 +61,16 @@ public class EmployeeIntegrationTests {
     public void testGetEmployeeInvalidId(){
         ResponseEntity<String> response = client.getForEntity("/employee/" + -1, String.class);
         assertNotNull(response);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(), "Response has correct status");
         assertNotNull(response.getBody(), "Response has body");
         assertEquals("Employee does not exist", response.getBody(), "Response has correct message");
     }
+
+    /**
+     * helper method to create an employeedto, inspired by the tutorial notes
+     * @author VZ
+     * @return the id of the created employee
+     */
 
     public Long createEmployeeDto(){
         EmployeeDto employeeDto = null;

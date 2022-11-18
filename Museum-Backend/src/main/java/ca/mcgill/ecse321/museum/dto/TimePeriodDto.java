@@ -1,6 +1,9 @@
 package ca.mcgill.ecse321.museum.dto;
 
-
+/**
+ * Time period DTO
+ * @author VZ
+ */
 
 public class TimePeriodDto {
 

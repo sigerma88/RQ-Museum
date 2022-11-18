@@ -37,8 +37,8 @@ public class SchedulingRestController {
      * RESTful api get an employee's schedule
      * 
      * @author VZ
-     * @param id
-     * @return
+     * @param id the id of the employee
+     * @return the schedule of the employee
      */
     @GetMapping(value = { "/employee/schedule/{id}", "/employee/schedule/{id}/" })
     public ResponseEntity<?> getScheduleByEmployee(@PathVariable("id") long id) {
@@ -53,9 +53,9 @@ public class SchedulingRestController {
     /**
      * RESTful api to get all employee's shifts
      * 
-     * @author VZ
-     * @param id
-     * @return
+     * @author VZ 
+     * @param id the id of the employee
+     * @return all shifts of the employee
      */
     @GetMapping(value = { "/employee/shifts/{id}", "/employee/shifts/{id}/" })
     public ResponseEntity<?> getAllShiftsByEmployee(@PathVariable("id") long id) {
@@ -74,8 +74,9 @@ public class SchedulingRestController {
     /**
      * RESTful api to get the museum's schedule
      * 
-     * @param id
-     * @return
+     * @author VZ
+     * @param id the id of the museum
+     * @return the schedule of the museum
      */
     @GetMapping(value = { "/museum/schedule/{id}", "/museum/schedule/{id}/" })
     public ResponseEntity<?> getScheduleByMuseum(@PathVariable("id") long id) {
@@ -91,8 +92,8 @@ public class SchedulingRestController {
      * RESTful api to get all museum's shifts
      * 
      * @author VZ
-     * @param id
-     * @return
+     * @param id the id of the museum
+     * @return all shifts of the museum
      */
     @GetMapping(value = { "/museum/shifts/{id}", "/museum/shifts/{id}/" })
     public ResponseEntity<?> getAllShiftsByMuseum(@PathVariable("id") long id) {
@@ -111,12 +112,11 @@ public class SchedulingRestController {
     /**
      * RESTful api to create a new time period in the database
      * We pass in a Dto object, we could also pass in strings to represent start and
-     * enddates, but
-     * that requires object mapper to parse into json.
+     * enddates, but that requires object mapper to parse into json.
      * 
      * @author VZ
-     * @param timePeriodDto
-     * @return
+     * @param timePeriodDto the time period dto
+     * @return the time period dto
      */
 
     @PostMapping(value = { "/shift/create", "/shift/create/" })
@@ -134,10 +134,9 @@ public class SchedulingRestController {
 
     /**
      * RESTful api to get a timeperiod from the database
-     * 
-     * @param id
-     * @return
      * @author VZ
+     * @param id the id of the timeperiod
+     * @return the timeperiod dto
      */
 
     @GetMapping(value = { "/shift/{id}", "/shift/{id}/" })
@@ -156,8 +155,8 @@ public class SchedulingRestController {
      * RESTful api to delete a time period from the database
      * 
      * @author VZ
-     * @param id
-     * @return
+     * @param id the id of the time period
+     * @return the time period dto
      */
     @DeleteMapping(value = { "/shift/delete/{id}", "/shift/delete/{id}/" })
     public ResponseEntity<?> deleteTimePeriod(@PathVariable("id") long id) {
@@ -170,13 +169,13 @@ public class SchedulingRestController {
     }
 
     /**
-     * RESTful api to assign edit a timeperiod in the database
+     * RESTful api to edit a timeperiod in the database
      * 
      * @author VZ
-     * @param id
-     * @param startDate
-     * @param endDate
-     * @return
+     * @param id the id of the timeperiod
+     * @param startDate the new start date
+     * @param endDate the new end date
+     * @return the edited timeperiod dto
      */
     @PostMapping(value = { "/shift/edit/{id}", "/shift/edit/{id}/" })
     public ResponseEntity<?> editTimePeriod(@PathVariable("id") long id,
@@ -195,9 +194,9 @@ public class SchedulingRestController {
      * RESTful api to add a time period to an employee
      * 
      * @author VZ
-     * @param employeeDto
-     * @param timePeriodDto
-     * @return
+     * @param employeeDto the employee dto
+     * @param timePeriodDto the time period dto
+     * @return the employeedto with an added timeperiod
      */
     @PostMapping(value = { "/employee/{employeeId}/add/shift/{tpId}", "/employee/{employeeId}/add/shift/{tpId}/" })
     public ResponseEntity<?> addTimePeriodToEmployeeSchedule(
@@ -215,9 +214,9 @@ public class SchedulingRestController {
      * RESTful api to remove a time period to an employee's schedule
      * 
      * @author VZ
-     * @param employeeId
-     * @param tpId
-     * @return
+     * @param employeeId the employee id
+     * @param tpId the time period id
+     * @return the employeedto with a removed timeperiod
      */
     @DeleteMapping(value = { "/employee/{employeeId}/remove/shift/{tpId}", "/employee/{employeeId}/remove/shift/{tpId}/" })
     public ResponseEntity<?> deleteTimePeriodFromEmployeeSchedule(
@@ -235,9 +234,9 @@ public class SchedulingRestController {
      * RESTful api to add a time period to a museum
      * 
      * @author VZ
-     * @param museumId
-     * @param tpId
-     * @return
+     * @param museumId the museum id
+     * @param tpId the timeperiod id
+     * @return the museum dto with an added timeperiod
      */
     @PostMapping(value = { "/museum/{museumId}/add/shift/{tpId}", "/museum/{museumId}/add/shift/{tpId}/" })
     public ResponseEntity<?> addTimePeriodToMuseumSchedule(
@@ -255,9 +254,9 @@ public class SchedulingRestController {
      * RESTful api to remove a time period from a museum
      * 
      * @author VZ
-     * @param museumId
-     * @param tpId
-     * @return
+     * @param museumId the museum id
+     * @param tpId the timeperiod id
+     * @return the museum dto with a removed timeperiod
      */
     @DeleteMapping(value = { "/museum/{museumId}/remove/shift/{tpId}", "/museum/{museumId}/remove/shift/{tpId}/" })
     public ResponseEntity<?> removeTimePeriodFromMuseumSchedule(

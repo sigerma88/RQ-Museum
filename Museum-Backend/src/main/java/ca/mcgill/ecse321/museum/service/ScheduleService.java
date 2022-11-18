@@ -18,7 +18,7 @@ public class ScheduleService {
     /**
      * Method to get a schedule
      * @author VZ
-     * @param scheduleId
+     * @param scheduleId 
      * @return
      */
     @Transactional

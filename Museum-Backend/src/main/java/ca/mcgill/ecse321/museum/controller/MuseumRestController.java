@@ -32,8 +32,8 @@ public class MuseumRestController {
    * API to get a museum by id
    * 
    * @author VZ
-   * @param id
-   * @return
+   * @param id the id of the museum
+   * @return museum with the given id
    */
   @GetMapping(value = { "/museum/{id}", "/museum/{id}/" })
   public ResponseEntity<?> getMuseum(@PathVariable("id") long id) {
@@ -48,9 +48,9 @@ public class MuseumRestController {
    * API to create a museum
    * 
    * @author VZ
-   * @param name
-   * @param visitFee
-   * @return
+   * @param name the name of the museum
+   * @param visitFee the visit fee of the museum
+   * @return the created museum
    */
   @PostMapping(value = { "/museum/app", "/museum/app/" })
   public ResponseEntity<?> createMuseum(
@@ -68,11 +68,11 @@ public class MuseumRestController {
 
   /**
    * API to edit the museum's name or visit fee
-   * 
-   * @param id
-   * @param name
-   * @param visitFee
-   * @return
+   * @author VZ
+   * @param id the id of the museum
+   * @param name the new name of the museum
+   * @param visitFee the new visit fee of the museum
+   * @return the edited museum
    */
   @PostMapping(value = { "/museum/app/edit/{id}/", "/museum/app/edit/{id}" })
   public ResponseEntity<?> editMuseum(
@@ -92,7 +92,7 @@ public class MuseumRestController {
    * API to get all museums
    * 
    * @author VZ
-   * @return
+   * @return all museums
    */
   @GetMapping(value = { "/museums", "/museums/" })
   public ResponseEntity<?> getAllMuseums() {

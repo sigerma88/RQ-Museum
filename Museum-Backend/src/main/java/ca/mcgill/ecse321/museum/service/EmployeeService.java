@@ -69,7 +69,7 @@ public class EmployeeService {
    * 
    * @author VZ
    * @param employeeId - id of employee
-   * @return
+   * @return employee's schedule
    */
   @Transactional
   public Schedule getEmployeeSchedule(long employeeId) {
@@ -89,8 +89,8 @@ public class EmployeeService {
    * Method to get all of employee's shifts
    * 
    * @author VZ
-   * @param employeeId
-   * @return
+   * @param employeeId - id of employee
+   * @return list of employee's shifts
    */
 
   @Transactional
@@ -108,20 +108,19 @@ public class EmployeeService {
     }
 
     List<TimePeriod> timePeriods = getTimePeriodsOfSchedule(schedule);
-    if (timePeriods == null) {
+    if (timePeriods == null || timePeriods.isEmpty()) {
       throw new IllegalArgumentException("Employee has no shift");
     }
     return timePeriods;
   }
 
   /**
-   * Method to add a time period to employee's schedule, in other words
-   * give more work to an employee.
+   * Method to add a shift to an employee's schedule
    * 
    * @author VZ
-   * @param employee
-   * @param timeperiod
-   * @return
+   * @param employeeId - id of employee
+   * @param timePeriodId - id of time period
+   * @return Employee with added shift
    */
 
   @Transactional
@@ -156,16 +155,16 @@ public class EmployeeService {
    * lessen an employee's workload.
    * 
    * @author VZ
-   * @param employeeId
-   * @param timePeriodId
-   * @return
+   * @param employeeId - id of employee
+   * @param timePeriodId - id of time period
+   * @return Employee with deleted shift
    */
   @Transactional
   public Employee deleteEmployeeTimePeriodAssociation(long employeeId, long timePeriodId) {
     /**
      * 1. Find the employee's schedule first and then delete the
-     * ScheduleOfTimePeriod that associates with
-     * the TimePeriod that we want to remove from the employee's schedule.
+     * ScheduleOfTimePeriod that is associated with the TimePeriod that we
+     * want to remove from the employee's schedule.
      */
     Employee employee = employeeRepository.findEmployeeByMuseumUserId(employeeId);
     if (employee == null) {
@@ -237,8 +236,8 @@ public class EmployeeService {
    * Helper method to get the time periods of a schedule
    * 
    * @author VZ
-   * @param schedule
-   * @return
+   * @param schedule - schedule
+   * @return list of time periods that are associated to the schedule
    */
 
   public List<TimePeriod> getTimePeriodsOfSchedule(Schedule schedule) {

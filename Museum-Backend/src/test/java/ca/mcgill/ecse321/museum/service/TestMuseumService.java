@@ -35,6 +35,13 @@ import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
 import ca.mcgill.ecse321.museum.model.TimePeriod;
 
+/**
+ * This is the test class for the MuseumService class.
+ * 
+ * @author VZ
+ * 
+ */
+
 @ExtendWith(MockitoExtension.class)
 public class TestMuseumService {
 
@@ -53,8 +60,14 @@ public class TestMuseumService {
     private static final Long MUSEUM_ID = 1L;
     private static final String MUSEUM_NAME = "RQ museum";
     private static final Double MUSEUM_VISITFEE = 10.0;
+    private static final Schedule MUSEUM_SCHEDULE = new Schedule();
+
+    private static final String NEW_MUSEUM_NAME = "NEW";
+    private static final Double NEW_MUSEUM_VISITFEE = 20.0;
+    private static final Schedule NEW_MUSEUM_SCHEDULE = new Schedule();
 
     private static final Long NON_EXISTING_MUSEUM_ID = 2L;
+    private static final Double NEGATIVE_VISITFEE = -10.0;
 
     private static final Long SCHEDULE_ID = 1L;
     private static final Long SECOND_SCHEDULE_ID = 2L;
@@ -79,9 +92,7 @@ public class TestMuseumService {
                 museum.setMuseumId(MUSEUM_ID);
                 museum.setName(MUSEUM_NAME);
                 museum.setVisitFee(MUSEUM_VISITFEE);
-                Schedule schedule = new Schedule();
-                schedule.setScheduleId(SCHEDULE_ID);
-                museum.setSchedule(schedule);
+                museum.setSchedule(MUSEUM_SCHEDULE);
                 return museum;
             } else {
                 return null;
@@ -159,19 +170,16 @@ public class TestMuseumService {
     @Test
     public void testCreateMuseum() {
         assertEquals(0, museumService.getAllMuseums().size());
-        String name = "The Louvre";
-        double visitFee = 10.0;
         Museum museum = null;
-        Schedule schedule = new Schedule();
         try {
-            museum = museumService.createMuseum(name, visitFee, schedule);
+            museum = museumService.createMuseum(MUSEUM_NAME, MUSEUM_VISITFEE, MUSEUM_SCHEDULE);
         } catch (IllegalArgumentException e) {
             fail();
         }
         assertNotNull(museum);
-        assertEquals(name, museum.getName());
-        assertEquals(visitFee, museum.getVisitFee());
-        assertEquals(schedule, museum.getSchedule());
+        assertEquals(MUSEUM_NAME, museum.getName());
+        assertEquals(MUSEUM_VISITFEE, museum.getVisitFee());
+        assertEquals(MUSEUM_SCHEDULE, museum.getSchedule());
     }
 
     /**
@@ -184,13 +192,10 @@ public class TestMuseumService {
     @Test
     public void testCreateMuseumNullName() {
         assertEquals(0, museumService.getAllMuseums().size());
-        String name = null;
-        double visitFee = 10.0;
-        Schedule schedule = new Schedule();
         Museum museum = null;
         String error = null;
         try {
-            museum = museumService.createMuseum(name, visitFee, schedule);
+            museum = museumService.createMuseum(null, MUSEUM_VISITFEE, MUSEUM_SCHEDULE);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -208,13 +213,10 @@ public class TestMuseumService {
     @Test
     public void testCreateMuseumEmptyName() {
         assertEquals(0, museumService.getAllMuseums().size());
-        String name = "";
-        double visitFee = 10.0;
-        Schedule schedule = new Schedule();
         Museum museum = null;
         String error = null;
         try {
-            museum = museumService.createMuseum(name, visitFee, schedule);
+            museum = museumService.createMuseum("", MUSEUM_VISITFEE, MUSEUM_SCHEDULE);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -248,32 +250,17 @@ public class TestMuseumService {
     }
 
     /**
-     * test method for creating a museum that doesn't exist.
-     * 
-     * @author VZ
-     * 
-     */
-    @Test
-    public void testCreateNonExistingMuseum() {
-        assertThrows(IllegalArgumentException.class, () -> museumService.getMuseum(NON_EXISTING_MUSEUM_ID));
-        //assertNull(museumService.getMuseum(NON_EXISTING_MUSEUM_ID));
-    }
-
-    /**
      * test for creating a museum with a negative visit fee
      * 
      * @author VZ
      */
     @Test
     public void testCreateMuseumWithNegativeVisitFee() {
-        String name = "The Louvre";
-        double visitFee = -10.0;
-        Schedule schedule = new Schedule();
         Museum museum = null;
         String error = null;
         try {
 
-            museum = museumService.createMuseum(name, visitFee, schedule);
+            museum = museumService.createMuseum(MUSEUM_NAME, NEGATIVE_VISITFEE, MUSEUM_SCHEDULE);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -288,13 +275,10 @@ public class TestMuseumService {
      */
     @Test
     public void testCreateMuseumWithNoSchedule() {
-        String name = "The Louvre";
-        double visitFee = 10.0;
-        Schedule schedule = null;
         Museum museum = null;
         String error = null;
         try {
-            museum = museumService.createMuseum(name, visitFee, schedule);
+            museum = museumService.createMuseum(MUSEUM_NAME, MUSEUM_VISITFEE, null);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -310,47 +294,51 @@ public class TestMuseumService {
      */
     @Test
     public void testEditMuseum() {
-        Schedule schedule = new Schedule();
         Museum museum = null;
-        String name = "L";
-        double visitFee = 20.0;
-        Schedule new_schedule = new Schedule();
         try {
-            museum = museumService.createMuseum(MUSEUM_NAME, MUSEUM_VISITFEE, schedule);
-            museum = museumService.editMuseum(MUSEUM_ID, name, visitFee, new_schedule);
+            museum = museumService.createMuseum(MUSEUM_NAME, MUSEUM_VISITFEE, MUSEUM_SCHEDULE);
+            museum = museumService.editMuseum(MUSEUM_ID, NEW_MUSEUM_NAME, NEW_MUSEUM_VISITFEE, NEW_MUSEUM_SCHEDULE);
         } catch (IllegalArgumentException e) {
             fail();
         }
         assertNotNull(museum);
-        assertEquals(name, museum.getName());
-        assertEquals(visitFee, museum.getVisitFee());
-        assertEquals(new_schedule, museum.getSchedule());
-
+        assertEquals(NEW_MUSEUM_NAME, museum.getName());
+        assertEquals(NEW_MUSEUM_VISITFEE, museum.getVisitFee());
+        assertEquals(NEW_MUSEUM_SCHEDULE, museum.getSchedule());
     }
 
     /**
-     * test for editing a museum by setting the name to null
+     * test method for editing a museum that doesn't exist.
+     * 
+     * @author VZ
+     * 
+     */
+    @Test
+    public void testEditNonExistingMuseum() {
+        assertThrows(IllegalArgumentException.class,
+                () -> museumService.editMuseum(NON_EXISTING_MUSEUM_ID, MUSEUM_NAME, MUSEUM_VISITFEE, new Schedule()));
+    }
+
+    /**
+     * test for editing a museum by only changing name, visit fee and schedule are
+     * null
      * 
      * @author VZ
      */
     @Test
-    public void testEditMuseumWithNullName() {
-        Schedule schedule = new Schedule();
+    public void testEditMuseumWithNameOnly() {
         Museum museum = null;
-        String name = null;
-        double visitFee = 20.0;
-        Schedule new_schedule = new Schedule();
-        String error = null;
-
         try {
-            museum = museumService.createMuseum(MUSEUM_NAME, MUSEUM_VISITFEE, schedule);
-            museum = museumService.editMuseum(MUSEUM_ID, name, visitFee, new_schedule);
+            museum = museumService.createMuseum(MUSEUM_NAME, MUSEUM_VISITFEE, MUSEUM_SCHEDULE);
+            museum = museumService.editMuseum(MUSEUM_ID, NEW_MUSEUM_NAME, null, null);
 
         } catch (IllegalArgumentException e) {
-            error = e.getMessage();
+            fail();
         }
         assertNotNull(museum);
-        assertEquals("Name cannot be empty!", error);
+        assertEquals(NEW_MUSEUM_NAME, museum.getName());
+        assertEquals(MUSEUM_VISITFEE, museum.getVisitFee());
+        assertEquals(MUSEUM_SCHEDULE, museum.getSchedule());
     }
 
     /**
@@ -361,97 +349,117 @@ public class TestMuseumService {
     @Test
     public void testEditMuseumWithEmptyName() {
         Museum museum = null;
-        Schedule schedule = new Schedule();
-        String name = "";
-        double visitFee = 20.0;
-        Schedule new_schedule = new Schedule();
         String error = null;
 
         try {
-            museum = museumService.createMuseum(MUSEUM_NAME, MUSEUM_VISITFEE, schedule);
-            museum = museumService.editMuseum(MUSEUM_ID, name, visitFee, new_schedule);
+            museum = museumService.createMuseum(MUSEUM_NAME, MUSEUM_VISITFEE, MUSEUM_SCHEDULE);
+            museum = museumService.editMuseum(MUSEUM_ID, "", MUSEUM_VISITFEE, MUSEUM_SCHEDULE);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
         assertNotNull(museum);
+        assertEquals(MUSEUM_NAME, museum.getName());
+        assertEquals(MUSEUM_VISITFEE, museum.getVisitFee());
+        assertEquals(MUSEUM_SCHEDULE, museum.getSchedule());
         assertEquals("Name cannot be empty!", error);
-
     }
 
     /**
      * test for trying to edit a museum by setting a name with only space
-     * 
+     *
      * @author VZ
      */
     @Test
     public void testEditMuseumWithSpaceName() {
         Museum museum = null;
-        Schedule schedule = new Schedule();
         String name = " ";
-        double visitFee = 20.0;
-        Schedule new_schedule = new Schedule();
         String error = null;
 
         try {
-            museum = museumService.createMuseum(MUSEUM_NAME, MUSEUM_VISITFEE, schedule);
-            museum = museumService.editMuseum(MUSEUM_ID, name, visitFee, new_schedule);
+            museum = museumService.createMuseum(MUSEUM_NAME, MUSEUM_VISITFEE, MUSEUM_SCHEDULE);
+            museum = museumService.editMuseum(MUSEUM_ID, name, NEW_MUSEUM_VISITFEE, NEW_MUSEUM_SCHEDULE);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
         assertNotNull(museum);
+        assertEquals(MUSEUM_NAME, museum.getName());
+        assertEquals(MUSEUM_VISITFEE, museum.getVisitFee());
+        assertEquals(MUSEUM_SCHEDULE, museum.getSchedule());
         assertEquals("Name cannot be empty!", error);
 
     }
 
     /**
+     * test for editing a museum by setting a negative visit fee
+     * 
      * @author VZ
-     *         test for editing a museum by setting a negative visit fee
+     * 
      */
     @Test
     public void testEditMuseumWithNegativeVisitFee() {
         Museum museum = null;
-        Schedule schedule = new Schedule();
-        String name = "L";
-        double visitFee = -20.0;
-        Schedule new_schedule = new Schedule();
         String error = null;
-
         try {
-            museum = museumService.createMuseum(MUSEUM_NAME, MUSEUM_VISITFEE, schedule);
-            museum = museumService.editMuseum(MUSEUM_ID, name, visitFee, new_schedule);
+            museum = museumService.createMuseum(MUSEUM_NAME, MUSEUM_VISITFEE, MUSEUM_SCHEDULE);
+            museum = museumService.editMuseum(MUSEUM_ID, NEW_MUSEUM_NAME, NEGATIVE_VISITFEE, NEW_MUSEUM_SCHEDULE);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
         assertNotNull(museum);
+        assertEquals(MUSEUM_NAME, museum.getName());
+        assertEquals(MUSEUM_VISITFEE, museum.getVisitFee());
+        assertEquals(MUSEUM_SCHEDULE, museum.getSchedule());
         assertEquals("Visit fee cannot be negative!", error);
     }
 
     /**
+     *
+     * test for editing a museum by only changing schedule
+     * 
      * @author VZ
-     *         test for editing a museum by setting a null schedule
      */
     @Test
-    public void testEditMuseumWithNoSchedule() {
+    public void testEditMuseumWithScheduleOnly() {
         Museum museum = null;
-        Schedule schedule = new Schedule();
-        String name = "L";
-        double visitFee = 20.0;
-        Schedule new_schedule = null;
-        String error = null;
 
         try {
-            museum = museumService.createMuseum(MUSEUM_NAME, MUSEUM_VISITFEE, schedule);
-            museum = museumService.editMuseum(MUSEUM_ID, name, visitFee, new_schedule);
+            museum = museumService.createMuseum(MUSEUM_NAME, MUSEUM_VISITFEE, MUSEUM_SCHEDULE);
+            museum = museumService.editMuseum(MUSEUM_ID, null, null, NEW_MUSEUM_SCHEDULE);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+        assertNotNull(museum);
+        assertEquals(MUSEUM_NAME, museum.getName());
+        assertEquals(MUSEUM_VISITFEE, museum.getVisitFee());
+        assertEquals(NEW_MUSEUM_SCHEDULE, museum.getSchedule());
+    }
+
+    /**
+     * Test for editing a museum by empty all null fields
+     * 
+     * @author VZ
+     */
+    @Test
+    public void testEditMuseumWithhAllFieldsNull() {
+        Museum museum = null;
+        String error = null;
+        try {
+            museum = museumService.createMuseum(MUSEUM_NAME, MUSEUM_VISITFEE, MUSEUM_SCHEDULE);
+            museum = museumService.editMuseum(MUSEUM_ID, null, null, null);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
         assertNotNull(museum);
-        assertEquals("Schedule cannot be null!", error);
+        assertEquals(MUSEUM_NAME, museum.getName());
+        assertEquals(MUSEUM_VISITFEE, museum.getVisitFee());
+        assertEquals(MUSEUM_SCHEDULE, museum.getSchedule());
+        assertEquals("Nothing to edit, all fields are empty", error);
     }
 
     /**
+     * Test for getting a museum schedule
+     * 
      * @author VZ
-     *         Test for getting a museum schedule
      */
     @Test
     public void testGetMuseumSchedule() {
@@ -465,8 +473,9 @@ public class TestMuseumService {
     }
 
     /**
+     * Test for getting a museum schedule with an invalid museum id
+     * 
      * @author VZ
-     *         Test for getting a museum schedule with an invalid museum id
      */
     @Test
     public void testGetMuseumScheduleWithInvalidMuseumId() {
@@ -485,7 +494,6 @@ public class TestMuseumService {
      * Test for getting museum timeperiods
      * 
      * @author VZ
-     * 
      */
     @Test
     public void testGetMuseumTimePeriods() {
@@ -546,8 +554,9 @@ public class TestMuseumService {
     }
 
     /**
+     * Test for getting museum timeperiods with an invalid museum id
+     * 
      * @author VZ
-     *         Test for getting museum timeperiods with an invalid museum id
      */
     @Test
     public void testGetMuseumTimePeriodsWithInvalidId() {
@@ -562,6 +571,11 @@ public class TestMuseumService {
         assertEquals("Museum doesn't exist!", error);
     }
 
+    /**
+     * Test for timeperiods of a museum that has no timeperiods
+     * 
+     * @author VZ
+     */
     @Test
     public void testGetMuseumTimePeriodsWithoutShifts() {
         // CREATE SCHEDULE
@@ -595,6 +609,7 @@ public class TestMuseumService {
      * 
      * @author VZ
      */
+
     @Test
     public void testAddMuseumTimePeriodAssociation() {
         // CREATE MUSEUM WITH SCHEDULE
@@ -624,9 +639,9 @@ public class TestMuseumService {
         // test that we get back a museum
         testMuseum = museumService.addMuseumTimePeriodAssociation(MUSEUM_ID, TIMEPERIOD_ID);
         assertNotNull(testMuseum);
-        // test that service actually saved museum
+        // test that service actually saved museum and schedule
         verify(museumRepository, times(1)).save(museum);
-
+        verify(scheduleRepository, times(1)).save(schedule);
     }
 
     /**
@@ -715,8 +730,9 @@ public class TestMuseumService {
         // test that we get back a museum
         testMuseum = museumService.deleteMuseumTimePeriodAssociation(MUSEUM_ID, TIMEPERIOD_ID);
         assertNotNull(testMuseum);
-        // test that service actually saved museum
+        // test that service actually saved museum 
         verify(museumRepository, times(1)).save(museum);
+
     }
 
     /**
@@ -835,7 +851,47 @@ public class TestMuseumService {
 
         List<Museum> testMuseums = museumService.getAllMuseums();
         assertEquals(museums, testMuseums);
+        assertEquals(2, testMuseums.size());
 
+    }
+
+    /**
+     * Test for getting all museums when there is one
+     * @author VZ
+     *
+     */
+    @Test
+    public void testGetAllMuseumsOne() {
+        // CREATE FIRST MUSEUM
+        final Museum museum = new Museum();
+        museum.setMuseumId(MUSEUM_ID);
+        museum.setName(MUSEUM_NAME);
+        museum.setVisitFee(MUSEUM_VISITFEE);
+
+        List<Museum> museums = new ArrayList<>();
+        museums.add(museum);
+
+        when(museumRepository.findAll()).thenAnswer((InvocationOnMock invocation) -> museums);
+
+        List<Museum> testMuseums = museumService.getAllMuseums();
+        assertEquals(museums, testMuseums);
+        assertEquals(1, testMuseums.size());
+
+    }
+    /**
+     * test for getting all museums when there are none
+     * @author VZ
+     */
+
+    @Test
+    public void testGetAllMuseumsEmpty() {
+        List<Museum> museums = new ArrayList<>();
+
+        when(museumRepository.findAll()).thenAnswer((InvocationOnMock invocation) -> museums);
+
+        List<Museum> testMuseums = museumService.getAllMuseums();
+        assertEquals(museums, testMuseums);
+        assertEquals(0, testMuseums.size());
     }
 
 }

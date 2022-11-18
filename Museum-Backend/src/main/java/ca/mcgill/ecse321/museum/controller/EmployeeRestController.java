@@ -27,8 +27,8 @@ public class EmployeeRestController {
    * RESTful api to get an employee
    * 
    * @author VZ
-   * @param id
-   * @return
+   * @param id the id of the employee
+   * @return employee with the given id
    */
   @GetMapping(value = { "/employee/{id}", "/employee/{id}/" })
   public ResponseEntity<?> getEmployee(@PathVariable("id") long id) {

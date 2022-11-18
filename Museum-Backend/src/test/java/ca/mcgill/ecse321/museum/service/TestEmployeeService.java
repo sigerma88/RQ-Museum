@@ -38,6 +38,7 @@ import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
  * This is the test class for the EmployeeService class
  * 
  * @author Siger
+ * @author VZ
  */
 @ExtendWith(MockitoExtension.class)
 public class TestEmployeeService {
@@ -581,8 +582,7 @@ public class TestEmployeeService {
   }
 
   /**
-   * Test for removing an existing timeperiod from an employee's schedule that
-   * doesn't
+   * Test for removing an existing timeperiod from an employee's schedule that doesn't
    * contain the mentioned timeperiod
    * 
    * @author VZ

@@ -1,5 +1,10 @@
 package ca.mcgill.ecse321.museum.dto;
 
+/**
+ * Schedule of time period DTO
+ * @author VZ
+ */
+
 public class ScheduleOfTimePeriodDto {
 
     private TimePeriodDto timePeriod;
