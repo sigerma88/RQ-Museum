@@ -56,7 +56,7 @@ public class DtoUtility {
     visitorDto.setEmail(visitor.getEmail());
     visitorDto.setName(visitor.getName());
     visitorDto.setPassword(visitor.getPassword());
-    visitorDto.setUserId(visitor.getMuseumUserId());
+    visitorDto.setMuseumUserId(visitor.getMuseumUserId());
     return visitorDto;
   }
 

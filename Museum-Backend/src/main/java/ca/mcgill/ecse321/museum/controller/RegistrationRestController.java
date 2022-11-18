@@ -51,7 +51,7 @@ public class RegistrationRestController {
           .createVisitor(visitor.getEmail(), visitor.getPassword(), visitor.getName()));
 
       if (visitorDto != null) {
-        session.setAttribute("user_id", visitorDto.getUserId());
+        session.setAttribute("user_id", visitorDto.getMuseumUserId());
         session.setAttribute("role", "visitor");
       }
 

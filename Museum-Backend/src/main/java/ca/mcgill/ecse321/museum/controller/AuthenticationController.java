@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.museum.controller.utilities.AuthenticationUtility;
+import ca.mcgill.ecse321.museum.dto.MuseumUserDto;
 import ca.mcgill.ecse321.museum.dto.VisitorDto;
 import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Manager;
@@ -26,9 +27,9 @@ public class AuthenticationController {
   private AuthenticationService authenticationService;
 
   @PostMapping("/login")
-  public ResponseEntity<?> login(HttpServletRequest request, @RequestBody VisitorDto museumUser) {
+  public ResponseEntity<?> login(HttpServletRequest request,
+      @RequestBody MuseumUserDto museumUser) {
     try {
-      // double check cuz might not work when multiple session
       if (AuthenticationUtility.isLoggedIn(request.getSession())) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot login while logged in");
       }

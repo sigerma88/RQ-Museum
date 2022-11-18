@@ -1,19 +1,26 @@
 package ca.mcgill.ecse321.museum.dto;
 
-public class ManagerDto {
+public class MuseumUserDto {
     private long userId;
     private String email;
     private String name;
     private String password;
     private String sessionId;
 
-    public ManagerDto() {}
+    public MuseumUserDto() {}
+
+    public MuseumUserDto(long userId, String email, String name, String password) {
+        this.userId = userId;
+        this.email = email;
+        this.name = name;
+        this.password = password;
+    }
 
     public Long getMuseumUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setMuseumUserId(Long userId) {
         this.userId = userId;
     }
 

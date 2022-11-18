@@ -130,7 +130,7 @@ public class RegistrationIntegrationTest {
   public void testViewVisitorProfile() {
     VisitorDto visitor = createVisitorAndLogin(
         createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
-    long visitorId = visitor.getUserId();
+    long visitorId = visitor.getMuseumUserId();
     HttpHeaders headers = new HttpHeaders();
     headers.set("Cookie", visitor.getSessionId());
     HttpEntity<String> entity = new HttpEntity<String>(headers);
@@ -153,7 +153,7 @@ public class RegistrationIntegrationTest {
     Visitor visitor = createVisitorAndSave(
         createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
     VisitorDto visitorDto = createVisitorDto(visitor);
-    long visitorId = visitorDto.getUserId();
+    long visitorId = visitorDto.getMuseumUserId();
 
     ResponseEntity<String> response =
         client.getForEntity("/api/profile/visitor/" + visitorId, String.class);
@@ -167,7 +167,7 @@ public class RegistrationIntegrationTest {
   public void testViewUnauthorizedVisitor() {
     VisitorDto visitor = createVisitorAndLogin(
         createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
-    long visitorId = visitor.getUserId() + 1;
+    long visitorId = visitor.getMuseumUserId() + 1;
 
     // TestRestTemplate does not pass session so we pass the sessionId we get from login
     HttpHeaders headers = new HttpHeaders();
@@ -188,7 +188,7 @@ public class RegistrationIntegrationTest {
   public void testUpdateVisitorInformation() {
     VisitorDto visitor = createVisitorAndLogin(
         createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
-    long visitorId = visitor.getUserId();
+    long visitorId = visitor.getMuseumUserId();
 
     Map<String, String> updatedCredentials = new HashMap<>();
     updatedCredentials.put("name", "Fernando Alonso");
@@ -218,7 +218,7 @@ public class RegistrationIntegrationTest {
     Visitor visitor = createVisitorAndSave(
         createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
     VisitorDto visitorDto = createVisitorDto(visitor);
-    long visitorId = visitorDto.getUserId();
+    long visitorId = visitorDto.getMuseumUserId();
 
     Map<String, String> updatedCredentials = new HashMap<>();
     updatedCredentials.put("name", "Fernando Alonso");
@@ -240,7 +240,7 @@ public class RegistrationIntegrationTest {
         createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
     VisitorDto secondVisitor = createVisitorAndLogin(
         createVisitor(SECOND_VISITOR_VALID_EMAIL, SECOND_VALID_VISITOR_NAME, VALID_PASSWORD));
-    long firstVisitorId = firstVisitor.getUserId();
+    long firstVisitorId = firstVisitor.getMuseumUserId();
 
     Map<String, String> updatedCredentials = new HashMap<>();
     updatedCredentials.put("name", "Fernando Alonso");
@@ -265,7 +265,7 @@ public class RegistrationIntegrationTest {
   public void testUpdateVisitorInformationWithInvalidEmail() {
     VisitorDto visitor = createVisitorAndLogin(
         createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
-    long visitorId = visitor.getUserId();
+    long visitorId = visitor.getMuseumUserId();
 
     Map<String, String> updatedCredentials = new HashMap<>();
     updatedCredentials.put("email", "fernando.alonsogmail");
@@ -287,7 +287,7 @@ public class RegistrationIntegrationTest {
   public void testUpdateVisitorInformationWithInvalidPassword() {
     VisitorDto visitor = createVisitorAndLogin(
         createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
-    long visitorId = visitor.getUserId();
+    long visitorId = visitor.getMuseumUserId();
 
     Map<String, String> updatedCredentials = new HashMap<>();
     updatedCredentials.put("oldPassword", "#BrazilGp2022");
@@ -311,7 +311,7 @@ public class RegistrationIntegrationTest {
   public void testUpdateVisitorWithWrongPassword() {
     VisitorDto visitor = createVisitorAndLogin(
         createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
-    long visitorId = visitor.getUserId();
+    long visitorId = visitor.getMuseumUserId();
 
     Map<String, String> updatedCredentials = new HashMap<>();
     updatedCredentials.put("oldPassword", "#BrasilGp2022");
