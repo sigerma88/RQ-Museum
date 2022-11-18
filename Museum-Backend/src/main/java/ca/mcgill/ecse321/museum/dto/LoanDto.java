@@ -11,7 +11,7 @@ public class LoanDto {
         
     }
 
-    public LoanDto(boolean aRequestAccepted) {
+    public LoanDto(Boolean aRequestAccepted) {
         requestAccepted = aRequestAccepted;
         visitorDto = null;
         artworkDto = null;

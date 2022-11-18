@@ -60,7 +60,7 @@ public class DtoUtility {
    * @return loan DTO
    * @author Eric
    */
-  static LoanDto convertToDto(Loan loan) {
+  public static LoanDto convertToDto(Loan loan) {
     if (loan == null) {
         throw new IllegalArgumentException("There is no such Loan");
     }

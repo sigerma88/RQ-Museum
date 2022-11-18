@@ -14,10 +14,22 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import ca.mcgill.ecse321.museum.controller.DtoUtility;
 import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
 import ca.mcgill.ecse321.museum.dao.LoanRepository;
+import ca.mcgill.ecse321.museum.dao.MuseumRepository;
+import ca.mcgill.ecse321.museum.dao.RoomRepository;
+import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
 import ca.mcgill.ecse321.museum.dto.LoanDto;
+import ca.mcgill.ecse321.museum.model.Artwork;
+import ca.mcgill.ecse321.museum.model.Loan;
+import ca.mcgill.ecse321.museum.model.Museum;
+import ca.mcgill.ecse321.museum.model.Room;
+import ca.mcgill.ecse321.museum.model.Schedule;
+import ca.mcgill.ecse321.museum.model.Visitor;
+import ca.mcgill.ecse321.museum.service.ArtworkService;
+import ca.mcgill.ecse321.museum.service.VisitorService;
 
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -33,87 +45,103 @@ public class LoanIntegrationTest {
     private ArtworkRepository artworkRepository;
     @Autowired
     private VisitorRepository visitorRepository;
-	
-	private static final long LOAN_ID = 1;
-    private static final Boolean LOAN_REQUESTACCEPTED = null;
+	@Autowired
+	private ScheduleRepository scheduleRepository;
+	@Autowired
+	private MuseumRepository museumRepository;
+	@Autowired
+	private RoomRepository roomRepository;
 
-    private static final long SECOND_LOAN_ID = 2;
-    private static final Boolean SECOND_LOAN_REQUESTACCEPTED = null;
+	@Autowired
+	private ArtworkService artworkService;
 
-    // Loan that should fail because associations with bad artwork or visitor
-    private static final long THIRD_LOAN_ID = 3;
-    private static final boolean THIRD_LOAN_REQUESTACCEPTED = true; 
+	@Autowired 
+	private VisitorService visitorService;
 
-    private static final long NONE_EXISTING_LOAN_ID = 4;
-
-    private static final long VISITOR_ID = 1;
-    private static final String VISITOR_EMAIL = "IAMAVISITOR@email.com";
-    private static final String VISITOR_NAME = "Steve";
-    private static final String VISITOR_PASSWORD = "Password123";
-
-    private static final long NONE_EXISTING_VISITOR_ID = 2;
-
-    // Artwork that can't be loaned
-    private static final long ARTWORK_ID =1;
-    private static final String ARTWORK_NAME = "George";
-    private static final String ARTWORK_ARTIST = "Curious";
-    private static final boolean ARTWORK_ISAVAILABLEFORLOAN = false;
-    private static final boolean ARTWORK_ISONLOAN = false; 
-    private static final double ARTWORK_LOANFEE = 54.2;
-    private static final String ARTWORK_IMAGE = "bruh";
-
-    // Artwork that can be loaned and isn't on loan
-    private static final long SECOND_ARTWORK_ID =2;
-    private static final String SECOND_ARTWORK_NAME = "HELLO";
-    private static final String SECOND_ARTWORK_ARTIST = "WORLD";
-    private static final boolean SECOND_ARTWORK_ISAVAILABLEFORLOAN = true;
-    private static final boolean SECOND_ARTWORK_ISONLOAN = false; 
-    private static final double SECOND_ARTWORK_LOANFEE = 63.5;
-    private static final String SECOND_ARTWORK_IMAGE = "bruuuuh";
-
-    // Artwork that can be loaned but is on loan
-    private static final long THIRD_ARTWORK_ID =3;
-    private static final String THIRD_ARTWORK_NAME = "dna";
-    private static final String THIRD_ARTWORK_ARTIST = "code";
-    private static final boolean THIRD_ARTWORK_ISAVAILABLEFORLOAN = true;
-    private static final boolean THIRD_ARTWORK_ISONLOAN = true; 
-    private static final double THIRD_ARTWORK_LOANFEE = 69.69;
-    private static final String THIRD_ARTWORK_IMAGE = "bruuuuuuuuuuuuuuuuuh";
-
-    private static final long NONE_EXISTING_ARTWORK_ID = 4;
     @BeforeEach
-    @AfterEach
+	public void setup() {
+	// Create stubs
+
+    // Create a schedule
+    Schedule schedule = new Schedule();
+
+    // Creating a museum
+    Museum museum = new Museum();
+    museum.setName("Rougon-Macquart");
+    museum.setVisitFee(12.5);
+    museum.setSchedule(schedule);
+    museumRepository.save(museum);
+
+    // Creating a room
+    Room room = new Room();
+    room.setRoomName("Room 1");
+    room.setRoomType(RoomType.Small);
+    room.setCurrentNumberOfArtwork(0);
+    room.setMuseum(museum);
+    roomRepository.save(room);
+
+    // Creating an artwork
+    Artwork artwork = new Artwork();
+    artwork.setName("La Joconde");
+    artwork.setArtist("Leonardo Da Vinci");
+    artwork.setIsAvailableForLoan(true);
+    artwork.setLoanFee(110.99);
+    artwork.setImage("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/La_Joconde.jpg/800px-La_Joconde.jpg");
+    artwork.setIsOnLoan(false);
+    artworkRepository.save(artwork);
+
+	// Creating a visitor
+	Visitor visitor = new Visitor();
+	visitor.setEmail("Please@email.com");
+	visitor.setName("Please");
+	visitor.setPassword("password");
+	visitorRepository.save(visitor);
+	}
+
+	@AfterEach
     public void clearDatabase() {
         loanRepository.deleteAll();
         artworkRepository.deleteAll();
         visitorRepository.deleteAll();
     }
+
     @Test
 	public void testCreateAndGetLoan() {
-		int id = testCreateLoan();
+		Long id = testCreateLoan();
 		testGetPerson(id);
 	}
 
-	private int testCreateLoan() {
+	@Test
+	public void testCreateLoan() {
+		Artwork artwork = artworkService.getAllArtworks().get(0);
+
+		Visitor visitor = visitorService.getAllVisitors().get(0);
+
+		Loan loan = new Loan();
+		loan.setRequestAccepted(null);
+		loan.setArtwork(artwork);
+		loan.setVisitor(visitor);
+		LoanDto loanDto = DtoUtility.convertToDto(loan);
 		
 
-		ResponseEntity<LoanDto> response = client.postForEntity("/postLoan", new LoanDto(), LoanDto.class);
+		ResponseEntity<LoanDto> response = client.postForEntity("/postLoan", loanDto, LoanDto.class);
 
+		// Check status and body of response are correct
 		assertNotNull(response);
 		assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
 		assertNotNull(response.getBody(), "Response has body");
-		assertEquals("Obi-Wan Kenobi", response.getBody().getName(), "Response has correct name");
-		assertTrue(response.getBody().getId() > 0, "Response has valid ID");
-
-		return response.getBody().getId();
+		assertEquals(loan.getRequestAccepted(), response.getBody().getRequestAccepted(), "Response has correct requestAccepted");
+		assertEquals(visitor.getMuseumUserId(), response.getBody().getVisitorDto(), "Response has correct visitorDto");
+		assertEquals(artwork.getArtworkId(), response.getBody().getArtworkDto(), "Response has correct artworkDto");
+		assertTrue(response.getBody().getLoanId() > 0, "Response has valid ID");
 	}
 
-	private void testGetPerson(int id) {
-		ResponseEntity<PersonDto> response = client.getForEntity("/person/" + id, PersonDto.class);
+	private void testGetLoan(Long LoanId) {
+		ResponseEntity<LoanDto> response = client.getForEntity("/loan/" + LoanId, LoanDto.class);
 
 		assertNotNull(response);
 		assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
 		assertNotNull(response.getBody(), "Response has body");
-		assertEquals("Obi-Wan Kenobi", response.getBody().getName(), "Response has correct name");
     
+	}
 }
