@@ -61,14 +61,14 @@ public class EmployeeRestController {
   /**
    * RESTful API to delete an employee by their id
    * 
-   * @param id - long
+   * @param employeeId - long
    * @return if the employee was deleted (success)
    * @author Siger
    */
-  @DeleteMapping(value = { "/employee/{id}", "/employee/{id}/" })
-  public ResponseEntity<?> deleteEmployee(@PathVariable("id") long id) {
+  @DeleteMapping(value = { "/employee/{employeeId}", "/employee/{employeeId}/" })
+  public ResponseEntity<?> deleteEmployee(@PathVariable("employeeId") long employeeId) {
     try {
-      service.deleteEmployee(id);
+      service.deleteEmployee(employeeId);
       return ResponseEntity.ok("Employee deleted");
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());

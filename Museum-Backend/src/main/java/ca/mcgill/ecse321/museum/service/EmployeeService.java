@@ -189,14 +189,14 @@ public class EmployeeService {
    * Method to delete an employee from the database by their id
    * Allows the manager to delete an employee
    * 
-   * @param id - Long
+   * @param employeeId - Long
    * @return if the employee was deleted (success)
    * @author Siger
    */
   @Transactional
-  public boolean deleteEmployee(Long id) {
+  public boolean deleteEmployee(Long employeeId) {
     // Check if the employee exists and error handling
-    Employee employee = employeeRepository.findEmployeeByMuseumUserId(id);
+    Employee employee = employeeRepository.findEmployeeByMuseumUserId(employeeId);
     if (employee == null) {
       throw new IllegalArgumentException("Employee does not exist");
     }
@@ -209,10 +209,10 @@ public class EmployeeService {
     }
 
     // Delete employee
-    employeeRepository.deleteEmployeeByMuseumUserId(id);
+    employeeRepository.deleteEmployeeByMuseumUserId(employeeId);
 
     // Check if employee was deleted
-    return getEmployee(id) == null;
+    return getEmployee(employeeId) == null;
   }
 
   /**
