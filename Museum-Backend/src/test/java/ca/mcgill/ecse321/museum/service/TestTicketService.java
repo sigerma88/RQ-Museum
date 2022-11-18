@@ -79,12 +79,30 @@ public class TestTicketService {
         visitor2.setPassword(VISITOR_PASSWORD_2);
         visitor2.setMuseumUserId(VISITOR_ID_2);
 
+       /* Ticket ticket = new Ticket();
+        ticket.setTicketId(TICKET_ID_2);
+        ticket.setVisitDate(Date.valueOf(VISIT_DATE_2));
+        ticket.setVisitor(visitor2);*/
+        // ticketService.createTickets(VISITOR_ID_2, Date.valueOf(VISIT_DATE_2), TICKETS_VISITOR_2);
         return visitor2;
       } else {
         return null;
       }
 
     });
+
+    /*lenient().when(ticketRepository.findTicketByTicketId(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
+      if (invocation.getArgument(0).equals(TICKET_ID_1)) {
+        Ticket ticket = new Ticket();
+        ticket.setTicketId(TICKET_ID_1);
+        ticket.setVisitDate(Date.valueOf(VISIT_DATE_1));
+        return ticket;
+      } else {
+        return null;
+      }
+
+    });*/
+
 
     lenient().when(ticketRepository.findAll()).thenAnswer((InvocationOnMock invocation) -> {
       List<Ticket> allTickets = new ArrayList<>();
@@ -112,12 +130,7 @@ public class TestTicketService {
 
   }
 
-  /**
-   * Creating a ticket
-   * Success scenario
-   *
-   * @author Zahra
-   */
+  //DONE
   @Test
   public void testCreateTicket() {
 
@@ -136,12 +149,7 @@ public class TestTicketService {
 
   }
 
-  /**
-   * Creating a ticket
-   * Fail scenario 1 : no date was given
-   *
-   * @author Zahra
-   */
+  //done
   @Test
   public void testCreateTicketWithNoDate() {
     Ticket ticket = null;
@@ -158,12 +166,8 @@ public class TestTicketService {
 
   }
 
-  /**
-   * Creating a ticket
-   * Fail scenario 2 : the given date is invalid
-   *
-   * @author Zahra
-   */
+
+  //done
   @Test
   public void testCreateTicketWithInvalidDate() {
     Ticket ticket = null;
@@ -182,14 +186,9 @@ public class TestTicketService {
 
   }
 
-  /**
-   * Creating a ticket
-   * Fail scenario 3 : the visitor ID doesn't match an existing visitor
-   *
-   * @author Zahra
-   */
+
   @Test
-  public void testCreateTicketWithNonExistingVisitor() {
+  public void createTicketWithNonExistingVisitor() {
     Ticket ticket = null;
     String visitDate = "2023-04-21";
     long visitorId = 0;
@@ -205,14 +204,9 @@ public class TestTicketService {
 
   }
 
-  /**
-   * Creating tickets
-   * Success scenario
-   *
-   * @author Zahra
-   */
+
   @Test
-  public void testCreateTickets() {
+  public void createTickets() {
     List<Ticket> createdTickets = null;
     String visitDate = VISIT_DATE_2;
     int number = 4;
@@ -230,12 +224,7 @@ public class TestTicketService {
 
   }
 
-  /**
-   * Creating  tickets
-   * Fail scenario 1 : the given visitor ID doesn't match an existing visitor
-   *
-   * @author Zahra
-   */
+  //done
   @Test
   public void testCreateTicketsWithNonExistingVisitor() {
 
@@ -274,7 +263,7 @@ public class TestTicketService {
   }
 
   @Test
-  public void testCreateTicketsWithInvalidDate() {
+  public void createTicketsWithInvalidDate() {
     List<Ticket> createdTickets = null;
     String visitDate = INVALID_DATE;
     String error = "";
@@ -297,16 +286,19 @@ public class TestTicketService {
    */
 
   @Test
-  public void testGetTicketsByVisitor() {
+  public void getTicketsByVisitor() {
     List<Ticket> allTicketsOfVisitor = null;
     long visitorId = VISITOR_ID_2;
-    Visitor visitor = visitorRepository.findVisitorByMuseumUserId(visitorId);
-    allTicketsOfVisitor = ticketService.getTicketsByVisitor(visitor);
+
+    allTicketsOfVisitor = ticketService.getTicketsByVisitor(visitorRepository.findVisitorByMuseumUserId(visitorId));
+
 
     assertNotNull(allTicketsOfVisitor);
     assertEquals(TICKETS_VISITOR_2, allTicketsOfVisitor.size());
-    assertEquals(VISIT_DATE_2, allTicketsOfVisitor.get(1).getVisitDate().toString());
-    assertEquals(VISITOR_ID_2, allTicketsOfVisitor.get(1).getVisitor().getMuseumUserId());
+    assertEquals(VISIT_DATE_2, allTicketsOfVisitor.get(1).getVisitDate());
+
+    /*for (int i = 0; i <= allTicketsOfVisitor.size(); i++)
+      assertEquals(VISIT_DATE_2, allTicketsOfVisitor.get(i).getVisitDate());*/
 
   }
 
@@ -317,7 +309,7 @@ public class TestTicketService {
    */
 
   @Test
-  public void testGetTicketsWithNonExistingVisitor() {
+  public void getTicketsWithNonExistingVisitor() {
     Visitor visitor = null;
     String error = null;
     List<Ticket> allTicketsOfVisitor = new ArrayList<>();
