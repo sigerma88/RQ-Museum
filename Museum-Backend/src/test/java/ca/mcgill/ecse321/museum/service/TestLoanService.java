@@ -5,6 +5,7 @@ import java.util.List;
 import java.sql.Timestamp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -307,6 +308,45 @@ public class TestLoanService {
         List<Loan> loans = loanService.getAllLoans();
         assertEquals(2, loans.size());
     }
+
+    /**
+     * Test method for creating a loan successfully
+     * 
+     * @author Eric
+     */
+    @Test
+    public void testCreateLoan() {
+        String exceptionMessage = null;
+        Loan createdLoan = null;
+        Visitor visitor = new Visitor();
+        Artwork artwork = new Artwork();
+
+
+        try {
+            visitor.setMuseumUserId(VISITOR_ID);
+            visitor.setName(VISITOR_NAME);
+            visitor.setEmail(VISITOR_EMAIL);
+            visitor.setPassword(VISITOR_PASSWORD);
+            VisitorDto visitorDto = DtoUtility.convertToDto(visitor);
+
+            artwork.setArtworkId(SECOND_ARTWORK_ID);
+            artwork.setArtist(SECOND_ARTWORK_ARTIST);
+            artwork.setName(SECOND_ARTWORK_NAME);
+            artwork.setImage(SECOND_ARTWORK_IMAGE);
+            artwork.setLoanFee(SECOND_ARTWORK_LOANFEE);
+            artwork.setIsOnLoan(SECOND_ARTWORK_ISONLOAN);
+            artwork.setIsAvailableForLoan(SECOND_ARTWORK_ISAVAILABLEFORLOAN);
+            ArtworkDto artworkDto = DtoUtility.convertToDto(artwork);
+
+            createdLoan = new Loan();
+            createdLoan = loanService.createLoan(null, artworkDto, visitorDto);
+        } catch (IllegalArgumentException e) {
+            exceptionMessage = e.getMessage();
+        }
+        assertNotNull(createdLoan);
+        assertEquals(createdLoan.getArtwork().getArtworkId(), artwork.getArtworkId());
+        assertEquals(createdLoan.getVisitor().getMuseumUserId(), visitor.getMuseumUserId());   
+    }
     
     /**
      * Test method for creating a loan with invalid requestAccepted status at creation
@@ -377,6 +417,138 @@ public class TestLoanService {
         assertEquals("Cannot create a duplicate loan request", exceptionMessage);
     }
 
+    /**
+     * Test method for creating a loan associated to a null visitor
+     * 
+     * @author Eric
+     */
+    @Test
+    public void testCreateLoanForNoneExistingVisitor() {
+        String exceptionMessage = null;
+        try {
+            Visitor visitor = new Visitor();
+            visitor.setMuseumUserId(NONE_EXISTING_ARTWORK_ID);
+            visitor.setName(VISITOR_NAME);
+            visitor.setEmail(VISITOR_EMAIL);
+            visitor.setPassword(VISITOR_PASSWORD);
+            VisitorDto visitorDto = DtoUtility.convertToDto(visitor);
+
+            Artwork artwork = new Artwork();
+            artwork.setArtworkId(SECOND_ARTWORK_ID);
+            artwork.setArtist(SECOND_ARTWORK_ARTIST);
+            artwork.setName(SECOND_ARTWORK_NAME);
+            artwork.setImage(SECOND_ARTWORK_IMAGE);
+            artwork.setLoanFee(SECOND_ARTWORK_LOANFEE);
+            artwork.setIsOnLoan(SECOND_ARTWORK_ISONLOAN);
+            artwork.setIsAvailableForLoan(SECOND_ARTWORK_ISAVAILABLEFORLOAN);
+            ArtworkDto artworkDto = DtoUtility.convertToDto(artwork);
+            artworkRepository.save(artwork);
+
+            Loan createdLoan = loanService.createLoan(null, artworkDto, visitorDto);
+        } catch (IllegalArgumentException e) {
+            exceptionMessage = e.getMessage();
+        }
+        assertEquals("Visitor does not exist", exceptionMessage);
+    }
+
+    /**
+     * Test method for creating a loan associated to a null artwork
+     * 
+     * @author Eric
+     */
+    @Test
+    public void testCreateLoanForNoneExistingArtwork() {
+        String exceptionMessage = null;
+        try {
+            Visitor visitor = new Visitor();
+            visitor.setMuseumUserId(VISITOR_ID);
+            visitor.setName(VISITOR_NAME);
+            visitor.setEmail(VISITOR_EMAIL);
+            visitor.setPassword(VISITOR_PASSWORD);
+            VisitorDto visitorDto = DtoUtility.convertToDto(visitor);
+
+            Artwork artwork = new Artwork();
+            artwork.setArtworkId(NONE_EXISTING_ARTWORK_ID);
+            artwork.setArtist(SECOND_ARTWORK_ARTIST);
+            artwork.setName(SECOND_ARTWORK_NAME);
+            artwork.setImage(SECOND_ARTWORK_IMAGE);
+            artwork.setLoanFee(SECOND_ARTWORK_LOANFEE);
+            artwork.setIsOnLoan(SECOND_ARTWORK_ISONLOAN);
+            artwork.setIsAvailableForLoan(SECOND_ARTWORK_ISAVAILABLEFORLOAN);
+            ArtworkDto artworkDto = DtoUtility.convertToDto(artwork);
+
+            Loan createdLoan = loanService.createLoan(null, artworkDto, visitorDto);
+        } catch (IllegalArgumentException e) {
+            exceptionMessage = e.getMessage();
+        }
+        assertEquals("Artwork does not exist", exceptionMessage);
+    }
+
+    /**
+     * Test method for creating a loan associated to an artwork that has isAvailableForLoan == false
+     * 
+     * @author Eric
+     */
+    @Test
+    public void testCreateLoanForArtworkIsAvailableForLoanFalse() {
+        String exceptionMessage = null;
+        try {
+            Visitor visitor = new Visitor();
+            visitor.setMuseumUserId(VISITOR_ID);
+            visitor.setName(VISITOR_NAME);
+            visitor.setEmail(VISITOR_EMAIL);
+            visitor.setPassword(VISITOR_PASSWORD);
+            VisitorDto visitorDto = DtoUtility.convertToDto(visitor);
+
+            Artwork artwork = new Artwork();
+            artwork.setArtworkId(ARTWORK_ID);
+            artwork.setArtist(ARTWORK_ARTIST);
+            artwork.setName(ARTWORK_NAME);
+            artwork.setImage(ARTWORK_IMAGE);
+            artwork.setLoanFee(ARTWORK_LOANFEE);
+            artwork.setIsOnLoan(ARTWORK_ISONLOAN);
+            artwork.setIsAvailableForLoan(ARTWORK_ISAVAILABLEFORLOAN);
+            ArtworkDto artworkDto = DtoUtility.convertToDto(artwork);
+
+            Loan createdLoan = loanService.createLoan(null, artworkDto, visitorDto);
+        } catch (IllegalArgumentException e) {
+            exceptionMessage = e.getMessage();
+        }
+        assertEquals("Artwork is not available for loan", exceptionMessage);
+    }
+
+    /**
+     * Test method for creating a loan associated to an artwork that has isAvailableForLoan == true but isOnLoan == true
+     * 
+     * @author Eric
+     */
+    @Test
+    public void testCreateLoanForArtworkIsOnLoanTrue() {
+        String exceptionMessage = null;
+        try {
+            Visitor visitor = new Visitor();
+            visitor.setMuseumUserId(VISITOR_ID);
+            visitor.setName(VISITOR_NAME);
+            visitor.setEmail(VISITOR_EMAIL);
+            visitor.setPassword(VISITOR_PASSWORD);
+            VisitorDto visitorDto = DtoUtility.convertToDto(visitor);
+
+            Artwork artwork = new Artwork();
+            artwork.setArtworkId(THIRD_ARTWORK_ID);
+            artwork.setArtist(THIRD_ARTWORK_ARTIST);
+            artwork.setName(THIRD_ARTWORK_NAME);
+            artwork.setImage(THIRD_ARTWORK_IMAGE);
+            artwork.setLoanFee(THIRD_ARTWORK_LOANFEE);
+            artwork.setIsOnLoan(THIRD_ARTWORK_ISONLOAN);
+            artwork.setIsAvailableForLoan(THIRD_ARTWORK_ISAVAILABLEFORLOAN);
+            ArtworkDto artworkDto = DtoUtility.convertToDto(artwork);
+
+            Loan createdLoan = loanService.createLoan(null, artworkDto, visitorDto);
+        } catch (IllegalArgumentException e) {
+            exceptionMessage = e.getMessage();
+        }
+        assertEquals("Cannot create a loan request for an artwork that is on loan", exceptionMessage);
+    }
 
 
 }

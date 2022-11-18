@@ -32,8 +32,8 @@ public class LoanRestController {
     private LoanService loanService;
     @Autowired
     private ArtworkService artworkService;
-    @Autowired
-    private VisitorService visitorService; 
+    //@Autowired
+    //private VisitorService visitorService; 
 
     /**
      * This method is called when we need the information of a specific loan
@@ -120,27 +120,4 @@ public class LoanRestController {
         }
     }
 
-    private VisitorDto convertToDto(Visitor visitor) {
-        if (visitor == null) {
-            throw new IllegalArgumentException("There is no such Visitor!");
-        }
-        /**
-         * TODO
-         * Modify the arguments passed in the VisitorDto constructor to properly construct the VisitorDto
-         */
-        VisitorDto visitorDto = new VisitorDto();
-        return visitorDto;
-    }
-
-    private ArtworkDto convertToDto(Artwork artwork) {
-        if (artwork == null) {
-            throw new IllegalArgumentException("There is no such Artwork!");
-        }
-        /**
-         * TODO
-         * Modify the arguments passed in the ArtworkDto constructor to properly construct the ArtworkDto
-         */
-        ArtworkDto artworkDto = new ArtworkDto();
-        return artworkDto;
-    }
 }

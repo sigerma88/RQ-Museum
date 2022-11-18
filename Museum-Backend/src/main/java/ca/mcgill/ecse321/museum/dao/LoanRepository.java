@@ -20,7 +20,7 @@ public interface LoanRepository extends CrudRepository<Loan, Long> {
 
   Loan findLoanByArtwork(Artwork artwork);
 
-  Loan findLoanByArtworkIdAndVisitorId(Long artworkId, Long visitorId);
+  Loan findLoanByArtworkAndVisitor(Artwork artwork, Visitor visitor);
 
   void deleteLoanByLoanId(Long loanId);
 

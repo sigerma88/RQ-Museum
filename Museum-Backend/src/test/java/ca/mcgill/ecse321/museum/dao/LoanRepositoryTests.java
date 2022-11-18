@@ -113,7 +113,7 @@ public class LoanRepositoryTests {
     loan = null;
 
     //get loan from artworkId and visitorId
-    loan = loanRepository.findLoanByArtworkIdAndVisitorId(artworkId, visitorId);
+    loan = loanRepository.findLoanByArtworkAndVisitor(monalisa, visitor);
 
     assertNotNull(loan);
   }
