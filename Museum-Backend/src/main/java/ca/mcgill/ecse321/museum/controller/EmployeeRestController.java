@@ -30,7 +30,7 @@ public class EmployeeRestController {
    * @param id the id of the employee
    * @return employee with the given id
    */
-  @GetMapping(value = { "/employee/{id}", "/employee/{id}/" })
+  @GetMapping(value = { "/employee/{id}", "/employee/{id}/" }) 
   public ResponseEntity<?> getEmployee(@PathVariable("id") long id) {
     try{
       return new ResponseEntity<>(DtoUtility.convertToDto(service.getEmployee(id)), HttpStatus.OK);

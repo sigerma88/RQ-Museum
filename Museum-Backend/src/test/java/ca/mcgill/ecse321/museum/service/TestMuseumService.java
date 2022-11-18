@@ -180,6 +180,7 @@ public class TestMuseumService {
         assertEquals(MUSEUM_NAME, museum.getName());
         assertEquals(MUSEUM_VISITFEE, museum.getVisitFee());
         assertEquals(MUSEUM_SCHEDULE, museum.getSchedule());
+
     }
 
     /**
@@ -882,7 +883,6 @@ public class TestMuseumService {
      * test for getting all museums when there are none
      * @author VZ
      */
-
     @Test
     public void testGetAllMuseumsEmpty() {
         List<Museum> museums = new ArrayList<>();

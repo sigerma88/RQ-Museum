@@ -1,6 +1,8 @@
 package ca.mcgill.ecse321.museum.service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +39,7 @@ public class TimePeriodService {
      * 
      * @author VZ
      * @param startDate - start date of time period
-     * @param endDate  - end date of time period
+     * @param endDate   - end date of time period
      * @return time period
      */
     @Transactional
@@ -82,15 +84,15 @@ public class TimePeriodService {
      * 
      * @author VZ
      * @param timePeriodId - id of time period
-     * @param startDate   - start date of time period
-     * @param endDate   - end date of time period
+     * @param startDate    - start date of time period
+     * @param endDate      - end date of time period
      * @return edited time period
      */
     @Transactional
     public TimePeriod editTimePeriod(long timePeriodId, Timestamp startDate, Timestamp endDate) {
         // input validation
-        if (startDate == null || endDate == null) {
-            throw new IllegalArgumentException("Start date and end date cannot be null");
+        if (startDate == null && endDate == null) {
+            throw new IllegalArgumentException("Nothing to change, fields are null");
         }
         if (startDate.after(endDate)) {
             throw new IllegalArgumentException("Start date cannot be after end date");
@@ -101,10 +103,39 @@ public class TimePeriodService {
             throw new IllegalArgumentException("Time period does not exist");
         }
         // edit TimePeriod
-        timePeriod.setStartDate(startDate);
-        timePeriod.setEndDate(endDate);
+        if (startDate != null) {
+            timePeriod.setStartDate(startDate);
+        }
+        if (endDate != null) {
+            timePeriod.setEndDate(endDate);
+        }
         timePeriodRepository.save(timePeriod);
         return timePeriod;
     }
 
+    /**
+     * Get all time periods from database
+     * 
+     * @author VZ
+     * @return list of time periods
+     */
+    @Transactional
+    public List<TimePeriod> getAllTimePeriods() {
+        return toList(timePeriodRepository.findAll());
+    }
+
+    /**
+     * Method to convert an Iterable to a List
+     * 
+     * @param iterable - Iterable
+     * @return List
+     * @author From tutorial notes
+     */
+    private <T> List<T> toList(Iterable<T> iterable) {
+        List<T> resultList = new ArrayList<T>();
+        for (T t : iterable) {
+            resultList.add(t);
+        }
+        return resultList;
+    }
 }
