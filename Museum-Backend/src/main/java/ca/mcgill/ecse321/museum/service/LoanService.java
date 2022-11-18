@@ -25,6 +25,8 @@ public class LoanService {
     ArtworkRepository artworkRepository;
     @Autowired 
     VisitorRepository visitorRepository;
+    @Autowired
+    ArtworkService artworkService;
 
     @Transactional
     public Loan getLoanById(Long loanId) {
@@ -79,7 +81,20 @@ public class LoanService {
         return persistedLoan;
     }
 
+    @Transactional
+    public Loan patchLoanById(Long loanId, Boolean requestAccepted) {
+        Loan loan = loanRepository.findLoanByLoanId(loanId);
+        if (loan == null) {
+            throw new IllegalArgumentException("Loan does not exist");
+        }
+        loan.setRequestAccepted(requestAccepted);
+        if (requestAccepted == true) {
+            artworkService.
+        }
 
+
+        return loan;
+    }
 
 /**
    * Method to convert an Iterable to a List
@@ -95,4 +110,6 @@ public class LoanService {
     }
     return resultList;
   }
+
+
 }

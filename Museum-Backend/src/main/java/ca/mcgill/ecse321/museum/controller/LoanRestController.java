@@ -72,21 +72,19 @@ public class LoanRestController {
     /**
      * This method is called when an employee approves or denies a loan request
      */
-    @PatchMapping(value = { "/patchLoan/{loanId}/{BooleanRequest}", "/patchLoan/{loanId}/{BooleanRequest}" })
-    public ResponseEntity<?> patchLoan(@PathVariable("loanId") Long loanId, @PathVariable("BooleanRequest") Boolean booleanRequest) {
+    @PatchMapping(
+        value = { "/patchLoan", "/patchLoan/" },
+        consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+        produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<?> patchLoan(@RequestBody LoanDto loanDto) {
         try {
-            // // Check if loan exists
-            Loan loan = loanService.getLoanById(loanId);
-            // if (loan == null) {
-            // return ResponseEntity.badRequest().body("Loan does not exist");
-            // }
-            loan.setRequestAccepted(booleanRequest);
-            LoanDto loanDto = DtoUtility.convertToDto(loan);
+            Loan patchedLoan = loanService.patchLoanById(loanDto.getLoanId(), loanDto.getRequestAccepted());
+            LoanDto loanDto = DtoUtility.convertToDto(patchedLoan);
 
             // TODO: Send email to user about the status of their loan request
 
             // TODO: Update the room of the artwork to null
-            return ResponseEntity.ok(loanDto);
+            return ResponseEntity.ok(patchedLoan);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
