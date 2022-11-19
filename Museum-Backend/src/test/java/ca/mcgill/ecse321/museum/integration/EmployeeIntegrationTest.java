@@ -150,7 +150,7 @@ public class EmployeeIntegrationTest {
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("Cookie", employee.getSessionId());
-    HttpEntity<Map<String, String>> entity = new HttpEntity<>(headers);
+    HttpEntity<?> entity = new HttpEntity<>(headers);
 
 
     ResponseEntity<String> responseEntity =
@@ -159,7 +159,100 @@ public class EmployeeIntegrationTest {
     assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
     assertEquals("You are not the manager", responseEntity.getBody(),
         "Correct response body message");
+  }
 
+  @Test
+  public void testDeleteEmployee() {
+    ManagerDto manager = createManagerAndLogin(
+        createManager(FIRST_VALID_MANAGER_NAME, FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD));
+
+    Employee firstEmployee =
+        createEmployee(FIRST_EMPLOYEE_NAME, FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
+
+    createEmployeeAndSave(firstEmployee);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", manager.getSessionId());
+    HttpEntity<?> entity = new HttpEntity<>(headers);
+
+
+    ResponseEntity<String> responseEntity =
+        client.exchange("/api/employee/" + firstEmployee.getMuseumUserId(), HttpMethod.DELETE,
+            entity, String.class);
+
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    assertNotNull(responseEntity.getBody());
+    assertEquals("Employee deleted", responseEntity.getBody(), "Correct response body message");
+
+  }
+
+  @Test
+  public void testDeleteInvalidEmployee() {
+    ManagerDto manager = createManagerAndLogin(
+        createManager(FIRST_VALID_MANAGER_NAME, FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD));
+
+    Employee firstEmployee =
+        createEmployee(FIRST_EMPLOYEE_NAME, FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
+
+    createEmployeeAndSave(firstEmployee);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", manager.getSessionId());
+    HttpEntity<?> entity = new HttpEntity<>(headers);
+    ResponseEntity<String> responseEntity =
+        client.exchange("/api/employee/" + firstEmployee.getMuseumUserId() + 1, HttpMethod.DELETE,
+            entity, String.class);
+
+    assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+    assertNotNull(responseEntity.getBody());
+    assertEquals("Employee does not exist", responseEntity.getBody(),
+        "Correct response body message");
+  }
+
+  @Test
+  public void testDeleteEmployeeNotLoggedIn() {
+    ManagerDto manager = createManagerDto(
+        createManager(FIRST_VALID_MANAGER_NAME, FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD));
+
+    Employee firstEmployee =
+        createEmployee(FIRST_EMPLOYEE_NAME, FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
+
+    createEmployeeAndSave(firstEmployee);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", manager.getSessionId());
+    HttpEntity<?> entity = new HttpEntity<>(headers);
+    ResponseEntity<String> responseEntity =
+        client.exchange("/api/employee/" + firstEmployee.getMuseumUserId(), HttpMethod.DELETE,
+            entity, String.class);
+
+    assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
+    assertNotNull(responseEntity.getBody());
+    assertEquals("You are not logged in", responseEntity.getBody(),
+        "Correct response body message");
+  }
+
+  @Test
+  public void testDeleteEmployeeNotManager() {
+    EmployeeDto employee = createEmployeeAndLogin(
+        createEmployee(THIRD_EMPLOYEE_VALID_NAME, THIRD_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD));
+
+    Employee firstEmployee =
+        createEmployee(FIRST_EMPLOYEE_NAME, FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
+
+    createEmployeeAndSave(firstEmployee);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", employee.getSessionId());
+    HttpEntity<?> entity = new HttpEntity<>(headers);
+    ResponseEntity<String> responseEntity =
+        client.exchange("/api/employee/" + firstEmployee.getMuseumUserId(), HttpMethod.DELETE,
+            entity, String.class);
+
+    assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
+    assertNotNull(responseEntity.getBody());
+    assertEquals("You are not the manager", responseEntity.getBody(),
+        "Correct response body message");
   }
 
   /**
