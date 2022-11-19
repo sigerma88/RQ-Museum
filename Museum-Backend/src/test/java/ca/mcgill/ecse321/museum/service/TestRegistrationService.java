@@ -642,12 +642,12 @@ public class TestRegistrationService {
     }
   }
 
-  @Test
   /**
    * Test that edit manager with invalid new password
    * 
    * @author Kevin
    */
+  @Test
   public void testEditManagerWithInvalidNewPassword() {
     try {
       registrationService.editManagerInformation(MANAGER_ID, VALID_PASSWORD, INVALID_PASSWORD);

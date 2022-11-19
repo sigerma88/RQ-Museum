@@ -50,11 +50,11 @@ public class ArtworkService {
       throw new IllegalArgumentException("Artist name cannot be empty");
     }
 
-    if (isAvailableForLoan == true) {
+    if (isAvailableForLoan) {
       if (loanFee == null) {
         throw new IllegalArgumentException("Loan fee cannot be null if artwork is available for loan");
       }
-    } else if (isAvailableForLoan == false && loanFee != null) {
+    } else if (loanFee != null) {
       throw new IllegalArgumentException("Loan fee must be null if artwork is not available for loan");
     }
 
@@ -64,13 +64,13 @@ public class ArtworkService {
 
     if (isOnLoan == null) {
       throw new IllegalArgumentException("Artwork must be either on loan or not on loan");
-    } else if (isOnLoan == true) {
+    } else if (isOnLoan) {
       if (room != null) {
         throw new IllegalArgumentException("Room must be null if artwork is on loan");
       }
-    } else if (isOnLoan == false && room == null) {
+    } else if (room == null) {
       throw new IllegalArgumentException("Room cannot be null if artwork is not on loan");
-    } else if (isOnLoan == false && room != null) {
+    } else {
       // Update room artwork count
       roomService.changeCurrentNumberOfArtwork(room.getRoomId(), room.getCurrentNumberOfArtwork() + 1);
     }
@@ -208,11 +208,11 @@ public class ArtworkService {
     if (isAvailableForLoan == null) {
       isAvailableForLoan = artwork.getIsAvailableForLoan();
     }
-    if (isAvailableForLoan == true) {
+    if (isAvailableForLoan) {
       if (loanFee == null) {
         throw new IllegalArgumentException("Loan fee cannot be null if artwork is available for loan");
       }
-    } else if (isAvailableForLoan == false && loanFee != null) {
+    } else if (loanFee != null) {
       throw new IllegalArgumentException("Loan fee must be null if artwork is not available for loan");
     }
 

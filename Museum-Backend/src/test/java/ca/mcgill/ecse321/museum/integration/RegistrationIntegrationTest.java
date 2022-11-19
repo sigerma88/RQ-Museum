@@ -999,11 +999,12 @@ public class RegistrationIntegrationTest {
     /**
      * Create a visitor and login
      * 
-     * @param newVisitor - the visitor to login
+     * @param name - name of visitor to create and login
+     * @param email - email of visitor to create and login
+     * @oaram password - password of visitor to create and login
      * @return the logged in visitor
      * @author Kevin
      */
-
 
     public Employee createEmployee(String name, String email, String password) {
         Employee employee = new Employee();
