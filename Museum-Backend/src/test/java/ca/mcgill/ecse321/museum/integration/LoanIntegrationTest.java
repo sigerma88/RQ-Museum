@@ -97,6 +97,7 @@ public class LoanIntegrationTest {
     artwork.setLoanFee(110.99);
     artwork.setImage("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/La_Joconde.jpg/800px-La_Joconde.jpg");
     artwork.setIsOnLoan(false);
+	artwork.setRoom(room);
     artworkRepository.save(artwork);
 
 	// Creating a visitor
@@ -205,11 +206,12 @@ public class LoanIntegrationTest {
 		Visitor visitor = visitorRepository.findVisitorByName("Please");
 
 		Loan loan = new Loan();
-		loan.setRequestAccepted(false);
+		Boolean aRequestAccepted = false;
+		loan.setRequestAccepted(aRequestAccepted);
 		loan.setArtwork(artwork);
 		loan.setVisitor(visitor);
-		Loan persistedLoan = loanRepository.save(loan);
-		LoanDto loanDto = DtoUtility.convertToDto(persistedLoan);
+		loanRepository.save(loan);
+		LoanDto loanDto = DtoUtility.convertToDto(loan);
 
 		
 		ResponseEntity<LoanDto> response = client.postForEntity("/patchLoan/", loanDto, LoanDto.class);
@@ -234,7 +236,7 @@ public class LoanIntegrationTest {
 		Visitor visitor = visitorRepository.findVisitorByName("Please");
 
 		Loan loan = new Loan();
-		loan.setRequestAccepted(false);
+		loan.setRequestAccepted(true);
 		loan.setArtwork(artwork);
 		loan.setVisitor(visitor);
 		LoanDto loanDto = DtoUtility.convertToDto(loan);
@@ -246,7 +248,7 @@ public class LoanIntegrationTest {
 		assertNotNull(response);
 		assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
 		assertNotNull(response.getBody(), "Response has body");
-		assertEquals(false, response.getBody().getRequestAccepted(), "Response has correct requestAccepted");
+		assertEquals(true, response.getBody().getRequestAccepted(), "Response has correct requestAccepted");
 		assertEquals(visitor.getMuseumUserId(), response.getBody().getVisitorDto().getUserId(), "Response has correct visitorDto");
 		assertEquals(artwork.getArtworkId(), response.getBody().getArtworkDto().getArtworkId(), "Response has correct artworkDto");
 		assertTrue(response.getBody().getLoanId() > 0, "Response has valid ID");
