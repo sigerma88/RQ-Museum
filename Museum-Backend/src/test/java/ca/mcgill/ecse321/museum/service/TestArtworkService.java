@@ -673,7 +673,7 @@ public class TestArtworkService {
   public void testGetAllArtworksByIsAvailableForLoan() {
     List<Artwork> artworks = null;
     try {
-      artworks = artworkService.getArtworksAvailableForLoan();
+      artworks = artworkService.getAllArtworksByAvailabilityForLoan(true);
     } catch (IllegalArgumentException e) {
       // Check that no error occurred
       fail();
@@ -703,7 +703,7 @@ public class TestArtworkService {
   public void testGetAllArtworksByIsNotAvailableForLoan() {
     List<Artwork> artworks = null;
     try {
-      artworks = artworkService.getArtworksNotAvailableForLoan();
+      artworks = artworkService.getAllArtworksByAvailabilityForLoan(false);
     } catch (IllegalArgumentException e) {
       // Check that no error occurred
       fail();
@@ -722,6 +722,24 @@ public class TestArtworkService {
     assertEquals(SECOND_ARTWORK_IMAGE, secondArtwork.getImage());
     assertEquals(SECOND_ARTWORK_IS_ON_LOAN, secondArtwork.getIsOnLoan());
     assertEquals(FIRST_ROOM_ID, secondArtwork.getRoom().getRoomId());
+  }
+
+  /**
+   * This method tests getting all artworks by if they are available for loan but the argument is null
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testGetAllArtworksByNullIsAvailableForLoan() {
+    List<Artwork> artworks = null;
+    try {
+      artworks = artworkService.getAllArtworksByAvailabilityForLoan(null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertNull(artworks);
+      assertEquals("Artwork availability cannot be null", e.getMessage());
+    }
   }
 
   /**

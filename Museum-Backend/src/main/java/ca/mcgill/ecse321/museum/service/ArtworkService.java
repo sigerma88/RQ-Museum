@@ -139,27 +139,21 @@ public class ArtworkService {
   }
 
   /**
-   * Method to get all artworks that are available for loan
+   * Method to get all artworks by if they are available for loan
    *
+   * @param isAvailableForLoan - availability of the artwork
    * @return Artworks that are available for loan
    * @author Zahra
    * @author Siger
    */
   @Transactional
-  public List<Artwork> getArtworksAvailableForLoan() {
-    return toList(artworkRepository.findArtworkByIsAvailableForLoan(true));
-  }
+  public List<Artwork> getAllArtworksByAvailabilityForLoan(Boolean isAvailableForLoan) {
+    // Error handling
+    if (isAvailableForLoan == null) {
+      throw new IllegalArgumentException("Artwork availability cannot be null");
+    }
 
-  /**
-   * Method to get all artworks that are not available for loan
-   *
-   * @return Artworks that are not available for loan
-   * @author Zahra
-   * @author Siger
-   */
-  @Transactional
-  public List<Artwork> getArtworksNotAvailableForLoan() {
-    return toList(artworkRepository.findArtworkByIsAvailableForLoan(false));
+    return toList(artworkRepository.findArtworkByIsAvailableForLoan(isAvailableForLoan));
   }
 
   /**
