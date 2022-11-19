@@ -17,7 +17,7 @@ public class LoanDto {
         artworkDto = null;
     }
 
-    public LoanDto(boolean aRequestAccepted, VisitorDto aVisitorDto, ArtworkDto aArtworkDto) {
+    public LoanDto(Boolean aRequestAccepted, VisitorDto aVisitorDto, ArtworkDto aArtworkDto) {
         requestAccepted = aRequestAccepted;
         visitorDto = aVisitorDto;
         artworkDto = aArtworkDto;

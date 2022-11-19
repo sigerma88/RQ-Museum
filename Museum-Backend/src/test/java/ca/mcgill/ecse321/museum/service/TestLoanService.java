@@ -37,6 +37,8 @@ import ca.mcgill.ecse321.museum.dao.ScheduleOfTimePeriodRepository;
 import ca.mcgill.ecse321.museum.model.Artwork;
 import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Loan;
+import ca.mcgill.ecse321.museum.model.Room;
+import ca.mcgill.ecse321.museum.model.RoomType;
 import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.TimePeriod;
 import ca.mcgill.ecse321.museum.model.Visitor;
@@ -62,8 +64,11 @@ public class TestLoanService {
     @InjectMocks
     private LoanService loanService;
 
-    @InjectMocks
+    @Mock
     private ArtworkService artworkService;
+
+    @Mock 
+    private RoomService roomService;
 
     private static final long LOAN_ID = 1;
     private static final Boolean LOAN_REQUESTACCEPTED = null;
@@ -75,7 +80,10 @@ public class TestLoanService {
     private static final long THIRD_LOAN_ID = 3;
     private static final boolean THIRD_LOAN_REQUESTACCEPTED = true; 
 
-    private static final long NONE_EXISTING_LOAN_ID = 4;
+    private static final long FOURTH_LOAN_ID = 4;
+    private static final boolean FOURTH_LOAN_REQUESTACCEPTED = false;
+
+    private static final long NONE_EXISTING_LOAN_ID = 5;
 
     private static final long VISITOR_ID = 1;
     private static final String VISITOR_EMAIL = "IAMAVISITOR@email.com";
@@ -111,7 +119,22 @@ public class TestLoanService {
     private static final double THIRD_ARTWORK_LOANFEE = 69.69;
     private static final String THIRD_ARTWORK_IMAGE = "bruuuuuuuuuuuuuuuuuh";
 
-    private static final long NONE_EXISTING_ARTWORK_ID = 4;
+    private static final long FOURTH_ARTWORK_ID = 4;
+    private static final String FOURTH_ARTWORK_NAME = "hEY";
+    private static final String FOURTH_ARTWORK_ARTIST = "HeyMonika";
+    private static final boolean FOURTH_ARTWORK_ISAVAILABLEFORLOAN = true;
+    private static final boolean FOURTH_ARTWORK_ISONLOAN = false; 
+    private static final double FOURTH_ARTWORK_LOANFEE = 39.69;
+    private static final String FOURTH_ARTWORK_IMAGE = "wikipedia.com";
+
+    private static final long NONE_EXISTING_ARTWORK_ID = 5;
+
+    // Room
+    private static final long ROOM_ID =1;
+    private static final String ROOM_ROOMNAME = "George";
+    private static final int ROOM_CURRENTNUMBEROFARTWORK = 5;
+    private static final RoomType ROOM_ROOMTYPE = RoomType.Small;
+
 
     @BeforeEach
     public void setMockOutput() {
@@ -175,22 +198,38 @@ public class TestLoanService {
             }
         });
 
+        lenient().when(loanRepository.findLoanByLoanId(FOURTH_LOAN_ID)).thenAnswer((InvocationOnMock invocation) -> 
+        {
+            if (invocation.getArgument(0).equals(FOURTH_LOAN_ID)) {
+
+                Loan loan4 = new Loan();
+                loan4.setLoanId(FOURTH_LOAN_ID);
+                loan4.setRequestAccepted(FOURTH_LOAN_REQUESTACCEPTED);
+                loan4.setVisitor(visitorRepository.findVisitorByMuseumUserId(VISITOR_ID));
+                loan4.setArtwork(artworkRepository.findArtworkByArtworkId(FOURTH_ARTWORK_ID));
+
+                return loan4;       
+            } else {
+                return null;
+            }
+        });
+
         lenient().when(loanRepository.findAll()).thenAnswer((InvocationOnMock invocation) ->
         {
-        Iterable<Loan> loans = new ArrayList<Loan>();
-        Loan loan1 = new Loan();
-        loan1.setLoanId(LOAN_ID);
-        loan1.setRequestAccepted(LOAN_REQUESTACCEPTED);
-        loan1.setVisitor(visitorRepository.findVisitorByMuseumUserId(VISITOR_ID));
-        loan1.setArtwork(artworkRepository.findArtworkByArtworkId(SECOND_ARTWORK_ID));
-        ((ArrayList<Loan>) loans).add(loan1);
+            Iterable<Loan> loans = new ArrayList<Loan>();
+            Loan loan1 = new Loan();
+            loan1.setLoanId(LOAN_ID);
+            loan1.setRequestAccepted(LOAN_REQUESTACCEPTED);
+            loan1.setVisitor(visitorRepository.findVisitorByMuseumUserId(VISITOR_ID));
+            loan1.setArtwork(artworkRepository.findArtworkByArtworkId(SECOND_ARTWORK_ID));
+            ((ArrayList<Loan>) loans).add(loan1);
 
-        Loan loan2 = new Loan();
-        loan2.setLoanId(SECOND_LOAN_ID);
-        loan2.setRequestAccepted(SECOND_LOAN_REQUESTACCEPTED);
-        loan2.setVisitor(visitorRepository.findVisitorByMuseumUserId(VISITOR_ID));
-        loan2.setArtwork(artworkRepository.findArtworkByArtworkId(SECOND_ARTWORK_ID));
-        ((ArrayList<Loan>) loans).add(loan2);
+            Loan loan2 = new Loan();
+            loan2.setLoanId(SECOND_LOAN_ID);
+            loan2.setRequestAccepted(SECOND_LOAN_REQUESTACCEPTED);
+            loan2.setVisitor(visitorRepository.findVisitorByMuseumUserId(VISITOR_ID));
+            loan2.setArtwork(artworkRepository.findArtworkByArtworkId(SECOND_ARTWORK_ID));
+            ((ArrayList<Loan>) loans).add(loan2);
 
         return loans;
         });
@@ -264,6 +303,82 @@ public class TestLoanService {
                 return artwork;
                 
             } else {
+                return null;
+            }
+        });
+
+        lenient().when(artworkRepository.findArtworkByArtworkId(FOURTH_ARTWORK_ID)).thenAnswer((InvocationOnMock invocation) ->
+        {
+            if (invocation.getArgument(0).equals(FOURTH_ARTWORK_ID)) {
+
+                Room room = new Room();
+                room.setRoomId(ROOM_ID);
+                room.setRoomName(ROOM_ROOMNAME);
+                room.setCurrentNumberOfArtwork(ROOM_CURRENTNUMBEROFARTWORK);
+                room.setRoomType(ROOM_ROOMTYPE);
+
+                Artwork artwork = new Artwork();
+                artwork.setArtworkId(FOURTH_ARTWORK_ID);
+                artwork.setArtist(FOURTH_ARTWORK_ARTIST);
+                artwork.setName(FOURTH_ARTWORK_NAME);
+                artwork.setImage(FOURTH_ARTWORK_IMAGE);
+                artwork.setLoanFee(FOURTH_ARTWORK_LOANFEE);
+                artwork.setIsOnLoan(FOURTH_ARTWORK_ISONLOAN);
+                artwork.setIsAvailableForLoan(FOURTH_ARTWORK_ISAVAILABLEFORLOAN);
+                artwork.setRoom(room);
+                return artwork;
+                
+            } else {
+                return null;
+            }
+        });
+
+        lenient().when(artworkService.removeArtworkFromRoom(ROOM_ID)).thenAnswer((InvocationOnMock invocation) -> 
+        {
+            // Room room = new Room();
+            // room.setRoomId(ROOM_ID);
+            // room.setRoomName(ROOM_ROOMNAME);
+            // room.setCurrentNumberOfArtwork(ROOM_CURRENTNUMBEROFARTWORK);
+            // room.setRoomType(ROOM_ROOMTYPE);
+
+            // Artwork artwork = new Artwork();
+            // artwork.setArtworkId(SECOND_ARTWORK_ID);
+            // artwork.setArtist(SECOND_ARTWORK_ARTIST);
+            // artwork.setName(SECOND_ARTWORK_NAME);
+            // artwork.setImage(SECOND_ARTWORK_IMAGE);
+            // artwork.setLoanFee(SECOND_ARTWORK_LOANFEE);
+            // artwork.setIsOnLoan(SECOND_ARTWORK_ISONLOAN);
+            // artwork.setRoom(room);
+
+            if ((invocation.getArgument(0).equals(ROOM_ID))) {
+
+                Artwork artwork = new Artwork();
+                artwork.setArtworkId(SECOND_ARTWORK_ID);
+                artwork.setArtist(SECOND_ARTWORK_ARTIST);
+                artwork.setName(SECOND_ARTWORK_NAME);
+                artwork.setImage(SECOND_ARTWORK_IMAGE);
+                artwork.setLoanFee(SECOND_ARTWORK_LOANFEE);
+                artwork.setIsOnLoan(SECOND_ARTWORK_ISONLOAN);
+                artwork.setIsAvailableForLoan(SECOND_ARTWORK_ISAVAILABLEFORLOAN);
+                artwork.setRoom(null);
+                return artwork;
+            } else {
+                return null;
+            }
+        });
+
+        lenient().when(roomService.changeCurrentNumberOfArtwork(ROOM_ID, ROOM_CURRENTNUMBEROFARTWORK)).thenAnswer((InvocationOnMock invocation) ->
+        {
+
+            if (invocation.getArgument(0).equals(ROOM_ID)) {
+                Room room = new Room();
+                room.setRoomId(ROOM_ID);
+                room.setRoomName(ROOM_ROOMNAME);
+                room.setRoomType(ROOM_ROOMTYPE);
+                room.setCurrentNumberOfArtwork(ROOM_CURRENTNUMBEROFARTWORK -1);
+                return room;
+
+            } else {            
                 return null;
             }
         });
@@ -561,10 +676,12 @@ public class TestLoanService {
      */
     @Test
     public void testPatchLoanAcceptRequest() {
-        Loan loan = loanService.getLoanById(LOAN_ID);
+        Loan loan = loanService.getLoanById(FOURTH_LOAN_ID);
         Loan patchedLoan = loanService.patchLoanById(loan.getLoanId(), true);
+        Room room = patchedLoan.getArtwork().getRoom();
         assertEquals(true, patchedLoan.getRequestAccepted());
-        assertNull(loan.getArtwork().getRoom());   
+        assertNull(loan.getArtwork().getRoom());
+        assertEquals(ROOM_CURRENTNUMBEROFARTWORK-1, room.getCurrentNumberOfArtwork());   
     }
 
     /**
@@ -574,7 +691,7 @@ public class TestLoanService {
      */
     @Test
     public void testPatchLoanRefuseRequest() {
-        Loan loan = loanService.getLoanById(LOAN_ID);
+        Loan loan = loanService.getLoanById(FOURTH_LOAN_ID);
         Loan patchedLoan = loanService.patchLoanById(loan.getLoanId(), false);
         assertEquals(false, patchedLoan.getRequestAccepted());
         assertNotNull(loan.getArtwork().getRoom());   

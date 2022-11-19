@@ -111,38 +111,37 @@ public class LoanIntegrationTest {
 	// 	testGetPerson(id);
 	// }
 
-// 	@Test
-// 	public void testCreateLoan() {
-// 		Artwork artwork = artworkService.getAllArtworks().get(0);
+	@Test
+	public void testCreateLoan() {
+		Artwork artwork = artworkService.getAllArtworks().get(0);
+		Visitor visitor = visitorRepository.findVisitorByName("Please");
 
-// 		//Visitor visitor = visitorService.getAllVisitors().get(0);
-
-// 		Loan loan = new Loan();
-// 		loan.setRequestAccepted(null);
-// 		loan.setArtwork(artwork);
-// 		loan.setVisitor(visitor);
-// 		LoanDto loanDto = DtoUtility.convertToDto(loan);
+		Loan loan = new Loan();
+		loan.setRequestAccepted(null);
+		loan.setArtwork(artwork);
+		loan.setVisitor(visitor);
+		LoanDto loanDto = DtoUtility.convertToDto(loan);
 		
 
-// 		ResponseEntity<LoanDto> response = client.postForEntity("/postLoan", loanDto, LoanDto.class);
+		ResponseEntity<LoanDto> response = client.postForEntity("/postLoan", loanDto, LoanDto.class);
 
-// 		// Check status and body of response are correct
-// 		assertNotNull(response);
-// 		assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
-// 		assertNotNull(response.getBody(), "Response has body");
-// 		assertEquals(loan.getRequestAccepted(), response.getBody().getRequestAccepted(), "Response has correct requestAccepted");
-// 		assertEquals(visitor.getMuseumUserId(), response.getBody().getVisitorDto(), "Response has correct visitorDto");
-// 		assertEquals(artwork.getArtworkId(), response.getBody().getArtworkDto(), "Response has correct artworkDto");
-// 		assertTrue(response.getBody().getLoanId() > 0, "Response has valid ID");
-// 	}
+		// Check status and body of response are correct
+		assertNotNull(response);
+		assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
+		assertNotNull(response.getBody(), "Response has body");
+		assertEquals(loan.getRequestAccepted(), response.getBody().getRequestAccepted(), "Response has correct requestAccepted");
+		assertEquals(visitor.getMuseumUserId(), response.getBody().getVisitorDto(), "Response has correct visitorDto");
+		assertEquals(artwork.getArtworkId(), response.getBody().getArtworkDto(), "Response has correct artworkDto");
+		assertTrue(response.getBody().getLoanId() > 0, "Response has valid ID");
+	}
 
-// 	private void testGetLoan(Long LoanId) {
-// 		ResponseEntity<LoanDto> response = client.getForEntity("/loan/" + LoanId, LoanDto.class);
+	@Test
+	private void testGetLoan(Long LoanId) {
+		ResponseEntity<LoanDto> response = client.getForEntity("/loan/" + LoanId, LoanDto.class);
 
-// 		assertNotNull(response);
-// 		assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
-// 		assertNotNull(response.getBody(), "Response has body");
+		assertNotNull(response);
+		assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
+		assertNotNull(response.getBody(), "Response has body");
     
-// 	}
-// }
+	}
 }
