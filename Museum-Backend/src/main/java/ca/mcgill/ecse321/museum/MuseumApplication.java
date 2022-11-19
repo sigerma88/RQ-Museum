@@ -20,10 +20,5 @@ public class MuseumApplication {
   public String greeting() {
     return "Hello world!";
   }
-
-  @PostConstruct
-  void started() {
-
-    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-  }
+  
 }
