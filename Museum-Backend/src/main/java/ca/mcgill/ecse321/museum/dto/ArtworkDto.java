@@ -4,21 +4,23 @@ package ca.mcgill.ecse321.museum.dto;
  * Artwork DTO
  *
  * @author Zahra
+ * @author Siger
  */
 public class ArtworkDto {
 
-  private long artworkId;
+  private Long artworkId;
   private String name;
   private String artist;
-  private boolean isAvailableForLoan;
-  private double loanFee;
+  private Boolean isAvailableForLoan;
+  private Double loanFee;
   private String image;
   private Boolean isOnLoan;
+  private RoomDto room;
 
   public ArtworkDto() {
   }
 
-  public ArtworkDto(Long artworkId, String name, String artist, Boolean isAvailableForLoan, double loanFee, String image, Boolean isOnLoan) {
+  public ArtworkDto(Long artworkId, String name, String artist, Boolean isAvailableForLoan, Double loanFee, String image, Boolean isOnLoan, RoomDto room) {
     this.artworkId = artworkId;
     this.name = name;
     this.artist = artist;
@@ -26,21 +28,26 @@ public class ArtworkDto {
     this.loanFee = loanFee;
     this.image = image;
     this.isOnLoan = isOnLoan;
+    this.room = room;
+  }
+
+  public Long getArtworkId() {
+    return artworkId;
   }
 
   public String getName() {
     return name;
   }
 
-  public boolean getIsAvailableForLoan() {
-    return isAvailableForLoan;
-  }
-
   public String getArtist() {
     return artist;
   }
 
-  public double getLoanFee() {
+  public Boolean getIsAvailableForLoan() {
+    return isAvailableForLoan;
+  }
+
+  public Double getLoanFee() {
     return loanFee;
   }
 
@@ -52,11 +59,11 @@ public class ArtworkDto {
     return isOnLoan;
   }
 
-  public long getArtworkId() {
-    return artworkId;
+  public RoomDto getRoom() {
+    return room;
   }
 
-  public void setArtworkId(long artworkId) {
+  public void setArtworkId(Long artworkId) {
     this.artworkId = artworkId;
   }
 
@@ -68,11 +75,11 @@ public class ArtworkDto {
     this.artist = artist;
   }
 
-  public void setIsAvailableForLoan(boolean availableForLoan) {
+  public void setIsAvailableForLoan(Boolean availableForLoan) {
     isAvailableForLoan = availableForLoan;
   }
 
-  public void setLoanFee(double loanFee) {
+  public void setLoanFee(Double loanFee) {
     this.loanFee = loanFee;
   }
 
@@ -82,5 +89,9 @@ public class ArtworkDto {
 
   public void setIsOnLoan(Boolean onLoan) {
     isOnLoan = onLoan;
+  }
+
+  public void setRoom(RoomDto room) {
+    this.room = room;
   }
 }
