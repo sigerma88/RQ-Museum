@@ -117,11 +117,31 @@ public class ArtworkRestController {
    * @author Siger
    * @author Zahra
    */
-  @GetMapping(value = { "/artworks/{roomId}", "/artworks/{roomId}/" })
+  @GetMapping(value = { "/artworks/room/{roomId}", "/artworks/room/{roomId}/" })
   public ResponseEntity<?> getAllArtworksByRoom(@PathVariable("roomId") Long roomId) {
     try {
       List<ArtworkDto> artworkDtos = new ArrayList<ArtworkDto>();
       for (Artwork artwork : artworkService.getAllArtworksByRoom(roomId)) {
+        artworkDtos.add(DtoUtility.convertToDto(artwork));
+      }
+      return ResponseEntity.ok(artworkDtos);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+
+  /**
+   * RESTful API to get all artworks by if they are available for loan
+   * 
+   * @param isAvailableForLoan - boolean
+   * @return List of all artworks that are available for loan or not available for loan depending on the given boolean value
+   * @author Siger
+   */
+  @GetMapping(value = { "/artworks/availableForLoan/{isAvailableForLoan}", "/artworks/availableForLoan/{isAvailableForLoan}/" })
+  public ResponseEntity<?> getAllArtworksByAvailabilityForLoan(@PathVariable("isAvailableForLoan") Boolean isAvailableForLoan) {
+    try {
+      List<ArtworkDto> artworkDtos = new ArrayList<ArtworkDto>();
+      for (Artwork artwork : artworkService.getAllArtworksByAvailabilityForLoan(isAvailableForLoan)) {
         artworkDtos.add(DtoUtility.convertToDto(artwork));
       }
       return ResponseEntity.ok(artworkDtos);

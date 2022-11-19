@@ -305,6 +305,110 @@ public class ArtworkIntegrationTests {
   }
 
   /**
+   * Test to get all artworks
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testGetAllArtworks() {
+    // Test controller GET RESTful API
+    ResponseEntity<ArtworkDto[]> response = client.getForEntity("/artworks", ArtworkDto[].class);
+
+    // Check status and body of response are correct
+    assertNotNull(response);
+    assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
+    assertNotNull(response.getBody(), "Response has a body");
+    assertEquals(artworkService.getAllArtworks().size(), response.getBody().length, "Response body has correct size");
+    assertEquals(artworkService.getAllArtworks().get(0).getArtworkId(), response.getBody()[0].getArtworkId(),
+        "Response body has correct artwork id");
+  }
+
+  /**
+   * Test to get all artworks in a room
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testGetAllArtworksInRoom() {
+    // Get room id
+    Long roomId = roomService.getAllRooms().get(0).getRoomId();
+
+    // Create artwork in room
+    Artwork artwork = new Artwork();
+    artwork.setName("The Scream");
+    artwork.setArtist("Edvard Munch");
+    artwork.setIsAvailableForLoan(true);
+    artwork.setLoanFee(100.99);
+    artwork.setImage("https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/The_Scream.jpg/1200px-The_Scream.jpg");
+    artwork.setIsOnLoan(false);
+    artwork.setRoom(roomService.getRoomById(roomId));
+    artwork = artworkRepository.save(artwork);
+
+    // Test controller GET RESTful API
+    ResponseEntity<ArtworkDto[]> response = client.getForEntity("/artworks/room/" + roomId, ArtworkDto[].class);
+
+    // Check status and body of response are correct
+    assertNotNull(response);
+    assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
+    assertNotNull(response.getBody(), "Response has a body");
+    assertEquals(artworkService.getAllArtworksByRoom(roomId).size(), response.getBody().length,
+        "Response body has correct size");
+    assertEquals(artwork.getArtworkId(), response.getBody()[0].getArtworkId(), "Response body has correct artwork id");
+  }
+
+  /**
+   * Test to get all artworks in a room that does not exist
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testGetAllArtworksInRoomDoesNotExist() {
+    // Test controller GET RESTful API
+    ResponseEntity<String> response = client.getForEntity("/artworks/room/-1", String.class);
+
+    // Check status and body of response are correct
+    assertNotNull(response);
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
+    assertEquals("Room does not exist", response.getBody(), "Response has correct body error message");
+  }
+
+  /**
+   * Test to get all artworks that is available for loan
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testGetAllArtworksAvailableForLoan() {
+    // Test controller GET RESTful API
+    ResponseEntity<ArtworkDto[]> response = client.getForEntity("/artworks/availableForLoan/true", ArtworkDto[].class);
+
+    // Check status and body of response are correct
+    assertNotNull(response);
+    assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
+    assertNotNull(response.getBody(), "Response has a body");
+    assertEquals(artworkService.getAllArtworksByAvailabilityForLoan(true).size(), response.getBody().length,
+        "Response body has correct size");
+  }
+
+  /**
+   * Test to get all artworks that is not available for loan
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testGetAllArtworksNotAvailableForLoan() {
+    // Test controller GET RESTful API
+    ResponseEntity<ArtworkDto[]> response = client.getForEntity("/artworks/availableForLoan/false", ArtworkDto[].class);
+
+    // Check status and body of response are correct
+    assertNotNull(response);
+    assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
+    assertNotNull(response.getBody(), "Response has a body");
+    assertEquals(artworkService.getAllArtworksByAvailabilityForLoan(false).size(), response.getBody().length,
+        "Response body has correct size");
+  }
+
+  /**
    * Test to edit an artwork's information
    * 
    * @author Siger
