@@ -216,7 +216,7 @@ public class EmployeeIntegrationTest {
     }
 
     /**
-     * Test delete invalid id employee
+     * Test delete employee when not logged in
      * 
      * @author Kevin
      */
@@ -244,12 +244,6 @@ public class EmployeeIntegrationTest {
                 "Correct response body message");
     }
 
-    /**
-     * Test delete employee when not logged in
-     * 
-     * @author Kevin
-     */
-
     @Test
     public void testDeleteEmployeeNotLoggedIn() {
         ManagerDto manager = createManagerDto(createManager(FIRST_VALID_MANAGER_NAME,
@@ -272,12 +266,6 @@ public class EmployeeIntegrationTest {
         assertEquals("You are not logged in", responseEntity.getBody(),
                 "Correct response body message");
     }
-
-    /**
-     * Test delete employee when not logged in as manager
-     * 
-     * @author Kevin
-     */
 
     @Test
     public void testDeleteEmployeeNotManager() {
