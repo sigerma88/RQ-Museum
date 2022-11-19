@@ -84,35 +84,6 @@ public class ArtworkRestController {
     }
   }
 
-  @GetMapping(value = { "/artworks", "/artworks/" })
-  public List<ArtworkDto> getAllArtworks() {
-    List<ArtworkDto> artworkDtos = new ArrayList<ArtworkDto>();
-
-    for (Artwork artwork : artworkService.getAllArtworks()) {
-      try {
-        artworkDtos.add(DtoUtility.convertToDto(artwork));
-
-      } catch (Exception e) {
-      }
-    }
-    return artworkDtos;
-  }
-
-  @GetMapping(value = { "/artworks/{room}", "/artworks/{room}/" })
-  public List<ArtworkDto> getAllArtworksByRoom(@PathVariable("room") Room room) {
-    List<ArtworkDto> artworkInRoomDtos = new ArrayList<ArtworkDto>();
-    List<Artwork> artworksInRoom = artworkService.getAllArtworksByRoom(room);
-    for (Artwork artwork : artworksInRoom) {
-      try {
-        artworkInRoomDtos.add(DtoUtility.convertToDto(artwork));
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-
-    }
-    return artworkInRoomDtos;
-  }
-
   /**
    * RESTful API to edit an artwork's information
    * 
