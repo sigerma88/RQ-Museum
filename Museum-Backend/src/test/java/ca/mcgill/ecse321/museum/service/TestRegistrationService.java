@@ -628,12 +628,12 @@ public class TestRegistrationService {
     assertEquals(newPassword, manager.getPassword());
   }
 
-  @Test
   /**
    * Test that edit manager with wrong password
    * 
    * @author Kevin
    */
+  @Test
   public void testEditManagerWithWrongOldPassword() {
     try {
       registrationService.editManagerInformation(MANAGER_ID, INVALID_PASSWORD, VALID_PASSWORD);

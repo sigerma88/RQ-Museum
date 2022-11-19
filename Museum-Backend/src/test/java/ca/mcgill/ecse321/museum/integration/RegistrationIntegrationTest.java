@@ -1001,7 +1001,7 @@ public class RegistrationIntegrationTest {
      * 
      * @param name - name of visitor to create and login
      * @param email - email of visitor to create and login
-     * @oaram password - password of visitor to create and login
+     * @param password - password of visitor to create and login
      * @return the logged in visitor
      * @author Kevin
      */

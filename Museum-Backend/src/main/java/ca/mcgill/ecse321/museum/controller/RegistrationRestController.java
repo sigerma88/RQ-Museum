@@ -44,6 +44,7 @@ public class RegistrationRestController {
    * 
    * @param visitor - VisitorDto object
    * @return created visitor
+   * @author Kevin
    */
 
   @PostMapping(value = "/visitor/register", produces = "application/json")
