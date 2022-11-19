@@ -1,9 +1,5 @@
 package ca.mcgill.ecse321.museum.dto;
 
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class LoanDto {
 
     private Long loanId;
