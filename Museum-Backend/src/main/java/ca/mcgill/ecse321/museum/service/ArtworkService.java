@@ -121,17 +121,21 @@ public class ArtworkService {
    * Method to get a list of all artworks in a room
    *
    * @param room - Room
-   * @return artworksInRoom - all artworks in room
+   * @return all artworks in specific room
    * @author Zahra
+   * @author Siger
    */
   @Transactional
-  public List<Artwork> getAllArtworksByRoom(Room room) {
-    List<Artwork> artworksInRoom = new ArrayList<>();
-    for (Artwork artwork : getAllArtworks()) {
-      if (artwork.getRoom().equals(room))
-        artworksInRoom.add(artwork);
+  public List<Artwork> getAllArtworksByRoom(Long roomId) {
+    // Get room
+    Room room = roomService.getRoomById(roomId);
+
+    // Error handling
+    if (room == null) {
+      throw new IllegalArgumentException("Room does not exist");
     }
-    return artworksInRoom;
+
+    return toList(artworkRepository.findArtworkByRoom(room));
   }
 
   /**

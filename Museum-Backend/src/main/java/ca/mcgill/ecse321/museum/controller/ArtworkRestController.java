@@ -82,7 +82,9 @@ public class ArtworkRestController {
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
-  }/**
+  }
+
+  /**
    * RESTful API to get all artworks
    *
    * @return List of all artworks
