@@ -294,17 +294,12 @@ public class ArtworkService {
   @Transactional
   public Artwork removeArtworkFromRoom(long artworkId){
     // Find artwork
-    Optional<Artwork> artworkOptional = artworkRepository.findById(artworkId);
+    Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
 
     // corresponds to error
-    if (artworkOptional == null){
+    if (artwork == null){
       throw new IllegalArgumentException("Artwork does not exist");
     }
-    if (artworkOptional.isPresent() == false){
-      throw new IllegalArgumentException("Artwork does not exist");
-    }
-    Artwork artwork = artworkOptional.get();
-
     // decrement number of artworks in room by 1
     Room room = artwork.getRoom();
     if (room != null){
