@@ -745,7 +745,7 @@ public class TestLoanService {
      */
     @Test
     public void testPatchLoanAcceptRequest() {
-        Loan patchedLoan = loanService.patchLoanById(FOURTH_LOAN_ID, true);
+        Loan patchedLoan = loanService.putLoanById(FOURTH_LOAN_ID, true);
         assertEquals(true, patchedLoan.getRequestAccepted());
         assertEquals(true, patchedLoan.getArtwork().getIsOnLoan());
         assertNull(patchedLoan.getArtwork().getRoom());
@@ -759,7 +759,7 @@ public class TestLoanService {
     @Test
     public void testPatchLoanRefuseRequest() {
         Loan loan = loanService.getLoanById(FOURTH_LOAN_ID);
-        Loan patchedLoan = loanService.patchLoanById(loan.getLoanId(), false);
+        Loan patchedLoan = loanService.putLoanById(loan.getLoanId(), false);
         assertEquals(false, patchedLoan.getRequestAccepted());
         assertNotNull(patchedLoan.getArtwork().getRoom());   
     }

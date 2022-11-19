@@ -84,7 +84,7 @@ public class LoanService {
     }
 
     @Transactional
-    public Loan patchLoanById(Long loanId, Boolean requestAccepted) {
+    public Loan putLoanById(Long loanId, Boolean requestAccepted) {
         Loan loan = loanRepository.findLoanByLoanId(loanId);
         if (loan == null) {
             throw new IllegalArgumentException("Loan does not exist");

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -70,13 +71,10 @@ public class LoanRestController {
     /**
      * This method is called when an employee approves or denies a loan request
      */
-    @PatchMapping(value = { "/patchLoan", "/patchLoan/" })
-    public ResponseEntity<?> patchLoan(@RequestBody LoanDto loanDto) {
+    @PutMapping(value = { "/putLoan", "/putLoan/" })
+    public ResponseEntity<?> putLoan(@RequestBody LoanDto loanDto) {
         try {
-            Loan patchedLoan = loanService.patchLoanById(loanDto.getLoanId(), loanDto.getRequestAccepted());
-            LoanDto returnDto = DtoUtility.convertToDto(patchedLoan);
-
-            return new ResponseEntity<>(returnDto, HttpStatus.OK);
+            return new ResponseEntity<>(((DtoUtility.convertToDto(loanService.putLoanById(loanDto.getLoanId(), loanDto.getRequestAccepted())))), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
