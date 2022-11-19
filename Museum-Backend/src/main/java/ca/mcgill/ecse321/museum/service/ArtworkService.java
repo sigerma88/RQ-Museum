@@ -19,8 +19,6 @@ public class ArtworkService {
   @Autowired
   ArtworkRepository artworkRepository;
 
-  @Autowired
-  RoomRepository roomRepository;
 
   /**
    * Method to get a list of all artworks in the database
@@ -34,26 +32,6 @@ public class ArtworkService {
     return toList(artworkRepository.findAll());
   }
 
-  /**
-   * Method to get a list of all artworks in a room
-   *
-   * @param room - Room
-   * @return artworksInRoom - all artworks in room
-   * @author Zahra
-   */
-  @Transactional
-  public List<Artwork> getAllArtworksByRoom(Room room) {
-
-    if (room == null) {
-      throw new IllegalArgumentException("Room doesn't exist");
-    }
-    List<Artwork> artworksInRoom = new ArrayList<>();
-
-    for (Artwork artwork : getAllArtworks()) {
-      if (artwork.getRoom().getRoomId() == room.getRoomId()) artworksInRoom.add(artwork);
-    }
-    return artworksInRoom;
-  }
 
   /**
    * Method to get all artworks with their
@@ -63,18 +41,10 @@ public class ArtworkService {
    * @author Zahra
    */
   @Transactional
-  public Map<String, String> getArtworkwithAvailabilityForLoan() {
-    Map<String, String> artworksWithAvailability = new HashMap<>();
+  public List<Artwork> getUnavailableArtworks() {
+    List<Artwork> unAvailableArtworks = artworkRepository.findArtworkByIsAvailableForLoan(false);
 
-    for (Artwork artwork : getAllArtworks()) {
-      if (artwork.getIsAvailableForLoan() == true) {
-        artworksWithAvailability.put(artwork.getName(), "Available");
-      } else if (artwork.getIsAvailableForLoan() == false) {
-        artworksWithAvailability.put(artwork.getName(), "Unavailable");
-      }
-
-    }
-    return artworksWithAvailability;
+    return unAvailableArtworks;
   }
 
 
@@ -85,13 +55,21 @@ public class ArtworkService {
    * @author Zahra
    */
   @Transactional
+  public List<Artwork> getAllAvailableArtworks() {
+    List<Artwork> availableArtworks = artworkRepository.findArtworkByIsAvailableForLoan(true);
+
+    return availableArtworks;
+  }
+  /*
   public Map<String, Double> getArtworkWithLoanFee() {
+
     Map<String, Double> artworksWithLoanFee = new HashMap<>();
     for (Artwork artwork : getAllArtworks()) {
+      artworkRepository.findArtworkByIsAvailableForLoan();
       artworksWithLoanFee.put(artwork.getName(), artwork.getLoanFee());
     }
     return artworksWithLoanFee;
-  }
+  }*/
 
 
   /**

@@ -43,27 +43,6 @@ public class ArtworkRestController {
   }
 
 
-  /**
-   * RESTful API to get all artworks in a room
-   *
-   * @param room - Room
-   * @return list of artwork in room
-   * @author Zahra
-   */
-  @GetMapping(value = {"/artworks/{room}", "/artworks/{room}/"})
-  public ResponseEntity<?> getAllArtworksByRoom(@PathVariable("room") Room room) {
-    try {
-      List<ArtworkDto> artworkInRoomDtos = new ArrayList<ArtworkDto>();
-      for (Artwork artwork : artworkService.getAllArtworksByRoom(room)) {
-        artworkInRoomDtos.add(DtoUtility.convertToDto(artwork));
-      }
-      return ResponseEntity.ok(artworkInRoomDtos);
-    } catch (Exception e) {
-      return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
-  }
-
   @GetMapping(value = {"/artworks/availabilty", "/artworks/availabilty/"})
   public ResponseEntity<?> displayArtworkWithAvailabilityForLoan() {
     try {
