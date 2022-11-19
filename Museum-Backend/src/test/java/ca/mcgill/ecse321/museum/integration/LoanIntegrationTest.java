@@ -62,15 +62,6 @@ public class LoanIntegrationTest {
   @Autowired
   private RoomRepository roomRepository;
 
-  @Autowired
-  private ArtworkService artworkService;
-
-  @Autowired
-  private VisitorService visitorService;
-
-  @Autowired
-  private RoomService roomService;
-
   @BeforeEach
   @AfterEach
   public void clearDatabase() {
@@ -125,8 +116,9 @@ public class LoanIntegrationTest {
   }
 
   /**
-   * Test to get loan successfully
+   * Test to get loan successfully given loanId
    * 
+   * @param loanId - Long loanId used to find loan
    * @author Eric
    */
   private void testGetLoan(Long LoanId) {
@@ -139,6 +131,8 @@ public class LoanIntegrationTest {
 
   /**
    * Test to create a loan unsuccessfully due to duplicate loan
+   * 
+   * @author Eric
    */
   @Test
   public void testCreateLoanDuplicate() {
@@ -297,6 +291,11 @@ public class LoanIntegrationTest {
     assertEquals(3, response.getBody().length, "Request has the expected number of elements");
   }
 
+  /**
+   * Test to delete loan successfully
+   * 
+   * @author Eric
+   */
   @Test
   public void testDeleteLoan() {
 	Artwork artwork = createArtwork();
@@ -316,6 +315,11 @@ public class LoanIntegrationTest {
     assertEquals("Loan deleted", response.getBody());
   }
 
+  /**
+   * Test to delete loan given a loanId of a loan that does not exist
+   * 
+   * @author Eric
+   */
   @Test
   public void testDeleteLoanWithNonExistingLoan() {
 	Long loanId = (long) -1;
@@ -327,6 +331,11 @@ public class LoanIntegrationTest {
     assertNotNull("Loan does not exist", response.getBody());
   }
 
+  /**
+   * Helper method to create artwork associated to a room associated to a museum associated to a schedule
+   * 
+   * @author Eric
+   */
   public Artwork createArtwork() {
     // Create a schedule
     Schedule schedule = new Schedule();
@@ -362,6 +371,11 @@ public class LoanIntegrationTest {
 
   }
 
+  /**
+   * Helper method to create visitor
+   * 
+   * @author Eric
+   */
   public Visitor createVisitor() {
     // Creating a visitor
     Visitor visitor = new Visitor();

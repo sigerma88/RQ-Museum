@@ -36,7 +36,11 @@ public class LoanRestController {
     private LoanService loanService;
 
     /**
-     * This method is called when we need the information of a specific loan
+     * RESTful API to get loan by their loan id
+     * 
+     * @param loanId - Long Id loan
+     * @return loanDto with loanId
+     * @author Eric
      */
     @GetMapping(value = { "/loan/{loanId}", "/loan/{loanId}/" })
     public ResponseEntity<?> getLoanById(@PathVariable("loanId") Long loanId) {
@@ -54,7 +58,10 @@ public class LoanRestController {
     }
 
     /**
-     * This method is called when employees want to see all loan requests
+     * RESTful API to get all loans
+     * 
+     * @return List of all loans
+     * @author Eric
      */
     @GetMapping(value = { "/loans", "/loans/" }) 
     public ResponseEntity<?> getLoans() {
@@ -70,7 +77,11 @@ public class LoanRestController {
     }
 
     /**
-     * This method is called when an employee approves or denies a loan request
+     * RESTful API to put loan
+     * 
+     * @param loanDto - RequestBody to be converted to a loanDto object
+     * @return loanDto of patched loan if successful 
+     * @author Eric
      */
     @PutMapping(value = { "/putLoan", "/putLoan/" })
     public ResponseEntity<?> putLoan(@RequestBody LoanDto loanDto) {
@@ -83,10 +94,11 @@ public class LoanRestController {
 
 
     /**
-     * postLoan method is called when a visitor wants to loan an Artwork (available for loan)
+     * RESTful API to create a loan
      * 
-     * @param loan
-     * @return
+     * @param loanDto - RequestBody to be converted to a loanDto object
+     * @return List of all
+     * @author Eric
      */
     @PostMapping(value = { "/postLoan", "/postLoan/" })
     public ResponseEntity<?> postLoan(@RequestBody LoanDto loanDto) {
@@ -102,6 +114,13 @@ public class LoanRestController {
         }
     }
 
+    /**
+     * RESTful API to delete loan by their loanId
+     * 
+     * @param loanId - PathVariable loanId of the loan to be deleted
+     * @return String "Loan deleted" if successful
+     * @author Eric
+     */
     @DeleteMapping(value = { "/deleteLoan/{loanId}", "/deleteLoan/{loanId}/" })
     public ResponseEntity<?> deleteLoan(@PathVariable("loanId") Long loanId) {
         try {

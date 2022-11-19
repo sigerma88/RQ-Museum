@@ -2,22 +2,17 @@ package ca.mcgill.ecse321.museum.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.Timestamp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -26,24 +21,16 @@ import org.mockito.stubbing.Answer;
 
 import ca.mcgill.ecse321.museum.controller.DtoUtility;
 import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
-import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
 import ca.mcgill.ecse321.museum.dao.LoanRepository;
-import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
-import ca.mcgill.ecse321.museum.dao.TimePeriodRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
 import ca.mcgill.ecse321.museum.dto.ArtworkDto;
 import ca.mcgill.ecse321.museum.dto.LoanDto;
 import ca.mcgill.ecse321.museum.dto.VisitorDto;
-import ca.mcgill.ecse321.museum.dao.ScheduleOfTimePeriodRepository;
 import ca.mcgill.ecse321.museum.model.Artwork;
-import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Loan;
 import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.model.RoomType;
-import ca.mcgill.ecse321.museum.model.Schedule;
-import ca.mcgill.ecse321.museum.model.TimePeriod;
 import ca.mcgill.ecse321.museum.model.Visitor;
-import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
 
 /**
  * This is the test class for the LoanService class
@@ -83,9 +70,6 @@ public class TestLoanService {
     
     private static final long FIFTH_LOAN_ID = 5;
     private static final boolean FIFTH_LOAN_REQUESTACCEPTED = false;
-
-    private static final long SIXTH_LOAN_ID = 6;
-    private static final boolean SIXTH_LOAN_REQUESTACCEPTED = false;
 
     private static final long NONE_EXISTING_LOAN_ID = 7;
 
@@ -275,7 +259,7 @@ public class TestLoanService {
             Loan loan2 = loanRepository.findLoanByLoanId(SECOND_LOAN_ID);
 
             if (visitor.getMuseumUserId() == 2) {
-                return loan1;
+                return null;
             }
             else {
                 return loan2;
@@ -470,12 +454,12 @@ public class TestLoanService {
     }
 
     /**
-     * Test method for creating a loan successfully
+     * Test method for creating a loan that already exists (i.e the visitor made a request for the artwork already)
      * 
      * @author Eric
      */
     @Test
-    public void testCreateLoan() {
+    public void testCreateDuplicateLoan() {
         String exceptionMessage = null;
         Loan createdLoan = null;
         Artwork artwork = new Artwork();
@@ -497,7 +481,7 @@ public class TestLoanService {
             artwork.setIsAvailableForLoan(SECOND_ARTWORK_ISAVAILABLEFORLOAN);
             ArtworkDto artworkDto = DtoUtility.convertToDto(artwork);
 
-            LoanDto loanDto = new LoanDto(LOAN_ID, null);
+            LoanDto loanDto = new LoanDto(FIFTH_LOAN_ID, null);
             loanDto.setArtwork(artworkDto);
             loanDto.setVisitor(visitorDto);
 
@@ -505,10 +489,8 @@ public class TestLoanService {
         } catch (IllegalArgumentException e) {
             exceptionMessage = e.getMessage();
         }
-        assertNotNull(createdLoan);
-        assertEquals(null, createdLoan.getRequestAccepted());
-        assertEquals(artwork.getArtworkId(), createdLoan.getArtwork().getArtworkId());
-        assertEquals(visitor.getMuseumUserId(), createdLoan.getVisitor().getMuseumUserId());   
+        assertEquals("Cannot create a duplicate loan request", exceptionMessage);
+
     }
     
     /**
@@ -550,15 +532,17 @@ public class TestLoanService {
     }
     
     /**
-     * Test method for creating a loan that was already created by a visitor for the same artwork
+     * Test method for creating a loan successfully
      * 
      * @author Eric
      */
     @Test
-    public void testCreateDuplicateLoan() {
+    public void testCreateLoanSuccessfully() {
         String exceptionMessage = null;
+        Loan createdLoan = null;
+        Artwork artwork = new Artwork();
+        Visitor visitor = new Visitor();
         try {
-            Visitor visitor = new Visitor();
             visitor.setMuseumUserId(SECOND_VISITOR_ID);
             visitor.setName(SECOND_VISITOR_NAME);
             visitor.setEmail(SECOND_VISITOR_EMAIL);
@@ -566,7 +550,6 @@ public class TestLoanService {
             VisitorDto visitorDto = DtoUtility.convertToDto(visitor);
             visitorRepository.save(visitor);
 
-            Artwork artwork = new Artwork();
             artwork.setArtworkId(SECOND_ARTWORK_ID);
             artwork.setArtist(SECOND_ARTWORK_ARTIST);
             artwork.setName(SECOND_ARTWORK_NAME);
@@ -577,16 +560,19 @@ public class TestLoanService {
             ArtworkDto artworkDto = DtoUtility.convertToDto(artwork);
             artworkRepository.save(artwork);
 
-            LoanDto loanDto = new LoanDto(FIFTH_LOAN_ID, null);
+            LoanDto loanDto = new LoanDto(LOAN_ID, null);
             loanDto.setArtwork(artworkDto);
             loanDto.setVisitor(visitorDto);
 
-            Loan createdLoan = loanService.createLoan(loanDto);
+            createdLoan = loanService.createLoan(loanDto);
 
         } catch (IllegalArgumentException e) {
             exceptionMessage = e.getMessage();
         }
-        assertEquals("Cannot create a duplicate loan request", exceptionMessage);
+        assertNotNull(createdLoan);
+        assertEquals(null, createdLoan.getRequestAccepted());
+        assertEquals(artwork.getArtworkId(), createdLoan.getArtwork().getArtworkId());
+        assertEquals(visitor.getMuseumUserId(), createdLoan.getVisitor().getMuseumUserId());   
     }
 
     /**

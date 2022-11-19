@@ -30,6 +30,13 @@ public class LoanService {
     @Autowired
     private ArtworkService artworkService;
 
+    /**
+     * Method to get loan from the database by their loanId
+     *
+     * @param loanId - Long primary key of loan
+     * @return loan identified by loanId
+     * @author Eric
+     */
     @Transactional
     public Loan getLoanById(Long loanId) {
         Loan loan = loanRepository.findLoanByLoanId(loanId);
@@ -39,11 +46,24 @@ public class LoanService {
         return loan;
     }
 
+    /**
+     * Method to get all loans from the database
+     * 
+     * @return list<Loan> of all loans from the database
+     * @author Eric
+     */
     @Transactional 
     public List<Loan> getAllLoans() {
         return toList(loanRepository.findAll());
     }
 
+    /**
+     * Method to create loan 
+     * 
+     * @param loanDto - loanDto
+     * @return loan created using the attributes of loanDto
+     * @author Eric
+     */
     @Transactional
     public Loan createLoan(LoanDto loanDto) {
         // Error handling associations
@@ -82,6 +102,14 @@ public class LoanService {
         return persistedLoan;
     }
 
+    /**
+     * Method to update loan given loanId and requestAccepted
+     * 
+     * @param loanId - Long primary key of loan
+     * @param requestAccepted - Boolean loan request
+     * @return updated loan
+     * @author Eric
+     */
     @Transactional
     public Loan putLoanById(Long loanId, Boolean requestAccepted) {
         Loan loan = loanRepository.findLoanByLoanId(loanId);
@@ -97,6 +125,12 @@ public class LoanService {
         return loanRepository.save(loan);
     }
 
+    /**
+     * Method to delete loan given their loanId
+     * 
+     * @param loanId - Long primary key of loan
+     * @author Eric
+     */
     @Transactional
     public void deleteLoanByLoanId(Long loanId) {
         Loan loan = loanRepository.findLoanByLoanId(loanId);
