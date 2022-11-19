@@ -84,7 +84,10 @@ public class TestLoanService {
     private static final long FIFTH_LOAN_ID = 5;
     private static final boolean FIFTH_LOAN_REQUESTACCEPTED = false;
 
-    private static final long NONE_EXISTING_LOAN_ID = 6;
+    private static final long SIXTH_LOAN_ID = 6;
+    private static final boolean SIXTH_LOAN_REQUESTACCEPTED = false;
+
+    private static final long NONE_EXISTING_LOAN_ID = 7;
 
     private static final long VISITOR_ID = 1;
     private static final String VISITOR_EMAIL = "IAMAVISITOR@email.com";
@@ -763,5 +766,33 @@ public class TestLoanService {
         assertEquals(false, patchedLoan.getRequestAccepted());
         assertNotNull(patchedLoan.getArtwork().getRoom());   
     }
+
+  /**
+   * Test method for deleting a loan
+   * 
+   * @author Eric
+   */
+  @Test
+  public void testDeleteLoan() {
+    try {
+      loanService.deleteLoanByLoanId(FIFTH_LOAN_ID);
+    } catch (IllegalArgumentException e) {
+        fail();
+    }
+  }
+
+  /**
+   * Test method for deleting a loan with invalid id
+   * 
+   * @author Eric
+   */
+  @Test
+  public void testDeleteLoanNoneExistingLoanId() {
+    try {
+      loanService.deleteLoanByLoanId(NONE_EXISTING_LOAN_ID);
+    } catch (IllegalArgumentException e) {
+        assertEquals("Loan does not exist", e.getMessage());
+    }
+  }
 
 }

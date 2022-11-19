@@ -97,6 +97,16 @@ public class LoanService {
         return loanRepository.save(loan);
     }
 
+    @Transactional
+    public void deleteLoanByLoanId(Long loanId) {
+        Loan loan = loanRepository.findLoanByLoanId(loanId);
+        if (loan == null) {
+            throw new IllegalArgumentException("Loan does not exist");
+        }
+
+        loanRepository.deleteLoanByLoanId(loanId);
+    }
+
 /**
    * Method to convert an Iterable to a List
    *

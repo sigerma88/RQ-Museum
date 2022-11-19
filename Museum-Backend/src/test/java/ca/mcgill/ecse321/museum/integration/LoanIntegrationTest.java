@@ -297,6 +297,36 @@ public class LoanIntegrationTest {
     assertEquals(3, response.getBody().length, "Request has the expected number of elements");
   }
 
+  @Test
+  public void testDeleteLoan() {
+	Artwork artwork = createArtwork();
+    Visitor visitor = createVisitor();
+
+    Loan loan = new Loan();
+    loan.setRequestAccepted(null);
+    loan.setArtwork(artwork);
+    loan.setVisitor(visitor);
+    loanRepository.save(loan);
+	Long loanId = loan.getLoanId();
+
+	HttpEntity<?> request = new HttpEntity<>(null);
+
+	ResponseEntity<String> response = client.exchange("/deleteLoan/" + loanId, HttpMethod.DELETE, request, String.class);
+	assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertEquals("Loan deleted", response.getBody());
+  }
+
+  @Test
+  public void testDeleteLoanWithNonExistingLoan() {
+	Long loanId = (long) -1;
+
+	HttpEntity<?> request = new HttpEntity<>(null);
+
+	ResponseEntity<String> response = client.exchange("/deleteLoan/" + loanId, HttpMethod.DELETE, request, String.class);
+	assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    assertNotNull("Loan does not exist", response.getBody());
+  }
+
   public Artwork createArtwork() {
     // Create a schedule
     Schedule schedule = new Schedule();

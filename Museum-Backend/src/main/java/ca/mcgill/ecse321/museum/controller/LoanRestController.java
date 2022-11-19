@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -96,6 +97,17 @@ public class LoanRestController {
             LoanDto persistedLoanDto = DtoUtility.convertToDto(persistedLoan);
 
             return new ResponseEntity<>(persistedLoanDto, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping(value = { "/deleteLoan/{loanId}", "/deleteLoan/{loanId}/" })
+    public ResponseEntity<?> deleteLoan(@PathVariable("loanId") Long loanId) {
+        try {
+            loanService.deleteLoanByLoanId(loanId);
+            
+            return new ResponseEntity<>("Loan deleted", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
