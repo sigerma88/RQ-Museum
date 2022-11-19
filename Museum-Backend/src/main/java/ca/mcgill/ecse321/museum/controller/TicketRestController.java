@@ -36,7 +36,7 @@ public class TicketRestController {
   public ResponseEntity<?> createTickets(@RequestBody TicketDto ticketDto, @RequestParam(name = "number") int numberOfTickets) {
     try {
       List<TicketDto> boughtTickets = new ArrayList<>();
-      for (Ticket ticket : ticketService.createTickets(ticketDto.getVisitor().getUserId(), Date.valueOf(ticketDto.getVisitDate()), numberOfTickets)) {
+      for (Ticket ticket : ticketService.createTickets(ticketDto.getVisitor(), Date.valueOf(ticketDto.getVisitDate()), numberOfTickets)) {
         boughtTickets.add(DtoUtility.convertToDto(ticket));
       }
       return new ResponseEntity<>(boughtTickets, HttpStatus.CREATED);

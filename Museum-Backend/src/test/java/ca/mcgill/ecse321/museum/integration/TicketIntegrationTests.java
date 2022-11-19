@@ -127,8 +127,8 @@ public class TicketIntegrationTests {
     assertNotNull(response.getBody(), "Response has body");
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertEquals(1, response.getBody().length);
-    assertEquals(VISITOR_NAME_1, response.getBody()[0].getVisitor().getName());
-    //assertEquals(Date.valueOf(VISIT_DATE_1), response.getBody()[0].getVisitDate());
+    assertEquals(visitorId, response.getBody()[0].getVisitor());
+    // assertEquals(Date.valueOf(VISIT_DATE_1), response.getBody()[0].getVisitDate());
 
   }
 
@@ -141,9 +141,8 @@ public class TicketIntegrationTests {
   @Test
   public void testCreateTickets() {
     int numOfTickets = 2;
-    // ArrayList<TicketDto> ticketDtos =
 
-    ResponseEntity<TicketDto[]> response = client.postForEntity("/tickets/purchase/?number=" + numOfTickets + "/", new ArrayList<TicketDto>(), TicketDto[].class);
+    ResponseEntity<TicketDto[]> response = client.postForEntity("/tickets/purchase/?number=" + numOfTickets + "/", new TicketDto(VISIT_DATE_2, VISITOR_ID_2), TicketDto[].class);
     assertNotNull(response);
     assertEquals(HttpStatus.CREATED, response.getStatusCode());
     assertNotNull(response.getBody(), "Response has body");

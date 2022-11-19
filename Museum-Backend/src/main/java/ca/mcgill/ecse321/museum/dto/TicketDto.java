@@ -11,30 +11,30 @@ public class TicketDto {
 
   private long ticketId;
   private String visitDate;
-  private VisitorDto visitor;
+  private long visitorId;
 
   public TicketDto() {
 
   }
 
-  public TicketDto(long ticketId, String visitDate, VisitorDto visitor) {
+  public TicketDto(long ticketId, String visitDate, long visitor) {
     this.ticketId = ticketId;
     this.visitDate = visitDate;
-    this.visitor = visitor;
+    this.visitorId = visitor;
 
   }
 
-  public TicketDto(Date visitSDate, VisitorDto visitor) {
-    this.visitor = visitor;
+  public TicketDto(String visitDate, long visitor) {
+    this.visitorId = visitor;
     this.visitDate = visitDate;
   }
 
-  public VisitorDto getVisitor() {
-    return visitor;
+  public long getVisitor() {
+    return visitorId;
   }
 
-  public void setVisitor(VisitorDto visitor) {
-    this.visitor = visitor;
+  public void setVisitor(long visitorId) {
+    this.visitorId = visitorId;
   }
 
   public long getTicketId() {
