@@ -57,12 +57,12 @@ public class EmployeeRestController {
   /**
    * RESTful API to delete an employee by their id
    * 
-   * @param id - long
+   * @param employeeId - long
    * @return if the employee was deleted (success)
    * @author Siger, Kevin
    */
-  @DeleteMapping(value = {"/{id}", "/{id}/"})
-  public ResponseEntity<?> deleteEmployee(@PathVariable("id") long id, HttpServletRequest request) {
+  @DeleteMapping(value = {"/{employeeId}", "/{employeeId}/"})
+  public ResponseEntity<?> deleteEmployee(@PathVariable("employeeId") long employeeId, HttpServletRequest request) {
     try {
 
       // Check if logged in
@@ -73,12 +73,12 @@ public class EmployeeRestController {
       }
 
       // Check if employee exists
-      if (service.getEmployee(id) == null) {
+      if (service.getEmployee(employeeId) == null) {
         return ResponseEntity.badRequest().body("Employee does not exist");
       }
 
       // Delete employee
-      service.deleteEmployee(id);
+      service.deleteEmployee(employeeId);
       return ResponseEntity.ok("Employee deleted");
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());

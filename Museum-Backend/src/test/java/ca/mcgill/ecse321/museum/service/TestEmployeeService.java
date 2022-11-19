@@ -239,7 +239,8 @@ public class TestEmployeeService {
   }
 
   /**
-   * Test method for deleting an employee by id when the employee has an empty schedule.
+   * Test method for deleting an employee by id when the employee has an empty
+   * schedule.
    * 
    * @author Siger
    */
@@ -253,7 +254,8 @@ public class TestEmployeeService {
   }
 
   /**
-   * Test method for deleting an employee by id when the employee has a non empty schedule.
+   * Test method for deleting an employee by id when the employee has a non empty
+   * schedule.
    * 
    * @author Siger
    */
