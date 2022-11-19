@@ -11,8 +11,8 @@ public class LoanDto {
     private VisitorDto visitorDto;
     private ArtworkDto artworkDto;
 
-    public LoanDto(){
-        
+    public LoanDto() {
+
     }
 
     public LoanDto(Long aLoanId, Boolean aRequestAccepted) {
@@ -34,7 +34,8 @@ public class LoanDto {
         artworkDto = aArtworkDto;
     }
 
-    public LoanDto(Long aLoanId, Boolean aRequestAccepted, VisitorDto aVisitorDto, ArtworkDto aArtworkDto) {
+    public LoanDto(Long aLoanId, Boolean aRequestAccepted, VisitorDto aVisitorDto,
+            ArtworkDto aArtworkDto) {
         loanId = aLoanId;
         requestAccepted = aRequestAccepted;
         visitorDto = aVisitorDto;
@@ -42,9 +43,9 @@ public class LoanDto {
     }
 
     public Long getLoanId() {
-        return loanId; 
+        return loanId;
     }
-    
+
     public Boolean getRequestAccepted() {
         return requestAccepted;
     }
@@ -67,42 +68,42 @@ public class LoanDto {
 
     // @JsonProperty("ArtworkDto")
     // public void setArtworkId(ArtworkDtoDeserializer artworkDtoDeserializer) {
-    //     artworkDto.setArtworkId(artworkDtoDeserializer.getArtworkId());
+    // artworkDto.setArtworkId(artworkDtoDeserializer.getArtworkId());
     // }
 
     // @JsonProperty("ArtworkDto")
     // public void setName(ArtworkDtoDeserializer artworkDtoDeserializer) {
-    //     artworkDto.setName(artworkDtoDeserializer.getName());
+    // artworkDto.setName(artworkDtoDeserializer.getName());
     // }
 
     // @JsonProperty("ArtworkDto")
     // public void setArtist(ArtworkDtoDeserializer artworkDtoDeserializer) {
-    //     artworkDto.setArtist(artworkDtoDeserializer.getArtist());
+    // artworkDto.setArtist(artworkDtoDeserializer.getArtist());
     // }
 
     // @JsonProperty("ArtworkDto")
     // public void setIsAvailableForLoan(ArtworkDtoDeserializer artworkDtoDeserializer) {
-    //     artworkDto.setIsAvailableForLoan(artworkDtoDeserializer.getIsAvailableForLoan());
+    // artworkDto.setIsAvailableForLoan(artworkDtoDeserializer.getIsAvailableForLoan());
     // }
 
     // @JsonProperty("ArtworkDto")
     // public void setLoanFee(ArtworkDtoDeserializer artworkDtoDeserializer) {
-    //     artworkDto.setLoanFee(artworkDtoDeserializer.getLoanFee());
+    // artworkDto.setLoanFee(artworkDtoDeserializer.getLoanFee());
     // }
 
     // @JsonProperty("ArtworkDto")
     // public void setImage(ArtworkDtoDeserializer artworkDtoDeserializer) {
-    //     artworkDto.setImage(artworkDtoDeserializer.getImage());
+    // artworkDto.setImage(artworkDtoDeserializer.getImage());
     // }
 
     // @JsonProperty("ArtworkDto")
     // public void setIsOnLoan(ArtworkDtoDeserializer artworkDtoDeserializer) {
-    //     artworkDto.setIsOnLoan(artworkDtoDeserializer.getIsOnLoan());
+    // artworkDto.setIsOnLoan(artworkDtoDeserializer.getIsOnLoan());
     // }
 
     // @JsonProperty("ArtworkDto")
     // public void setRoom(ArtworkDtoDeserializer artworkDtoDeserializer) {
-    //     artworkDto.setRoom(artworkDtoDeserializer.getRoom());
+    // artworkDto.setRoom(artworkDtoDeserializer.getRoom());
     // }
 }
 
