@@ -123,8 +123,8 @@ public class LoanIntegrationTest {
 
 	private Long testCreateLoan() {
 
-		long artworkId = 1;
-		long visitorId = 1;
+		Long artworkId = (long) 1;
+		Long visitorId = (long) 1;
 
 		ResponseEntity<LoanDto> response = client.postForEntity("/postLoan/" + artworkId + "/"+ visitorId + "/?&requestAccepted=null", new LoanDto(), LoanDto.class);
 
