@@ -1,7 +1,5 @@
 package ca.mcgill.ecse321.museum.dto;
 
-import java.sql.Date;
-
 /**
  * Ticket DTO
  *
@@ -49,7 +47,7 @@ public class TicketDto {
     this.ticketId = ticketId;
   }
 
-  public void setVisitDate(Date visitSDate) {
+  public void setVisitDate(String visitSDate) {
     this.visitDate = visitDate;
   }
 }

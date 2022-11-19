@@ -9,6 +9,9 @@ import ca.mcgill.ecse321.museum.dto.ScheduleDto;
 import ca.mcgill.ecse321.museum.model.Ticket;
 import ca.mcgill.ecse321.museum.dto.VisitorDto;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 public class DtoUtility {
   /**
    * Method to convert a schedule to a DTO
@@ -77,7 +80,8 @@ public class DtoUtility {
     TicketDto ticketDto = new TicketDto();
     ticketDto.setVisitor(visitorDto.getUserId());
     ticketDto.setTicketId(ticket.getTicketId());
-    ticketDto.setVisitDate(ticket.getVisitDate());
+    String visitDateString = new SimpleDateFormat("yyyy-MM-dd").format(ticket.getVisitDate());
+    ticketDto.setVisitDate(visitDateString);
     return ticketDto;
   }
 

@@ -142,7 +142,7 @@ public class TicketIntegrationTests {
   public void testCreateTickets() {
     int numOfTickets = 2;
 
-    ResponseEntity<TicketDto[]> response = client.postForEntity("/tickets/purchase/?number=" + numOfTickets + "/", new TicketDto(VISIT_DATE_2, VISITOR_ID_2), TicketDto[].class);
+    ResponseEntity<TicketDto[]> response = client.postForEntity("/tickets/purchase/?number=" + numOfTickets, new TicketDto(VISIT_DATE_1, visitorRepository.findVisitorByName(VISITOR_NAME_1).getMuseumUserId()), TicketDto[].class);
     assertNotNull(response);
     assertEquals(HttpStatus.CREATED, response.getStatusCode());
     assertNotNull(response.getBody(), "Response has body");
