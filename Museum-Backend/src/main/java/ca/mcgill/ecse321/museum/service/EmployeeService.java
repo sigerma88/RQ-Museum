@@ -79,9 +79,7 @@ public class EmployeeService {
     }
 
     Schedule schedule = employee.getSchedule();
-    if (schedule == null) {
-      throw new IllegalArgumentException("No schedule found");
-    }
+
     return schedule;
   }
 
@@ -102,10 +100,6 @@ public class EmployeeService {
     }
 
     Schedule schedule = employee.getSchedule();
-
-    if (schedule == null) {
-      throw new IllegalArgumentException("Employee has empty schedule");
-    }
 
     List<TimePeriod> timePeriods = getTimePeriodsOfSchedule(schedule);
 
@@ -173,9 +167,7 @@ public class EmployeeService {
       throw new IllegalArgumentException("There is no such time period");
     }
     Schedule employeeSchedule = employee.getSchedule();
-    if (employeeSchedule == null) {
-      throw new IllegalArgumentException("Employee has empty schedule");
-    }
+
     if (scheduleOfTimePeriodRepository.findScheduleOfTimePeriodByScheduleAndTimePeriod(employeeSchedule,
         timePeriod) == null) {
       throw new IllegalArgumentException("Time period does not exist in employee's schedule");

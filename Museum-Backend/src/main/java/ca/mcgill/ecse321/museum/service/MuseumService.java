@@ -132,9 +132,7 @@ public class MuseumService {
       throw new IllegalArgumentException("Museum doesn't exist!");
     }
     Schedule schedule = museum.getSchedule();
-    if (schedule == null) {
-      throw new IllegalArgumentException("Schedule doesn't exist!");
-    }
+
     return schedule;
   }
 
@@ -152,9 +150,7 @@ public class MuseumService {
       throw new IllegalArgumentException("Museum doesn't exist!");
     }
     Schedule schedule = museum.getSchedule();
-    if (schedule == null) {
-      throw new IllegalArgumentException("Schedule doesn't exist!");
-    }
+
     List<TimePeriod> timePeriods = getTimePeriodsOfSchedule(schedule);
 
     return timePeriods;
@@ -179,9 +175,7 @@ public class MuseumService {
       throw new IllegalArgumentException("Time period doesn't exist!");
     }
     Schedule schedule = museum.getSchedule();
-    if (schedule == null) {
-      throw new IllegalArgumentException("Schedule doesn't exist!");
-    }
+
     ScheduleOfTimePeriod scheduleOfTimePeriod = new ScheduleOfTimePeriod();
     scheduleOfTimePeriod.setTimePeriod(timePeriod);
     scheduleOfTimePeriod.setSchedule(schedule);
@@ -210,9 +204,6 @@ public class MuseumService {
       throw new IllegalArgumentException("Time period doesn't exist!");
     }
     Schedule schedule = museum.getSchedule();
-    if (schedule == null) {
-      throw new IllegalArgumentException("Schedule doesn't exist!");
-    }
 
     if (scheduleOfTimePeriodRepository.findScheduleOfTimePeriodByScheduleAndTimePeriod(schedule, timePeriod) == null) {
       throw new IllegalArgumentException("Time period doesn't exist in museum's schedule!");
