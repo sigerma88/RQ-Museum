@@ -30,10 +30,6 @@ public class LoanRestController {
 
     @Autowired
     private LoanService loanService;
-    @Autowired
-    private ArtworkService artworkService;
-    //@Autowired
-    //private VisitorService visitorService; 
 
     /**
      * This method is called when we need the information of a specific loan
@@ -72,10 +68,7 @@ public class LoanRestController {
     /**
      * This method is called when an employee approves or denies a loan request
      */
-    @PatchMapping(
-        value = { "/patchLoan", "/patchLoan/" },
-        consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
-        produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @PatchMapping(value = { "/patchLoan", "/patchLoan/" })
     public ResponseEntity<?> patchLoan(@RequestBody LoanDto loanDto) {
         try {
             Loan patchedLoan = loanService.patchLoanById(loanDto.getLoanId(), loanDto.getRequestAccepted());
@@ -97,10 +90,7 @@ public class LoanRestController {
      * @param loan
      * @return
      */
-    @PostMapping(
-        value = { "/postLoan", "/postLoan/" },
-        consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
-        produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @PostMapping(value = { "/postLoan", "/postLoan/" })
     public ResponseEntity<?> postLoan(@RequestBody LoanDto loanDto) {
         try {
             Loan persistedLoan = loanService.createLoan(loanDto);

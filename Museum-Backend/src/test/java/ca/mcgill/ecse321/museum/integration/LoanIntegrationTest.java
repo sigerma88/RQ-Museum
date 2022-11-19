@@ -167,5 +167,12 @@ public class LoanIntegrationTest {
 
 		public LoanDto loanDto() {
 		}
+
+		public LoanDto loanDto(Long aLoanId, Boolean aRequestAccepted, VisitorDto aVisitorDto, ArtworkDto aArtworkDto) {
+			this.loanId = aLoanId;
+			this.requestAccepted = aRequestAccepted;
+			this.visitorDto = aVisitorDto;
+			this.artworkDto = aArtworkDto;
+		}
 	}
 }
