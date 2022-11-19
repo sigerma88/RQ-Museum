@@ -83,7 +83,7 @@ public class DtoUtility {
     }
     VisitorDto visitorDto = convertToDto(loan.getVisitor());
     ArtworkDto artworkDto = convertToDto(loan.getArtwork());
-    LoanDto loanDto = new LoanDto(loan.getRequestAccepted(), visitorDto, artworkDto);
+    LoanDto loanDto = new LoanDto(loan.getLoanId(), loan.getRequestAccepted(), visitorDto, artworkDto);
     return loanDto;
   }
   /**

@@ -91,11 +91,13 @@ public class LoanRestController {
      * @param loan
      * @return
      */
-    @PostMapping(value = { "/postLoan/{artworkId}/{visitorId}", "/postLoan/{artworkId}/{visitorId}/" })
+    @PostMapping(value = { "/postLoan", "/postLoan/" })
     public ResponseEntity<?> postLoan(
-        @PathVariable("artworkId") Long artworkId,
-        @PathVariable("visitorId") Long visitorId,
-        @RequestParam(name = "requestAccepted") Boolean requestAccepted) {
+        // @PathVariable("artworkId") Long artworkId,
+        // @PathVariable("visitorId") Long visitorId,
+        // @RequestParam(name = "requestAccepted") Boolean requestAccepted
+        @RequestBody LoanDto loanDto
+        ) {
         try {
 
             // Boolean requestAccepted;
@@ -112,9 +114,12 @@ public class LoanRestController {
             // Boolean requestAccepted = Boolean.parseBoolean(requestAcceptedString);
             
 
-            Loan persistedLoan = loanService.createLoan(requestAccepted, artworkId, visitorId);
-            
+            // Loan persistedLoan = loanService.createLoan(requestAccepted, artworkId, visitorId);
+
+            Loan persistedLoan = loanService.createLoan(loanDto);
+
             LoanDto persistedLoanDto = DtoUtility.convertToDto(persistedLoan);
+
 
             // Send email notification to visitor that the request was successful
             // TODO

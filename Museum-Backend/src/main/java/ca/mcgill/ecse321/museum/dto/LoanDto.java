@@ -30,6 +30,13 @@ public class LoanDto {
         artworkDto = aArtworkDto;
     }
 
+    public LoanDto(Long aLoanId, Boolean aRequestAccepted, VisitorDto aVisitorDto, ArtworkDto aArtworkDto) {
+        loanId = aLoanId;
+        requestAccepted = aRequestAccepted;
+        visitorDto = aVisitorDto;
+        artworkDto = aArtworkDto;
+    }
+
     public Long getLoanId() {
         return loanId; 
     }

@@ -46,10 +46,10 @@ public class LoanService {
     }
 
     @Transactional
-    public Loan createLoan(Boolean aRequestAccepted, Long aArtworkId, Long aVisitorId) {
+    public Loan createLoan(LoanDto loanDto) {
         // Error handling associations
-        Artwork artwork = artworkRepository.findArtworkByArtworkId(aArtworkId);
-        Visitor visitor = visitorRepository.findVisitorByMuseumUserId(aVisitorId);
+        Artwork artwork = artworkRepository.findArtworkByArtworkId(loanDto.getArtworkDto().getArtworkId());
+        Visitor visitor = visitorRepository.findVisitorByMuseumUserId(loanDto.getVisitorDto().getUserId());
         if (artwork == null) {
             throw new IllegalArgumentException("Artwork does not exist");
         }
@@ -64,17 +64,17 @@ public class LoanService {
         }
         
         Loan loan = new Loan();
-        loan.setRequestAccepted(aRequestAccepted);
+        loan.setRequestAccepted(loanDto.getRequestAccepted());
         loan.setArtwork(artwork);
         loan.setVisitor(visitor);
 
         // Error handling loan attributes
-        if (aRequestAccepted != null) {
+        if (loanDto.getRequestAccepted() != null) {
             throw new IllegalArgumentException("Loan getRequestAccepted must be null because only an employee can define");
         }
         // TODO: find out how findBySingleColumn works to determine if this implementation would work
         // loanRepository.findLoanByArtworkAndVisitor does not seem to work but this does 
-        if (loanRepository.findLoanByArtworkAndVisitor(artwork, visitor).getLoanId() == loan.getLoanId()) {
+        if (loanRepository.findLoanByArtworkAndVisitor(artwork, visitor) != null) {
             throw new IllegalArgumentException("Cannot create a duplicate loan request");
         }
         
