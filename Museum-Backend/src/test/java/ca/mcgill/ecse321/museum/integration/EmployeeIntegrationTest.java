@@ -27,6 +27,12 @@ import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Manager;
 import ca.mcgill.ecse321.museum.model.Schedule;
 
+/**
+ * This class tests the employee rest controller
+ * 
+ * @author Kevin
+ */
+
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class EmployeeIntegrationTest {
 
@@ -269,6 +275,12 @@ public class EmployeeIntegrationTest {
         assertEquals("You are not logged in", responseEntity.getBody(),
                 "Correct response body message");
     }
+
+    /**
+     * Test delete employee when not logged in as manager
+     * 
+     * @author Kevin
+     */
 
     @Test
     public void testDeleteEmployeeNotManager() {
