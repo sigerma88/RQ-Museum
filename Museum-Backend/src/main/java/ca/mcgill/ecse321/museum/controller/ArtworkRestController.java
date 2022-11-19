@@ -118,7 +118,7 @@ public class ArtworkRestController {
    * @author Zahra
    */
   @GetMapping(value = { "/artworks/{roomId}", "/artworks/{roomId}/" })
-  public List<ArtworkDto> getAllArtworksByRoom(@PathVariable("roomId") Long roomId) {
+  public ResponseEntity<?> getAllArtworksByRoom(@PathVariable("roomId") Long roomId) {
     try {
       List<ArtworkDto> artworkDtos = new ArrayList<ArtworkDto>();
       for (Artwork artwork : artworkService.getAllArtworksByRoom(roomId)) {

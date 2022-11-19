@@ -1,10 +1,14 @@
 package ca.mcgill.ecse321.museum.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.lenient;
 
@@ -40,6 +44,9 @@ public class TestArtworkService {
 
   @Mock
   private LoanRepository loanRepository;
+
+  @Mock
+  private RoomService roomService;
 
   @InjectMocks
   private ArtworkService artworkService;
@@ -121,6 +128,108 @@ public class TestArtworkService {
         artwork.setIsOnLoan(SECOND_ARTWORK_IS_ON_LOAN);
         artwork.setRoom(room);
         return artwork;
+      } else {
+        return null;
+      }
+    });
+
+    lenient().when(artworkRepository.findAll()).thenAnswer((InvocationOnMock invocation) -> {
+      // Create a room
+      Room room = createRoomStub();
+
+      // Create an artworks
+      Artwork firstArtwork = new Artwork();
+      firstArtwork.setArtworkId(FIRST_ARTWORK_ID);
+      firstArtwork.setName(FIRST_ARTWORK_NAME);
+      firstArtwork.setArtist(FIRST_ARTWORK_ARTIST);
+      firstArtwork.setIsAvailableForLoan(FIRST_ARTWORK_IS_AVAILABLE_FOR_LOAN);
+      firstArtwork.setLoanFee(FIRST_ARTWORK_LOAN_FEE);
+      firstArtwork.setImage(FIRST_ARTWORK_IMAGE);
+      firstArtwork.setIsOnLoan(FIRST_ARTWORK_IS_ON_LOAN);
+
+      Artwork secondArtwork = new Artwork();
+      secondArtwork.setArtworkId(SECOND_ARTWORK_ID);
+      secondArtwork.setName(SECOND_ARTWORK_NAME);
+      secondArtwork.setArtist(SECOND_ARTWORK_ARTIST);
+      secondArtwork.setIsAvailableForLoan(SECOND_ARTWORK_IS_AVAILABLE_FOR_LOAN);
+      secondArtwork.setLoanFee(SECOND_ARTWORK_LOAN_FEE);
+      secondArtwork.setImage(SECOND_ARTWORK_IMAGE);
+      secondArtwork.setIsOnLoan(SECOND_ARTWORK_IS_ON_LOAN);
+      secondArtwork.setRoom(room);
+
+      // Create and return a list of artworks
+      List<Artwork> artworks = new ArrayList<>();
+      artworks.add(firstArtwork);
+      artworks.add(secondArtwork);
+      return artworks;
+    });
+
+    lenient().when(artworkRepository.findArtworkByRoom(any(Room.class))).thenAnswer((InvocationOnMock invocation) -> {
+      Room room = (Room) invocation.getArgument(0);
+      if (room.getRoomId() == FIRST_ROOM_ID) {
+        // Create an artwork
+        Artwork artwork = new Artwork();
+        artwork.setArtworkId(SECOND_ARTWORK_ID);
+        artwork.setName(SECOND_ARTWORK_NAME);
+        artwork.setArtist(SECOND_ARTWORK_ARTIST);
+        artwork.setIsAvailableForLoan(SECOND_ARTWORK_IS_AVAILABLE_FOR_LOAN);
+        artwork.setLoanFee(SECOND_ARTWORK_LOAN_FEE);
+        artwork.setImage(SECOND_ARTWORK_IMAGE);
+        artwork.setIsOnLoan(SECOND_ARTWORK_IS_ON_LOAN);
+        artwork.setRoom(room);
+  
+        // Create and return a list of artworks
+        List<Artwork> artworks = new ArrayList<>();
+        artworks.add(artwork);
+        return artworks;
+      } else {
+        return null;
+      }
+    });
+
+    lenient().when(artworkRepository.findArtworkByIsAvailableForLoan(anyBoolean())).thenAnswer((InvocationOnMock invocation) -> {
+      if (invocation.getArgument(0).equals(true)) {
+        // Create an artwork
+        Artwork artwork = new Artwork();
+        artwork.setArtworkId(FIRST_ARTWORK_ID);
+        artwork.setName(FIRST_ARTWORK_NAME);
+        artwork.setArtist(FIRST_ARTWORK_ARTIST);
+        artwork.setIsAvailableForLoan(FIRST_ARTWORK_IS_AVAILABLE_FOR_LOAN);
+        artwork.setLoanFee(FIRST_ARTWORK_LOAN_FEE);
+        artwork.setImage(FIRST_ARTWORK_IMAGE);
+        artwork.setIsOnLoan(FIRST_ARTWORK_IS_ON_LOAN);
+
+        // Create and return a list of artworks
+        List<Artwork> artworks = new ArrayList<>();
+        artworks.add(artwork);
+        return artworks;
+      } else if (invocation.getArgument(0).equals(false)) {
+        // Create a room
+        Room room = createRoomStub();
+
+        // Create an artwork
+        Artwork artwork = new Artwork();
+        artwork.setArtworkId(SECOND_ARTWORK_ID);
+        artwork.setName(SECOND_ARTWORK_NAME);
+        artwork.setArtist(SECOND_ARTWORK_ARTIST);
+        artwork.setIsAvailableForLoan(SECOND_ARTWORK_IS_AVAILABLE_FOR_LOAN);
+        artwork.setLoanFee(SECOND_ARTWORK_LOAN_FEE);
+        artwork.setImage(SECOND_ARTWORK_IMAGE);
+        artwork.setIsOnLoan(SECOND_ARTWORK_IS_ON_LOAN);
+        artwork.setRoom(room);
+
+        // Create and return a list of artworks
+        List<Artwork> artworks = new ArrayList<>();
+        artworks.add(artwork);
+        return artworks;
+      } else {
+        return null;
+      }
+    });
+
+    lenient().when(roomService.getRoomById(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
+      if (invocation.getArgument(0).equals(FIRST_ROOM_ID)) {
+        return createRoomStub();
       } else {
         return null;
       }
@@ -447,6 +556,172 @@ public class TestArtworkService {
       assertNull(artwork);
       assertEquals("Artwork id cannot be null", e.getMessage());
     }
+  }
+
+  /**
+   * This method tests getting all artworks
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testGetAllArtworks() {
+    List<Artwork> artworks = null;
+    try {
+      artworks = artworkService.getAllArtworks();
+    } catch (IllegalArgumentException e) {
+      // Check that no error occurred
+      fail();
+    }
+
+    // Check that the artworks were correctly retrieved
+    assertNotNull(artworks);
+    assertEquals(2, artworks.size());
+
+    Artwork firstArtwork = artworks.get(0);
+    assertEquals(FIRST_ARTWORK_ID, firstArtwork.getArtworkId());
+    assertEquals(FIRST_ARTWORK_NAME, firstArtwork.getName());
+    assertEquals(FIRST_ARTWORK_ARTIST, firstArtwork.getArtist());
+    assertEquals(FIRST_ARTWORK_IS_AVAILABLE_FOR_LOAN, firstArtwork.getIsAvailableForLoan());
+    assertEquals(FIRST_ARTWORK_LOAN_FEE, firstArtwork.getLoanFee());
+    assertEquals(FIRST_ARTWORK_IMAGE, firstArtwork.getImage());
+    assertEquals(FIRST_ARTWORK_IS_ON_LOAN, firstArtwork.getIsOnLoan());
+    assertNull(firstArtwork.getRoom());
+
+    Artwork secondArtwork = artworks.get(1);
+    assertEquals(SECOND_ARTWORK_ID, secondArtwork.getArtworkId());
+    assertEquals(SECOND_ARTWORK_NAME, secondArtwork.getName());
+    assertEquals(SECOND_ARTWORK_ARTIST, secondArtwork.getArtist());
+    assertEquals(SECOND_ARTWORK_IS_AVAILABLE_FOR_LOAN, secondArtwork.getIsAvailableForLoan());
+    assertEquals(SECOND_ARTWORK_LOAN_FEE, secondArtwork.getLoanFee());
+    assertEquals(SECOND_ARTWORK_IMAGE, secondArtwork.getImage());
+    assertEquals(SECOND_ARTWORK_IS_ON_LOAN, secondArtwork.getIsOnLoan());
+    assertEquals(FIRST_ROOM_ID, secondArtwork.getRoom().getRoomId());
+  }
+
+  /**
+   * This method tests getting all artworks by a room
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testGetAllArtworksByRoom() {
+    List<Artwork> artworks = null;
+    try {
+      artworks = artworkService.getAllArtworksByRoom(FIRST_ROOM_ID);
+    } catch (IllegalArgumentException e) {
+      // Check that no error occurred
+      fail();
+    }
+
+    // Check that the artworks were correctly retrieved
+    assertNotNull(artworks);
+    assertEquals(1, artworks.size());
+
+    Artwork secondArtwork = artworks.get(0);
+    assertEquals(SECOND_ARTWORK_ID, secondArtwork.getArtworkId());
+    assertEquals(SECOND_ARTWORK_NAME, secondArtwork.getName());
+    assertEquals(SECOND_ARTWORK_ARTIST, secondArtwork.getArtist());
+    assertEquals(SECOND_ARTWORK_IS_AVAILABLE_FOR_LOAN, secondArtwork.getIsAvailableForLoan());
+    assertEquals(SECOND_ARTWORK_LOAN_FEE, secondArtwork.getLoanFee());
+    assertEquals(SECOND_ARTWORK_IMAGE, secondArtwork.getImage());
+    assertEquals(SECOND_ARTWORK_IS_ON_LOAN, secondArtwork.getIsOnLoan());
+    assertEquals(FIRST_ROOM_ID, secondArtwork.getRoom().getRoomId());
+  }
+
+  /**
+   * This method tests getting all artworks by a non-existent room
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testGetAllArtworksByNonExistentRoom() {
+    List<Artwork> artworks = null;
+    try {
+      artworks = artworkService.getAllArtworksByRoom(-1L);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertNull(artworks);
+      assertEquals("Room does not exist", e.getMessage());
+    }
+  }
+
+  /**
+   * This method tests getting all artworks by a null room
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testGetAllArtworksByNullRoom() {
+    List<Artwork> artworks = null;
+    try {
+      artworks = artworkService.getAllArtworksByRoom(null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // Check that an error occurred
+      assertNull(artworks);
+      assertEquals("Room does not exist", e.getMessage());
+    }
+  }
+
+  /**
+   * This method tests getting all artworks by if they are available for loan
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testGetAllArtworksByIsAvailableForLoan() {
+    List<Artwork> artworks = null;
+    try {
+      artworks = artworkService.getArtworksAvailableForLoan();
+    } catch (IllegalArgumentException e) {
+      // Check that no error occurred
+      fail();
+    }
+
+    // Check that the artworks were correctly retrieved
+    assertNotNull(artworks);
+    assertEquals(1, artworks.size());
+
+    Artwork firstArtwork = artworks.get(0);
+    assertEquals(FIRST_ARTWORK_ID, firstArtwork.getArtworkId());
+    assertEquals(FIRST_ARTWORK_NAME, firstArtwork.getName());
+    assertEquals(FIRST_ARTWORK_ARTIST, firstArtwork.getArtist());
+    assertEquals(FIRST_ARTWORK_IS_AVAILABLE_FOR_LOAN, firstArtwork.getIsAvailableForLoan());
+    assertEquals(FIRST_ARTWORK_LOAN_FEE, firstArtwork.getLoanFee());
+    assertEquals(FIRST_ARTWORK_IMAGE, firstArtwork.getImage());
+    assertEquals(FIRST_ARTWORK_IS_ON_LOAN, firstArtwork.getIsOnLoan());
+    assertNull(firstArtwork.getRoom());
+  }
+
+  /**
+   * This method tests getting all artworks by if they are not available for loan
+   * 
+   * @author Siger
+   */
+  @Test
+  public void testGetAllArtworksByIsNotAvailableForLoan() {
+    List<Artwork> artworks = null;
+    try {
+      artworks = artworkService.getArtworksNotAvailableForLoan();
+    } catch (IllegalArgumentException e) {
+      // Check that no error occurred
+      fail();
+    }
+
+    // Check that the artworks were correctly retrieved
+    assertNotNull(artworks);
+    assertEquals(1, artworks.size());
+
+    Artwork secondArtwork = artworks.get(0);
+    assertEquals(SECOND_ARTWORK_ID, secondArtwork.getArtworkId());
+    assertEquals(SECOND_ARTWORK_NAME, secondArtwork.getName());
+    assertEquals(SECOND_ARTWORK_ARTIST, secondArtwork.getArtist());
+    assertEquals(SECOND_ARTWORK_IS_AVAILABLE_FOR_LOAN, secondArtwork.getIsAvailableForLoan());
+    assertEquals(SECOND_ARTWORK_LOAN_FEE, secondArtwork.getLoanFee());
+    assertEquals(SECOND_ARTWORK_IMAGE, secondArtwork.getImage());
+    assertEquals(SECOND_ARTWORK_IS_ON_LOAN, secondArtwork.getIsOnLoan());
+    assertEquals(FIRST_ROOM_ID, secondArtwork.getRoom().getRoomId());
   }
 
   /**

@@ -120,7 +120,7 @@ public class ArtworkService {
   /**
    * Method to get a list of all artworks in a room
    *
-   * @param room - Room
+   * @param roomId - id of room
    * @return all artworks in specific room
    * @author Zahra
    * @author Siger
@@ -180,8 +180,7 @@ public class ArtworkService {
       throw new IllegalArgumentException("Artwork does not exist");
     }
 
-    if ((name == null || name.trim().length() == 0) && (artist == null || artist.trim().length() == 0)
-        && (image == null || image.trim().length() == 0)) {
+    if ((name == null || name.trim().length() == 0) && (artist == null || artist.trim().length() == 0) && (image == null || image.trim().length() == 0)) {
       throw new IllegalArgumentException("Nothing to edit, all fields are empty");
     }
 
