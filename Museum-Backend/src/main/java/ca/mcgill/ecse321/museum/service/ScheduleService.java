@@ -7,29 +7,20 @@ import org.springframework.transaction.annotation.Transactional;
 import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
 import ca.mcgill.ecse321.museum.model.Schedule;
 
-
+/**
+ * This is the service class for schedule
+ * @author VZ
+ * 
+ */
 @Service
 public class ScheduleService {
     @Autowired
     private ScheduleRepository scheduleRepository;
 
-    //GET
-
     /**
-     * Method to get a schedule
+     * Method to create a schedule
      * @author VZ
-     * @param scheduleId 
-     * @return
-     */
-    @Transactional
-    public Schedule getSchedule(long scheduleId) {
-        return scheduleRepository.findScheduleByScheduleId(scheduleId);
-    }
-
-    //CREATE
-    /**
-     * @author VZ
-     * @return
+     * @return created schedule
      */
     @Transactional
     public Schedule createSchedule() {
@@ -38,12 +29,5 @@ public class ScheduleService {
         return schedule;
 
     }
-
-    //DELETE
-    @Transactional
-    public void deleteSchedule(long scheduleId) {
-        scheduleRepository.deleteById(scheduleId);
-    }
-
     
 }
