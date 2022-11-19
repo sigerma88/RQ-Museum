@@ -53,8 +53,7 @@ public class DtoUtility {
 
     // Convert employee to DTO
     return new EmployeeDto(employee.getMuseumUserId(), employee.getEmail(), employee.getName(),
-        employee.getPassword(),
-        scheduleDto);
+        employee.getPassword(), scheduleDto);
   }
 
   /**
