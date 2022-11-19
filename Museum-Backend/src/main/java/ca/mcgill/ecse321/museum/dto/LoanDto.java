@@ -11,6 +11,13 @@ public class LoanDto {
         
     }
 
+    public LoanDto(Long aLoanId, Boolean aRequestAccepted) {
+        loanId = aLoanId;
+        requestAccepted = aRequestAccepted;
+        visitorDto = null;
+        artworkDto = null;
+    }
+
     public LoanDto(Boolean aRequestAccepted) {
         requestAccepted = aRequestAccepted;
         visitorDto = null;

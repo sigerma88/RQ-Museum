@@ -308,6 +308,7 @@ public class ArtworkService {
 
     // Update room
     artwork.setRoom(null);
+    artwork.setIsOnLoan(true);
     artworkRepository.save(artwork);
 
     return artwork;

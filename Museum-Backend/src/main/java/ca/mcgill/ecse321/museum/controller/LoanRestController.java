@@ -103,7 +103,7 @@ public class LoanRestController {
         produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<?> postLoan(@RequestBody LoanDto loanDto) {
         try {
-            Loan persistedLoan = loanService.createLoan(loanDto.getRequestAccepted(), loanDto.getArtworkDto(), loanDto.getVisitorDto());
+            Loan persistedLoan = loanService.createLoan(loanDto);
             
             LoanDto persistedLoanDto = DtoUtility.convertToDto(persistedLoan);
 

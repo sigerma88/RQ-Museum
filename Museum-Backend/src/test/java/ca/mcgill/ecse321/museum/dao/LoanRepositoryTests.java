@@ -109,12 +109,13 @@ public class LoanRepositoryTests {
     assertNotNull(loan.getArtwork());
     assertEquals(artworkId, loan.getArtwork().getArtworkId());
 
-    //reset
-    loan = null;
-
     //get loan from artworkId and visitorId
-    loan = loanRepository.findLoanByArtworkAndVisitor(monalisa, visitor);
+    Loan newLoan = loanRepository.findLoanByArtworkAndVisitor(monalisa, visitor);
 
-    assertNotNull(loan);
+    assertNotNull(newLoan);
+    assertEquals(monalisa.getArtworkId(), newLoan.getArtwork().getArtworkId());
+    assertEquals(visitor.getMuseumUserId(), newLoan.getVisitor().getMuseumUserId());
+
+    assertEquals(loan.getLoanId(), newLoan.getLoanId());
   }
 }

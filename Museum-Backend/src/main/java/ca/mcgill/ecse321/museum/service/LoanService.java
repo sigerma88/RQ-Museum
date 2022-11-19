@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.ldap.LdapRepositoriesAutoConfiguration;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +13,7 @@ import ca.mcgill.ecse321.museum.dao.LoanRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
 import ca.mcgill.ecse321.museum.dto.VisitorDto;
 import ca.mcgill.ecse321.museum.dto.ArtworkDto;
+import ca.mcgill.ecse321.museum.dto.LoanDto;
 import ca.mcgill.ecse321.museum.model.Artwork;
 import ca.mcgill.ecse321.museum.model.Loan;
 import ca.mcgill.ecse321.museum.model.Visitor;
@@ -44,10 +46,10 @@ public class LoanService {
     }
 
     @Transactional
-    public Loan createLoan(Boolean requestAccepted, ArtworkDto artworkDto, VisitorDto visitorDto) {
+    public Loan createLoan(LoanDto loanDto) {
         // Error handling associations
-        Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkDto.getArtworkId());
-        Visitor visitor = visitorRepository.findVisitorByMuseumUserId(visitorDto.getUserId());
+        Artwork artwork = artworkRepository.findArtworkByArtworkId(loanDto.getArtworkDto().getArtworkId());
+        Visitor visitor = visitorRepository.findVisitorByMuseumUserId(loanDto.getVisitorDto().getUserId());
         if (artwork == null) {
             throw new IllegalArgumentException("Artwork does not exist");
         }
@@ -61,21 +63,18 @@ public class LoanService {
             throw new IllegalArgumentException("Visitor does not exist");
         }
         
-
+        Loan loan = loanRepository.findLoanByLoanId(loanDto.getLoanId());
 
         // Error handling loan attributes
-        if (requestAccepted != null) {
+        if (loanDto.getRequestAccepted() != null) {
             throw new IllegalArgumentException("Loan getRequestAccepted must be null because only an employee can define");
         }
         // TODO: find out how findBySingleColumn works to determine if this implementation would work
         // loanRepository.findLoanByArtworkAndVisitor does not seem to work but this does 
-        if (loanRepository.findLoanByArtwork(artwork) == loanRepository.findLoanByVisitor(visitor)) {
+        if (loanRepository.findLoanByArtworkAndVisitor(artwork, visitor).getLoanId() == loan.getLoanId()) {
             throw new IllegalArgumentException("Cannot create a duplicate loan request");
         }
-        Loan loan = new Loan();
-        loan.setRequestAccepted(requestAccepted);
-        loan.setArtwork(artwork);
-        loan.setVisitor(visitor);
+        
         Loan persistedLoan = loanRepository.save(loan);
 
         return persistedLoan;
@@ -90,12 +89,10 @@ public class LoanService {
 
         // If the patch is to accept the loan request, the artwork must be removed from the room it's in
         loan.setRequestAccepted(requestAccepted);
-        if (requestAccepted == true) {
-            Artwork artwork = artworkService.removeArtworkFromRoom(loan.getArtwork().getArtworkId());
-            loan.setArtwork(artwork);
+        if (requestAccepted) {
+            loan.setArtwork(artworkService.removeArtworkFromRoom(loan.getArtwork().getArtworkId()));
         }
-        loanRepository.save(loan);
-        return loan;
+        return loanRepository.save(loan);
     }
 
 /**

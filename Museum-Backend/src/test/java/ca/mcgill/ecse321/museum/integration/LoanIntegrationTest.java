@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -105,14 +106,13 @@ public class LoanIntegrationTest {
         visitorRepository.deleteAll();
     }
 
-    // @Test
-	// public void testCreateAndGetLoan() {
-	// 	Long id = testCreateLoan();
-	// 	testGetPerson(id);
-	// }
+    @Test
+	public void testCreateAndGetLoan() {
+		Long id = testCreateLoan();
+		testGetLoan(id);
+	}
 
-	@Test
-	public void testCreateLoan() {
+	private Long testCreateLoan() {
 		Artwork artwork = artworkService.getAllArtworks().get(0);
 		Visitor visitor = visitorRepository.findVisitorByName("Please");
 
@@ -121,9 +121,11 @@ public class LoanIntegrationTest {
 		loan.setArtwork(artwork);
 		loan.setVisitor(visitor);
 		LoanDto loanDto = DtoUtility.convertToDto(loan);
+
+		HttpEntity<LoanDto> request = new HttpEntity<>(loanDto);
 		
 
-		ResponseEntity<LoanDto> response = client.postForEntity("/postLoan", loanDto, LoanDto.class);
+		ResponseEntity<LoanDto> response = client.postForEntity("/postLoan", request, LoanDto.class);
 
 		// Check status and body of response are correct
 		assertNotNull(response);
@@ -133,9 +135,10 @@ public class LoanIntegrationTest {
 		assertEquals(visitor.getMuseumUserId(), response.getBody().getVisitorDto(), "Response has correct visitorDto");
 		assertEquals(artwork.getArtworkId(), response.getBody().getArtworkDto(), "Response has correct artworkDto");
 		assertTrue(response.getBody().getLoanId() > 0, "Response has valid ID");
+
+		return response.getBody().getLoanId();
 	}
 
-	@Test
 	private void testGetLoan(Long LoanId) {
 		ResponseEntity<LoanDto> response = client.getForEntity("/loan/" + LoanId, LoanDto.class);
 
