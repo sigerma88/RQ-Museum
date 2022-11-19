@@ -47,7 +47,7 @@ public class TicketDto {
     this.ticketId = ticketId;
   }
 
-  public void setVisitDate(String visitSDate) {
+  public void setVisitDate(String visitDate) {
     this.visitDate = visitDate;
   }
 }

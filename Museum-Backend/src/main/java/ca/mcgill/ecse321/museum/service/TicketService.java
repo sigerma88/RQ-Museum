@@ -31,9 +31,9 @@ public class TicketService {
    * @author Zahra
    */
   @Transactional
-  public List<Ticket> createTickets(Long visitorID, Date date, int numberOfTickets) {
+  public List<Ticket> createTickets(long visitorID, Date date, int numberOfTickets) {
     List<Ticket> ticketsBought = new ArrayList<>();
-    String error = "";
+
     if (numberOfTickets == 0) {
       throw new IllegalArgumentException("Number of tickets must be at least 1");
     }
@@ -44,10 +44,13 @@ public class TicketService {
     } else if (date.toLocalDate().isBefore(java.time.LocalDate.now())) {
       throw new IllegalArgumentException("Cannot pick a date in the past.");
     }
+
     for (int i = 0; i < numberOfTickets; i++) {
       Ticket ticket = createTicket(visitorID, date);
       ticketsBought.add(ticket);
     }
+
+    System.out.println(ticketsBought);
     return ticketsBought;
 
   }
@@ -82,20 +85,26 @@ public class TicketService {
   @Transactional
   public List<Ticket> getTicketsByVisitor(long visitorID) {
 
-    if (visitorRepository.findVisitorByMuseumUserId(visitorID) == null) {
+    // if (visitorRepository.findVisitorByMuseumUserId(visitorID) == null) {
+    // throw new IllegalArgumentException("Visitor doesn't exist");
+    // }
+    // List<Ticket> allTicketsOfVisitor = new ArrayList<>();
+    // List<Ticket> allTickets = toList(ticketRepository.findAll());
+    // for (Ticket ticket : allTickets) {
+
+    // if (ticket != null && ticket.getVisitor().getMuseumUserId() == visitorID) {
+    // allTicketsOfVisitor.add(ticket);
+    // }
+
+    // }
+
+    // return allTicketsOfVisitor;
+
+    Visitor visitor = visitorRepository.findVisitorByMuseumUserId(visitorID);
+    if (visitor == null) {
       throw new IllegalArgumentException("Visitor doesn't exist");
     }
-    List<Ticket> allTicketsOfVisitor = new ArrayList<>();
-    List<Ticket> allTickets = toList(ticketRepository.findAll());
-    for (Ticket ticket : allTickets) {
-
-      if (ticket != null && ticket.getVisitor().getMuseumUserId() == visitorID) {
-        allTicketsOfVisitor.add(ticket);
-      }
-
-    }
-
-    return allTicketsOfVisitor;
+    return ticketRepository.findTicketByVisitor(visitor);
   }
 
   /**
