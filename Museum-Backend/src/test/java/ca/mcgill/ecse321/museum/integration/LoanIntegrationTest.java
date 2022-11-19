@@ -72,11 +72,11 @@ public class LoanIntegrationTest {
     Schedule schedule = new Schedule();
 
     // Creating a museum
-    Museum museum = new Museum();
-    museum.setName("Rougon-Macquart");
-    museum.setVisitFee(12.5);
-    museum.setSchedule(schedule);
-    museumRepository.save(museum);
+    // Museum museum = new Museum();
+    // museum.setName("Rougon-Macquart");
+    // museum.setVisitFee(12.5);
+    // museum.setSchedule(schedule);
+    // museumRepository.save(museum);
 
     // // Creating a room
     // Room room = new Room();
@@ -88,7 +88,7 @@ public class LoanIntegrationTest {
 
     // Creating an artwork
     Artwork artwork = new Artwork();
-	long artworkId = 1;
+	Long artworkId = (long) 1;
 	artwork.setArtworkId(artworkId);
     artwork.setName("La Joconde");
     artwork.setArtist("Leonardo Da Vinci");
@@ -100,7 +100,7 @@ public class LoanIntegrationTest {
 
 	// Creating a visitor
 	Visitor visitor = new Visitor();
-	long visitorId = 1;
+	Long visitorId = (long) 1;
 	visitor.setMuseumUserId(visitorId);
 	visitor.setEmail("Please@email.com");
 	visitor.setName("Please");
@@ -123,8 +123,8 @@ public class LoanIntegrationTest {
 
 	private Long testCreateLoan() {
 
-		Long artworkId = (long) 1;
-		Long visitorId = (long) 1;
+		Long artworkId = artworkRepository.findArtworkByName("La Joconde").get(0).getArtworkId();
+		Long visitorId = visitorRepository.findVisitorByName("Please").getMuseumUserId();
 
 		ResponseEntity<LoanDto> response = client.postForEntity("/postLoan/" + artworkId + "/"+ visitorId + "/?&requestAccepted=null", new LoanDto(), LoanDto.class);
 
@@ -133,8 +133,8 @@ public class LoanIntegrationTest {
 		assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
 		assertNotNull(response.getBody(), "Response has body");
 		assertEquals(null, response.getBody().getRequestAccepted(), "Response has correct requestAccepted");
-		assertEquals(visitorId, response.getBody().getVisitorDto(), "Response has correct visitorDto");
-		assertEquals(artworkId, response.getBody().getArtworkDto(), "Response has correct artworkDto");
+		assertEquals(visitorId, response.getBody().getVisitorDto().getUserId(), "Response has correct visitorDto");
+		assertEquals(artworkId, response.getBody().getArtworkDto().getArtworkId(), "Response has correct artworkDto");
 		assertTrue(response.getBody().getLoanId() > 0, "Response has valid ID");
 
 		return response.getBody().getLoanId();

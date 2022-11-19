@@ -95,10 +95,22 @@ public class LoanRestController {
     public ResponseEntity<?> postLoan(
         @PathVariable("artworkId") Long artworkId,
         @PathVariable("visitorId") Long visitorId,
-        @RequestParam(name = "requestAccepted") String requestAcceptedString) {
+        @RequestParam(name = "requestAccepted") Boolean requestAccepted) {
         try {
 
-            Boolean requestAccepted = Boolean.parseBoolean(requestAcceptedString);
+            // Boolean requestAccepted;
+            // if (requestAcceptedString.equals("null")) {
+            //     requestAccepted = null;
+            // }
+            // else if (requestAcceptedString.equals("true")) {
+            //     requestAccepted = true; 
+            // }
+            // else if (requestAcceptedString.equals("false")) {
+            //     requestAccepted = false;
+            // }
+
+            // Boolean requestAccepted = Boolean.parseBoolean(requestAcceptedString);
+            
 
             Loan persistedLoan = loanService.createLoan(requestAccepted, artworkId, visitorId);
             
