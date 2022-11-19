@@ -1,14 +1,10 @@
 package ca.mcgill.ecse321.museum.service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
 import ca.mcgill.ecse321.museum.dao.LoanRepository;
 import ca.mcgill.ecse321.museum.dao.RoomRepository;
@@ -124,26 +120,11 @@ public class ArtworkService {
     return toList(artworkRepository.findAll());
   }
 
-  /**
-   * Method to get a list of all artworks in a room
-   *
-   * @param room - Room
-   * @return artworksInRoom - all artworks in room
-   * @author Zahra
-   */
-  // @Transactional
-  // public List<Artwork> getAllArtworksByRoom(Room room) {
-  //   List<Artwork> artworksInRoom = new ArrayList<>();
-  //   for (Artwork artwork : getAllArtworks()) {
-  //     if (artwork.getRoom().equals(room)) artworksInRoom.add(artwork);
-  //   }
-  //   return artworksInRoom;
-  // }
 
-  // FR3 Function which gets all artworks for a given room
   /**
    * Method to get all artworks in a room
    *
+   * FR3 Function which gets all artworks for a given room
    * @param roomId - ID of room which we want to get all artworks inside
    * @return All artworks in a room
    * @author kieyanmamiche
@@ -151,18 +132,13 @@ public class ArtworkService {
   @Transactional
   public List<Artwork> getAllArtworksInRoom(long roomId){
     List<Artwork> artworkList = new ArrayList<Artwork>();
-    Iterable<Artwork> artworkIterable = artworkRepository.findAll();
-    Iterator<Artwork> artworkIterator = artworkIterable.iterator();
 
-    while(artworkIterator.hasNext()){
-      Artwork currentArtwork = artworkIterator.next();
-      if (currentArtwork.getRoom() != null) {
-        if (currentArtwork.getRoom().getRoomId() == roomId) {
-          // add artwork to list if it has the room id we want to query for
-          artworkList.add(currentArtwork);
-        }
-      }
+    Room room = roomRepository.findRoomByRoomId(roomId);
+    if (room == null){
+      throw new IllegalArgumentException("Room does not exist");
     }
+    artworkList = artworkRepository.findArtworkByRoom(room);
+
     return artworkList;
   }
 
@@ -262,22 +238,19 @@ public class ArtworkService {
   /**
    * Method to get artwork status
    *
-   * @param id - ID of artwork we want the status of
+   * @param artworkId - ID of artwork we want the status of
    * @return The status of an artwork
    * @author kieyanmamiche
    */
   @Transactional
-  public String getArtworkStatus(long id) {
-    Optional<Artwork> artworkOptional = artworkRepository.findById(id);
+  public String getArtworkStatus(long artworkId) {
+    Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
 
     // Make sure artwork exists
-    if (artworkOptional == null){
+    if (artwork == null){
       throw new IllegalArgumentException("Artwork does not exist");
     }
-    if (artworkOptional.isPresent() == false){
-      throw new IllegalArgumentException("Artwork does not exist");
-    }
-    Artwork artwork = artworkOptional.get();
+
     // Find out the status of the artwork OPTIONS: loan / on display / in storage
     // 1. Check if it is on loan:
     if (artwork.getIsOnLoan() == true){
@@ -285,6 +258,10 @@ public class ArtworkService {
     }
 
     Room roomOfArtwork = artwork.getRoom();
+    if (roomOfArtwork == null){
+      throw new IllegalArgumentException("Room does not exist");
+    }
+
     RoomType roomType = roomOfArtwork.getRoomType();
     if (roomType == RoomType.Storage){
       return "storage";
@@ -297,35 +274,32 @@ public class ArtworkService {
     throw new IllegalArgumentException("Artwork not initialized correctly");
   }
 
-  // FR3 Function which checks how many artworks in single room
   /**
    * Method which checks how many artworks in a room
    *
+   * FR3 Function which checks how many artworks in single room
    * @param roomId - ID of room we want to see how many artworks are in
    * @return The number of artworks in a room
    * @author kieyanmamiche
    */
   @Transactional
   public int getNumberOfArtworksInRoom(long roomId){
-    int count = 0;
-    Iterable<Artwork> artworkIterable = artworkRepository.findAll();
-    Iterator<Artwork> artworkIterator = artworkIterable.iterator();
-    while(artworkIterator.hasNext()){
-      Artwork currentArtwork = artworkIterator.next();
-      if (currentArtwork.getRoom() != null){
-        if(currentArtwork.getRoom().getRoomId() == roomId){
-          // increment counter to se how many artworks in room
-          count++;
-        }
-      }
+    List<Artwork> artworkList = new ArrayList<Artwork>();
+
+    Room room = roomRepository.findRoomByRoomId(roomId);
+    if (room == null){
+      throw new IllegalArgumentException("Room does not exist");
     }
-    return count;
+    artworkList = artworkRepository.findArtworkByRoom(room);
+
+    return artworkList.size();
   }
 
-  // FR3 Function which moves artwork to corresponding room
+
   /**
    * Method to move artwork to a specific room
    *
+   * FR3 Function which moves artwork to corresponding room
    * @param artworkId - ID of artwork we want to move
    * @param roomId - ID of room we want to move artwork to
    * @return The artwork we moved
@@ -334,28 +308,20 @@ public class ArtworkService {
   @Transactional
   public Artwork moveArtworkToRoom(long artworkId,long roomId){
     // Find artwork
-    Optional<Artwork> artworkOptional = artworkRepository.findById(artworkId);
+    Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
 
     // corresponds to error finding artwork
-    if (artworkOptional == null){
+    if (artwork == null){
       throw new IllegalArgumentException("Artwork does not exist");
     }
-    if (artworkOptional.isPresent() == false){
-      throw new IllegalArgumentException("Artwork does not exist");
-    }
-    Artwork artwork = artworkOptional.get();
 
     // Find room
-    Optional<Room> roomOptional = roomRepository.findById(roomId);
+    Room room = roomRepository.findRoomByRoomId(roomId);
 
     // corresponds to error finding room
-    if (roomOptional == null){
+    if (room == null){
       throw new IllegalArgumentException("Room does not exist");
     }
-    if (roomOptional.isPresent() == false){
-      throw new IllegalArgumentException("Room does not exist");
-    }
-    Room room = roomOptional.get();
 
     // Update room of artwork if the room has capacity
     if (roomService.getRoomCapacity(roomId) > 0){
@@ -365,7 +331,7 @@ public class ArtworkService {
         roomService.changeCurrentNumberOfArtwork(oldRoom.getRoomId(), oldRoom.getCurrentNumberOfArtwork() - 1);
       }
 
-      // increase amount of artwork in new room
+      // increase amount of artwork in new room if there is capacity
       roomService.changeCurrentNumberOfArtwork(room.getRoomId(), room.getCurrentNumberOfArtwork() + 1);
       artwork.setRoom(room);
       artworkRepository.save(artwork);
@@ -378,10 +344,10 @@ public class ArtworkService {
     }
   }
 
-  // FR3 Function which removes artwork from room
   /**
    * Method to remove artwork from a specific room
    *
+   * FR3 Function which removes artwork from room
    * @param artworkId - ID of artwork we want to remove
    * @return The artwork we removed
    * @author kieyanmamiche
@@ -389,16 +355,12 @@ public class ArtworkService {
   @Transactional
   public Artwork removeArtworkFromRoom(long artworkId){
     // Find artwork
-    Optional<Artwork> artworkOptional = artworkRepository.findById(artworkId);
+    Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
 
     // corresponds to error
-    if (artworkOptional == null){
+    if (artwork == null){
       throw new IllegalArgumentException("Artwork does not exist");
     }
-    if (artworkOptional.isPresent() == false){
-      throw new IllegalArgumentException("Artwork does not exist");
-    }
-    Artwork artwork = artworkOptional.get();
 
     // decrement number of artworks in room by 1
     Room room = artwork.getRoom();
@@ -409,6 +371,7 @@ public class ArtworkService {
     // Update room
     artwork.setRoom(null);
     artworkRepository.save(artwork);
+
 
     return artwork;
   }

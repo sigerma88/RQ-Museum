@@ -2,13 +2,10 @@ package ca.mcgill.ecse321.museum.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.lenient;
-
 import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
 import ca.mcgill.ecse321.museum.dao.RoomRepository;
 import ca.mcgill.ecse321.museum.model.*;
@@ -22,6 +19,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
 
+/**
+ * This is a class used to test the ArtworkService class by implementing JUnit tests on that class
+ */
 @ExtendWith(MockitoExtension.class)
 public class TestArtworkService {
 
@@ -65,6 +65,15 @@ public class TestArtworkService {
     private static final String IMAGE_3 = "https://source.unsplash.com/C54OKBaasdad99iuw";
     private static final Boolean IS_ON_LOAN_3 = true;
 
+    // Artwork 4 - NULL ROOM
+    private static final long ARTWORK_ID_4 = 888;
+    private static final String NAME_4 = "Mona Lisa 3";
+    private static final String ARTIST_4 = "Kian 3";
+    private static final Boolean IS_AVAILABLE_FOR_LOAN_4 = false;
+    private static final double LOAN_FEE_4 = 12345;
+    private static final String IMAGE_4 = "https://source.unsplash.com/C54OKBaasdad99iuw";
+    private static final Boolean IS_ON_LOAN_4 = false;
+
     // Room 1
     private static final long ROOM_ID_1 = 3;
     private static final String ROOM_NAME_1 = "Clark Room";
@@ -83,7 +92,11 @@ public class TestArtworkService {
     private static final int CURRENT_NUMBER_OF_ARTWORK_3 = 300;
     private static final RoomType ROOM_TYPE_3 = RoomType.Large;
 
-
+    /**
+     * This is a special Mockito function which set's up the mocked output before each test
+     * This allows us to isolate the ArtworkService class and unit test it by mocking its dependant
+     * classes
+     */
     @BeforeEach
     public void setMockOutput() {
 
@@ -98,7 +111,7 @@ public class TestArtworkService {
             return invocation.getArgument(0);
         };
 
-        lenient().when(artworkRepository.findById(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
+        lenient().when(artworkRepository.findArtworkByArtworkId(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
             if (invocation.getArgument(0).equals(ARTWORK_ID_1)) {
                 Artwork artwork = new Artwork();
                 artwork.setArtworkId(ARTWORK_ID_1);
@@ -108,9 +121,9 @@ public class TestArtworkService {
                 artwork.setArtist(ARTIST_1);
                 artwork.setIsOnLoan(IS_ON_LOAN_1);
                 artwork.setIsAvailableForLoan(IS_AVAILABLE_FOR_LOAN_1);
-                Optional<Room> roomOptional = roomRepository.findById(ROOM_ID_1);
-                artwork.setRoom(roomOptional.get());
-                return Optional.of(artwork);
+                Room room = roomRepository.findRoomByRoomId(ROOM_ID_1);
+                artwork.setRoom(room);
+                return artwork;
             } else if(invocation.getArgument(0).equals(ARTWORK_ID_2)){
                 Artwork artwork = new Artwork();
                 artwork.setArtworkId(ARTWORK_ID_2);
@@ -120,9 +133,9 @@ public class TestArtworkService {
                 artwork.setName(NAME_2);
                 artwork.setIsOnLoan(IS_ON_LOAN_2);
                 artwork.setIsAvailableForLoan(IS_AVAILABLE_FOR_LOAN_2);
-                Optional<Room> roomOptional = roomRepository.findById(ROOM_ID_2);
-                artwork.setRoom(roomOptional.get());
-                return Optional.of(artwork);
+                Room room = roomRepository.findRoomByRoomId(ROOM_ID_2);
+                artwork.setRoom(room);
+                return artwork;
             }else if(invocation.getArgument(0).equals(ARTWORK_ID_3)){
                 Artwork artwork = new Artwork();
                 artwork.setArtworkId(ARTWORK_ID_3);
@@ -132,16 +145,27 @@ public class TestArtworkService {
                 artwork.setName(NAME_3);
                 artwork.setIsOnLoan(IS_ON_LOAN_3);
                 artwork.setIsAvailableForLoan(IS_AVAILABLE_FOR_LOAN_3);
-                Optional<Room> roomOptional = roomRepository.findById(ROOM_ID_3);
-                artwork.setRoom(roomOptional.get());
-                return Optional.of(artwork);
+                Room room = roomRepository.findRoomByRoomId(ROOM_ID_3);
+                artwork.setRoom(room);
+                return artwork;
+            }else if(invocation.getArgument(0).equals(ARTWORK_ID_4)){ // Artwork with null room
+                Artwork artwork = new Artwork();
+                artwork.setArtworkId(ARTWORK_ID_4);
+                artwork.setImage(IMAGE_4);
+                artwork.setLoanFee(LOAN_FEE_4);
+                artwork.setArtist(ARTIST_4);
+                artwork.setName(NAME_4);
+                artwork.setIsOnLoan(IS_ON_LOAN_4);
+                artwork.setIsAvailableForLoan(IS_AVAILABLE_FOR_LOAN_4);
+                artwork.setRoom(null);
+                return artwork;
             }
             else {
                 return null;
             }
         });
 
-        lenient().when(roomRepository.findById(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
+        lenient().when(roomRepository.findRoomByRoomId(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
             if (invocation.getArgument(0).equals(ROOM_ID_1)) {
                 Room room = new Room();
                 room.setRoomType(ROOM_TYPE_1);
@@ -149,8 +173,7 @@ public class TestArtworkService {
                 room.setCurrentNumberOfArtwork(CURRENT_NUMBER_OF_ARTWORK_1);
                 room.setRoomId(ROOM_ID_1);
                 room.setMuseum(museum);
-                Optional<Room> roomOpt = Optional.of(room);
-                return roomOpt;
+                return room;
             } else if (invocation.getArgument(0).equals(ROOM_ID_2)) {
                 Room room = new Room();
                 room.setRoomType(ROOM_TYPE_2);
@@ -158,8 +181,7 @@ public class TestArtworkService {
                 room.setCurrentNumberOfArtwork(CURRENT_NUMBER_OF_ARTWORK_2);
                 room.setRoomId(ROOM_ID_2);
                 room.setMuseum(museum);
-                Optional<Room> roomOpt = Optional.of(room);
-                return roomOpt;
+                return room;
             } else if (invocation.getArgument(0).equals(ROOM_ID_3)) {
                 Room room = new Room();
                 room.setRoomType(ROOM_TYPE_3);
@@ -167,9 +189,61 @@ public class TestArtworkService {
                 room.setCurrentNumberOfArtwork(CURRENT_NUMBER_OF_ARTWORK_3);
                 room.setRoomId(ROOM_ID_3);
                 room.setMuseum(museum);
-                Optional<Room> roomOpt = Optional.of(room);
-                return roomOpt;
+                return room;
             }else {
+                return null;
+            }
+        });
+
+        lenient().when(artworkRepository.findArtworkByRoom(any(Room.class))).thenAnswer((InvocationOnMock invocation) -> {
+            if (invocation.getArgument(0) instanceof Room){
+                Long roomId = ((Room) invocation.getArgument(0)).getRoomId();
+                if (roomId == ROOM_ID_1) {
+                    Artwork artwork = new Artwork();
+                    artwork.setArtworkId(ARTWORK_ID_1);
+                    artwork.setName(NAME_1);
+                    artwork.setImage(IMAGE_1);
+                    artwork.setLoanFee(LOAN_FEE_1);
+                    artwork.setArtist(ARTIST_1);
+                    artwork.setIsOnLoan(IS_ON_LOAN_1);
+                    artwork.setIsAvailableForLoan(IS_AVAILABLE_FOR_LOAN_1);
+                    Room room = roomRepository.findRoomByRoomId(ROOM_ID_1);
+                    artwork.setRoom(room);
+                    List<Artwork> artworks = new ArrayList<Artwork>();
+                    artworks.add(artwork);
+                    return artworks;
+                } else if (roomId == ROOM_ID_2) {
+                    Artwork artwork = new Artwork();
+                    artwork.setArtworkId(ARTWORK_ID_2);
+                    artwork.setImage(IMAGE_2);
+                    artwork.setLoanFee(LOAN_FEE_2);
+                    artwork.setArtist(ARTIST_2);
+                    artwork.setName(NAME_2);
+                    artwork.setIsOnLoan(IS_ON_LOAN_2);
+                    artwork.setIsAvailableForLoan(IS_AVAILABLE_FOR_LOAN_2);
+                    Room room = roomRepository.findRoomByRoomId(ROOM_ID_2);
+                    artwork.setRoom(room);
+                    List<Artwork> artworks = new ArrayList<Artwork>();
+                    artworks.add(artwork);
+                    return artworks;
+                } else if (roomId == ROOM_ID_3) {
+                    Artwork artwork = new Artwork();
+                    artwork.setArtworkId(ARTWORK_ID_3);
+                    artwork.setImage(IMAGE_3);
+                    artwork.setLoanFee(LOAN_FEE_3);
+                    artwork.setArtist(ARTIST_3);
+                    artwork.setName(NAME_3);
+                    artwork.setIsOnLoan(IS_ON_LOAN_3);
+                    artwork.setIsAvailableForLoan(IS_AVAILABLE_FOR_LOAN_3);
+                    Room room = roomRepository.findRoomByRoomId(ROOM_ID_3);
+                    artwork.setRoom(room);
+                    List<Artwork> artworks = new ArrayList<Artwork>();
+                    artworks.add(artwork);
+                    return artworks;
+                }else {
+                    return null;
+                }
+            }else{
                 return null;
             }
         });
@@ -179,8 +253,8 @@ public class TestArtworkService {
                 // Small room
                 return 200 - CURRENT_NUMBER_OF_ARTWORK_1;
             } else if (invocation.getArgument(0).equals(ROOM_ID_2)) {
-                // Large room
-                return 300 - CURRENT_NUMBER_OF_ARTWORK_2;
+                // Storage room
+                return Integer.MAX_VALUE;
             }else if (invocation.getArgument(0).equals(ROOM_ID_3)) {
                 // Large room
                 return 300 - CURRENT_NUMBER_OF_ARTWORK_3;
@@ -277,6 +351,22 @@ public class TestArtworkService {
     }
 
     /**
+     * Test method for getting the status of an artwork when the artwork doesn't exist
+     *
+     * @author kieyanmamiche
+     */
+    @Test
+    public void testGetArtworkStatus_RoomNonExisting() {
+        String error = null;
+        try {
+            artworkService.getArtworkStatus(ARTWORK_ID_4);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertEquals("Room does not exist", error);
+    }
+
+    /**
      * Test method for getting all artworks in a room
      *
      * @author kieyanmamiche
@@ -317,8 +407,7 @@ public class TestArtworkService {
      */
     @Test
     public void testMoveArtworkToRoom() {
-        Optional<Artwork> artworkBeforeMoveOptional = artworkRepository.findById(ARTWORK_ID_1);
-        Artwork artworkBeforeMove = artworkBeforeMoveOptional.get();
+        Artwork artworkBeforeMove = artworkRepository.findArtworkByArtworkId(ARTWORK_ID_1);
 
         // Check that artwork before move is in room 1
         assertEquals(artworkBeforeMove.getRoom().getRoomId(), ROOM_ID_1);
@@ -337,12 +426,13 @@ public class TestArtworkService {
      */
     @Test
     public void testGetAllArtworksInRoom_NoRoom() {
+        String error = null;
         try{
-            List<Artwork> artworkList = artworkService.getAllArtworksInRoom(12345);
-            assertEquals(0, artworkList.size());
-        }catch (Exception e){
-            fail();
+            List<Artwork> artworks = artworkService.getAllArtworksInRoom(123456);
+        }catch (IllegalArgumentException e) {
+            error = e.getMessage();
         }
+        assertEquals("Room does not exist", error);
     }
 
     /**
@@ -352,12 +442,13 @@ public class TestArtworkService {
      */
     @Test
     public void testGetNumberOfArtworksInRoom_NoRoom() {
+        String error = null;
         try{
             int numberOfArtworksInRoom = artworkService.getNumberOfArtworksInRoom(123456);
-            assertEquals(0, numberOfArtworksInRoom);
-        }catch (Exception e){
-            fail();
+        }catch (IllegalArgumentException e) {
+            error = e.getMessage();
         }
+        assertEquals("Room does not exist", error);
     }
 
     /**
@@ -419,8 +510,7 @@ public class TestArtworkService {
      */
     @Test
     public void testRemoveArtworkFromRoom() {
-        Optional<Artwork> artworkBeforeRemoveOptional = artworkRepository.findById(ARTWORK_ID_1);
-        Artwork artworkBeforeRemove = artworkBeforeRemoveOptional.get();
+        Artwork artworkBeforeRemove = artworkRepository.findArtworkByArtworkId(ARTWORK_ID_1);
 
         // Check that artwork before move is in room 1
         assertEquals(artworkBeforeRemove.getRoom().getRoomId(), ROOM_ID_1);

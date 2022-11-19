@@ -2,12 +2,9 @@ package ca.mcgill.ecse321.museum.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
 import ca.mcgill.ecse321.museum.dao.RoomRepository;
 import ca.mcgill.ecse321.museum.model.Artwork;
@@ -222,23 +219,20 @@ public class RoomService {
   /**
    * Method to get room capacity
    *
-   * @param id - ID of room we want to capacity of
+   * @param roomId - ID of room we want to capacity of
    * @return The capacity of a room
    * @author kieyanmamiche
    */
   @Transactional
-  public int getRoomCapacity(long id) {
+  public int getRoomCapacity(long roomId) {
 
-    Optional<Room> roomOptional = roomRepository.findById(id);
+    Room room = roomRepository.findRoomByRoomId(roomId);
 
     // The room is not in the DB
-    if (roomOptional == null){
+    if (room == null){
       throw new IllegalArgumentException("Room does not exist");
     }
-    if (roomOptional.isPresent() == false){
-      throw new IllegalArgumentException("Room does not exist");
-    }
-    Room room = roomOptional.get();
+
     RoomType roomType = room.getRoomType();
 
     // Large room has a capacity of 300
@@ -269,7 +263,7 @@ public class RoomService {
 
     // Storage has an almost unlimited capacity
     if (roomType == RoomType.Storage){
-      return 999999;
+      return Integer.MAX_VALUE;
     }
 
     // Error, since no room capacity has been given

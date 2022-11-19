@@ -136,7 +136,7 @@ public class ArtworkIntegrationTests {
         assertEquals(roomIdNew, response.getBody().getRoom().getRoomId(), "Response correctly showed that the artworks new room id is correct and that it has been moved");
 
         // We do a get request to see if our controller method works
-        ResponseEntity<ArtworkDto> response2 = client.postForEntity("/moveArtworkToRoom/" + artworkId2.toString() + "/" + roomIdNew.toString(),null, ArtworkDto.class);
+        ResponseEntity<ArtworkDto> response2 = client.postForEntity("/moveArtworkToRoom/" + artworkId2.toString() + "/" + roomIdNew,null, ArtworkDto.class);
         assertNotNull(response2);
         assertEquals(HttpStatus.OK, response2.getStatusCode());
         assertNotNull(response2.getBody(), "Response has body");
@@ -173,11 +173,11 @@ public class ArtworkIntegrationTests {
         String roomId = "1234";
 
         // We do a get request to see if our controller method works
-        ResponseEntity<ArtworkDto[]> response = client.getForEntity("/getAllArtworksInRoom/" + roomId, ArtworkDto[].class);
+        ResponseEntity<String> response = client.getForEntity("/getAllArtworksInRoom/" + roomId, String.class);
         assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(response.getBody(), "Response has body");
-        assertEquals(0, response.getBody().length, "Response has correct number of Artworks");
+        assertEquals("Room does not exist", response.getBody(), "Response has correct error message");
     }
 
     /**
@@ -192,13 +192,11 @@ public class ArtworkIntegrationTests {
         String roomId = "1234";
 
         // We do a get request to see if our controller method works
-        ResponseEntity<Integer> response = client.getForEntity("/getNumberOfArtworksInRoom/" + roomId, Integer.class);
+        ResponseEntity<String> response = client.getForEntity("/getNumberOfArtworksInRoom/" + roomId, String.class);
         assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(response.getBody(), "Response has body");
-        assertEquals(0, response.getBody(), "Response has correct number of Artworks");
-
-
+        assertEquals("Room does not exist", response.getBody(), "Response has correct error message");
     }
 
     /**
@@ -210,8 +208,15 @@ public class ArtworkIntegrationTests {
     @Test
     public void testMoveArtworkToRoom_ArtworkNonExisting() {
 
-        List<ArtworkDto> artworkDtoList = createArtworkDtos();
-        Long roomId = artworkDtoList.get(0).getRoom().getRoomId();
+        // We created an artwork in the DB
+        List<ArtworkDto> artworkDtos = createArtworkDtos();
+        Long roomId = artworkDtos.get(0).getRoom().getRoomId();
+
+        // Make sure there are 2 artworks in the room before the move
+        ResponseEntity<Integer> responseTester = client.getForEntity("/getNumberOfArtworksInRoom/" + roomId.toString(), Integer.class);
+        assertEquals(2, responseTester.getBody(), "Response correctly said that there are two artworks in room");
+
+        // Bad artwork id, for artwork which doesn't exist
         String artworkIdBad = "123214";
 
         // We do a get request to see if our controller handles bad request well
@@ -221,6 +226,10 @@ public class ArtworkIntegrationTests {
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(response.getBody(), "Response has body");
         assertEquals("Artwork does not exist", response.getBody(), "Response has correct error message");
+
+        // Make sure that the count of artworks in the room stays the same -- aka it stays at 2
+        ResponseEntity<Integer> responseTester2 = client.getForEntity("/getNumberOfArtworksInRoom/" + roomId, Integer.class);
+        assertEquals(2, responseTester2.getBody(), "Response correctly said that there are two artworks in room");
 
     }
 
@@ -235,6 +244,7 @@ public class ArtworkIntegrationTests {
 
         List<ArtworkDto> artworkDtoList = createArtworkDtos();
         Long artworkId = artworkDtoList.get(0).getArtworkId();
+        Long roomIdOriginal = artworkDtoList.get(0).getRoom().getRoomId(); // This shouldn't change
         String roomIdBad = "123214";
 
         // We do a get request to see if our controller handles bad request well
@@ -245,6 +255,9 @@ public class ArtworkIntegrationTests {
         assertNotNull(response.getBody(), "Response has body");
         assertEquals("Room does not exist", response.getBody(), "Response has correct error message");
 
+        // Make sure the artwork's room hasn't changed
+        Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
+        assertEquals(roomIdOriginal, artwork.getRoom().getRoomId(), "Room has not changed on Room error");
 
     }
 
@@ -258,9 +271,11 @@ public class ArtworkIntegrationTests {
     public void testMoveArtworkToRoom_FullCapacity() {
 
         List<ArtworkDto> artworkDtoList = createArtworkDtos();
-        Long artworkId = artworkDtoList.get(1).getArtworkId();
+        Long artworkId = artworkDtoList.get(0).getArtworkId();
+        Long roomIdOriginal = artworkDtoList.get(0).getRoom().getRoomId(); // This shouldn't change
         Long roomIdFull = artworkDtoList.get(3).getRoom().getRoomId();
-
+        int roomCount1 = roomRepository.findRoomByRoomId(roomIdOriginal).getCurrentNumberOfArtwork();
+        int roomCount2 = roomRepository.findRoomByRoomId(roomIdFull).getCurrentNumberOfArtwork();
 
         // We do a get request to see if our controller handles bad request well
         ResponseEntity<String> response = client.postForEntity("/moveArtworkToRoom/" + artworkId + "/" + roomIdFull,null, String.class);
@@ -269,6 +284,17 @@ public class ArtworkIntegrationTests {
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(response.getBody(), "Response has body");
         assertEquals("Room is full capacity", response.getBody(), "Response has correct error message");
+
+
+        // Make sure that the number of artworks in each of the rooms hasn't changed
+        Room roomOriginal = roomRepository.findRoomByRoomId(roomIdOriginal);
+        Room roomFull = roomRepository.findRoomByRoomId(roomIdFull);
+        assertEquals(roomOriginal.getCurrentNumberOfArtwork(), roomCount1, "Room has not changed number of artworks");
+        assertEquals(roomFull.getCurrentNumberOfArtwork(), roomCount2, "Room has not changed number of artworks");
+
+        // Make sure the artwork didn't change rooms
+        Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
+        assertEquals(roomIdOriginal, artwork.getRoom().getRoomId(), "Room has not changed on Room error");
 
     }
 
@@ -279,7 +305,7 @@ public class ArtworkIntegrationTests {
      * @author kieyanmamiche
      */
     public List<ArtworkDto> createArtworkDtos(){
-        List<ArtworkDto> artworkDtos = new ArrayList<ArtworkDto>();
+        List<ArtworkDto> artworkDtos = new ArrayList<>();
 
         // Expected values for the artwork 1
         String artworkName = "The Art";

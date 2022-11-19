@@ -1,7 +1,11 @@
 package ca.mcgill.ecse321.museum.service;
 
 import ca.mcgill.ecse321.museum.dao.RoomRepository;
-import ca.mcgill.ecse321.museum.model.*;
+
+import ca.mcgill.ecse321.museum.model.Museum;
+import ca.mcgill.ecse321.museum.model.Room;
+import ca.mcgill.ecse321.museum.model.RoomType;
+import ca.mcgill.ecse321.museum.model.Schedule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,12 +13,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.lenient;
 
+/**
+ * This is a class used to test the RoomService class by implementing JUnit tests on that class
+ */
 @ExtendWith(MockitoExtension.class)
 public class TestRoomService {
 
@@ -48,6 +54,11 @@ public class TestRoomService {
     private static final int CURRENT_NUMBER_OF_ARTWORK_4 = 200;
     private static final RoomType ROOM_TYPE_4 = RoomType.Small;
 
+    /**
+     * This is a special Mockito function which set's up the mocked output before each test
+     * This allows us to isolate the RoomService class and unit test it by mocking its dependant
+     * classes
+     */
     @BeforeEach
     public void setMockOutput() {
 
@@ -59,7 +70,7 @@ public class TestRoomService {
         museum.setSchedule(schedule);
 
 
-        lenient().when(roomRepository.findById(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
+        lenient().when(roomRepository.findRoomByRoomId(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
             if (invocation.getArgument(0).equals(ROOM_ID_1)) {
                 Room room = new Room();
                 room.setRoomType(ROOM_TYPE_1);
@@ -67,8 +78,7 @@ public class TestRoomService {
                 room.setCurrentNumberOfArtwork(CURRENT_NUMBER_OF_ARTWORK_1);
                 room.setRoomId(ROOM_ID_1);
                 room.setMuseum(museum);
-                Optional<Room> roomOpt = Optional.of(room);
-                return roomOpt;
+                return room;
             } else if (invocation.getArgument(0).equals(ROOM_ID_2)) {
                 Room room = new Room();
                 room.setRoomType(ROOM_TYPE_2);
@@ -76,8 +86,7 @@ public class TestRoomService {
                 room.setCurrentNumberOfArtwork(CURRENT_NUMBER_OF_ARTWORK_2);
                 room.setRoomId(ROOM_ID_2);
                 room.setMuseum(museum);
-                Optional<Room> roomOpt = Optional.of(room);
-                return roomOpt;
+                return room;
             }else if (invocation.getArgument(0).equals(ROOM_ID_3)) {
                 Room room = new Room();
                 room.setRoomType(ROOM_TYPE_3);
@@ -85,8 +94,7 @@ public class TestRoomService {
                 room.setCurrentNumberOfArtwork(CURRENT_NUMBER_OF_ARTWORK_3);
                 room.setRoomId(ROOM_ID_3);
                 room.setMuseum(museum);
-                Optional<Room> roomOpt = Optional.of(room);
-                return roomOpt;
+                return room;
             }else if (invocation.getArgument(0).equals(ROOM_ID_4)) {
                 Room room = new Room();
                 room.setRoomType(ROOM_TYPE_4);
@@ -94,8 +102,7 @@ public class TestRoomService {
                 room.setCurrentNumberOfArtwork(CURRENT_NUMBER_OF_ARTWORK_4);
                 room.setRoomId(ROOM_ID_4);
                 room.setMuseum(museum);
-                Optional<Room> roomOpt = Optional.of(room);
-                return roomOpt;
+                return room;
             } else {
                 return null;
             }

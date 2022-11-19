@@ -5,7 +5,6 @@ import ca.mcgill.ecse321.museum.model.Artwork;
 import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.service.ArtworkService;
 import ca.mcgill.ecse321.museum.service.RoomService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,21 +84,6 @@ public class ArtworkRestController {
     return artworkDtos;
   }
 
-  // @GetMapping(value = {"/artworks/{room}", "/artworks/{room}/"})
-  // public List<ArtworkDto> getAllArtworksByRoom(@PathVariable("room") Room room) {
-  //   List<ArtworkDto> artworkInRoomDtos = new ArrayList<ArtworkDto>();
-  //   List<Artwork> artworksInRoom = artworkService.getAllArtworksByRoom(room);
-  //   for (Artwork artwork : artworksInRoom) {
-  //     try {
-  //       artworkInRoomDtos.add(DtoUtility.convertToDto(artwork));
-  //     } catch (Exception e) {
-  //       e.printStackTrace();
-  //     }
-
-  //   }
-  //   return artworkInRoomDtos;
-  // }
-
   /**
    * RESTful API to get all artworks in a room
    *
@@ -108,7 +91,7 @@ public class ArtworkRestController {
    * @return A list of all the artworks in a specific room
    * @author kieyanmamiche
    */
-  @GetMapping(value = "/getAllArtworksInRoom/{roomId}")
+  @GetMapping(value = {"/getAllArtworksInRoom/{roomId}", "/getAllArtworksInRoom/{roomId}/"})
   public ResponseEntity<?> getAllArtworksInRoom(@PathVariable("roomId") long roomId) {
     try {
       List<Artwork> listOfArtworksThatBelongToRoom = artworkService.getAllArtworksInRoom(roomId);
@@ -180,7 +163,7 @@ public class ArtworkRestController {
     }
   }
 
-  // Getting artwork status - FR7
+
   /**
    * RESTful API to get the artwork status
    *
@@ -190,14 +173,15 @@ public class ArtworkRestController {
    *    2. "display" -> The artwork is on Display
    *    3. "storage" -> The artwork is in storage
    *
-   * @param id - The id of the artwork we want to get the status of
+   * Getting artwork status - FR7
+   * @param artworkId - The id of the artwork we want to get the status of
    * @return The status of the artwork
    * @author kieyanmamiche
    */
-  @GetMapping(value = "/getArtworkStatus/{id}")
-  public ResponseEntity<?> getArtworkStatus(@PathVariable("id") long id) {
+  @GetMapping(value = {"/getArtworkStatus/{artworkId}", "/getArtworkStatus/{artworkId}/"})
+  public ResponseEntity<?> getArtworkStatus(@PathVariable("artworkId") long artworkId) {
     try {
-      String status = artworkService.getArtworkStatus(id);
+      String status = artworkService.getArtworkStatus(artworkId);
       return new ResponseEntity<>(status, HttpStatus.OK);
     }catch (Exception e){
       return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -211,7 +195,7 @@ public class ArtworkRestController {
    * @return Number of artworks in specific room
    * @author kieyanmamiche
    */
-  @GetMapping(value = "/getNumberOfArtworksInRoom/{roomId}")
+  @GetMapping(value = {"/getNumberOfArtworksInRoom/{roomId}", "/getNumberOfArtworksInRoom/{roomId}/"})
   public ResponseEntity<?> getNumberOfArtworksInRoom(@PathVariable("roomId") long roomId) {
     try {
       int numberOfArtworksInRoom = artworkService.getNumberOfArtworksInRoom(roomId);
@@ -230,7 +214,7 @@ public class ArtworkRestController {
    * @return The artwork which has been moved
    * @author kieyanmamiche
    */
-  @PostMapping(value = "/moveArtworkToRoom/{artworkId}/{roomId}")
+  @PostMapping(value = {"/moveArtworkToRoom/{artworkId}/{roomId}", "/moveArtworkToRoom/{artworkId}/{roomId}/"})
   public ResponseEntity<?> moveArtworkToRoom(@PathVariable("artworkId") long artworkId, @PathVariable("roomId") long roomId){
     try{
       Artwork artwork = artworkService.moveArtworkToRoom(artworkId, roomId);
