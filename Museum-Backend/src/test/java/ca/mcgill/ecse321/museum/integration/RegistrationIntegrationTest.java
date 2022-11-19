@@ -746,6 +746,154 @@ public class RegistrationIntegrationTest {
   }
 
   /**
+   * Test edit manager information
+   * 
+   * @author Kevin
+   */
+
+  @Test
+  public void testEditManagerInformation() {
+    ManagerDto manager = createManagerAndLogin(
+        createManager(FIRST_VALID_MANAGER_NAME, FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
+
+    Map<String, String> updatedCredentials = new HashMap<>();
+    updatedCredentials.put("oldPassword", manager.getPassword());
+    updatedCredentials.put("newPassword", "#AbuDhabiGp2022");
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", manager.getSessionId());
+    HttpEntity<Map<String, String>> entity = new HttpEntity<>(updatedCredentials, headers);
+
+    ResponseEntity<ManagerDto> response =
+        client.exchange("/api/profile/manager/edit/" + manager.getMuseumUserId(), HttpMethod.PUT,
+            entity, ManagerDto.class);
+
+    assertNotNull(response);
+    assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
+    assertNotNull(response.getBody(), "Response has body");
+
+  }
+
+  /**
+   * Test edit manager information without login
+   * 
+   * @author Kevin
+   */
+
+  @Test
+  public void testEditManagerWithoutLogin() {
+    ManagerDto manager = createManagerDto(
+        createManager(FIRST_VALID_MANAGER_NAME, FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
+
+    Map<String, String> updatedCredentials = new HashMap<>();
+    updatedCredentials.put("oldPassword", manager.getPassword());
+    updatedCredentials.put("newPassword", "#AbuDhabiGp2022");
+
+    HttpEntity<Map<String, String>> entity = new HttpEntity<>(updatedCredentials);
+
+    ResponseEntity<String> response =
+        client.exchange("/api/profile/manager/edit/" + manager.getMuseumUserId(), HttpMethod.PUT,
+            entity, String.class);
+
+    assertNotNull(response);
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
+    assertNotNull(response.getBody(), "Response has body");
+    assertEquals("You must be logged in to edit a manager", response.getBody(),
+        "Response has correct message");
+  }
+
+  /**
+   * Test edit manager information with invalid role
+   * 
+   * @author Kevin
+   */
+
+  @Test
+  public void testEditManagerWithInvalidRole() {
+    EmployeeDto employee = createEmployeeAndLogin(
+        createEmployee(FIRST_VALID_MANAGER_NAME, FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
+
+    Map<String, String> updatedCredentials = new HashMap<>();
+    updatedCredentials.put("oldPassword", employee.getPassword());
+    updatedCredentials.put("newPassword", "#AbuDhabiGp2022");
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", employee.getSessionId());
+    HttpEntity<Map<String, String>> entity = new HttpEntity<>(updatedCredentials, headers);
+
+    ResponseEntity<String> response =
+        client.exchange("/api/profile/manager/edit/" + employee.getMuseumUserId(), HttpMethod.PUT,
+            entity, String.class);
+
+    assertNotNull(response);
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
+    assertNotNull(response.getBody(), "Response has body");
+    assertEquals("You must be a manager to edit a manager", response.getBody(),
+        "Response has correct message");
+  }
+
+  /**
+   * Test edit manager information with wrong old password
+   * 
+   * @author Kevin
+   */
+
+  @Test
+  public void testEditManagerWithWrongOldPassword() {
+    ManagerDto manager = createManagerAndLogin(
+        createManager(FIRST_VALID_MANAGER_NAME, FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
+
+    Map<String, String> updatedCredentials = new HashMap<>();
+    updatedCredentials.put("oldPassword", "wrongPassword");
+    updatedCredentials.put("newPassword", "#AbuDhabiGp2022");
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", manager.getSessionId());
+    HttpEntity<Map<String, String>> entity = new HttpEntity<>(updatedCredentials, headers);
+
+    ResponseEntity<String> response =
+        client.exchange("/api/profile/manager/edit/" + manager.getMuseumUserId(), HttpMethod.PUT,
+            entity, String.class);
+
+    assertNotNull(response);
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
+    assertNotNull(response.getBody(), "Response has body");
+    assertEquals("Old password incorrect", response.getBody(), "Response has correct message");
+  }
+
+  /**
+   * Test edit manager information with invalid new password
+   * 
+   * @author Kevin
+   */
+
+  @Test
+  public void testEditManagerWithInvalidNewPassword() {
+    ManagerDto manager = createManagerAndLogin(
+        createManager(FIRST_VALID_MANAGER_NAME, FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
+
+    Map<String, String> updatedCredentials = new HashMap<>();
+    updatedCredentials.put("oldPassword", manager.getPassword());
+    updatedCredentials.put("newPassword", "invalidPassword");
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", manager.getSessionId());
+    HttpEntity<Map<String, String>> entity = new HttpEntity<>(updatedCredentials, headers);
+
+    ResponseEntity<String> response =
+        client.exchange("/api/profile/manager/edit/" + manager.getMuseumUserId(), HttpMethod.PUT,
+            entity, String.class);
+
+    assertNotNull(response);
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
+    assertNotNull(response.getBody(), "Response has body");
+    assertEquals(
+        "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special character. ",
+        response.getBody(), "Response has correct message");
+  }
+
+
+  /**
    * Create an visitorDto
    * 
    * @param visitor - the visitorDto to be created
@@ -866,7 +1014,7 @@ public class RegistrationIntegrationTest {
   }
 
   /**
-   * Test create a managerDTO
+   * Create a managerDTO
    * 
    * @param manager - the manager to be created
    * @return ManagerDto
@@ -878,7 +1026,7 @@ public class RegistrationIntegrationTest {
   }
 
   /**
-   * Test create a manager
+   * Create a manager
    * 
    * @param name - name of the manager
    * @param email - email of the manager
@@ -898,7 +1046,7 @@ public class RegistrationIntegrationTest {
   }
 
   /**
-   * Test create a manager and save
+   * Create a manager and save
    * 
    * @param manager - the manager to save
    * @return Manager - the saved manager
@@ -912,7 +1060,7 @@ public class RegistrationIntegrationTest {
   }
 
   /**
-   * Test create a manager and login
+   * Create a manager and login
    * 
    * @param newManager - the manager to login
    * @return managerDto - the logged in manager

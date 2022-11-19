@@ -175,8 +175,10 @@ public class AuthenticationIntegrationTest {
   /**
    * Create a visitor Dto
    * 
-   * @param visitor
+   * @param visitor - Visitor
    * @return visitorDto
+   * @author Kevin
+   * 
    */
 
   public VisitorDto createVisitorDto(Visitor visitor) {
@@ -187,6 +189,7 @@ public class AuthenticationIntegrationTest {
    * Create a visitor
    * 
    * @return visitor
+   * @author Kevin
    */
 
   public Visitor createVisitor() {
@@ -202,6 +205,8 @@ public class AuthenticationIntegrationTest {
    * Create a visitor and save it
    * 
    * @return visitor
+   * @author Kevin
+   * 
    */
 
   public Visitor createVisitorAndSave() {
@@ -214,6 +219,7 @@ public class AuthenticationIntegrationTest {
    * Create a visitor and login
    * 
    * @return visitorDto
+   * @author Kevin
    */
 
   public VisitorDto createVisitorAndLogin() {

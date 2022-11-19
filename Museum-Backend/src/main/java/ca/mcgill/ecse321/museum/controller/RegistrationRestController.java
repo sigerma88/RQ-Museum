@@ -72,10 +72,10 @@ public class RegistrationRestController {
   }
 
   /**
-   * POST method to create a new employee account
+   * GET method to get a visitor account
    * 
-   * @param id - long (employee id)
-   * @return employeeDto
+   * @param id - long (visitor id)
+   * @return visitorDto
    * @author Kevin
    */
 
