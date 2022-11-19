@@ -60,7 +60,7 @@ Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/De
 
 ### Deliverable 2
 
-Click [here] (https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/Deliverable-2) to view the project report for Deliverable 2.
+Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/Deliverable-2) to view the project report for Deliverable 2.
 
 ### Deliverable 3
 
