@@ -1,5 +1,8 @@
 package ca.mcgill.ecse321.museum.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
 import ca.mcgill.ecse321.museum.dao.RoomRepository;
 import ca.mcgill.ecse321.museum.model.Artwork;
@@ -8,17 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 @Service
 public class ArtworkService {
 
   @Autowired
   ArtworkRepository artworkRepository;
-
 
   /**
    * Method to get a list of all artworks in the database
@@ -32,45 +29,29 @@ public class ArtworkService {
     return toList(artworkRepository.findAll());
   }
 
-
   /**
-   * Method to get all artworks with their
-   * corresponding availability for loan
+   * Method to get all artworks that are available for loan
    *
-   * @return artworksWithAvailability
+   * @return Artworks that are available for loan
    * @author Zahra
+   * @author Siger
    */
   @Transactional
-  public List<Artwork> getUnavailableArtworks() {
-    List<Artwork> unAvailableArtworks = artworkRepository.findArtworkByIsAvailableForLoan(false);
-
-    return unAvailableArtworks;
+  public List<Artwork> getArtworksAvailableForLoan() {
+    return toList(artworkRepository.findArtworkByIsAvailableForLoan(true));
   }
-
 
   /**
-   * Method to
+   * Method to get all artworks that are not available for loan
    *
-   * @return
+   * @return Artworks that are not available for loan
    * @author Zahra
+   * @author Siger
    */
   @Transactional
-  public List<Artwork> getAllAvailableArtworks() {
-    List<Artwork> availableArtworks = artworkRepository.findArtworkByIsAvailableForLoan(true);
-
-    return availableArtworks;
+  public List<Artwork> getArtworksNotAvailableForLoan() {
+    return toList(artworkRepository.findArtworkByIsAvailableForLoan(false));
   }
-  /*
-  public Map<String, Double> getArtworkWithLoanFee() {
-
-    Map<String, Double> artworksWithLoanFee = new HashMap<>();
-    for (Artwork artwork : getAllArtworks()) {
-      artworkRepository.findArtworkByIsAvailableForLoan();
-      artworksWithLoanFee.put(artwork.getName(), artwork.getLoanFee());
-    }
-    return artworksWithLoanFee;
-  }*/
-
 
   /**
    * Method to convert an Iterable to a List
