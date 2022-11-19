@@ -17,7 +17,8 @@ import ca.mcgill.ecse321.museum.model.Artwork;
 import ca.mcgill.ecse321.museum.model.RoomType;
 
 /**
- * Testing the persistence layer for the ArtworkRepository. Testing the items stored in the database are the same as the items created.
+ * Testing the persistence layer for the ArtworkRepository. Testing the items stored in the database
+ * are the same as the items created.
  *
  * @author KL
  */
@@ -44,17 +45,18 @@ public class ArtworkRepositoryTests {
   /**
    * Function that compares the artwork stored in the database with the artwork created.
    *
-   * @param artwork            - The saved artwork from the repository
-   * @param artworkName        - The expected name of the artwork
-   * @param artist             - The expected name of the artist
+   * @param artwork - The saved artwork from the repository
+   * @param artworkName - The expected name of the artwork
+   * @param artist - The expected name of the artist
    * @param isAvailableForLoan - The expected loan availability of the artwork
-   * @param loanFee            - The expected loan fee of the artwork
-   * @param image              - The expected url of the image of the artwork
-   * @param room               - The expected room of the artwork
-   * @param isOnLoan           - The expected loan status of the artwork
+   * @param loanFee - The expected loan fee of the artwork
+   * @param image - The expected url of the image of the artwork
+   * @param room - The expected room of the artwork
+   * @param isOnLoan - The expected loan status of the artwork
    */
-  public void compareUniqueArtwork(Artwork artwork, long artworkId, String artworkName, String artist,
-                                   boolean isAvailableForLoan, double loanFee, String image, Room room, boolean isOnLoan) {
+  public void compareUniqueArtwork(Artwork artwork, long artworkId, String artworkName,
+      String artist, boolean isAvailableForLoan, double loanFee, String image, Room room,
+      boolean isOnLoan) {
     assertNotNull(artwork);
     assertEquals(artworkId, artwork.getArtworkId());
     assertEquals(artworkName, artwork.getName());
@@ -113,24 +115,25 @@ public class ArtworkRepositoryTests {
     // Test by retrieving with the artwork id
     artwork = null;
     artwork = artworkRepository.findArtworkByArtworkId(savedArtwork.getArtworkId());
-    compareUniqueArtwork(artwork, artworkId, artworkName, artist, isAvailableForLoan, loanFee, image,
-            room, isOnLoan);
+    compareUniqueArtwork(artwork, artworkId, artworkName, artist, isAvailableForLoan, loanFee,
+        image, room, isOnLoan);
 
     // Test by retrieving with the artwork name
     artwork = null;
     artwork = artworkRepository.findArtworkByName(savedArtwork.getName()).get(0);
-    compareUniqueArtwork(artwork, artworkId, artworkName, artist, isAvailableForLoan, loanFee, image,
-            room, isOnLoan);
+    compareUniqueArtwork(artwork, artworkId, artworkName, artist, isAvailableForLoan, loanFee,
+        image, room, isOnLoan);
 
     // Test by retrieving by its artist
     artwork = null;
     artwork = artworkRepository.findArtworkByArtist(savedArtwork.getArtist()).get(0);
-    compareUniqueArtwork(artwork, artworkId, artworkName, artist, isAvailableForLoan, loanFee, image,
-            room, isOnLoan);
+    compareUniqueArtwork(artwork, artworkId, artworkName, artist, isAvailableForLoan, loanFee,
+        image, room, isOnLoan);
   }
 
   /**
-   * Function that compares if the repository retrieves all artworks that share the same artwork name or artist.
+   * Function that compares if the repository retrieves all artworks that share the same artwork
+   * name or artist.
    */
   @Test
   public void testPersistenceWithMultipleArtwork() {
