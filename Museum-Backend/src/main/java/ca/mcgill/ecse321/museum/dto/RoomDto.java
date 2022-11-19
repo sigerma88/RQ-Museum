@@ -18,7 +18,7 @@ public class RoomDto {
   public RoomDto() {
   }
 
-  public RoomDto(Long roomId, String roomName, RoomType roomType, Integer currentNumberOfArtworks,  MuseumDto museum) {
+  public RoomDto(Long roomId, String roomName, RoomType roomType, Integer currentNumberOfArtwork,  MuseumDto museum) {
     this.roomId = roomId;
     this.roomName = roomName;
     this.roomType = roomType;
@@ -54,7 +54,7 @@ public class RoomDto {
     return currentNumberOfArtwork;
   }
 
-  public void setCurrentNumberOfArtwork(Integer currentNumberOfArtworks) {
+  public void setCurrentNumberOfArtwork(Integer currentNumberOfArtwork) {
     this.currentNumberOfArtwork = currentNumberOfArtwork;
   }
 

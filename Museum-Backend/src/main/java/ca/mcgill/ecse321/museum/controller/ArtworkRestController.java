@@ -1,10 +1,8 @@
 package ca.mcgill.ecse321.museum.controller;
 
-import ca.mcgill.ecse321.museum.dto.ArtworkDto;
-import ca.mcgill.ecse321.museum.model.Artwork;
-import ca.mcgill.ecse321.museum.model.Room;
-import ca.mcgill.ecse321.museum.service.ArtworkService;
-import ca.mcgill.ecse321.museum.service.RoomService;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +14,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.ArrayList;
-import java.util.List;
 
+import ca.mcgill.ecse321.museum.dto.ArtworkDto;
+import ca.mcgill.ecse321.museum.model.Artwork;
+import ca.mcgill.ecse321.museum.model.Room;
+import ca.mcgill.ecse321.museum.service.ArtworkService;
+import ca.mcgill.ecse321.museum.service.RoomService;
+
+/**
+ * RESTful api for Artwork to expose the business logic in the service layer to the frontend
+ * 
+ * @author Siger
+ * @author Zahra
+ * @author kieyanmamiche
+ */
 @CrossOrigin(origins = "*")
 @RestController
 public class ArtworkRestController {
@@ -32,17 +41,30 @@ public class ArtworkRestController {
   /**
    * RESTful API to create an artwork
    * 
-   * @param artworkDto - Artwork
+   * @param name               - name of the artwork
+   * @param artist             - artist of the artwork
+   * @param isAvailableForLoan - availability of the artwork for loans
+   * @param loanFee            - loan fee of the artwork
+   * @param image              - image of the artwork
+   * @param isOnLoan           - loan status of the artwork
+   * @param roomId             - id of the room of the artwork
    * @return created artwork
    * @author Siger
    */
   @PostMapping(value = { "/artwork", "/artwork/" }, produces = "application/json")
-  public ResponseEntity<?> createArtwork(@RequestParam(name = "name") String name, @RequestParam(name = "artist") String artist, @RequestParam(name = "isAvailableForLoan") Boolean isAvailableForLoan, @RequestParam(name = "loanFee", required = false) Double loanFee, @RequestParam(name = "image") String image, @RequestParam(name = "isOnLoan") Boolean isOnLoan, @RequestParam(name = "roomId", required = false) Long roomId) {
+  public ResponseEntity<?> createArtwork(@RequestParam(name = "name") String name,
+      @RequestParam(name = "artist") String artist,
+      @RequestParam(name = "isAvailableForLoan") Boolean isAvailableForLoan,
+      @RequestParam(name = "loanFee", required = false) Double loanFee, @RequestParam(name = "image") String image,
+      @RequestParam(name = "isOnLoan") Boolean isOnLoan, @RequestParam(name = "roomId", required = false) Long roomId) {
     try {
       // Get room
       Room room = null;
       if (roomId != null) {
         room = roomService.getRoomById(roomId);
+        if (room == null) {
+          return ResponseEntity.badRequest().body("Room with id " + roomId + " does not exist");
+        }
       }
 
       // Create artwork
@@ -70,39 +92,64 @@ public class ArtworkRestController {
     }
   }
 
+  /**
+   * RESTful API to get all artworks
+   *
+   * @return List of all artworks
+   * @author Zahra
+   */
   @GetMapping(value = {"/artworks", "/artworks/"})
-  public List<ArtworkDto> getAllArtworks() {
-    List<ArtworkDto> artworkDtos = new ArrayList<ArtworkDto>();
-
-    for (Artwork artwork : artworkService.getAllArtworks()) {
-      try {
+  public ResponseEntity<?> getAllArtworks() {
+    try {
+      List<ArtworkDto> artworkDtos = new ArrayList<ArtworkDto>();
+      for (Artwork artwork : artworkService.getAllArtworks()) {
         artworkDtos.add(DtoUtility.convertToDto(artwork));
-
-      } catch (Exception e) {
       }
+      return ResponseEntity.ok(artworkDtos);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
     }
-    return artworkDtos;
   }
 
   /**
-   * RESTful API to get all artworks in a room
-   *
-   * @param roomId - The id of a room we want to get all the artworks in
-   * @return A list of all the artworks in a specific room
+   * RESTful API to get all artworks by room
+   * 
+   * @param roomId - long
+   * @return List of all artworks in the given room
+   * @author Siger
+   * @author Zahra
    * @author kieyanmamiche
    */
-  @GetMapping(value = {"/getAllArtworksInRoom/{roomId}", "/getAllArtworksInRoom/{roomId}/"})
-  public ResponseEntity<?> getAllArtworksInRoom(@PathVariable("roomId") long roomId) {
+  @GetMapping(value = { "/artworks/room/{roomId}", "/artworks/room/{roomId}/" })
+  public ResponseEntity<?> getAllArtworksByRoom(@PathVariable("roomId") Long roomId) {
     try {
-      List<Artwork> listOfArtworksThatBelongToRoom = artworkService.getAllArtworksInRoom(roomId);
-      List<ArtworkDto> artworkDtos = new ArrayList<>();
-      for (Artwork artwork: listOfArtworksThatBelongToRoom){
+      List<ArtworkDto> artworkDtos = new ArrayList<ArtworkDto>();
+      for (Artwork artwork : artworkService.getAllArtworksByRoom(roomId)) {
         artworkDtos.add(DtoUtility.convertToDto(artwork));
       }
-      return new ResponseEntity<>(artworkDtos, HttpStatus.OK);
-    }catch (Exception e){
-      // return error message
-      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+      return ResponseEntity.ok(artworkDtos);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+
+  /**
+   * RESTful API to get all artworks by if they are available for loan
+   * 
+   * @param isAvailableForLoan - boolean
+   * @return List of all artworks that are available for loan or not available for loan depending on the given boolean value
+   * @author Siger
+   */
+  @GetMapping(value = { "/artworks/availableForLoan/{isAvailableForLoan}", "/artworks/availableForLoan/{isAvailableForLoan}/" })
+  public ResponseEntity<?> getAllArtworksByAvailabilityForLoan(@PathVariable("isAvailableForLoan") Boolean isAvailableForLoan) {
+    try {
+      List<ArtworkDto> artworkDtos = new ArrayList<ArtworkDto>();
+      for (Artwork artwork : artworkService.getAllArtworksByAvailabilityForLoan(isAvailableForLoan)) {
+        artworkDtos.add(DtoUtility.convertToDto(artwork));
+      }
+      return ResponseEntity.ok(artworkDtos);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
 
@@ -110,14 +157,17 @@ public class ArtworkRestController {
    * RESTful API to edit an artwork's information
    * 
    * @param artworkId - id of artwork to be edited
-   * @param name - new name of artwork
-   * @param artist - new artist of artwork
-   * @param image - new image of artwork
+   * @param name      - new name of artwork
+   * @param artist    - new artist of artwork
+   * @param image     - new image of artwork
    * @return edited artwork
    * @author Siger
    */
-  @PutMapping(value = { "/artwork/{artworkId}", "/artwork/{artworkId}/" }, produces = "application/json")
-  public ResponseEntity<?> editArtworkInfo(@PathVariable("artworkId") Long artworkId, @RequestParam(name = "name") String name, @RequestParam(name = "artist") String artist, @RequestParam(name = "image") String image) {
+  @PutMapping(value = { "/artwork/info/{artworkId}", "/artwork/info/{artworkId}/" }, produces = "application/json")
+  public ResponseEntity<?> editArtworkInfo(@PathVariable("artworkId") Long artworkId,
+      @RequestParam(name = "name", required = false) String name,
+      @RequestParam(name = "artist", required = false) String artist,
+      @RequestParam(name = "image", required = false) String image) {
     try {
       Artwork result = artworkService.editArtworkInfo(artworkId, name, artist, image);
       return ResponseEntity.ok(DtoUtility.convertToDto(result));
@@ -129,16 +179,19 @@ public class ArtworkRestController {
   /**
    * RESTful API to edit an artwork's loan availability and loan fee
    * 
-   * @param artworkId - id of artwork to be edited
+   * @param artworkId          - id of artwork to be edited
    * @param isAvailableForLoan - new availability of artwork
-   * @param loanFee - new loan fee of artwork
+   * @param loanFee            - new loan fee of artwork
    * @return edited artwork
    * @author Siger
    */
-  @PutMapping(value = { "/artwork/loanInfo/{artworkId}", "/artwork/loanInfo/{artworkId}/" }, produces = "application/json")
-  public ResponseEntity<?> editArtworkLoanInfo(@PathVariable("artworkId") Long artworkId, @RequestParam(name = "isAvailableForLoan") boolean isAvailableForLoan, @RequestParam(name = "loanFee", required = false) Double loanFee) {
+  @PutMapping(value = { "/artwork/loanInfo/{artworkId}",
+      "/artwork/loanInfo/{artworkId}/" }, produces = "application/json")
+  public ResponseEntity<?> editArtworkLoanInfo(@PathVariable("artworkId") Long artworkId,
+      @RequestParam(name = "isAvailableForLoan") boolean isAvailableForLoan,
+      @RequestParam(name = "loanFee", required = false) Double loanFee) {
     try {
-      Artwork result = artworkService.editArtworkLoan(artworkId, isAvailableForLoan, loanFee);
+      Artwork result = artworkService.editArtworkLoanInfo(artworkId, isAvailableForLoan, loanFee);
       return ResponseEntity.ok(DtoUtility.convertToDto(result));
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
@@ -156,8 +209,8 @@ public class ArtworkRestController {
   public ResponseEntity<?> deleteArtwork(@PathVariable("artworkId") Long artworkId) {
     try {
       // Delete the artwork
-      artworkService.deleteArtwork(artworkId);
-      return ResponseEntity.ok("Artwork deleted");
+      Artwork artwork = artworkService.deleteArtwork(artworkId);
+      return ResponseEntity.ok(DtoUtility.convertToDto(artwork));
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }

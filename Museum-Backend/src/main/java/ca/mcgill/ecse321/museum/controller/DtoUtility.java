@@ -2,16 +2,80 @@ package ca.mcgill.ecse321.museum.controller;
 
 import ca.mcgill.ecse321.museum.model.Artwork;
 import ca.mcgill.ecse321.museum.model.Employee;
+import ca.mcgill.ecse321.museum.model.Manager;
 import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.model.Schedule;
+import ca.mcgill.ecse321.museum.model.Visitor;
+import ca.mcgill.ecse321.museum.model.TimePeriod;
 import ca.mcgill.ecse321.museum.dto.ArtworkDto;
 import ca.mcgill.ecse321.museum.dto.EmployeeDto;
+import ca.mcgill.ecse321.museum.dto.ManagerDto;
 import ca.mcgill.ecse321.museum.dto.MuseumDto;
 import ca.mcgill.ecse321.museum.dto.RoomDto;
 import ca.mcgill.ecse321.museum.dto.ScheduleDto;
+import ca.mcgill.ecse321.museum.dto.VisitorDto;
+import ca.mcgill.ecse321.museum.dto.TimePeriodDto;
 
 public class DtoUtility {
+  /**
+   * Method to convert an employee to a DTO
+   *
+   * @param employee - Employee
+   * @return employee DTO
+   * @author Siger
+   */
+  public static EmployeeDto convertToDto(Employee employee) {
+    // Error handling
+    if (employee == null) {
+      throw new IllegalArgumentException("There is no such employee");
+    }
+
+    // Convert schedule to DTO
+    ScheduleDto scheduleDto = convertToDto(employee.getSchedule());
+    return new EmployeeDto(employee.getMuseumUserId(), employee.getEmail(), employee.getName(), employee.getPassword(), scheduleDto);
+  }
+
+  /**
+   * Method to convert an visitor to a DTO
+   * 
+   * @param visitor - Visitor
+   * @return visitor DTO
+   * @author Kevin
+   */
+  public static VisitorDto convertToDto(Visitor visitor) {
+    if (visitor == null) {
+      throw new IllegalArgumentException("There is no such visitor");
+    }
+
+    VisitorDto visitorDto = new VisitorDto();
+    visitorDto.setEmail(visitor.getEmail());
+    visitorDto.setName(visitor.getName());
+    visitorDto.setPassword(visitor.getPassword());
+    visitorDto.setMuseumUserId(visitor.getMuseumUserId());
+    return visitorDto;
+  }
+
+  /**
+   * Method to convert an Manager to a DTO
+   * 
+   * @param manager - Manager
+   * @return visitor DTO
+   * @author Kevin
+   */
+  public static ManagerDto convertToDto(Manager manager) {
+    if (manager == null) {
+      throw new IllegalArgumentException("There is no such manager");
+    }
+
+    ManagerDto managerDto = new ManagerDto();
+    managerDto.setEmail(manager.getEmail());
+    managerDto.setName(manager.getName());
+    managerDto.setPassword(manager.getPassword());
+    managerDto.setMuseumUserId(manager.getMuseumUserId());
+    return managerDto;
+  }
+
   /**
    * Method to convert a schedule to a DTO
    *
@@ -30,23 +94,17 @@ public class DtoUtility {
   }
 
   /**
-   * Method to convert an employee to a DTO
+   * Method to convert a time period to a DTO
    *
-   * @param employee - Employee
-   * @return employee DTO
-   * @author Siger
+   * @param timePeriod - TimePeriod
+   * @return timePeriod DTO
+   * @author Victor
    */
-  static EmployeeDto convertToDto(Employee employee) {
-    // Error handling
-    if (employee == null) {
-      throw new IllegalArgumentException("There is no such employee");
+  static TimePeriodDto convertToDto(TimePeriod timePeriod) {
+    if (timePeriod == null) {
+      throw new IllegalArgumentException("There is no such time period");
     }
-
-    // Convert schedule to DTO
-    ScheduleDto scheduleDto = convertToDto(employee.getSchedule());
-
-    // Convert employee to DTO
-    return new EmployeeDto(employee.getMuseumUserId(), employee.getEmail(), employee.getName(), employee.getPassword(), scheduleDto);
+    return new TimePeriodDto(timePeriod.getTimePeriodId(), timePeriod.getStartDate(), timePeriod.getEndDate());
   }
 
   /**
@@ -70,7 +128,8 @@ public class DtoUtility {
     }
 
     // Convert artwork to DTO
-    return new ArtworkDto(artwork.getArtworkId(), artwork.getName(), artwork.getArtist(), artwork.getIsAvailableForLoan(), artwork.getLoanFee(), artwork.getImage(), artwork.getIsOnLoan(), roomDto);
+    return new ArtworkDto(artwork.getArtworkId(), artwork.getName(), artwork.getArtist(),
+        artwork.getIsAvailableForLoan(), artwork.getLoanFee(), artwork.getImage(), artwork.getIsOnLoan(), roomDto);
   }
 
   /**
@@ -90,7 +149,8 @@ public class DtoUtility {
     MuseumDto museumDto = convertToDto(room.getMuseum());
 
     // Convert room to DTO
-    return new RoomDto(room.getRoomId(), room.getRoomName(), room.getRoomType(), room.getCurrentNumberOfArtwork(), museumDto);
+    return new RoomDto(room.getRoomId(), room.getRoomName(), room.getRoomType(), room.getCurrentNumberOfArtwork(),
+        museumDto);
   }
 
   /**
@@ -99,6 +159,7 @@ public class DtoUtility {
    * @param museum - Museum
    * @return museum DTO
    * @author Siger
+   * @author Victor
    */
   static MuseumDto convertToDto(Museum museum) {
     // Error handling
