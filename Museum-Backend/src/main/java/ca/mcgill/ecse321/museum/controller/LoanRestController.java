@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -69,7 +70,7 @@ public class LoanRestController {
      * This method is called when an employee approves or denies a loan request
      */
     @PatchMapping(value = { "/patchLoan", "/patchLoan/" })
-    public ResponseEntity<?> patchLoan(@RequestBody LoanDto loanDto) {
+    public ResponseEntity<?> patchLoan(@RequestParam(name = "loanDto") LoanDto loanDto) {
         try {
             Loan patchedLoan = loanService.patchLoanById(loanDto.getLoanId(), loanDto.getRequestAccepted());
             LoanDto returnDto = DtoUtility.convertToDto(patchedLoan);
@@ -90,10 +91,14 @@ public class LoanRestController {
      * @param loan
      * @return
      */
-    @PostMapping(value = { "/postLoan", "/postLoan/" })
-    public ResponseEntity<?> postLoan(@RequestBody LoanDto loanDto) {
+    @PostMapping(value = { "/postLoan/{artworkId}/{visitorId}", "/postLoan/{artworkId}/{visitorId}/" })
+    public ResponseEntity<?> postLoan(
+        @PathVariable("artworkId") Long artworkId,
+        @PathVariable("visitorId") Long visitorId,
+        @RequestParam(name = "requestAccepted") Boolean requestAccepted) {
         try {
-            Loan persistedLoan = loanService.createLoan(loanDto);
+
+            Loan persistedLoan = loanService.createLoan(requestAccepted, artworkId, visitorId);
             
             LoanDto persistedLoanDto = DtoUtility.convertToDto(persistedLoan);
 

@@ -46,10 +46,10 @@ public class LoanService {
     }
 
     @Transactional
-    public Loan createLoan(LoanDto loanDto) {
+    public Loan createLoan(Boolean aRequestAccepted, Long aArtworkId, Long aVisitorId) {
         // Error handling associations
-        Artwork artwork = artworkRepository.findArtworkByArtworkId(loanDto.getArtworkDto().getArtworkId());
-        Visitor visitor = visitorRepository.findVisitorByMuseumUserId(loanDto.getVisitorDto().getUserId());
+        Artwork artwork = artworkRepository.findArtworkByArtworkId(aArtworkId);
+        Visitor visitor = visitorRepository.findVisitorByMuseumUserId(aVisitorId);
         if (artwork == null) {
             throw new IllegalArgumentException("Artwork does not exist");
         }
@@ -63,10 +63,13 @@ public class LoanService {
             throw new IllegalArgumentException("Visitor does not exist");
         }
         
-        Loan loan = loanRepository.findLoanByLoanId(loanDto.getLoanId());
+        Loan loan = new Loan();
+        loan.setRequestAccepted(aRequestAccepted);
+        loan.setArtwork(artwork);
+        loan.setVisitor(visitor);
 
         // Error handling loan attributes
-        if (loanDto.getRequestAccepted() != null) {
+        if (aRequestAccepted != null) {
             throw new IllegalArgumentException("Loan getRequestAccepted must be null because only an employee can define");
         }
         // TODO: find out how findBySingleColumn works to determine if this implementation would work

@@ -27,6 +27,7 @@ import ca.mcgill.ecse321.museum.dao.MuseumRepository;
 import ca.mcgill.ecse321.museum.dao.RoomRepository;
 import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
+import ca.mcgill.ecse321.museum.dto.LoanDto;
 import ca.mcgill.ecse321.museum.model.Artwork;
 import ca.mcgill.ecse321.museum.model.Loan;
 import ca.mcgill.ecse321.museum.model.Museum;
@@ -87,6 +88,8 @@ public class LoanIntegrationTest {
 
     // Creating an artwork
     Artwork artwork = new Artwork();
+	long artworkId = 1;
+	artwork.setArtworkId(artworkId);
     artwork.setName("La Joconde");
     artwork.setArtist("Leonardo Da Vinci");
     artwork.setIsAvailableForLoan(true);
@@ -97,6 +100,8 @@ public class LoanIntegrationTest {
 
 	// Creating a visitor
 	Visitor visitor = new Visitor();
+	long visitorId = 1;
+	visitor.setMuseumUserId(visitorId);
 	visitor.setEmail("Please@email.com");
 	visitor.setName("Please");
 	visitor.setPassword("password");
@@ -118,33 +123,18 @@ public class LoanIntegrationTest {
 
 	private Long testCreateLoan() {
 
-		// create headers
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		long artworkId = 1;
+		long visitorId = 1;
 
-
-		Artwork artwork = artworkService.getAllArtworks().get(0);
-		Visitor visitor = visitorRepository.findVisitorByName("Please");
-
-		Loan loan = new Loan();
-		loan.setRequestAccepted(null);
-		loan.setArtwork(artwork);
-		loan.setVisitor(visitor);
-		LoanDto loanDto = DtoUtility.convertToDto(loan);
-
-		HttpEntity<LoanDto> request = new HttpEntity<>(loanDto, headers);
-		
-
-		ResponseEntity<LoanDto> response = client.postForEntity("/postLoan", request, LoanDto.class);
+		ResponseEntity<LoanDto> response = client.postForEntity("/postLoan/" + artworkId + "/"+ visitorId + "/?&requestAccepted=null", new LoanDto(), LoanDto.class);
 
 		// Check status and body of response are correct
 		assertNotNull(response);
 		assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
 		assertNotNull(response.getBody(), "Response has body");
-		assertEquals(loan.getRequestAccepted(), response.getBody().getRequestAccepted(), "Response has correct requestAccepted");
-		assertEquals(visitor.getMuseumUserId(), response.getBody().getVisitorDto(), "Response has correct visitorDto");
-		assertEquals(artwork.getArtworkId(), response.getBody().getArtworkDto(), "Response has correct artworkDto");
+		assertEquals(null, response.getBody().getRequestAccepted(), "Response has correct requestAccepted");
+		assertEquals(visitorId, response.getBody().getVisitorDto(), "Response has correct visitorDto");
+		assertEquals(artworkId, response.getBody().getArtworkDto(), "Response has correct artworkDto");
 		assertTrue(response.getBody().getLoanId() > 0, "Response has valid ID");
 
 		return response.getBody().getLoanId();
@@ -159,20 +149,4 @@ public class LoanIntegrationTest {
     
 	}
 
-	class LoanDto {
-		private Long loanId;
-		private Boolean requestAccepted;
-		private VisitorDto visitorDto;
-		private ArtworkDto artworkDto;
-
-		public LoanDto loanDto() {
-		}
-
-		public LoanDto loanDto(Long aLoanId, Boolean aRequestAccepted, VisitorDto aVisitorDto, ArtworkDto aArtworkDto) {
-			this.loanId = aLoanId;
-			this.requestAccepted = aRequestAccepted;
-			this.visitorDto = aVisitorDto;
-			this.artworkDto = aArtworkDto;
-		}
-	}
 }
