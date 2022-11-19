@@ -72,11 +72,6 @@ public class EmployeeRestController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not the manager");
       }
 
-      // Check if employee exists
-      if (service.getEmployee(employeeId) == null) {
-        return ResponseEntity.badRequest().body("Employee does not exist");
-      }
-
       // Delete employee
       service.deleteEmployee(employeeId);
       return ResponseEntity.ok("Employee deleted");

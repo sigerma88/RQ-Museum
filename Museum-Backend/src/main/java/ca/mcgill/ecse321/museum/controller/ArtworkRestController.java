@@ -20,6 +20,12 @@ import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.service.ArtworkService;
 import ca.mcgill.ecse321.museum.service.RoomService;
 
+/**
+ * RESTful api for Artwork to expose the business logic in the service layer to the frontend
+ * 
+ * @author Siger
+ * @author Zahra
+ */
 @CrossOrigin(origins = "*")
 @RestController
 public class ArtworkRestController {
@@ -79,6 +85,66 @@ public class ArtworkRestController {
     try {
       Artwork artwork = artworkService.getArtwork(artworkId);
       return ResponseEntity.ok(DtoUtility.convertToDto(artwork));
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+
+  /**
+   * RESTful API to get all artworks
+   *
+   * @return List of all artworks
+   * @author Zahra
+   */
+  @GetMapping(value = {"/artworks", "/artworks/"})
+  public ResponseEntity<?> getAllArtworks() {
+    try {
+      List<ArtworkDto> artworkDtos = new ArrayList<ArtworkDto>();
+      for (Artwork artwork : artworkService.getAllArtworks()) {
+        artworkDtos.add(DtoUtility.convertToDto(artwork));
+      }
+      return ResponseEntity.ok(artworkDtos);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+
+  /**
+   * RESTful API to get all artworks by room
+   * 
+   * @param roomId - long
+   * @return List of all artworks in the given room
+   * @author Siger
+   * @author Zahra
+   */
+  @GetMapping(value = { "/artworks/room/{roomId}", "/artworks/room/{roomId}/" })
+  public ResponseEntity<?> getAllArtworksByRoom(@PathVariable("roomId") Long roomId) {
+    try {
+      List<ArtworkDto> artworkDtos = new ArrayList<ArtworkDto>();
+      for (Artwork artwork : artworkService.getAllArtworksByRoom(roomId)) {
+        artworkDtos.add(DtoUtility.convertToDto(artwork));
+      }
+      return ResponseEntity.ok(artworkDtos);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+
+  /**
+   * RESTful API to get all artworks by if they are available for loan
+   * 
+   * @param isAvailableForLoan - boolean
+   * @return List of all artworks that are available for loan or not available for loan depending on the given boolean value
+   * @author Siger
+   */
+  @GetMapping(value = { "/artworks/availableForLoan/{isAvailableForLoan}", "/artworks/availableForLoan/{isAvailableForLoan}/" })
+  public ResponseEntity<?> getAllArtworksByAvailabilityForLoan(@PathVariable("isAvailableForLoan") Boolean isAvailableForLoan) {
+    try {
+      List<ArtworkDto> artworkDtos = new ArrayList<ArtworkDto>();
+      for (Artwork artwork : artworkService.getAllArtworksByAvailabilityForLoan(isAvailableForLoan)) {
+        artworkDtos.add(DtoUtility.convertToDto(artwork));
+      }
+      return ResponseEntity.ok(artworkDtos);
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }

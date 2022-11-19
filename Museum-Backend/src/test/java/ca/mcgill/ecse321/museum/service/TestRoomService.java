@@ -297,7 +297,7 @@ public class TestRoomService {
   }
 
   /**
-   * This method tests the creation of a room with an null room name
+   * This method tests the creation of a room with a null room name
    * 
    * @author Siger
    */

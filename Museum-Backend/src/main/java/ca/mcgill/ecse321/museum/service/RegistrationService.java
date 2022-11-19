@@ -286,7 +286,7 @@ public class RegistrationService {
   /**
    * Edit manager information
    * 
-   * @param string - id of manager
+   * @param id - id of manager
    * @param oldPassword - old password of manager
    * @param newPassword - new password of manager
    * @return Manager - the manager that was updated

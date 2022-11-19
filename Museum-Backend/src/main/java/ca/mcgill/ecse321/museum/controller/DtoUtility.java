@@ -19,23 +19,6 @@ import ca.mcgill.ecse321.museum.dto.TimePeriodDto;
 
 public class DtoUtility {
   /**
-   * Method to convert a schedule to a DTO
-   *
-   * @param schedule - Schedule
-   * @return schedule DTO
-   * @author Siger
-   */
-  static ScheduleDto convertToDto(Schedule schedule) {
-    // Error handling
-    if (schedule == null) {
-      throw new IllegalArgumentException("There is no such schedule");
-    }
-
-    // Convert schedule to DTO
-    return new ScheduleDto(schedule.getScheduleId());
-  }
-
-  /**
    * Method to convert an employee to a DTO
    *
    * @param employee - Employee
@@ -56,7 +39,7 @@ public class DtoUtility {
   /**
    * Method to convert an visitor to a DTO
    * 
-   * @param museumUser - Visitor
+   * @param visitor - Visitor
    * @return visitor DTO
    * @author Kevin
    */
@@ -76,7 +59,7 @@ public class DtoUtility {
   /**
    * Method to convert an Manager to a DTO
    * 
-   * @param museumUser - Visitor
+   * @param manager - Manager
    * @return visitor DTO
    * @author Kevin
    */
@@ -91,6 +74,23 @@ public class DtoUtility {
     managerDto.setPassword(manager.getPassword());
     managerDto.setMuseumUserId(manager.getMuseumUserId());
     return managerDto;
+  }
+
+  /**
+   * Method to convert a schedule to a DTO
+   *
+   * @param schedule - Schedule
+   * @return schedule DTO
+   * @author Siger
+   */
+  static ScheduleDto convertToDto(Schedule schedule) {
+    // Error handling
+    if (schedule == null) {
+      throw new IllegalArgumentException("There is no such schedule");
+    }
+
+    // Convert schedule to DTO
+    return new ScheduleDto(schedule.getScheduleId());
   }
 
   /**

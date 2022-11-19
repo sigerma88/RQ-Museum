@@ -24,6 +24,8 @@ public interface ArtworkRepository extends CrudRepository<Artwork, Long> {
 
   List<Artwork> findArtworkByRoom(Room room);
 
+  List<Artwork> findArtworkByIsAvailableForLoan(Boolean isAvailableForLoan);
+
   void deleteArtworkByArtworkId(Long artworkId);
 
 }

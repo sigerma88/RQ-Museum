@@ -159,7 +159,7 @@ public class EmployeeService {
    */
   @Transactional
   public Employee deleteEmployeeTimePeriodAssociation(long employeeId, long timePeriodId) {
-    /**
+    /*
      * 1. Find the employee's schedule first and then delete the
      * ScheduleOfTimePeriod that associates with
      * the TimePeriod that we want to remove from the employee's schedule.

@@ -50,11 +50,11 @@ public class ArtworkService {
       throw new IllegalArgumentException("Artist name cannot be empty");
     }
 
-    if (isAvailableForLoan == true) {
+    if (isAvailableForLoan) {
       if (loanFee == null) {
         throw new IllegalArgumentException("Loan fee cannot be null if artwork is available for loan");
       }
-    } else if (isAvailableForLoan == false && loanFee != null) {
+    } else if (loanFee != null) {
       throw new IllegalArgumentException("Loan fee must be null if artwork is not available for loan");
     }
 
@@ -64,13 +64,13 @@ public class ArtworkService {
 
     if (isOnLoan == null) {
       throw new IllegalArgumentException("Artwork must be either on loan or not on loan");
-    } else if (isOnLoan == true) {
+    } else if (isOnLoan) {
       if (room != null) {
         throw new IllegalArgumentException("Room must be null if artwork is on loan");
       }
-    } else if (isOnLoan == false && room == null) {
+    } else if (room == null) {
       throw new IllegalArgumentException("Room cannot be null if artwork is not on loan");
-    } else if (isOnLoan == false && room != null) {
+    } else {
       // Update room artwork count
       roomService.changeCurrentNumberOfArtwork(room.getRoomId(), room.getCurrentNumberOfArtwork() + 1);
     }
@@ -120,26 +120,40 @@ public class ArtworkService {
   /**
    * Method to get a list of all artworks in a room
    *
-   * @param room - Room
-   * @return artworksInRoom - all artworks in room
+   * @param roomId - id of room
+   * @return all artworks in specific room
    * @author Zahra
+   * @author Siger
    */
   @Transactional
-  public List<Artwork> getAllArtworksByRoom(Room room) {
-    List<Artwork> artworksInRoom = new ArrayList<>();
-    for (Artwork artwork : getAllArtworks()) {
-      if (artwork.getRoom().equals(room))
-        artworksInRoom.add(artwork);
+  public List<Artwork> getAllArtworksByRoom(Long roomId) {
+    // Get room
+    Room room = roomService.getRoomById(roomId);
+
+    // Error handling
+    if (room == null) {
+      throw new IllegalArgumentException("Room does not exist");
     }
-    return artworksInRoom;
+
+    return toList(artworkRepository.findArtworkByRoom(room));
   }
 
-  public boolean getArtworkAvailabilityForLoan(Artwork artwork) {
-    return artwork.getIsAvailableForLoan();
-  }
+  /**
+   * Method to get all artworks by if they are available for loan
+   *
+   * @param isAvailableForLoan - availability of the artwork
+   * @return Artworks that are available for loan
+   * @author Zahra
+   * @author Siger
+   */
+  @Transactional
+  public List<Artwork> getAllArtworksByAvailabilityForLoan(Boolean isAvailableForLoan) {
+    // Error handling
+    if (isAvailableForLoan == null) {
+      throw new IllegalArgumentException("Artwork availability cannot be null");
+    }
 
-  public double getArtworkLoanFee(Artwork artwork) {
-    return artwork.getLoanFee();
+    return toList(artworkRepository.findArtworkByIsAvailableForLoan(isAvailableForLoan));
   }
 
   /**
@@ -160,8 +174,7 @@ public class ArtworkService {
       throw new IllegalArgumentException("Artwork does not exist");
     }
 
-    if ((name == null || name.trim().length() == 0) && (artist == null || artist.trim().length() == 0)
-        && (image == null || image.trim().length() == 0)) {
+    if ((name == null || name.trim().length() == 0) && (artist == null || artist.trim().length() == 0) && (image == null || image.trim().length() == 0)) {
       throw new IllegalArgumentException("Nothing to edit, all fields are empty");
     }
 
@@ -195,11 +208,11 @@ public class ArtworkService {
     if (isAvailableForLoan == null) {
       isAvailableForLoan = artwork.getIsAvailableForLoan();
     }
-    if (isAvailableForLoan == true) {
+    if (isAvailableForLoan) {
       if (loanFee == null) {
         throw new IllegalArgumentException("Loan fee cannot be null if artwork is available for loan");
       }
-    } else if (isAvailableForLoan == false && loanFee != null) {
+    } else if (loanFee != null) {
       throw new IllegalArgumentException("Loan fee must be null if artwork is not available for loan");
     }
 

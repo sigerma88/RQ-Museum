@@ -154,7 +154,7 @@ public class TestEmployeeService {
         });
 
     lenient().when(employeeRepository.findAll()).thenAnswer((InvocationOnMock invocation) -> {
-      Iterable<Employee> employees = new ArrayList<Employee>();
+      ArrayList<Employee> employees = new ArrayList<Employee>();
 
       Employee employee = new Employee();
       employee.setMuseumUserId(EMPLOYEE_ID);
@@ -162,7 +162,7 @@ public class TestEmployeeService {
       employee.setName(EMPLOYEE_NAME);
       employee.setPassword(EMPLOYEE_PASSWORD);
       employee.setSchedule(scheduleRepository.findScheduleByScheduleId(SCHEDULE_ID));
-      ((ArrayList<Employee>) employees).add(employee);
+      employees.add(employee);
 
       Employee secondEmployee = new Employee();
       secondEmployee.setMuseumUserId(SECOND_EMPLOYEE_ID);
@@ -170,7 +170,7 @@ public class TestEmployeeService {
       secondEmployee.setName(SECOND_EMPLOYEE_NAME);
       secondEmployee.setPassword(SECOND_EMPLOYEE_PASSWORD);
       secondEmployee.setSchedule(scheduleRepository.findScheduleByScheduleId(SECOND_SCHEDULE_ID));
-      ((ArrayList<Employee>) employees).add(secondEmployee);
+      employees.add(secondEmployee);
 
       return employees;
     });

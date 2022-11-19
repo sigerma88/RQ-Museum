@@ -43,7 +43,7 @@ public class AuthenticationService {
     @Transactional
     public MuseumUser authenticateUser(String email, String password) throws Exception {
         if (email == null || password == null) {
-            new Exception("Email and password must be filled when logging in.");
+            throw new Exception("Email and password must be filled when logging in.");
         }
 
         Visitor visitor = visitorRepository.findVisitorByEmail(email);
