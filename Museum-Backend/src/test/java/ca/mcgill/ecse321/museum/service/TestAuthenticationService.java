@@ -63,19 +63,6 @@ public class TestAuthenticationService {
           }
         });
 
-    lenient().when(visitorRepository.findVisitorByEmail(anyString()))
-        .thenAnswer((InvocationOnMock invocation) -> {
-          if (invocation.getArgument(0).equals(VISITOR_VALID_EMAIL)) {
-            Visitor visitor = new Visitor();
-            visitor.setEmail(VISITOR_VALID_EMAIL);
-            visitor.setPassword(VALID_PASSWORD);
-            return visitor;
-          } else {
-            return null;
-          }
-        });
-
-
     lenient().when(employeeRepository.findEmployeeByEmail(anyString()))
         .thenAnswer((InvocationOnMock invocation) -> {
           if (invocation.getArgument(0).equals(EMPLOYEE_VALID_EMAIL)) {

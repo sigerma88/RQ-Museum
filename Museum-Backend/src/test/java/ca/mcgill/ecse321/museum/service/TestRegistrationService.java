@@ -63,6 +63,11 @@ public class TestRegistrationService {
   private static final String INVALID_PASSWORD = "Speed123";
   private static final String INVALID_EMAIL = "lewisgmailcom";
 
+  /**
+   * Create a visitor,manager,employee and save it in the database
+   * 
+   * @author Kevin
+   */
 
   @BeforeEach
   public void setMockOutput() {
