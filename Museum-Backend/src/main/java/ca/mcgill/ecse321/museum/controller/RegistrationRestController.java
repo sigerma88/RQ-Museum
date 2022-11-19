@@ -42,8 +42,8 @@ public class RegistrationRestController {
   /**
    * POST method to create a new visitor account
    * 
-   * @param visitorDto
-   * @return visitor parameter
+   * @param visitor - VisitorDto object
+   * @return created visitor
    */
 
   @PostMapping(value = "/visitor/register", produces = "application/json")
@@ -105,7 +105,8 @@ public class RegistrationRestController {
   /**
    * PUT method to update visitor information
    * 
-   * @param Map<String,String> - map containing oldPassword, newPassword, email and name
+   * @param id - long (visitor id)
+   * @param updatedCredential - map containing oldPassword, newPassword, email and name
    * @return visitorDto
    * @author Kevin
    */
@@ -195,7 +196,8 @@ public class RegistrationRestController {
   /**
    * PUT method to update employee information
    * 
-   * @param Map<String,String> - map containing oldPassword, newPassword
+   * @param id - long (employee id)
+   * @param updatedEmployeeCredential - map containing oldPassword, newPassword
    * @return employeeDto
    * @author Kevin
    */
@@ -230,7 +232,8 @@ public class RegistrationRestController {
   /**
    * PUT method to update manager information
    * 
-   * @param Map<String,String> - map containing oldPassword, newPassword, managerId
+   * @param id - long (manager id)
+   * @param updatedManagerCredential - map containing oldPassword, newPassword, managerId
    * @return managerDto
    * @author Kevin
    */
