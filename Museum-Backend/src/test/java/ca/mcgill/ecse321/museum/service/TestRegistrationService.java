@@ -356,7 +356,7 @@ public class TestRegistrationService {
   }
 
   /**
-   * Test that editing an existing employee.
+   * Test that editing an existing visitor.
    * 
    * @author Kevin
    */
@@ -381,7 +381,7 @@ public class TestRegistrationService {
   }
 
   /**
-   * Test that editing a non-existing employee.
+   * Test that editing a non-existing visitor.
    * 
    * @author Kevin
    */
@@ -396,7 +396,7 @@ public class TestRegistrationService {
   }
 
   /**
-   * Test that editing an employee with an invalid email.
+   * Test that editing an visitor with an invalid email.
    * 
    * @author Kevin
    */
@@ -411,7 +411,7 @@ public class TestRegistrationService {
   }
 
   /**
-   * Test that editing an employee to an email that already exists.
+   * Test that editing an visitor to an email that already exists.
    * 
    * @author Kevin
    */
@@ -428,7 +428,7 @@ public class TestRegistrationService {
   }
 
   /**
-   * Test that editing an employee with an invalid new password.
+   * Test that editing an visitor with an invalid new password.
    * 
    * @author Kevin
    */
@@ -446,7 +446,7 @@ public class TestRegistrationService {
   }
 
   /**
-   * Test that editing an employee with an invalid old password.
+   * Test that editing an visitor with an invalid old password.
    * 
    * @author Kevin
    */
