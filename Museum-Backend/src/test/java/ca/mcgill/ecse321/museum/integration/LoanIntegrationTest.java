@@ -85,6 +85,7 @@ public class LoanIntegrationTest {
   /**
    * Test to create a loan successfully
    * 
+   * @param Long - loanId 
    * @author Eric
    */
   private Long testCreateLoan() {
@@ -333,7 +334,7 @@ public class LoanIntegrationTest {
 
   /**
    * Helper method to create artwork associated to a room associated to a museum associated to a schedule
-   * 
+   * @return artwork
    * @author Eric
    */
   public Artwork createArtwork() {
@@ -373,7 +374,7 @@ public class LoanIntegrationTest {
 
   /**
    * Helper method to create visitor
-   * 
+   * @return visitor 
    * @author Eric
    */
   public Visitor createVisitor() {
