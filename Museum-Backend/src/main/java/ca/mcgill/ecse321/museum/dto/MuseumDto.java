@@ -2,7 +2,7 @@ package ca.mcgill.ecse321.museum.dto;
 
 /**
  * Museum DTO
- * 
+ *
  * @author Siger
  * @author Victor
  */

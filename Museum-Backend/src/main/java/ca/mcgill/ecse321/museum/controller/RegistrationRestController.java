@@ -1,38 +1,29 @@
 package ca.mcgill.ecse321.museum.controller;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import ca.mcgill.ecse321.museum.controller.utilities.AuthenticationUtility;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
 import ca.mcgill.ecse321.museum.dto.EmployeeDto;
 import ca.mcgill.ecse321.museum.dto.ManagerDto;
 import ca.mcgill.ecse321.museum.dto.VisitorDto;
 import ca.mcgill.ecse321.museum.service.RegistrationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 /**
  * RESTful API to handle registration
- * 
+ *
  * @author Kevin
  */
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("api/profile")
+@RequestMapping("/api/profile")
 public class RegistrationRestController {
 
   @Autowired
@@ -43,7 +34,7 @@ public class RegistrationRestController {
 
   /**
    * POST method to create a new visitor account
-   * 
+   *
    * @param visitor - VisitorDto object
    * @return created visitor
    * @author Kevin
@@ -51,7 +42,7 @@ public class RegistrationRestController {
 
   @PostMapping(value = "/visitor/register", produces = "application/json")
   public ResponseEntity<?> registerVisitor(HttpServletRequest request,
-      @RequestBody VisitorDto visitor) {
+                                           @RequestBody VisitorDto visitor) {
     try {
       HttpSession session = request.getSession();
       if (AuthenticationUtility.isLoggedIn(session)) {
@@ -76,7 +67,7 @@ public class RegistrationRestController {
 
   /**
    * GET method to get a visitor account
-   * 
+   *
    * @param id - long (visitor id)
    * @return visitorDto
    * @author Kevin
@@ -84,7 +75,7 @@ public class RegistrationRestController {
 
   @GetMapping(value = "/visitor/{id}", produces = "application/json")
   public ResponseEntity<?> viewVisitorInformation(HttpServletRequest request,
-      @PathVariable long id) {
+                                                  @PathVariable long id) {
     try {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
@@ -107,8 +98,8 @@ public class RegistrationRestController {
 
   /**
    * PUT method to update visitor information
-   * 
-   * @param id - long (visitor id)
+   *
+   * @param id                - long (visitor id)
    * @param updatedCredential - map containing oldPassword, newPassword, email and name
    * @return visitorDto
    * @author Kevin
@@ -116,7 +107,7 @@ public class RegistrationRestController {
 
   @PutMapping(value = "/visitor/edit/{id}", produces = "application/json")
   public ResponseEntity<?> editVisitorInformation(HttpServletRequest request, @PathVariable long id,
-      @RequestBody Map<String, String> updatedCredential) {
+                                                  @RequestBody Map<String, String> updatedCredential) {
     try {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
@@ -138,7 +129,7 @@ public class RegistrationRestController {
 
   /**
    * GET method to view employee information
-   * 
+   *
    * @param id - long (employee id)
    * @return employeeDto
    * @author Kevin
@@ -169,7 +160,7 @@ public class RegistrationRestController {
 
   /**
    * POST method to create a new employee account
-   * 
+   *
    * @param employeeName - Name of new employee
    * @return employeeDto
    * @author Kevin
@@ -199,8 +190,8 @@ public class RegistrationRestController {
 
   /**
    * PUT method to update employee information
-   * 
-   * @param id - long (employee id)
+   *
+   * @param id                        - long (employee id)
    * @param updatedEmployeeCredential - map containing oldPassword, newPassword
    * @return employeeDto
    * @author Kevin
@@ -208,7 +199,7 @@ public class RegistrationRestController {
 
   @PostMapping(value = "employee/edit/{id}", produces = "application/json")
   public ResponseEntity<?> editEmployeeInformation(HttpServletRequest request,
-      @PathVariable long id, @RequestBody Map<String, String> updatedEmployeeCredential) {
+                                                   @PathVariable long id, @RequestBody Map<String, String> updatedEmployeeCredential) {
     try {
       HttpSession session = request.getSession();
 
@@ -235,8 +226,8 @@ public class RegistrationRestController {
 
   /**
    * PUT method to update manager information
-   * 
-   * @param id - long (manager id)
+   *
+   * @param id                       - long (manager id)
    * @param updatedManagerCredential - map containing oldPassword, newPassword, managerId
    * @return managerDto
    * @author Kevin
@@ -244,7 +235,7 @@ public class RegistrationRestController {
 
   @PutMapping(value = "manager/edit/{id}", produces = "application/json")
   public ResponseEntity<?> editManagerInformation(HttpServletRequest request, @PathVariable long id,
-      @RequestBody Map<String, String> updatedManagerCredential) {
+                                                  @RequestBody Map<String, String> updatedManagerCredential) {
     try {
       HttpSession session = request.getSession();
 
@@ -262,7 +253,7 @@ public class RegistrationRestController {
       return ResponseEntity.ok(manager);
     } catch (
 
-    Exception e) {
+        Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
   }

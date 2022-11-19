@@ -1,34 +1,28 @@
 package ca.mcgill.ecse321.museum.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import ca.mcgill.ecse321.museum.controller.utilities.AuthenticationUtility;
+import ca.mcgill.ecse321.museum.dto.EmployeeDto;
+import ca.mcgill.ecse321.museum.model.Employee;
+import ca.mcgill.ecse321.museum.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import ca.mcgill.ecse321.museum.model.Employee;
-import ca.mcgill.ecse321.museum.controller.utilities.AuthenticationUtility;
-import ca.mcgill.ecse321.museum.dto.EmployeeDto;
-import ca.mcgill.ecse321.museum.service.EmployeeService;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * EmployeeRestController class is used as a controller where we call
  * our API for our web application
+ *
  * @author Siger
  * @author Kevin
  */
 
 @CrossOrigin(origins = "*")
-@RequestMapping("api/employee")
+@RequestMapping("/api/employee")
 @RestController
 public class EmployeeRestController {
 
@@ -37,7 +31,7 @@ public class EmployeeRestController {
 
   /**
    * RESTful API to get all employees
-   * 
+   *
    * @return List of all employees
    * @author Siger, Kevin
    */
@@ -63,7 +57,7 @@ public class EmployeeRestController {
 
   /**
    * RESTful API to delete an employee by their id
-   * 
+   *
    * @param employeeId - long
    * @return if the employee was deleted (success)
    * @author Siger, Kevin

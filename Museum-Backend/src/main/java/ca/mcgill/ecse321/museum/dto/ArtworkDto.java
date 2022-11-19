@@ -42,7 +42,7 @@ public class ArtworkDto {
     this.loanFee = loanFee;
     this.image = image;
     this.isOnLoan = isOnLoan;
-}
+  }
 
   public Long getArtworkId() {
     return artworkId;

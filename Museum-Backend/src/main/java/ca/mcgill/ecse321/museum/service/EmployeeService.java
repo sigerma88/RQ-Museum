@@ -1,12 +1,5 @@
 package ca.mcgill.ecse321.museum.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
 import ca.mcgill.ecse321.museum.dao.ScheduleOfTimePeriodRepository;
 import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
@@ -15,10 +8,16 @@ import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
 import ca.mcgill.ecse321.museum.model.TimePeriod;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Business logic for employeeController
- * 
+ *
  * @author Victor
  * @author Siger
  */
@@ -41,10 +40,13 @@ public class EmployeeService {
   @Autowired
   private TimePeriodService timePeriodService;
 
+  @Autowired
+  private RegistrationService registrationService;
+
   /**
    * Method to get all the employees in the database
    * Allows the manager to view the list of employees
-   * 
+   *
    * @return List of all employees
    * @author Siger
    */
@@ -56,10 +58,10 @@ public class EmployeeService {
 
   /**
    * Method to view an employee's schedule
-   * 
-   * @author VZ
+   *
    * @param employeeId - id of employee
    * @return
+   * @author VZ
    */
 
   @Transactional
@@ -78,10 +80,10 @@ public class EmployeeService {
 
   /**
    * Method to get all of employee's shifts
-   * 
-   * @author VZ
+   *
    * @param employeeId
    * @return
+   * @author VZ
    */
 
   @Transactional
@@ -105,11 +107,11 @@ public class EmployeeService {
   /**
    * Method to add a time period to employee's schedule, in other words
    * give more work to an employee.
-   * 
-   * @author VZ
+   *
    * @param employee
    * @param timeperiod
    * @return
+   * @author VZ
    */
 
   @Transactional
@@ -142,11 +144,11 @@ public class EmployeeService {
   /**
    * Method to delete a time period from an employee's schedule, in other words
    * lessen an employee's workload.
-   * 
-   * @author VZ
+   *
    * @param employeeId
    * @param timePeriodId
    * @return
+   * @author VZ
    */
 
   @Transactional
@@ -180,7 +182,7 @@ public class EmployeeService {
   /**
    * Method to delete an employee from the database by their id
    * Allows the manager to delete an employee
-   * 
+   *
    * @param employeeId - Long
    * @return if the employee was deleted (success)
    * @author Siger
@@ -205,12 +207,12 @@ public class EmployeeService {
     employeeRepository.deleteEmployeeByMuseumUserId(employeeId);
 
     // Check if employee was deleted
-    return getEmployee(employeeId) == null;
+    return employeeRepository.findEmployeeByMuseumUserId(employeeId) == null;
   }
 
   /**
    * Method to convert an Iterable to a List
-   * 
+   *
    * @param iterable - Iterable
    * @return List
    * @author From tutorial notes

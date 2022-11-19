@@ -1,25 +1,5 @@
 package ca.mcgill.ecse321.museum.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.lenient;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
-
 import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
 import ca.mcgill.ecse321.museum.dao.MuseumRepository;
 import ca.mcgill.ecse321.museum.dao.RoomRepository;
@@ -27,10 +7,26 @@ import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.model.RoomType;
 import ca.mcgill.ecse321.museum.model.Schedule;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.lenient;
 
 /**
  * This is the test class for the RoomService class
- * 
+ *
  * @author Siger
  */
 
@@ -76,7 +72,7 @@ public class TestRoomService {
    * This method sets up the mock objects
    * There are three rooms in the museum, one is a small room, one is a large room
    * and one is a storage room
-   * 
+   *
    * @author Siger
    */
   @BeforeEach
@@ -200,7 +196,7 @@ public class TestRoomService {
 
   /**
    * This method tests the creation of a small room and checks its max capacity
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -233,7 +229,7 @@ public class TestRoomService {
 
   /**
    * This method tests the creation of a large room and checks its max capacity
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -266,7 +262,7 @@ public class TestRoomService {
 
   /**
    * This method tests the creation of a storage room and checks its max capacity
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -299,7 +295,7 @@ public class TestRoomService {
 
   /**
    * This method tests the creation of a room with a null room name
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -320,7 +316,7 @@ public class TestRoomService {
 
   /**
    * This method tests the creation of a room with a null room type
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -342,7 +338,7 @@ public class TestRoomService {
 
   /**
    * This method tests the creation of a room with a null museum
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -361,7 +357,7 @@ public class TestRoomService {
 
   /**
    * This method tests getting a room by its id
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -389,7 +385,7 @@ public class TestRoomService {
 
   /**
    * This method tests getting a room by its id with a null id
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -407,7 +403,7 @@ public class TestRoomService {
 
   /**
    * This method tests getting a room by its id with an invalid id
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -425,7 +421,7 @@ public class TestRoomService {
 
   /**
    * This method tests getting all the rooms
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -448,7 +444,7 @@ public class TestRoomService {
 
   /**
    * This method tests getting all the rooms in a museum
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -479,7 +475,7 @@ public class TestRoomService {
 
   /**
    * This method tests getting all the rooms in a museum with a null museum
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -498,7 +494,7 @@ public class TestRoomService {
 
   /**
    * This method tests changing the current number of artworks in a room
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -519,7 +515,7 @@ public class TestRoomService {
   /**
    * This method tests changing the current number of artworks in a room with a
    * null id
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -539,7 +535,7 @@ public class TestRoomService {
   /**
    * This method tests changing the current number of artworks in a room with an
    * invalid id
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -559,7 +555,7 @@ public class TestRoomService {
   /**
    * This method tests changing the current number of artworks in a room with a
    * null number
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -579,7 +575,7 @@ public class TestRoomService {
   /**
    * This method tests changing the current number of artworks in a room with a
    * negative number
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -599,7 +595,7 @@ public class TestRoomService {
   /**
    * This method tests changing the current number of artworks in a room with a
    * number greater than the maximum number of artworks for a small room
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -620,7 +616,7 @@ public class TestRoomService {
   /**
    * This method tests changing the current number of artworks in a room with a
    * number greater than the maximum number of artworks for a large room
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -641,7 +637,7 @@ public class TestRoomService {
   /**
    * This method tests changing the current number of artworks in a room with a
    * very large number of artworks for a storage room
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -662,7 +658,7 @@ public class TestRoomService {
   /**
    * This method tests getting the maximum number of artworks for a room with a
    * null room type
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -681,7 +677,7 @@ public class TestRoomService {
 
   /**
    * This method tests deleting a room
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -695,7 +691,7 @@ public class TestRoomService {
 
   /**
    * This method tests deleting a room with a null id
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -711,7 +707,7 @@ public class TestRoomService {
 
   /**
    * This method tests editing a room
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -733,7 +729,7 @@ public class TestRoomService {
 
   /**
    * This method tests editing a room with a null id
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -752,7 +748,7 @@ public class TestRoomService {
 
   /**
    * This method tests editing a room with a null name
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -774,7 +770,7 @@ public class TestRoomService {
 
   /**
    * This method tests editing a room with a null type
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -796,7 +792,7 @@ public class TestRoomService {
 
   /**
    * This method tests editing a room with a null name and type
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -817,23 +813,29 @@ public class TestRoomService {
    * Test method for getting the room capacity of a room given its id
    *
    * @author kieyanmamiche
+   * @author Siger
    */
   @Test
   public void testGetRoomCapacity() {
+    // Get the room capacity
+    Integer firstRoomCapacity = null;
+    Integer secondRoomCapacity = null;
+    Integer thirdRoomCapacity = null;
+    try {
+      firstRoomCapacity = roomService.getRoomCapacity(FIRST_ROOM_ID);
+      secondRoomCapacity = roomService.getRoomCapacity(SECOND_ROOM_ID);
+      thirdRoomCapacity = roomService.getRoomCapacity(THIRD_ROOM_ID);
+    } catch (IllegalArgumentException e) {
+      fail();
+    }
 
-      // Assert that storage room has high capacity aka greater than 10000
-      int capacityStorage = 10000;
-      assertTrue(roomService.getRoomCapacity(ROOM_ID_1) > capacityStorage);
-
-      // Assert that small room has small capacity, 193 artworks out of total 200 so => 7 capacity
-      assertEquals(7, roomService.getRoomCapacity(ROOM_ID_2));
-
-      // Assert that large room has large capacity, 293 artworks out of total 300 so => 7 capacity
-      assertEquals(7, roomService.getRoomCapacity(ROOM_ID_3));
-
-      // Assert that full room has no capacity => capacity == 0
-      assertEquals(0, roomService.getRoomCapacity(ROOM_ID_4));
-
+    // Check that the room capacity was retrieved
+    assertNotNull(firstRoomCapacity);
+    assertNotNull(secondRoomCapacity);
+    assertNotNull(thirdRoomCapacity);
+    assertEquals(200, firstRoomCapacity);
+    assertEquals(300, secondRoomCapacity);
+    assertEquals(-1, thirdRoomCapacity);
   }
 
   /**
@@ -843,19 +845,19 @@ public class TestRoomService {
    */
   @Test
   public void testGetRoomCapacityNonExisting() {
-      String error = null;
-      try {
-          long NONE_EXISTING_ROOM_ID = 1234;
-          roomService.getRoomCapacity(NONE_EXISTING_ROOM_ID);
-      } catch (IllegalArgumentException e) {
-          error = e.getMessage();
-      }
-      assertEquals("Room does not exist", error);
+    String error = null;
+    try {
+      Long NONE_EXISTING_ROOM_ID = -1L;
+      roomService.getRoomCapacity(NONE_EXISTING_ROOM_ID);
+    } catch (IllegalArgumentException e) {
+      error = e.getMessage();
+    }
+    assertEquals("Room does not exist", error);
   }
 
   /**
    * This is a helper method creating a museum stub
-   * 
+   *
    * @author Siger
    */
   public Museum createMuseumStub() {

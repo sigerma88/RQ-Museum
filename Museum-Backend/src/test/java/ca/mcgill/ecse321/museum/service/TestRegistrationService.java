@@ -1,18 +1,5 @@
 package ca.mcgill.ecse321.museum.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.lenient;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
 import ca.mcgill.ecse321.museum.dao.ManagerRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
@@ -20,12 +7,23 @@ import ca.mcgill.ecse321.museum.dto.VisitorDto;
 import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Manager;
 import ca.mcgill.ecse321.museum.model.Visitor;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.lenient;
 
 /**
  * This class tests the Registration Service
- * 
+ *
  * @author Kevin
- * 
  */
 
 @ExtendWith(MockitoExtension.class)
@@ -65,7 +63,7 @@ public class TestRegistrationService {
 
   /**
    * Create a visitor,manager,employee and save it in the database
-   * 
+   *
    * @author Kevin
    */
 
@@ -200,7 +198,7 @@ public class TestRegistrationService {
 
   /**
    * Test that a visitor can be created successfully.
-   * 
+   *
    * @author Kevin
    */
 
@@ -226,7 +224,7 @@ public class TestRegistrationService {
 
   /**
    * Test that a visitor cannot be created with null fields.
-   * 
+   *
    * @author Kevin
    */
 
@@ -247,7 +245,7 @@ public class TestRegistrationService {
 
   /**
    * Test that a visitor cannot be created with an invalid email.
-   * 
+   *
    * @author Kevin
    */
 
@@ -267,7 +265,7 @@ public class TestRegistrationService {
 
   /**
    * Test that a visitor cannot be created with an invalid password.
-   * 
+   *
    * @author Kevin
    */
 
@@ -289,7 +287,7 @@ public class TestRegistrationService {
 
   /**
    * Test that a visitor cannot be created with an invalid email.
-   * 
+   *
    * @author Kevin
    */
 
@@ -322,7 +320,7 @@ public class TestRegistrationService {
 
   /**
    * Test that getting an existing visitor.
-   * 
+   *
    * @author Kevin
    */
 
@@ -342,7 +340,7 @@ public class TestRegistrationService {
 
   /**
    * Test that getting a non-existing visitor.
-   * 
+   *
    * @author Kevin
    */
 
@@ -357,7 +355,7 @@ public class TestRegistrationService {
 
   /**
    * Test that editing an existing visitor.
-   * 
+   *
    * @author Kevin
    */
 
@@ -382,7 +380,7 @@ public class TestRegistrationService {
 
   /**
    * Test that editing a non-existing visitor.
-   * 
+   *
    * @author Kevin
    */
 
@@ -397,7 +395,7 @@ public class TestRegistrationService {
 
   /**
    * Test that editing an visitor with an invalid email.
-   * 
+   *
    * @author Kevin
    */
 
@@ -412,7 +410,7 @@ public class TestRegistrationService {
 
   /**
    * Test that editing an visitor to an email that already exists.
-   * 
+   *
    * @author Kevin
    */
 
@@ -429,7 +427,7 @@ public class TestRegistrationService {
 
   /**
    * Test that editing an visitor with an invalid new password.
-   * 
+   *
    * @author Kevin
    */
 
@@ -447,7 +445,7 @@ public class TestRegistrationService {
 
   /**
    * Test that editing an visitor with an invalid old password.
-   * 
+   *
    * @author Kevin
    */
 
@@ -463,7 +461,7 @@ public class TestRegistrationService {
 
   /**
    * Test that create new employee.
-   * 
+   *
    * @author Kevin
    */
 
@@ -484,7 +482,7 @@ public class TestRegistrationService {
 
   /**
    * Test that create employee with invalid name.
-   * 
+   *
    * @author Kevin
    */
 
@@ -501,7 +499,7 @@ public class TestRegistrationService {
 
   /**
    * Test that generate employee email.
-   * 
+   *
    * @author Kevin
    */
 
@@ -521,7 +519,7 @@ public class TestRegistrationService {
 
   /**
    * Test that edit employee.
-   * 
+   *
    * @author Kevin
    */
 
@@ -542,7 +540,7 @@ public class TestRegistrationService {
 
   /**
    * Test that get employee information.
-   * 
+   *
    * @author Kevin
    */
 
@@ -563,7 +561,7 @@ public class TestRegistrationService {
 
   /**
    * Test that get employee information with invalid id.
-   * 
+   *
    * @author Kevin
    */
 
@@ -578,7 +576,7 @@ public class TestRegistrationService {
 
   /**
    * Test that edit employee with invalid id.
-   * 
+   *
    * @author Kevin
    */
 
@@ -593,7 +591,7 @@ public class TestRegistrationService {
 
   /**
    * Test that edit employee with invalid new password.
-   * 
+   *
    * @author Kevin
    */
 
@@ -610,7 +608,7 @@ public class TestRegistrationService {
 
   /**
    * Test that edit manager
-   * 
+   *
    * @author Kevin
    */
 
@@ -630,7 +628,7 @@ public class TestRegistrationService {
 
   /**
    * Test that edit manager with wrong password
-   * 
+   *
    * @author Kevin
    */
   @Test
@@ -644,7 +642,7 @@ public class TestRegistrationService {
 
   /**
    * Test that edit manager with invalid new password
-   * 
+   *
    * @author Kevin
    */
   @Test

@@ -1,12 +1,5 @@
 package ca.mcgill.ecse321.museum.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import ca.mcgill.ecse321.museum.dao.MuseumRepository;
 import ca.mcgill.ecse321.museum.dao.ScheduleOfTimePeriodRepository;
 import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
@@ -15,10 +8,16 @@ import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
 import ca.mcgill.ecse321.museum.model.TimePeriod;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Business logic for museumController
- * 
+ *
  * @author Victor
  * @author Siger
  */
@@ -43,10 +42,10 @@ public class MuseumService {
 
   /**
    * Method to view a museum
-   * 
-   * @author VZ
+   *
    * @param museumId - museum id
    * @return museum
+   * @author VZ
    */
 
   @Transactional
@@ -56,7 +55,7 @@ public class MuseumService {
 
   /**
    * Method to get all the museums in the database
-   * 
+   *
    * @return List of all museums
    * @author Siger
    */
@@ -68,9 +67,9 @@ public class MuseumService {
 
   /**
    * Method to create a museum
-   * 
-   * @author VZ
+   *
    * @return
+   * @author VZ
    */
 
   @Transactional
@@ -95,7 +94,7 @@ public class MuseumService {
 
   /**
    * Method to edit a museum's name, visit fee or schedule given the museum's id.
-   * 
+   *
    * @param museumId
    * @param name
    * @param visitFee
@@ -125,10 +124,10 @@ public class MuseumService {
 
   /**
    * Method to get a museum's schedule
-   * 
-   * @author VZ
+   *
    * @param museumId
    * @return
+   * @author VZ
    */
 
   @Transactional
@@ -146,10 +145,10 @@ public class MuseumService {
 
   /**
    * Method to get all of museum's shifts
-   * 
-   * @author VZ
+   *
    * @param museumId
    * @return
+   * @author VZ
    */
 
   @Transactional
@@ -168,11 +167,11 @@ public class MuseumService {
 
   /**
    * Method to add a time period to a museum's schedule
-   * 
-   * @author VZ
+   *
    * @param museumId
    * @param timePeriodId
    * @return
+   * @author VZ
    */
 
   @Transactional
@@ -199,11 +198,11 @@ public class MuseumService {
 
   /**
    * Method to remove a time period from a museum's schedule
-   * 
-   * @author VZ
+   *
    * @param museumId
    * @param timePeriodId
    * @return
+   * @author VZ
    */
 
   @Transactional
@@ -230,7 +229,7 @@ public class MuseumService {
 
   /**
    * Method to convert an Iterable to a List
-   * 
+   *
    * @param iterable - Iterable
    * @return List
    * @author From tutorial notes

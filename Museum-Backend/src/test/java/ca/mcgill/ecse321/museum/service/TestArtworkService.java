@@ -1,39 +1,28 @@
 package ca.mcgill.ecse321.museum.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.lenient;
-
+import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
+import ca.mcgill.ecse321.museum.dao.LoanRepository;
+import ca.mcgill.ecse321.museum.dao.RoomRepository;
+import ca.mcgill.ecse321.museum.model.*;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
-import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
-import ca.mcgill.ecse321.museum.dao.LoanRepository;
-import ca.mcgill.ecse321.museum.model.Artwork;
-import ca.mcgill.ecse321.museum.model.Loan;
-import ca.mcgill.ecse321.museum.model.Museum;
-import ca.mcgill.ecse321.museum.model.Room;
-import ca.mcgill.ecse321.museum.model.RoomType;
-import ca.mcgill.ecse321.museum.model.Schedule;
-import ca.mcgill.ecse321.museum.model.Visitor;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.lenient;
 
 /**
  * This is the test class for the ArtworkService class
- * 
+ *
  * @author Siger
  * @author kieyanmamiche
  */
@@ -48,11 +37,15 @@ public class TestArtworkService {
   private LoanRepository loanRepository;
 
   @Mock
+  private RoomRepository roomRepository;
+
+  @Mock
   private RoomService roomService;
 
   @InjectMocks
   private ArtworkService artworkService;
 
+  // Constants for Siger's tests
   private static final Long FIRST_ARTWORK_ID = 0L;
   private static final String FIRST_ARTWORK_NAME = "Artwork 1 Name";
   private static final String FIRST_ARTWORK_ARTIST = "Artist 1";
@@ -90,11 +83,66 @@ public class TestArtworkService {
 
   private static final Double SECOND_LOAN_FEE = 100.0;
 
+  // Constants for Kieyan's tests
+  // Artwork 1
+  private static final Long ARTWORK_ID_1 = 2L;
+  private static final String NAME_1 = "Mona Lisa";
+  private static final String ARTIST_1 = "Kian";
+  private static final Boolean IS_AVAILABLE_FOR_LOAN_1 = true;
+  private static final double LOAN_FEE_1 = 10;
+  private static final String IMAGE_1 = "https://source.unsplash.com/C54OKB99iuw";
+  private static final Boolean IS_ON_LOAN_1 = false;
+
+  // Artwork 2
+  private static final Long ARTWORK_ID_2 = 3L;
+  private static final String NAME_2 = "Mona Lisa 2";
+  private static final String ARTIST_2 = "Kian 2";
+  private static final Boolean IS_AVAILABLE_FOR_LOAN_2 = false;
+  private static final double LOAN_FEE_2 = 1000000000;
+  private static final String IMAGE_2 = "https://source.unsplash.com/C54OKBaasdad99iuw";
+  private static final Boolean IS_ON_LOAN_2 = false;
+
+  // Artwork 3
+  private static final Long ARTWORK_ID_3 = 4L;
+  private static final String NAME_3 = "Mona Lisa 3";
+  private static final String ARTIST_3 = "Kian 3";
+  private static final Boolean IS_AVAILABLE_FOR_LOAN_3 = false;
+  private static final double LOAN_FEE_3 = 12345;
+  private static final String IMAGE_3 = "https://source.unsplash.com/C54OKBaasdad99iuw";
+  private static final Boolean IS_ON_LOAN_3 = true;
+
+  // Artwork 4 - NULL ROOM
+  private static final Long ARTWORK_ID_4 = 5L;
+  private static final String NAME_4 = "Mona Lisa 3";
+  private static final String ARTIST_4 = "Kian 3";
+  private static final Boolean IS_AVAILABLE_FOR_LOAN_4 = false;
+  private static final double LOAN_FEE_4 = 12345;
+  private static final String IMAGE_4 = "https://source.unsplash.com/C54OKBaasdad99iuw";
+  private static final Boolean IS_ON_LOAN_4 = false;
+
+  // Room 1
+  private static final Long ROOM_ID_1 = 1L;
+  private static final String ROOM_NAME_1 = "Clark Room";
+  private static final int CURRENT_NUMBER_OF_ARTWORK_1 = 123;
+  private static final RoomType ROOM_TYPE_1 = RoomType.Small;
+
+  // Room 2
+  private static final Long ROOM_ID_2 = 2L;
+  private static final String ROOM_NAME_2 = "Bob Room";
+  private static final int CURRENT_NUMBER_OF_ARTWORK_2 = 293;
+  private static final RoomType ROOM_TYPE_2 = RoomType.Storage;
+
+  // Room 3 - THE FULL ROOM
+  private static final Long ROOM_ID_3 = 3L;
+  private static final String ROOM_NAME_3 = "Full Room";
+  private static final int CURRENT_NUMBER_OF_ARTWORK_3 = 300;
+  private static final RoomType ROOM_TYPE_3 = RoomType.Large;
+
   /**
    * This method sets up the mock objects before each test
    * There is one loaned artwork not in a room and one non-loanable artwork in a
    * room
-   * 
+   *
    * @author Siger
    */
   @BeforeEach
@@ -102,6 +150,13 @@ public class TestArtworkService {
     Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
       return invocation.getArgument(0);
     };
+
+    // Museum Creation
+    Schedule schedule = new Schedule();
+    Museum museum = new Museum();
+    museum.setName("Rougon-Macquart");
+    museum.setVisitFee(12.5);
+    museum.setSchedule(schedule);
 
     lenient().when(artworkRepository.findArtworkByArtworkId(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
       if (invocation.getArgument(0).equals(FIRST_ARTWORK_ID)) {
@@ -129,6 +184,53 @@ public class TestArtworkService {
         artwork.setImage(SECOND_ARTWORK_IMAGE);
         artwork.setIsOnLoan(SECOND_ARTWORK_IS_ON_LOAN);
         artwork.setRoom(room);
+        return artwork;
+      } else if (invocation.getArgument(0).equals(ARTWORK_ID_1)) {
+        Artwork artwork = new Artwork();
+        artwork.setArtworkId(ARTWORK_ID_1);
+        artwork.setName(NAME_1);
+        artwork.setImage(IMAGE_1);
+        artwork.setLoanFee(LOAN_FEE_1);
+        artwork.setArtist(ARTIST_1);
+        artwork.setIsOnLoan(IS_ON_LOAN_1);
+        artwork.setIsAvailableForLoan(IS_AVAILABLE_FOR_LOAN_1);
+        Room room = roomRepository.findRoomByRoomId(ROOM_ID_1);
+        artwork.setRoom(room);
+        return artwork;
+      } else if (invocation.getArgument(0).equals(ARTWORK_ID_2)) {
+        Artwork artwork = new Artwork();
+        artwork.setArtworkId(ARTWORK_ID_2);
+        artwork.setImage(IMAGE_2);
+        artwork.setLoanFee(LOAN_FEE_2);
+        artwork.setArtist(ARTIST_2);
+        artwork.setName(NAME_2);
+        artwork.setIsOnLoan(IS_ON_LOAN_2);
+        artwork.setIsAvailableForLoan(IS_AVAILABLE_FOR_LOAN_2);
+        Room room = roomRepository.findRoomByRoomId(ROOM_ID_2);
+        artwork.setRoom(room);
+        return artwork;
+      } else if (invocation.getArgument(0).equals(ARTWORK_ID_3)) {
+        Artwork artwork = new Artwork();
+        artwork.setArtworkId(ARTWORK_ID_3);
+        artwork.setImage(IMAGE_3);
+        artwork.setLoanFee(LOAN_FEE_3);
+        artwork.setArtist(ARTIST_3);
+        artwork.setName(NAME_3);
+        artwork.setIsOnLoan(IS_ON_LOAN_3);
+        artwork.setIsAvailableForLoan(IS_AVAILABLE_FOR_LOAN_3);
+        Room room = roomRepository.findRoomByRoomId(ROOM_ID_3);
+        artwork.setRoom(room);
+        return artwork;
+      } else if (invocation.getArgument(0).equals(ARTWORK_ID_4)) { // Artwork with null room
+        Artwork artwork = new Artwork();
+        artwork.setArtworkId(ARTWORK_ID_4);
+        artwork.setImage(IMAGE_4);
+        artwork.setLoanFee(LOAN_FEE_4);
+        artwork.setArtist(ARTIST_4);
+        artwork.setName(NAME_4);
+        artwork.setIsOnLoan(IS_ON_LOAN_4);
+        artwork.setIsAvailableForLoan(IS_AVAILABLE_FOR_LOAN_4);
+        artwork.setRoom(null);
         return artwork;
       } else {
         return null;
@@ -167,7 +269,7 @@ public class TestArtworkService {
     });
 
     lenient().when(artworkRepository.findArtworkByRoom(any(Room.class))).thenAnswer((InvocationOnMock invocation) -> {
-      Room room = (Room) invocation.getArgument(0);
+      Room room = invocation.getArgument(0);
       if (room.getRoomId() == FIRST_ROOM_ID) {
         // Create an artwork
         Artwork artwork = new Artwork();
@@ -179,9 +281,48 @@ public class TestArtworkService {
         artwork.setImage(SECOND_ARTWORK_IMAGE);
         artwork.setIsOnLoan(SECOND_ARTWORK_IS_ON_LOAN);
         artwork.setRoom(room);
-  
+
         // Create and return a list of artworks
         List<Artwork> artworks = new ArrayList<>();
+        artworks.add(artwork);
+        return artworks;
+      } else if (room.getRoomId() == ROOM_ID_1) {
+        Artwork artwork = new Artwork();
+        artwork.setArtworkId(ARTWORK_ID_1);
+        artwork.setName(NAME_1);
+        artwork.setImage(IMAGE_1);
+        artwork.setLoanFee(LOAN_FEE_1);
+        artwork.setArtist(ARTIST_1);
+        artwork.setIsOnLoan(IS_ON_LOAN_1);
+        artwork.setIsAvailableForLoan(IS_AVAILABLE_FOR_LOAN_1);
+        artwork.setRoom(room);
+        List<Artwork> artworks = new ArrayList<Artwork>();
+        artworks.add(artwork);
+        return artworks;
+      } else if (room.getRoomId() == ROOM_ID_2) {
+        Artwork artwork = new Artwork();
+        artwork.setArtworkId(ARTWORK_ID_2);
+        artwork.setImage(IMAGE_2);
+        artwork.setLoanFee(LOAN_FEE_2);
+        artwork.setArtist(ARTIST_2);
+        artwork.setName(NAME_2);
+        artwork.setIsOnLoan(IS_ON_LOAN_2);
+        artwork.setIsAvailableForLoan(IS_AVAILABLE_FOR_LOAN_2);
+        artwork.setRoom(room);
+        List<Artwork> artworks = new ArrayList<Artwork>();
+        artworks.add(artwork);
+        return artworks;
+      } else if (room.getRoomId() == ROOM_ID_3) {
+        Artwork artwork = new Artwork();
+        artwork.setArtworkId(ARTWORK_ID_3);
+        artwork.setImage(IMAGE_3);
+        artwork.setLoanFee(LOAN_FEE_3);
+        artwork.setArtist(ARTIST_3);
+        artwork.setName(NAME_3);
+        artwork.setIsOnLoan(IS_ON_LOAN_3);
+        artwork.setIsAvailableForLoan(IS_AVAILABLE_FOR_LOAN_3);
+        artwork.setRoom(room);
+        List<Artwork> artworks = new ArrayList<Artwork>();
         artworks.add(artwork);
         return artworks;
       } else {
@@ -238,11 +379,41 @@ public class TestArtworkService {
     });
 
     lenient().when(loanRepository.findLoanByArtwork(any(Artwork.class))).thenAnswer((InvocationOnMock invocation) -> {
-      Artwork artwork = (Artwork) invocation.getArgument(0);
+      Artwork artwork = invocation.getArgument(0);
       if (artwork.getArtworkId().equals(FIRST_ARTWORK_ID)) {
         // Create a loan stub
         Loan loan = createLoanStub(artwork);
         return loan;
+      } else {
+        return null;
+      }
+    });
+
+    lenient().when(roomRepository.findRoomByRoomId(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
+      if (invocation.getArgument(0).equals(ROOM_ID_1)) {
+        Room room = new Room();
+        room.setRoomId(ROOM_ID_1);
+        room.setRoomType(ROOM_TYPE_1);
+        room.setRoomName(ROOM_NAME_1);
+        room.setCurrentNumberOfArtwork(CURRENT_NUMBER_OF_ARTWORK_1);
+        room.setMuseum(museum);
+        return room;
+      } else if (invocation.getArgument(0).equals(ROOM_ID_2)) {
+        Room room = new Room();
+        room.setRoomId(ROOM_ID_2);
+        room.setRoomType(ROOM_TYPE_2);
+        room.setRoomName(ROOM_NAME_2);
+        room.setCurrentNumberOfArtwork(CURRENT_NUMBER_OF_ARTWORK_2);
+        room.setMuseum(museum);
+        return room;
+      } else if (invocation.getArgument(0).equals(ROOM_ID_3)) {
+        Room room = new Room();
+        room.setRoomId(ROOM_ID_3);
+        room.setRoomType(ROOM_TYPE_3);
+        room.setRoomName(ROOM_NAME_3);
+        room.setCurrentNumberOfArtwork(CURRENT_NUMBER_OF_ARTWORK_3);
+        room.setMuseum(museum);
+        return room;
       } else {
         return null;
       }
@@ -253,7 +424,7 @@ public class TestArtworkService {
 
   /**
    * This method tests the creation of an artwork
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -281,7 +452,7 @@ public class TestArtworkService {
 
   /**
    * This method tests the creation of an artwork with a null name
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -299,7 +470,7 @@ public class TestArtworkService {
 
   /**
    * This method tests the creation of an artwork with an empty name
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -317,7 +488,7 @@ public class TestArtworkService {
 
   /**
    * This method tests the creation of an artwork with a null artist
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -335,7 +506,7 @@ public class TestArtworkService {
 
   /**
    * This method tests the creation of an artwork with an empty artist
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -353,7 +524,7 @@ public class TestArtworkService {
 
   /**
    * This method tests the creation of an artwork with a null image
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -372,7 +543,7 @@ public class TestArtworkService {
 
   /**
    * This method tests the creation of an artwork with an empty image
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -391,7 +562,7 @@ public class TestArtworkService {
 
   /**
    * This method tests the creation of a loanable artwork with a null loan fee
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -410,7 +581,7 @@ public class TestArtworkService {
 
   /**
    * This method tests the creation of a non-loanable artwork with a loan fee
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -429,7 +600,7 @@ public class TestArtworkService {
 
   /**
    * This method tests the creation of an artwork on loan with a room
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -449,7 +620,7 @@ public class TestArtworkService {
 
   /**
    * This method tests the creation of an artwork not on loan with no room
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -468,7 +639,7 @@ public class TestArtworkService {
 
   /**
    * This method tests the creation of an artwork with a null isOnLoan
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -486,7 +657,7 @@ public class TestArtworkService {
 
   /**
    * This method tests getting an artwork by its id
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -525,7 +696,7 @@ public class TestArtworkService {
 
   /**
    * This method tests getting an artwork by a non-existent id
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -544,7 +715,7 @@ public class TestArtworkService {
 
   /**
    * This method tests getting an artwork by a null id
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -562,7 +733,7 @@ public class TestArtworkService {
 
   /**
    * This method tests getting all artworks
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -602,7 +773,7 @@ public class TestArtworkService {
 
   /**
    * This method tests getting all artworks by a room
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -632,7 +803,7 @@ public class TestArtworkService {
 
   /**
    * This method tests getting all artworks by a non-existent room
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -650,7 +821,7 @@ public class TestArtworkService {
 
   /**
    * This method tests getting all artworks by a null room
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -668,7 +839,7 @@ public class TestArtworkService {
 
   /**
    * This method tests getting all artworks by if they are available for loan
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -698,7 +869,7 @@ public class TestArtworkService {
 
   /**
    * This method tests getting all artworks by if they are not available for loan
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -728,7 +899,7 @@ public class TestArtworkService {
 
   /**
    * This method tests getting all artworks by if they are available for loan but the argument is null
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -746,7 +917,7 @@ public class TestArtworkService {
 
   /**
    * This method tests editing an artwork's information
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -774,7 +945,7 @@ public class TestArtworkService {
 
   /**
    * This method tests editing an artwork's information with a null id
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -793,7 +964,7 @@ public class TestArtworkService {
 
   /**
    * This method tests editing an artwork's information with a non-existent id
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -812,7 +983,7 @@ public class TestArtworkService {
 
   /**
    * This method tests editing an artwork's information with a null name
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -839,7 +1010,7 @@ public class TestArtworkService {
 
   /**
    * This method tests editing an artwork's information with a null artist
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -866,7 +1037,7 @@ public class TestArtworkService {
 
   /**
    * This method tests editing an artwork's information with a null image
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -893,7 +1064,7 @@ public class TestArtworkService {
 
   /**
    * This method tests editing an artwork's information with everything null
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -911,7 +1082,7 @@ public class TestArtworkService {
 
   /**
    * This method tests editing an artwork's loan information
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -952,7 +1123,7 @@ public class TestArtworkService {
   /**
    * This method tests editing an artwork's loan information with a null artwork
    * id
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -972,7 +1143,7 @@ public class TestArtworkService {
   /**
    * This method tests editing an artwork's loan information with an invalid
    * artwork id
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -992,7 +1163,7 @@ public class TestArtworkService {
   /**
    * This method tests editing an artwork's loan information with a null
    * isAvailableForLoan
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -1019,7 +1190,7 @@ public class TestArtworkService {
   /**
    * This method tests editing an artwork's loan information with a null loanFee
    * when it is available for loan
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -1038,7 +1209,7 @@ public class TestArtworkService {
   /**
    * This method tests editing an artwork's loan information with a non null
    * loanFee when it is not available for loan
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -1056,7 +1227,7 @@ public class TestArtworkService {
 
   /**
    * This method tests deleting an artwork with a valid id
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -1094,7 +1265,7 @@ public class TestArtworkService {
 
   /**
    * This method tests deleting an artwork with a null id
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -1112,7 +1283,7 @@ public class TestArtworkService {
 
   /**
    * This method tests deleting an artwork with an invalid id
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -1129,8 +1300,191 @@ public class TestArtworkService {
   }
 
   /**
+   * Test method for getting the status of an artwork
+   *
+   * @author kieyanmamiche
+   */
+  @Test
+  public void testGetArtworkStatus() {
+    assertEquals("display", artworkService.getArtworkStatus(ARTWORK_ID_1));
+    assertEquals("storage", artworkService.getArtworkStatus(ARTWORK_ID_2));
+    assertEquals("loan", artworkService.getArtworkStatus(ARTWORK_ID_3));
+  }
+
+  /**
+   * Test method for getting the status of an artwork when the artwork doesn't exist
+   *
+   * @author kieyanmamiche
+   */
+  @Test
+  public void testGetArtworkStatusNonExisting() {
+    String error = null;
+    try {
+      long NONE_EXISTING_ARTWORK_ID = 1234;
+      artworkService.getArtworkStatus(NONE_EXISTING_ARTWORK_ID);
+    } catch (IllegalArgumentException e) {
+      error = e.getMessage();
+    }
+    assertEquals("Artwork does not exist", error);
+  }
+
+  /**
+   * Test method for getting the status of an artwork when the artwork doesn't exist
+   *
+   * @author kieyanmamiche
+   */
+  @Test
+  public void testGetArtworkStatus_RoomNonExisting() {
+    String error = null;
+    try {
+      artworkService.getArtworkStatus(ARTWORK_ID_4);
+    } catch (IllegalArgumentException e) {
+      error = e.getMessage();
+    }
+    assertEquals("Room does not exist", error);
+  }
+
+  /**
+   * Test method for getting the number of artworks in a room
+   *
+   * @author kieyanmamiche
+   */
+  @Test
+  public void testGetNumberOfArtworksInRoom() {
+    try {
+      int numberOfArtworksInRoom = artworkService.getNumberOfArtworksInRoom(ROOM_ID_1);
+      int numberOfArtworksInRoom2 = artworkService.getNumberOfArtworksInRoom(ROOM_ID_2);
+      assertEquals(1, numberOfArtworksInRoom);
+      assertEquals(1, numberOfArtworksInRoom2);
+    } catch (Exception e) {
+      fail(e.getMessage());
+    }
+  }
+
+  /**
+   * Test method for moving an artwork to a different room
+   *
+   * @author kieyanmamiche
+   */
+  @Test
+  public void testMoveArtworkToRoom() {
+    Artwork artworkBeforeMove = artworkRepository.findArtworkByArtworkId(ARTWORK_ID_1);
+
+    // Check that artwork before move is in room 1
+    assertEquals(ROOM_ID_1, artworkBeforeMove.getRoom().getRoomId(), "Artwork before move is in room 1");
+
+    // Move artwork to other room
+    Artwork artwork = artworkService.moveArtworkToRoom(ARTWORK_ID_1, ROOM_ID_2);
+
+    // Check that artwork after move is in room 2
+    assertEquals(ROOM_ID_2, artwork.getRoom().getRoomId(), "Artwork after move is in room 2");
+  }
+
+  /**
+   * Test method for getting the number of artworks in a room when room doesn't exist
+   *
+   * @author kieyanmamiche
+   */
+  @Test
+  public void testGetNumberOfArtworksInRoom_NoRoom() {
+    String error = null;
+    try {
+      int numberOfArtworksInRoom = artworkService.getNumberOfArtworksInRoom(123456);
+    } catch (IllegalArgumentException e) {
+      error = e.getMessage();
+    }
+    assertEquals("Room does not exist", error);
+  }
+
+  /**
+   * Test method for moving an artwork to a room where the artwork doesn't exist
+   *
+   * @author kieyanmamiche
+   */
+
+  @Test
+  public void testMoveArtworkToRoom_ArtworkNonExisting() {
+    String error = null;
+    try {
+      long NON_EXISTING_ARTWORK_ID = 1234;
+      artworkService.moveArtworkToRoom(NON_EXISTING_ARTWORK_ID, ROOM_ID_2);
+    } catch (IllegalArgumentException e) {
+      error = e.getMessage();
+    }
+    assertEquals("Artwork does not exist", error);
+  }
+
+  /**
+   * Test method for moving an artwork to a room when the room doesn't exist
+   *
+   * @author kieyanmamiche
+   */
+  @Test
+  public void testMoveArtworkToRoom_RoomNonExisting() {
+    String error = null;
+    try {
+      long NON_EXISTING_ROOM_ID = 1234;
+      artworkService.moveArtworkToRoom(ARTWORK_ID_1, NON_EXISTING_ROOM_ID);
+    } catch (IllegalArgumentException e) {
+      error = e.getMessage();
+    }
+    assertEquals("Room does not exist", error);
+  }
+
+  /**
+   * Test method for moving an artwork to a room when the room is at full capacity
+   *
+   * @author kieyanmamiche
+   */
+  @Test
+  public void testMoveArtworkToRoom_FullCapacity() {
+    String error = null;
+    try {
+      // ROOM 3 is FULL
+      artworkService.moveArtworkToRoom(ARTWORK_ID_1, ROOM_ID_3);
+    } catch (IllegalArgumentException e) {
+      error = e.getMessage();
+    }
+    assertEquals("Room is at full capacity", error);
+  }
+
+  /**
+   * Test method for removing an artwork from its room
+   *
+   * @author kieyanmamiche
+   */
+  @Test
+  public void testRemoveArtworkFromRoom() {
+    Artwork artworkBeforeRemove = artworkRepository.findArtworkByArtworkId(ARTWORK_ID_1);
+
+    // Check that artwork before move is in room 1
+    assertEquals(ROOM_ID_1, artworkBeforeRemove.getRoom().getRoomId(), "Artwork before move is in room 1");
+    Artwork artwork = artworkService.removeArtworkFromRoom(ARTWORK_ID_1);
+
+    // Check that artwork's room is now null
+    assertNull(artwork.getRoom(), "Artwork's room is now null");
+  }
+
+  /**
+   * Test method for removing artwork from its room but the artwork doesn't exist
+   *
+   * @author kieyanmamiche
+   */
+  @Test
+  public void testRemoveArtworkFromRoomNonExisting() {
+    String error = null;
+    try {
+      long NON_EXISTING_ARTWORK_ID = 1234;
+      artworkService.removeArtworkFromRoom(NON_EXISTING_ARTWORK_ID);
+    } catch (IllegalArgumentException e) {
+      error = e.getMessage();
+    }
+    assertEquals("Artwork does not exist", error);
+  }
+
+  /**
    * This is a helper method that creates a room stub
-   * 
+   *
    * @author Siger
    */
   public Room createRoomStub() {
@@ -1158,7 +1512,7 @@ public class TestArtworkService {
 
   /**
    * This is a helper method that creates a loan stub
-   * 
+   *
    * @author Siger
    */
   public Loan createLoanStub(Artwork artwork) {
@@ -1177,221 +1531,5 @@ public class TestArtworkService {
     loan.setArtwork(artwork);
 
     return loan;
-  }
-
-  /**
-   * Test method for getting the status of an artwork
-   *
-   * @author kieyanmamiche
-   */
-  @Test
-  public void testGetArtworkStatus() {
-      assertEquals("display", artworkService.getArtworkStatus(ARTWORK_ID_1));
-      assertEquals("storage", artworkService.getArtworkStatus(ARTWORK_ID_2));
-      assertEquals("loan", artworkService.getArtworkStatus(ARTWORK_ID_3));
-  }
-
-  /**
-   * Test method for getting the status of an artwork when the artwork doesn't exist
-   *
-   * @author kieyanmamiche
-   */
-  @Test
-  public void testGetArtworkStatusNonExisting() {
-      String error = null;
-      try {
-          long NONE_EXISTING_ARTWORK_ID = 1234;
-          artworkService.getArtworkStatus(NONE_EXISTING_ARTWORK_ID);
-      } catch (IllegalArgumentException e) {
-          error = e.getMessage();
-      }
-      assertEquals("Artwork does not exist", error);
-  }
-
-  /**
-   * Test method for getting the status of an artwork when the artwork doesn't exist
-   *
-   * @author kieyanmamiche
-   */
-  @Test
-  public void testGetArtworkStatus_RoomNonExisting() {
-      String error = null;
-      try {
-          artworkService.getArtworkStatus(ARTWORK_ID_4);
-      } catch (IllegalArgumentException e) {
-          error = e.getMessage();
-      }
-      assertEquals("Room does not exist", error);
-  }
-
-  /**
-   * Test method for getting all artworks in a room
-   *
-   * @author kieyanmamiche
-   */
-  @Test
-  public void testGetAllArtworksInRoom() {
-      try{
-          List<Artwork> artworkList = artworkService.getAllArtworksInRoom(ROOM_ID_1);
-          assertEquals(ARTWORK_ID_1, artworkList.get(0).getArtworkId());
-          List<Artwork> artworkList2 = artworkService.getAllArtworksInRoom(ROOM_ID_2);
-          assertEquals(ARTWORK_ID_2, artworkList2.get(0).getArtworkId());
-      }catch (Exception e){
-          fail();
-      }
-  }
-
-  /**
-   * Test method for getting the number of artworks in a room
-   *
-   * @author kieyanmamiche
-   */
-  @Test
-  public void testGetNumberOfArtworksInRoom() {
-      try{
-          int numberOfArtworksInRoom = artworkService.getNumberOfArtworksInRoom(ROOM_ID_1);
-          int numberOfArtworksInRoom2 = artworkService.getNumberOfArtworksInRoom(ROOM_ID_2);
-          assertEquals(1, numberOfArtworksInRoom);
-          assertEquals(1,  numberOfArtworksInRoom2);
-      }catch (Exception e){
-          fail();
-      }
-  }
-
-  /**
-   * Test method for moving an artwork to a different room
-   *
-   * @author kieyanmamiche
-   */
-  @Test
-  public void testMoveArtworkToRoom() {
-      Artwork artworkBeforeMove = artworkRepository.findArtworkByArtworkId(ARTWORK_ID_1);
-
-      // Check that artwork before move is in room 1
-      assertEquals(artworkBeforeMove.getRoom().getRoomId(), ROOM_ID_1);
-
-      // Move artwork to other room
-      Artwork artwork = artworkService.moveArtworkToRoom(ARTWORK_ID_1, ROOM_ID_2);
-
-      // Check that artwork after move is in room 2
-      assertEquals(artwork.getRoom().getRoomId(), ROOM_ID_2);
-  }
-
-  /**
-   * Test method for getting all artworks in a room when room doesn't exist
-   *
-   * @author kieyanmamiche
-   */
-  @Test
-  public void testGetAllArtworksInRoom_NoRoom() {
-      String error = null;
-      try{
-          List<Artwork> artworks = artworkService.getAllArtworksInRoom(123456);
-      }catch (IllegalArgumentException e) {
-          error = e.getMessage();
-      }
-      assertEquals("Room does not exist", error);
-  }
-
-  /**
-   * Test method for getting the number of artworks in a room when room doesn't exist
-   *
-   * @author kieyanmamiche
-   */
-  @Test
-  public void testGetNumberOfArtworksInRoom_NoRoom() {
-      String error = null;
-      try{
-          int numberOfArtworksInRoom = artworkService.getNumberOfArtworksInRoom(123456);
-      }catch (IllegalArgumentException e) {
-          error = e.getMessage();
-      }
-      assertEquals("Room does not exist", error);
-  }
-
-  /**
-   * Test method for moving an artwork to a room where the artwork doesn't exist
-   *
-   * @author kieyanmamiche
-   */
-
-  @Test
-  public void testMoveArtworkToRoom_ArtworkNonExisting() {
-      String error = null;
-      try {
-          long NON_EXISTING_ARTWORK_ID = 1234;
-          artworkService.moveArtworkToRoom(NON_EXISTING_ARTWORK_ID, ROOM_ID_2);
-      } catch (IllegalArgumentException e) {
-          error = e.getMessage();
-      }
-      assertEquals("Artwork does not exist", error);
-  }
-
-  /**
-   * Test method for moving an artwork to a room when the room doesn't exist
-   *
-   * @author kieyanmamiche
-   */
-  @Test
-  public void testMoveArtworkToRoom_RoomNonExisting() {
-      String error = null;
-      try {
-          long NON_EXISTING_ROOM_ID = 1234;
-          artworkService.moveArtworkToRoom(ARTWORK_ID_1, NON_EXISTING_ROOM_ID);
-      } catch (IllegalArgumentException e) {
-          error = e.getMessage();
-      }
-      assertEquals("Room does not exist", error);
-  }
-
-  /**
-   * Test method for moving an artwork to a room when the room is at full capacity
-   *
-   * @author kieyanmamiche
-   */
-  @Test
-  public void testMoveArtworkToRoom_FullCapacity() {
-      String error = null;
-      try {
-          // ROOM 3 is FULL
-          artworkService.moveArtworkToRoom(ARTWORK_ID_1, ROOM_ID_3);
-      } catch (IllegalArgumentException e) {
-          error = e.getMessage();
-      }
-      assertEquals("Room is full capacity", error);
-  }
-
-  /**
-   * Test method for removing an artwork from its room
-   *
-   * @author kieyanmamiche
-   */
-  @Test
-  public void testRemoveArtworkFromRoom() {
-      Artwork artworkBeforeRemove = artworkRepository.findArtworkByArtworkId(ARTWORK_ID_1);
-
-      // Check that artwork before move is in room 1
-      assertEquals(artworkBeforeRemove.getRoom().getRoomId(), ROOM_ID_1);
-      Artwork artwork = artworkService.removeArtworkFromRoom(ARTWORK_ID_1);
-
-      // Check that artwork's room is now null
-      assertNull(artwork.getRoom());
-  }
-
-  /**
-   * Test method for removing artwork from its room but the artwork doesn't exist
-   *
-   * @author kieyanmamiche
-   */
-  @Test
-  public void testRemoveArtworkFromRoomNonExisting() {
-      String error = null;
-      try {
-          long NON_EXISTING_ARTWORK_ID = 1234;
-          artworkService.removeArtworkFromRoom(NON_EXISTING_ARTWORK_ID);
-      } catch (IllegalArgumentException e) {
-          error = e.getMessage();
-      }
-      assertEquals("Artwork does not exist", error);
   }
 }

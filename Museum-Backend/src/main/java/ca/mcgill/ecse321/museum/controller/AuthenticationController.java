@@ -1,17 +1,5 @@
 package ca.mcgill.ecse321.museum.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import ca.mcgill.ecse321.museum.controller.utilities.AuthenticationUtility;
 import ca.mcgill.ecse321.museum.dto.MuseumUserDto;
 import ca.mcgill.ecse321.museum.model.Employee;
@@ -19,10 +7,17 @@ import ca.mcgill.ecse321.museum.model.Manager;
 import ca.mcgill.ecse321.museum.model.MuseumUser;
 import ca.mcgill.ecse321.museum.model.Visitor;
 import ca.mcgill.ecse321.museum.service.AuthenticationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * RESTful API to handle authentication
- * 
+ *
  * @author Kevin
  */
 
@@ -36,7 +31,7 @@ public class AuthenticationController {
 
   /**
    * POST to login a user
-   * 
+   *
    * @param museumUser - MuseumUserDto
    * @return if the user was logged in (success)
    * @author Kevin
@@ -44,7 +39,7 @@ public class AuthenticationController {
 
   @PostMapping("/login")
   public ResponseEntity<?> login(HttpServletRequest request,
-      @RequestBody MuseumUserDto museumUser) {
+                                 @RequestBody MuseumUserDto museumUser) {
     try {
       if (AuthenticationUtility.isLoggedIn(request.getSession())) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot login while logged in");
@@ -71,14 +66,14 @@ public class AuthenticationController {
       return ResponseEntity.ok("logged in");
     } catch (
 
-    Exception e) {
+        Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
 
   /**
    * POST to logout a user
-   * 
+   *
    * @return if the user was logged out (success)
    * @author Kevin
    */

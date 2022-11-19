@@ -1,17 +1,5 @@
 package ca.mcgill.ecse321.museum.service;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.lenient;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
 import ca.mcgill.ecse321.museum.dao.ManagerRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
@@ -19,10 +7,23 @@ import ca.mcgill.ecse321.museum.dto.VisitorDto;
 import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Manager;
 import ca.mcgill.ecse321.museum.model.Visitor;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.lenient;
 
 /**
  * This class tests the Authentication Service
- * 
+ *
  * @author Kevin
  */
 
@@ -97,7 +98,7 @@ public class TestAuthenticationService {
 
   /**
    * This test checks if the visitor can login with valid credentials
-   * 
+   *
    * @author Kevin
    */
 
@@ -115,7 +116,7 @@ public class TestAuthenticationService {
 
   /**
    * This test checks if the visitor can login with invalid credentials
-   * 
+   *
    * @author Kevin
    */
 
@@ -131,7 +132,7 @@ public class TestAuthenticationService {
 
   /**
    * This test checks if the visitor can login with invalid credentials
-   * 
+   *
    * @author Kevin
    */
 
@@ -147,7 +148,7 @@ public class TestAuthenticationService {
 
   /**
    * This test checks if the employee can login with null credentials
-   * 
+   *
    * @author Kevin
    */
 
@@ -163,7 +164,7 @@ public class TestAuthenticationService {
 
   /**
    * This test checks if the employee can login with no password entered
-   * 
+   *
    * @author Kevin
    */
 

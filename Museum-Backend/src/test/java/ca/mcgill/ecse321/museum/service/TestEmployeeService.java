@@ -1,36 +1,34 @@
 package ca.mcgill.ecse321.museum.service;
 
-import java.util.ArrayList;
-import java.sql.Timestamp;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.lenient;
-
+import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
+import ca.mcgill.ecse321.museum.dao.ScheduleOfTimePeriodRepository;
+import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
+import ca.mcgill.ecse321.museum.dao.TimePeriodRepository;
+import ca.mcgill.ecse321.museum.model.Employee;
+import ca.mcgill.ecse321.museum.model.Schedule;
+import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
+import ca.mcgill.ecse321.museum.model.TimePeriod;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
-import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
-import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
-import ca.mcgill.ecse321.museum.dao.TimePeriodRepository;
-import ca.mcgill.ecse321.museum.dao.ScheduleOfTimePeriodRepository;
-import ca.mcgill.ecse321.museum.model.Employee;
-import ca.mcgill.ecse321.museum.model.Schedule;
-import ca.mcgill.ecse321.museum.model.TimePeriod;
-import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.lenient;
 
 /**
  * This is the test class for the EmployeeService class
- * 
+ *
  * @author Siger
  */
 
@@ -77,7 +75,7 @@ public class TestEmployeeService {
    * This method sets up the mock objects There is an employee with an empty schedule and an
    * employee with a non empty schedule. A non empty schedule has a schedule of time period with a
    * time period.
-   * 
+   *
    * @author Siger
    */
   @BeforeEach
@@ -189,49 +187,8 @@ public class TestEmployeeService {
   }
 
   /**
-   * Test method for getting an employee by id.
-   * 
-   * @author Siger
-   */
-  @Test
-  public void testGetEmployee() {
-    Employee employee = employeeService.getEmployee(EMPLOYEE_ID);
-    assertEquals(EMPLOYEE_ID, employee.getMuseumUserId());
-    assertEquals(EMPLOYEE_EMAIL, employee.getEmail());
-    assertEquals(EMPLOYEE_NAME, employee.getName());
-    assertEquals(EMPLOYEE_PASSWORD, employee.getPassword());
-    assertEquals(SCHEDULE_ID, employee.getSchedule().getScheduleId());
-  }
-
-  /**
-   * Test method for getting an employee by id when the employee does not exist.
-   * 
-   * @author Siger
-   */
-  @Test
-  public void testGetEmployeeNonExisting() {
-    assertNull(employeeService.getEmployee(NONE_EXISTING_EMPLOYEE_ID));
-  }
-
-  /**
-   * Test method for getting an employee by id when id is null.
-   * 
-   * @author Siger
-   */
-  @Test
-  public void testGetEmployeeNull() {
-    String error = null;
-    try {
-      employeeService.getEmployee(null);
-    } catch (IllegalArgumentException e) {
-      error = e.getMessage();
-    }
-    assertEquals("Employee id cannot be null", error);
-  }
-
-  /**
    * Test method for getting all employees.
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -242,7 +199,7 @@ public class TestEmployeeService {
   /**
    * Test method for deleting an employee by id when the employee has an empty
    * schedule.
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -257,7 +214,7 @@ public class TestEmployeeService {
   /**
    * Test method for deleting an employee by id when the employee has a non empty
    * schedule.
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -271,7 +228,7 @@ public class TestEmployeeService {
 
   /**
    * Test method for deleting an employee by id when the employee does not exist.
-   * 
+   *
    * @author Siger
    */
   @Test

@@ -1,18 +1,17 @@
 package ca.mcgill.ecse321.museum.service;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import ca.mcgill.ecse321.museum.dao.ScheduleOfTimePeriodRepository;
 import ca.mcgill.ecse321.museum.dao.TimePeriodRepository;
 import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
 import ca.mcgill.ecse321.museum.model.TimePeriod;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Business logic for timePeriodController
@@ -28,12 +27,13 @@ public class TimePeriodService {
   private ScheduleOfTimePeriodRepository scheduleOfTimePeriodRepository;
 
   // GET
+
   /**
    * Method to get a time period from database
    *
-   * @author VZ
    * @param timePeriodId - id of time period
    * @return
+   * @author VZ
    */
 
   @Transactional
@@ -42,13 +42,14 @@ public class TimePeriodService {
   }
 
   // CREATE
+
   /**
    * Create a TimePeriod and save to database
    *
-   * @author VZ
    * @param startDate
    * @param endDate
    * @return
+   * @author VZ
    */
 
   @Transactional
@@ -75,8 +76,8 @@ public class TimePeriodService {
   /**
    * Delete a TimePeriod from database by ID
    *
-   * @author VZ
    * @param timePeriodId
+   * @author VZ
    */
 
   @Transactional
@@ -86,14 +87,15 @@ public class TimePeriodService {
   }
 
   // EDIT
+
   /**
    * Edit a TimePeriod by ID and save to database
    *
-   * @author VZ
    * @param timePeriodId
    * @param startDate
    * @param endDate
    * @return
+   * @author VZ
    */
 
   @Transactional
@@ -120,9 +122,9 @@ public class TimePeriodService {
   /**
    * Helper method to get the time periods of a schedule
    *
-   * @author VZ
    * @param schedule
    * @return
+   * @author VZ
    */
 
   public List<TimePeriod> getTimePeriodsOfSchedule(Schedule schedule) {

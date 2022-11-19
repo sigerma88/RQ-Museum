@@ -1,20 +1,22 @@
 package ca.mcgill.ecse321.museum.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
 import ca.mcgill.ecse321.museum.dao.LoanRepository;
+import ca.mcgill.ecse321.museum.dao.RoomRepository;
 import ca.mcgill.ecse321.museum.model.Artwork;
 import ca.mcgill.ecse321.museum.model.Loan;
 import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.model.RoomType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Service for Artwork class
- * 
+ *
  * @author Zahra
  * @author Siger
  * @author kieyanmamiche
@@ -30,12 +32,15 @@ public class ArtworkService {
   LoanRepository loanRepository;
 
   @Autowired
+  RoomRepository roomRepository;
+
+  @Autowired
   RoomService roomService;
 
 
   /**
    * Method to create an artwork
-   * 
+   *
    * @param name               - name of the artwork
    * @param artist             - artist of the artwork
    * @param isAvailableForLoan - availability of the artwork
@@ -49,7 +54,7 @@ public class ArtworkService {
 
   @Transactional
   public Artwork createArtwork(String name, String artist, Boolean isAvailableForLoan, Double loanFee, String image,
-      Boolean isOnLoan, Room room) {
+                               Boolean isOnLoan, Room room) {
     // Error handling
     if (name == null || name.trim().length() == 0) {
       throw new IllegalArgumentException("Artwork name cannot be empty");
@@ -100,7 +105,7 @@ public class ArtworkService {
 
   /**
    * Method to get artwork by id
-   * 
+   *
    * @param artworkId - id of the artwork
    * @return artwork
    * @author Siger
@@ -174,7 +179,7 @@ public class ArtworkService {
 
   /**
    * Method to edit an artwork's information and image
-   * 
+   *
    * @param artworkId - ID of artwork to be edited
    * @param name      - name of the artwork
    * @param artist    - artist of the artwork
@@ -207,7 +212,7 @@ public class ArtworkService {
 
   /**
    * Method to edit an artwork's loan availability and loan fee
-   * 
+   *
    * @param artworkId          - ID of artwork to be edited
    * @param isAvailableForLoan - availability of the artwork
    * @param loanFee            - loan fee of the artwork
@@ -281,27 +286,27 @@ public class ArtworkService {
     Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
 
     // Make sure artwork exists
-    if (artwork == null){
+    if (artwork == null) {
       throw new IllegalArgumentException("Artwork does not exist");
     }
 
     // Find out the status of the artwork OPTIONS: loan / on display / in storage
     // 1. Check if it is on loan:
-    if (artwork.getIsOnLoan() == true){
+    if (artwork.getIsOnLoan()) {
       return "loan";
     }
 
     Room roomOfArtwork = artwork.getRoom();
-    if (roomOfArtwork == null){
+    if (roomOfArtwork == null) {
       throw new IllegalArgumentException("Room does not exist");
     }
 
     RoomType roomType = roomOfArtwork.getRoomType();
-    if (roomType == RoomType.Storage){
+    if (roomType == RoomType.Storage) {
       return "storage";
     }
 
-    if (roomType == RoomType.Small || roomType == RoomType.Large){
+    if (roomType == RoomType.Small || roomType == RoomType.Large) {
       return "display";
     }
 
@@ -310,19 +315,20 @@ public class ArtworkService {
 
   /**
    * Method which checks how many artworks in a room
-   *
+   * <p>
    * FR3 Function which checks how many artworks in single room
+   *
    * @param roomId - ID of room we want to see how many artworks are in
    * @return The number of artworks in a room
    * @author kieyanmamiche
    */
 
   @Transactional
-  public int getNumberOfArtworksInRoom(long roomId){
+  public int getNumberOfArtworksInRoom(long roomId) {
     List<Artwork> artworkList = new ArrayList<Artwork>();
 
     Room room = roomRepository.findRoomByRoomId(roomId);
-    if (room == null){
+    if (room == null) {
       throw new IllegalArgumentException("Room does not exist");
     }
     artworkList = artworkRepository.findArtworkByRoom(room);
@@ -333,21 +339,22 @@ public class ArtworkService {
 
   /**
    * Method to move artwork to a specific room
-   *
+   * <p>
    * FR3 Function which moves artwork to corresponding room
+   *
    * @param artworkId - ID of artwork we want to move
-   * @param roomId - ID of room we want to move artwork to
+   * @param roomId    - ID of room we want to move artwork to
    * @return The artwork we moved
    * @author kieyanmamiche
    */
 
   @Transactional
-  public Artwork moveArtworkToRoom(long artworkId,long roomId){
+  public Artwork moveArtworkToRoom(long artworkId, long roomId) {
     // Find artwork
     Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
 
     // corresponds to error finding artwork
-    if (artwork == null){
+    if (artwork == null) {
       throw new IllegalArgumentException("Artwork does not exist");
     }
 
@@ -355,198 +362,52 @@ public class ArtworkService {
     Room room = roomRepository.findRoomByRoomId(roomId);
 
     // corresponds to error finding room
-    if (room == null){
+    if (room == null) {
       throw new IllegalArgumentException("Room does not exist");
     }
 
+    int capacity = roomService.getRoomCapacity(roomId);
     // Update room of artwork if the room has capacity
-    if (roomService.getRoomCapacity(roomId) > 0){
+    if (roomService.getRoomCapacity(roomId) == -1 || roomService.getRoomCapacity(roomId) > 0) {
       // Reduce amount of artwork in old room
       Room oldRoom = artwork.getRoom();
-      if (oldRoom != null){
+      if (oldRoom != null) {
         roomService.changeCurrentNumberOfArtwork(oldRoom.getRoomId(), oldRoom.getCurrentNumberOfArtwork() - 1);
       }
 
       // increase amount of artwork in new room if there is capacity
       roomService.changeCurrentNumberOfArtwork(room.getRoomId(), room.getCurrentNumberOfArtwork() + 1);
       artwork.setRoom(room);
-      artworkRepository.save(artwork);
-
-      // corresponds to no error
-      return artwork;
-    }else{
+      return artworkRepository.save(artwork);
+    } else {
       // corresponds to room being full
-      throw new IllegalArgumentException("Room is full capacity");
+      throw new IllegalArgumentException("Room is at full capacity");
     }
   }
 
   /**
    * Method to remove artwork from a specific room
-   *
+   * <p>
    * FR3 Function which removes artwork from room
+   *
    * @param artworkId - ID of artwork we want to remove
    * @return The artwork we removed
    * @author kieyanmamiche
    */
 
   @Transactional
-  public Artwork removeArtworkFromRoom(long artworkId){
+  public Artwork removeArtworkFromRoom(long artworkId) {
     // Find artwork
     Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
 
     // corresponds to error
-    if (artwork == null){
+    if (artwork == null) {
       throw new IllegalArgumentException("Artwork does not exist");
     }
 
     // decrement number of artworks in room by 1
     Room room = artwork.getRoom();
-    if (room != null){
-      roomService.changeCurrentNumberOfArtwork(room.getRoomId(), room.getCurrentNumberOfArtwork() - 1);
-    }
-
-    // Update room
-    artwork.setRoom(null);
-    artworkRepository.save(artwork);
-
-
-    return artwork;
-  }
-
-  /**
-   * Method to get artwork status
-   *
-   * @param artworkId - ID of artwork we want the status of
-   * @return The status of an artwork
-   * @author kieyanmamiche
-   */
-
-  @Transactional
-  public String getArtworkStatus(long artworkId) {
-    Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
-
-    // Make sure artwork exists
-    if (artwork == null){
-      throw new IllegalArgumentException("Artwork does not exist");
-    }
-
-    // Find out the status of the artwork OPTIONS: loan / on display / in storage
-    // 1. Check if it is on loan:
-    if (artwork.getIsOnLoan() == true){
-      return "loan";
-    }
-
-    Room roomOfArtwork = artwork.getRoom();
-    if (roomOfArtwork == null){
-      throw new IllegalArgumentException("Room does not exist");
-    }
-
-    RoomType roomType = roomOfArtwork.getRoomType();
-    if (roomType == RoomType.Storage){
-      return "storage";
-    }
-
-    if (roomType == RoomType.Small || roomType == RoomType.Large){
-      return "display";
-    }
-
-    throw new IllegalArgumentException("Artwork not initialized correctly");
-  }
-
-  /**
-   * Method which checks how many artworks in a room
-   *
-   * FR3 Function which checks how many artworks in single room
-   * @param roomId - ID of room we want to see how many artworks are in
-   * @return The number of artworks in a room
-   * @author kieyanmamiche
-   */
-
-  @Transactional
-  public int getNumberOfArtworksInRoom(long roomId){
-    List<Artwork> artworkList = new ArrayList<Artwork>();
-
-    Room room = roomRepository.findRoomByRoomId(roomId);
-    if (room == null){
-      throw new IllegalArgumentException("Room does not exist");
-    }
-    artworkList = artworkRepository.findArtworkByRoom(room);
-
-    return artworkList.size();
-  }
-
-
-  /**
-   * Method to move artwork to a specific room
-   *
-   * FR3 Function which moves artwork to corresponding room
-   * @param artworkId - ID of artwork we want to move
-   * @param roomId - ID of room we want to move artwork to
-   * @return The artwork we moved
-   * @author kieyanmamiche
-   */
-
-  @Transactional
-  public Artwork moveArtworkToRoom(long artworkId,long roomId){
-    // Find artwork
-    Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
-
-    // corresponds to error finding artwork
-    if (artwork == null){
-      throw new IllegalArgumentException("Artwork does not exist");
-    }
-
-    // Find room
-    Room room = roomRepository.findRoomByRoomId(roomId);
-
-    // corresponds to error finding room
-    if (room == null){
-      throw new IllegalArgumentException("Room does not exist");
-    }
-
-    // Update room of artwork if the room has capacity
-    if (roomService.getRoomCapacity(roomId) > 0){
-      // Reduce amount of artwork in old room
-      Room oldRoom = artwork.getRoom();
-      if (oldRoom != null){
-        roomService.changeCurrentNumberOfArtwork(oldRoom.getRoomId(), oldRoom.getCurrentNumberOfArtwork() - 1);
-      }
-
-      // increase amount of artwork in new room if there is capacity
-      roomService.changeCurrentNumberOfArtwork(room.getRoomId(), room.getCurrentNumberOfArtwork() + 1);
-      artwork.setRoom(room);
-      artworkRepository.save(artwork);
-
-      // corresponds to no error
-      return artwork;
-    }else{
-      // corresponds to room being full
-      throw new IllegalArgumentException("Room is full capacity");
-    }
-  }
-
-  /**
-   * Method to remove artwork from a specific room
-   *
-   * FR3 Function which removes artwork from room
-   * @param artworkId - ID of artwork we want to remove
-   * @return The artwork we removed
-   * @author kieyanmamiche
-   */
-
-  @Transactional
-  public Artwork removeArtworkFromRoom(long artworkId){
-    // Find artwork
-    Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
-
-    // corresponds to error
-    if (artwork == null){
-      throw new IllegalArgumentException("Artwork does not exist");
-    }
-
-    // decrement number of artworks in room by 1
-    Room room = artwork.getRoom();
-    if (room != null){
+    if (room != null) {
       roomService.changeCurrentNumberOfArtwork(room.getRoomId(), room.getCurrentNumberOfArtwork() - 1);
     }
 

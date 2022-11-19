@@ -1,20 +1,21 @@
 package ca.mcgill.ecse321.museum.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
 import ca.mcgill.ecse321.museum.dao.RoomRepository;
 import ca.mcgill.ecse321.museum.model.Artwork;
 import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.model.RoomType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Business logic for roomController
- * 
+ *
  * @author Siger
  * @author kieyanmamiche
  */
@@ -30,7 +31,7 @@ public class RoomService {
 
   /**
    * Method to create a room
-   * 
+   *
    * @param roomName - name of the room
    * @param roomType - type of the room
    * @param museum   - museum of the room
@@ -63,7 +64,7 @@ public class RoomService {
 
   /**
    * Method to get room by id
-   * 
+   *
    * @param roomId - id of the room
    * @return room
    * @author Siger
@@ -82,7 +83,7 @@ public class RoomService {
 
   /**
    * Method to get all rooms
-   * 
+   *
    * @return list of rooms
    * @author Siger
    */
@@ -94,7 +95,7 @@ public class RoomService {
 
   /**
    * Method to get all rooms by museum
-   * 
+   *
    * @param museum - museum of the room
    * @return list of rooms
    * @author Siger
@@ -112,7 +113,7 @@ public class RoomService {
 
   /**
    * Method to edit a room
-   * 
+   *
    * @param roomId   - id of the room
    * @param roomName - name of the room
    * @param roomType - type of the room
@@ -146,7 +147,7 @@ public class RoomService {
 
   /**
    * Method to delete a room
-   * 
+   *
    * @param roomId - id of the room
    * @return room
    * @author Siger
@@ -174,7 +175,7 @@ public class RoomService {
   /**
    * Method to get the maximum number of artworks in a room
    * -1 if room has no limit
-   * 
+   *
    * @param roomType - type of the room
    * @return maximum number of artworks
    * @author Siger
@@ -204,7 +205,7 @@ public class RoomService {
 
   /**
    * Method to change current number of artworks in a room
-   * 
+   *
    * @param roomId                 - id of the room
    * @param currentNumberOfArtwork - number of artworks in the room
    * @return room
@@ -240,10 +241,12 @@ public class RoomService {
 
   /**
    * Method to get room capacity
+   * -1 if room has no limit
    *
    * @param roomId - ID of room we want to capacity of
    * @return The capacity of a room
    * @author kieyanmamiche
+   * @author Siger
    */
 
   @Transactional
@@ -251,52 +254,23 @@ public class RoomService {
 
     Room room = roomRepository.findRoomByRoomId(roomId);
 
-    // The room is not in the DB
-    if (room == null){
+    // Check if the room is not in the DB
+    if (room == null) {
       throw new IllegalArgumentException("Room does not exist");
     }
 
-    RoomType roomType = room.getRoomType();
+    int maxCapacity = getMaxNumberOfArtwork(room.getRoomType());
 
-    // Large room has a capacity of 300
-    if (roomType == RoomType.Large){
-      int numberOfArtwork = room.getCurrentNumberOfArtwork();
-      int capacity = 300 - numberOfArtwork;
-      if (capacity < 0){
-        return 0;
-      } else if (capacity > 300) {
-        return 300;
-      } else{
-        return capacity;
-      }
+    if (maxCapacity == -1) {
+      return -1;
+    } else {
+      return maxCapacity - room.getCurrentNumberOfArtwork();
     }
-
-    // Small room has a capacity of 200
-    if (roomType == RoomType.Small){
-      int numberOfArtwork = room.getCurrentNumberOfArtwork();
-      int capacity = 200 - numberOfArtwork;
-      if (capacity < 0){
-        return 0;
-      } else if (capacity > 200) {
-        return 200;
-      } else{
-        return capacity;
-      }
-    }
-
-    // Storage has an almost unlimited capacity
-    if (roomType == RoomType.Storage){
-      return Integer.MAX_VALUE;
-    }
-
-    // Error, since no room capacity has been given
-    throw new IllegalArgumentException("Room doesn't have capacity, error in initialization");
-
   }
 
   /**
    * Method to convert an Iterable to a List
-   * 
+   *
    * @param iterable - Iterable
    * @return List
    * @author From tutorial notes
