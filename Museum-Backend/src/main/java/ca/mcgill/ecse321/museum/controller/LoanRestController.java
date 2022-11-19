@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -92,43 +93,16 @@ public class LoanRestController {
      * @return
      */
     @PostMapping(value = { "/postLoan", "/postLoan/" })
-    public ResponseEntity<?> postLoan(
-        // @PathVariable("artworkId") Long artworkId,
-        // @PathVariable("visitorId") Long visitorId,
-        // @RequestParam(name = "requestAccepted") Boolean requestAccepted
-        @RequestBody LoanDto loanDto
-        ) {
+    public ResponseEntity<?> postLoan(@RequestBody LoanDto loanDto) {
         try {
-
-            // Boolean requestAccepted;
-            // if (requestAcceptedString.equals("null")) {
-            //     requestAccepted = null;
-            // }
-            // else if (requestAcceptedString.equals("true")) {
-            //     requestAccepted = true; 
-            // }
-            // else if (requestAcceptedString.equals("false")) {
-            //     requestAccepted = false;
-            // }
-
-            // Boolean requestAccepted = Boolean.parseBoolean(requestAcceptedString);
-            
-
-            // Loan persistedLoan = loanService.createLoan(requestAccepted, artworkId, visitorId);
 
             Loan persistedLoan = loanService.createLoan(loanDto);
 
             LoanDto persistedLoanDto = DtoUtility.convertToDto(persistedLoan);
 
-
-            // Send email notification to visitor that the request was successful
-            // TODO
-
-
-
-            return ResponseEntity.ok(persistedLoanDto);
+            return new ResponseEntity<>(persistedLoanDto, HttpStatus.CREATED);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

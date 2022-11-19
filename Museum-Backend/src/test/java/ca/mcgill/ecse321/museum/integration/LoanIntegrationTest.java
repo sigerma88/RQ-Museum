@@ -121,6 +121,11 @@ public class LoanIntegrationTest {
 		testGetLoan(id);
 	}
 
+	
+	/**
+	 * Test to create a loan successfully
+	 * @author Eric
+	 */
 	private Long testCreateLoan() {
 
 		Artwork artwork = artworkRepository.findArtworkByName("La Joconde").get(0);
@@ -136,7 +141,7 @@ public class LoanIntegrationTest {
 
 		// Check status and body of response are correct
 		assertNotNull(response);
-		assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
+		assertEquals(HttpStatus.CREATED, response.getStatusCode(), "Response has correct status");
 		assertNotNull(response.getBody(), "Response has body");
 		assertEquals(null, response.getBody().getRequestAccepted(), "Response has correct requestAccepted");
 		assertEquals(visitor.getMuseumUserId(), response.getBody().getVisitorDto().getUserId(), "Response has correct visitorDto");
@@ -146,13 +151,45 @@ public class LoanIntegrationTest {
 		return response.getBody().getLoanId();
 	}
 
+	/**
+	 * Test to get loan successfully
+	 * @author Eric
+	 */
 	private void testGetLoan(Long LoanId) {
 		ResponseEntity<LoanDto> response = client.getForEntity("/loan/" + LoanId, LoanDto.class);
 
 		assertNotNull(response);
 		assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
 		assertNotNull(response.getBody(), "Response has body");
-    
 	}
+
+	/**
+	 * Test to create a loan unsuccessfully due to duplicate loan
+	 */
+	@Test
+	public void testCreateLoanDuplicate() {
+
+		Artwork artwork = artworkRepository.findArtworkByName("La Joconde").get(0);
+		Visitor visitor = visitorRepository.findVisitorByName("Please");
+
+		Loan loan = new Loan();
+		loan.setRequestAccepted(null);
+		loan.setArtwork(artwork);
+		loan.setVisitor(visitor);
+		loanRepository.save(loan);
+
+		Loan loan2 = new Loan();
+		loan2.setRequestAccepted(null);
+		loan2.setArtwork(artwork);
+		loan2.setVisitor(visitor);
+		LoanDto loanDto = DtoUtility.convertToDto(loan);
+
+		ResponseEntity<LoanDto> response = client.postForEntity("/postLoan/", loanDto, LoanDto.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertEquals("Cannot create a duplicate loan request", response.getBody());
+	}
+
+
 
 }
