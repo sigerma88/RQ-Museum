@@ -59,5 +59,8 @@ Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/De
 |      Kevin Luo       | Requirements, use-case diagram and scenario for FR1, UML diagram, Umple, testing artwork repository, worked on the museum system repository but we decided to remove at the end.                                                             |       26       |
 
 ### Deliverable 2
+
+Click [here] (https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/Deliverable-2) to view the project report for Deliverable 2.
+
 ### Deliverable 3
 
