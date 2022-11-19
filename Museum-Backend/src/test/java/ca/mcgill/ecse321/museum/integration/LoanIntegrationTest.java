@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collections;
-import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -200,44 +199,15 @@ public class LoanIntegrationTest {
 		Visitor visitor = createVisitor();
 
 		Loan loan = new Loan();
-		loan.setRequestAccepted(false);
+		loan.setRequestAccepted(true);
 		loan.setArtwork(artwork);
 		loan.setVisitor(visitor);
 		loanRepository.save(loan);
+		LoanDto loanDto = DtoUtility.convertToDto(loan);
 
-		// Creating an artwork
-		Artwork artwork2 = new Artwork();
-		Long artworkId = (long) 2;
-		artwork2.setArtworkId(artworkId);
-		artwork2.setName("La");
-		artwork2.setArtist("Da Vinci");
-		artwork2.setIsAvailableForLoan(true);
-		artwork2.setLoanFee(110.99);
-		artwork2.setImage("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/La_Joconde.jpg/800px-La_Joconde.jpg");
-		artwork2.setIsOnLoan(false);
-		artwork2.setRoom(artwork.getRoom());
-		artworkRepository.save(artwork2);
-
-		Loan loan2 = new Loan();
-		loan2.setRequestAccepted(true);
-		loan2.setArtwork(artwork2);
-		loan2.setVisitor(visitor);
-		loanRepository.save(loan2);
-
-		// Creating an artwork
-		Artwork artwork3 = new Artwork();
-		Long artworkId3 = (long) 3;
-		artwork3.setArtworkId(artworkId);
-		artwork3.setName("Bruh");
-		artwork3.setArtist("Monet");
-		artwork3.setIsAvailableForLoan(true);
-		artwork3.setLoanFee(110.99);
-		artwork3.setImage("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/La_Joconde.jpg/800px-La_Joconde.jpg");
-		artwork3.setIsOnLoan(false);
-		artwork3.setRoom(artwork.getRoom());
-		artworkRepository.save(artwork2);
+		HttpEntity<LoanDto> request = new HttpEntity<LoanDto>(loanDto);
 		
-		ResponseEntity<List<LoanDto>> response = client.getForEntity("/loans/", List<LoanDto>.class);
+		ResponseEntity<LoanDto> response = client.exchange("/putLoan/", HttpMethod.PUT, request, LoanDto.class);
 
 		// Check status and body of response are correct
 		assertNotNull(response);
@@ -252,9 +222,13 @@ public class LoanIntegrationTest {
 
 	/**
 	 * Test to get all loans
+	 * @author Eric
 	 */
 	@Test
 	public void testGetAllLoans() {
+
+		Artwork artwork = createArtwork();
+		Visitor visitor = createVisitor();
 
 		Loan loan = new Loan();
 		loan.setRequestAccepted(null);
@@ -262,10 +236,46 @@ public class LoanIntegrationTest {
 		loan.setVisitor(visitor);
 		loanRepository.save(loan);
 
-		ResponseEntity<String> response = client.postForEntity("/postLoan/", loanDto, String.class);
+		// Creating an artwork
+		Artwork artwork2 = new Artwork();
+		artwork2.setName("La");
+		artwork2.setArtist("Da Vinci");
+		artwork2.setIsAvailableForLoan(true);
+		artwork2.setLoanFee(110.99);
+		artwork2.setImage(".jpg");
+		artwork2.setIsOnLoan(false);
+		artwork2.setRoom(artwork.getRoom());
+		artworkRepository.save(artwork2);
 
-		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-		assertEquals("Cannot create a duplicate loan request", response.getBody());
+		Loan loan2 = new Loan();
+		loan2.setRequestAccepted(null);
+		loan2.setArtwork(artwork2);
+		loan2.setVisitor(visitor);
+		loanRepository.save(loan2);
+
+		// Creating an artwork
+		Artwork artwork3 = new Artwork();
+		artwork3.setName("Bruh");
+		artwork3.setArtist("Monet");
+		artwork3.setIsAvailableForLoan(true);
+		artwork3.setLoanFee(110.99);
+		artwork3.setImage(".org/wikipedia/commons/thumb/6/6b/La_Joconde.jpg/800px-La_Joconde.jpg");
+		artwork3.setIsOnLoan(false);
+		artwork3.setRoom(artwork.getRoom());
+		artworkRepository.save(artwork3);
+
+		Loan loan3 = new Loan();
+		loan3.setRequestAccepted(null);
+		loan3.setArtwork(artwork3);
+		loan3.setVisitor(visitor);
+		loanRepository.save(loan3);
+
+
+		ResponseEntity<LoanDto[]> response = client.getForEntity("/getLoans/", LoanDto[].class);
+
+		assertNotNull(response);
+		assertEquals(HttpStatus.FOUND, response.getStatusCode());
+		assertEquals(3, response.getBody().length, "Request has the expected number of elements");
 	}
 
 	public Artwork createArtwork() {
