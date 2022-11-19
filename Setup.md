@@ -1,6 +1,8 @@
-# Prerequisites
+# Setup for the application
 
-## PostgreSQL and Java
+## Prerequisites
+
+### PostgreSQL and Java
 
 - Download PostgreSQL (version 15 is better as it is the newest version as of now)
   - In the application, the current default username and password to access the local database are both `postgres`
@@ -11,9 +13,9 @@
 It's possible to install postgresql with [homebrew](https://formulae.brew.sh/formula/postgresql@14).
 Run the following command on the terminal `brew install postgresql`
 
-# Start PostgreSQL Server Locally
+## Start PostgreSQL Server Locally
 
-## Windows
+### Windows
 
 1. Open the command line
 2. Go to the PostgreSQL folder
@@ -29,12 +31,12 @@ Run the following command on the terminal `brew install postgresql`
 
 Note: If you have the PgAdmin application downloaded, you can access and view the database there after starting the PostgreSQL server
 
-## Mac
+### Mac
 
 1. Open terminal
 2. Run the command `brew services start postgresql`
 
-# Build and start the back-end application
+## Build and start the back-end application locally
 
 _Note:_
 
@@ -42,15 +44,15 @@ _Note:_
   - Username and password need to be the same between your local PostgreSQL server and the properties of the application
 - For the application, they are set in `Museum-Backend/src/main/resources/application.properties`
 
-## First step
+### First step
 
 1. Open the file `application.properties` and change the username and password to your local PostgreSQL server username and password
 
-## Second step
+### Second step
 
 From the project folder, run the command: `gradle build` or `./gradlew build`
 
-## Third step options
+### Third step options
 
 1. From the IDE, run the application from the file `Museum-Backend/src/main/java/ca/mcgill/ecse321/museum/MuseumApplication.java` by clicking on the run or play button beside the code.
 2. From the project folder, run the command: `gradle bootRun` or `gradle run` or `./gradlew bootRun` or `./gradlew run`
