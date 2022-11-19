@@ -9,8 +9,12 @@ import ca.mcgill.ecse321.museum.model.Manager;
  * 
  * @author VZ
  */
-public interface ManagerRepository extends CrudRepository<Manager, Long>{
+public interface ManagerRepository extends CrudRepository<Manager, Long> {
 
   Manager findManagerByMuseumUserId(Long museumUserId);
+
+  Manager findManagerByEmail(String email);
+
+  Manager findManagerByName(String name);
 
 }
