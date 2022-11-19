@@ -41,8 +41,7 @@ public class LoanService {
 
     @Transactional 
     public List<Loan> getAllLoans() {
-        List<Loan> loans = toList(loanRepository.findAll());
-        return loans;
+        return toList(loanRepository.findAll());
     }
 
     @Transactional
