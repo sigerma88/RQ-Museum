@@ -281,6 +281,39 @@ public class RegistrationService {
     return emailMatcher.matches();
   }
 
+  /**
+   * Edit manager information
+   * 
+   * @param string - id of manager
+   * @param oldPassword - old password of manager
+   * @param newPassword - new password of manager
+   * @return Manager - the manager that was updated
+   * @throws Exception
+   */
+  public Manager editManagerInformation(long id, String oldPassword, String newPassword)
+      throws Exception {
+    Manager manager = managerRepository.findManagerByMuseumUserId(id);
+
+    if (manager == null) {
+      throw new Exception("Account was not found in the system. ");
+    }
+
+    String currentPassword = manager.getPassword();
+    if (!currentPassword.equals(oldPassword)) {
+      throw new Exception("Old password incorrect");
+    }
+
+    if (passwordValidityChecker(newPassword)) {
+      manager.setPassword(newPassword);
+    } else {
+      throw new Exception(
+          "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special character. ");
+    }
+
+    managerRepository.save(manager);
+    return manager;
+  }
+
 
   /**
    * Generate a random password
@@ -354,7 +387,7 @@ public class RegistrationService {
    * @param email - email to be checked
    * @return boolean - true if email exists, false otherwise
    */
-  public boolean checkIfEmailExists(String email) {
+  public boolean checkIfEmailExists(String email) throws Exception {
     Visitor visitor = visitorRepository.findVisitorByEmail(email);
     Employee employee = employeeRepository.findEmployeeByEmail(email);
     Manager manager = managerRepository.findManagerByEmail(email);

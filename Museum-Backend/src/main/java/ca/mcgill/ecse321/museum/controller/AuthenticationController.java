@@ -78,7 +78,6 @@ public class AuthenticationController {
   /**
    * POST to logout a user
    * 
-   * @param user - MuseumUserDto
    * @return if the user was logged out (success)
    * @author Kevin
    */
