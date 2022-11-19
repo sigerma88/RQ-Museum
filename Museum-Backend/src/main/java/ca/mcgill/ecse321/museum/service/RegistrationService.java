@@ -1,9 +1,15 @@
 package ca.mcgill.ecse321.museum.service;
 
+import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.regex.Matcher;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
 import ca.mcgill.ecse321.museum.dao.ManagerRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
@@ -11,16 +17,13 @@ import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Manager;
 import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.Visitor;
-import java.util.regex.Pattern;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.regex.Matcher;
 
 /**
  * Business logic for registrationController
  */
 @Service
 public class RegistrationService {
+
   @Autowired
   private VisitorRepository visitorRepository;
 

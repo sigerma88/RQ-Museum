@@ -1,9 +1,10 @@
 package ca.mcgill.ecse321.museum.service;
 
-
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
 import ca.mcgill.ecse321.museum.dao.ManagerRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
@@ -20,10 +21,13 @@ import ca.mcgill.ecse321.museum.model.Visitor;
 
 @Service
 public class AuthenticationService {
+
     @Autowired
     private VisitorRepository visitorRepository;
+
     @Autowired
     private EmployeeRepository employeeRepository;
+
     @Autowired
     private ManagerRepository managerRepository;
 
