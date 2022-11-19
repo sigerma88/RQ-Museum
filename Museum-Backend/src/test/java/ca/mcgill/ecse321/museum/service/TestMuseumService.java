@@ -590,8 +590,7 @@ public class TestMuseumService {
         museum.setMuseumId(museumId);
         museum.setSchedule(schedule);
 
-        List<TimePeriod> timePeriods = null;
-        String error = "";
+        List<TimePeriod> timePeriods = new ArrayList<>();
         when(museumRepository.findMuseumByMuseumId(museumId)).thenAnswer((InvocationOnMock invocation) -> museum);
         when(scheduleOfTimePeriodRepository.findScheduleOfTimePeriodBySchedule(schedule))
                 .thenAnswer((InvocationOnMock invocation) -> null);
@@ -599,10 +598,9 @@ public class TestMuseumService {
         try {
             timePeriods = museumService.getMuseumTimePeriods(museumId);
         } catch (IllegalArgumentException e) {
-            error = e.getMessage();
+            fail();
         }
         assertNull(timePeriods);
-        assertEquals("Museum's schedule has no shift!", error);
     }
 
     /**
@@ -731,7 +729,7 @@ public class TestMuseumService {
         // test that we get back a museum
         testMuseum = museumService.deleteMuseumTimePeriodAssociation(MUSEUM_ID, TIMEPERIOD_ID);
         assertNotNull(testMuseum);
-        // test that service actually saved museum 
+        // test that service actually saved museum
         verify(museumRepository, times(1)).save(museum);
 
     }
@@ -858,6 +856,7 @@ public class TestMuseumService {
 
     /**
      * Test for getting all museums when there is one
+     * 
      * @author VZ
      *
      */
@@ -879,8 +878,10 @@ public class TestMuseumService {
         assertEquals(1, testMuseums.size());
 
     }
+
     /**
      * test for getting all museums when there are none
+     * 
      * @author VZ
      */
     @Test

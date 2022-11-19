@@ -90,10 +90,7 @@ public class TimePeriodService {
      */
     @Transactional
     public TimePeriod editTimePeriod(long timePeriodId, Timestamp startDate, Timestamp endDate) {
-        // input validation
-        if (startDate == null && endDate == null) {
-            throw new IllegalArgumentException("Nothing to change, fields are null");
-        }
+
         if (startDate.after(endDate)) {
             throw new IllegalArgumentException("Start date cannot be after end date");
         }
@@ -102,13 +99,14 @@ public class TimePeriodService {
         if (timePeriod == null) {
             throw new IllegalArgumentException("Time period does not exist");
         }
+
+        if (startDate == null || endDate == null) {
+            throw new IllegalArgumentException("Dates cannot be null");
+        }
         // edit TimePeriod
-        if (startDate != null) {
-            timePeriod.setStartDate(startDate);
-        }
-        if (endDate != null) {
-            timePeriod.setEndDate(endDate);
-        }
+        timePeriod.setStartDate(startDate);
+        timePeriod.setEndDate(endDate);
+
         timePeriodRepository.save(timePeriod);
         return timePeriod;
     }

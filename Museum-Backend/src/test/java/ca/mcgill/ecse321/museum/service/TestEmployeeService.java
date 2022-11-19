@@ -436,8 +436,7 @@ public class TestEmployeeService {
     employee.setMuseumUserId(employeeId);
     employee.setSchedule(schedule);
 
-    List<TimePeriod> timePeriods = null;
-    String error = "";
+    List<TimePeriod> timePeriods = new ArrayList<>();
     when(employeeRepository.findEmployeeByMuseumUserId(employeeId))
         .thenAnswer((InvocationOnMock invocation) -> employee);
     when(scheduleOfTimePeriodRepository.findScheduleOfTimePeriodBySchedule(schedule))
@@ -446,10 +445,9 @@ public class TestEmployeeService {
     try {
       timePeriods = employeeService.getEmployeeTimePeriods(employeeId);
     } catch (IllegalArgumentException e) {
-      error = e.getMessage();
+
     }
     assertNull(timePeriods);
-    assertEquals("Employee has no shift", error);
   }
 
   /**
@@ -582,7 +580,8 @@ public class TestEmployeeService {
   }
 
   /**
-   * Test for removing an existing timeperiod from an employee's schedule that doesn't
+   * Test for removing an existing timeperiod from an employee's schedule that
+   * doesn't
    * contain the mentioned timeperiod
    * 
    * @author VZ

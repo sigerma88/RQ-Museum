@@ -134,7 +134,6 @@ public class SchedulingIntegrationTests {
         assertNotNull(response);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(), "The response has the correct status");
         assertNotNull(response.getBody(), "Response has body");
-        assertEquals(response.getBody(), "Employee has no shift");
 
     }
 
@@ -213,7 +212,6 @@ public class SchedulingIntegrationTests {
         assertNotNull(response);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(), "The response has the correct status");
         assertNotNull(response.getBody(), "Response has body");
-        assertEquals(response.getBody(), "Museum's schedule has no shift!");
     }
 
     /**
@@ -288,7 +286,8 @@ public class SchedulingIntegrationTests {
      * @param id
      */
     public void testDeleteTimePeriod(Long id) {
-        //once we delete the timeperiod, we try to get it and we should get a 404 not found reponse.
+        //once we delete the timeperiod, we try to get it, but it doesn't exist anymore so
+        //we should get a 404 not found reponse.
         client.delete(("/shift/delete/" + id), TimePeriodDto.class);
         ResponseEntity<String> response = client.getForEntity("/shift/" + id, String.class);
         assertNotNull(response);

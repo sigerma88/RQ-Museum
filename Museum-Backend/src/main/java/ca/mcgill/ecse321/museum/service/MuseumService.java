@@ -15,6 +15,10 @@ import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
 import ca.mcgill.ecse321.museum.model.TimePeriod;
 
+/**
+ * Service class for Museum
+ * @author
+ */
 @Service
 public class MuseumService {
 
@@ -152,9 +156,7 @@ public class MuseumService {
       throw new IllegalArgumentException("Schedule doesn't exist!");
     }
     List<TimePeriod> timePeriods = getTimePeriodsOfSchedule(schedule);
-    if (timePeriods == null) {
-      throw new IllegalArgumentException("Museum's schedule has no shift!");
-    }
+
     return timePeriods;
   }
 

@@ -108,9 +108,7 @@ public class EmployeeService {
     }
 
     List<TimePeriod> timePeriods = getTimePeriodsOfSchedule(schedule);
-    if (timePeriods == null || timePeriods.isEmpty()) {
-      throw new IllegalArgumentException("Employee has no shift");
-    }
+
     return timePeriods;
   }
 

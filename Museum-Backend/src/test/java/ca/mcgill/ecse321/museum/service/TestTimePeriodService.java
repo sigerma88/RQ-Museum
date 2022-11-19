@@ -200,7 +200,6 @@ public class TestTimePeriodService {
         assertEquals(END_DATE, timePeriod.getEndDate());
         assertEquals("Start date cannot be after end date", error);
     }
-
     /**
      * Test to delete a time period by id
      * @author VZ
