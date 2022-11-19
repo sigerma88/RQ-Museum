@@ -10,14 +10,14 @@ import java.sql.Date;
 public class TicketDto {
 
   private long ticketId;
-  private Date visitDate;
+  private String visitDate;
   private VisitorDto visitor;
 
   public TicketDto() {
 
   }
 
-  public TicketDto(long ticketId, Date visitDate, VisitorDto visitor) {
+  public TicketDto(long ticketId, String visitDate, VisitorDto visitor) {
     this.ticketId = ticketId;
     this.visitDate = visitDate;
     this.visitor = visitor;
@@ -41,7 +41,7 @@ public class TicketDto {
     return ticketId;
   }
 
-  public Date getVisitDate() {
+  public String getVisitDate() {
     return visitDate;
   }
 

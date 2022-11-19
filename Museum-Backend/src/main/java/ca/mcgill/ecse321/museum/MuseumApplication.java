@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.PostConstruct;
 import java.util.TimeZone;
 
 @RestController
@@ -20,6 +21,7 @@ public class MuseumApplication {
     return "Hello world!";
   }
 
+  @PostConstruct
   void started() {
 
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"));

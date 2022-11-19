@@ -24,20 +24,20 @@ public class TicketService {
   /**
    * Method to create a list of tickets
    *
-   * @param visitorName
+   * @param visitorID
    * @param date
    * @param numberOfTickets
    * @return ticketsBought
    * @author Zahra
    */
   @Transactional
-  public List<Ticket> createTickets(String visitorName, Date date, int numberOfTickets) {
+  public List<Ticket> createTickets(Long visitorID, Date date, int numberOfTickets) {
     List<Ticket> ticketsBought = new ArrayList<>();
     String error = "";
-    if (numberOfTickets <= 0) {
+    if (numberOfTickets == 0) {
       throw new IllegalArgumentException("Number of tickets must be at least 1");
     }
-    if (visitorRepository.findVisitorByName(visitorName) == null) {
+    if (visitorRepository.findVisitorByMuseumUserId(visitorID) == null) {
       throw new IllegalArgumentException("Visitor doesn't exist");
     } else if (date == null) {
       throw new IllegalArgumentException("Please insert a date");
@@ -45,7 +45,7 @@ public class TicketService {
       throw new IllegalArgumentException("Cannot pick a date in the past.");
     }
     for (int i = 0; i < numberOfTickets; i++) {
-      Ticket ticket = createTicket(visitorName, date);
+      Ticket ticket = createTicket(visitorID, date);
       ticketsBought.add(ticket);
     }
     return ticketsBought;
@@ -55,14 +55,14 @@ public class TicketService {
   /**
    * Method to create a ticket
    *
-   * @param visitorName visitor's ID
-   * @param visitDate   chosen date of visit
+   * @param visitorID visitor's ID
+   * @param visitDate chosen date of visit
    * @return ticket
    */
   @Transactional
-  public Ticket createTicket(String visitorName, Date visitDate) {
+  public Ticket createTicket(Long visitorID, Date visitDate) {
     Ticket ticket = new Ticket();
-    Visitor visitor = visitorRepository.findVisitorByName(visitorName);
+    Visitor visitor = visitorRepository.findVisitorByMuseumUserId(visitorID);
     if (visitor == null) {
       throw new IllegalArgumentException("Visitor doesn't exist");
     } else if (visitDate == null) {
@@ -80,16 +80,16 @@ public class TicketService {
    * Feature 6
    */
   @Transactional
-  public List<Ticket> getTicketsByVisitor(String visitorName) {
+  public List<Ticket> getTicketsByVisitor(long visitorID) {
 
-    if (visitorRepository.findVisitorByName(visitorName) == null) {
+    if (visitorRepository.findVisitorByMuseumUserId(visitorID) == null) {
       throw new IllegalArgumentException("Visitor doesn't exist");
     }
     List<Ticket> allTicketsOfVisitor = new ArrayList<>();
     List<Ticket> allTickets = toList(ticketRepository.findAll());
     for (Ticket ticket : allTickets) {
 
-      if (ticket != null && ticket.getVisitor().getName() == visitorName) {
+      if (ticket != null && ticket.getVisitor().getMuseumUserId() == visitorID) {
         allTicketsOfVisitor.add(ticket);
       }
 
