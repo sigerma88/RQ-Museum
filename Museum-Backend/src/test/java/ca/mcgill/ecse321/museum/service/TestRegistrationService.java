@@ -18,6 +18,7 @@ import ca.mcgill.ecse321.museum.dao.ManagerRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
 import ca.mcgill.ecse321.museum.dto.VisitorDto;
 import ca.mcgill.ecse321.museum.model.Employee;
+import ca.mcgill.ecse321.museum.model.Manager;
 import ca.mcgill.ecse321.museum.model.Visitor;
 
 /**
@@ -52,6 +53,10 @@ public class TestRegistrationService {
   private static final long EMPLOYEE_ID = 3;
   private static final String EMPLOYEE_VALID_EMAIL = "sergio.perez@museum.ca";
   private static final String EMPLOYEE_VALID_NAME = "Sergio Perez";
+
+  private static final long MANAGER_ID = 4;
+  private static final String MANAGER_VALID_EMAIL = "nicholas.latifi@admin.ca";
+  private static final String MANAGER_VALID_NAME = "Nicholas Latifi";
 
   private static final String VALID_PASSWORD = "Speed123#$";
 
@@ -162,6 +167,20 @@ public class TestRegistrationService {
             employee.setPassword(VALID_PASSWORD);
             employee.setName(EMPLOYEE_VALID_NAME);
             return employee;
+          } else {
+            return null;
+          }
+        });
+
+    lenient().when(managerRepository.findManagerByMuseumUserId(anyLong()))
+        .thenAnswer((InvocationOnMock invocation) -> {
+          if (invocation.getArgument(0).equals(MANAGER_ID)) {
+            Manager manager = new Manager();
+            manager.setEmail(EMPLOYEE_VALID_EMAIL);
+            manager.setMuseumUserId(EMPLOYEE_ID);
+            manager.setPassword(VALID_PASSWORD);
+            manager.setName(EMPLOYEE_VALID_NAME);
+            return manager;
           } else {
             return null;
           }
@@ -577,6 +596,56 @@ public class TestRegistrationService {
   public void testEditEmployeeWithInvalidNewPassword() {
     try {
       registrationService.editEmployeeInformation(EMPLOYEE_ID, VALID_PASSWORD, INVALID_PASSWORD);
+    } catch (Exception e) {
+      assertEquals(
+          "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special character. ",
+          e.getMessage());
+    }
+  }
+
+  /**
+   * Test that edit manager
+   * 
+   * @author Kevin
+   */
+
+  @Test
+  public void testEditManager() {
+    Manager manager = null;
+    String newPassword = "#BrazilGP2022";
+
+    try {
+      manager = registrationService.editManagerInformation(MANAGER_ID, VALID_PASSWORD, newPassword);
+    } catch (Exception e) {
+      fail(e.getMessage());
+    }
+
+    assertEquals(newPassword, manager.getPassword());
+  }
+
+  @Test
+  /**
+   * Test that edit manager with wrong password
+   * 
+   * @author Kevin
+   */
+  public void testEditManagerWithWrongOldPassword() {
+    try {
+      registrationService.editManagerInformation(MANAGER_ID, INVALID_PASSWORD, VALID_PASSWORD);
+    } catch (Exception e) {
+      assertEquals("Old password incorrect", e.getMessage());
+    }
+  }
+
+  @Test
+  /**
+   * Test that edit manager with invalid new password
+   * 
+   * @author Kevin
+   */
+  public void testEditManagerWithInvalidNewPassword() {
+    try {
+      registrationService.editManagerInformation(MANAGER_ID, VALID_PASSWORD, INVALID_PASSWORD);
     } catch (Exception e) {
       assertEquals(
           "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special character. ",

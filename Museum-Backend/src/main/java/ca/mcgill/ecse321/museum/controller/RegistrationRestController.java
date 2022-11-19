@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.museum.controller.utilities.AuthenticationUtility;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
 import ca.mcgill.ecse321.museum.dto.EmployeeDto;
+import ca.mcgill.ecse321.museum.dto.ManagerDto;
 import ca.mcgill.ecse321.museum.dto.VisitorDto;
 import ca.mcgill.ecse321.museum.service.RegistrationService;
 
@@ -225,4 +226,39 @@ public class RegistrationRestController {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
+
+  /**
+   * PUT method to update manager information
+   * 
+   * @param Map<String,String> - map containing oldPassword, newPassword, managerId
+   * @return managerDto
+   * @author Kevin
+   */
+
+  @PutMapping(value = "manager/edit/{id}", produces = "application/json")
+  public ResponseEntity<?> editManagerInformation(HttpServletRequest request, @PathVariable long id,
+      @RequestBody Map<String, String> updatedManagerCredential) {
+    try {
+      HttpSession session = request.getSession();
+
+      if (!AuthenticationUtility.isLoggedIn(session)) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body("You must be logged in to edit a manager");
+      } else if (!AuthenticationUtility.isManager(session)) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body("You must be a manager to edit a manager");
+      }
+      ManagerDto manager = DtoUtility.convertToDto(registrationService.editManagerInformation(id,
+          updatedManagerCredential.get("oldPassword"),
+          updatedManagerCredential.get("newPassword")));
+
+      return ResponseEntity.ok(manager);
+    } catch (
+
+    Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+
+
 }
