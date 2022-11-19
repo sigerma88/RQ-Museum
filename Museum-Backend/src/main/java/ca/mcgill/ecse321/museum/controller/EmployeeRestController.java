@@ -30,23 +30,6 @@ public class EmployeeRestController {
   private EmployeeService service;
 
   /**
-   * RESTful api to get an employee
-   * 
-   * @author VZ
-   * @param id
-   * @return
-   */
-  @GetMapping(value = { "/employee/{id}", "/employee/{id}/" })
-  public ResponseEntity<?> getEmployee(@PathVariable("id") long id) {
-    try {
-      EmployeeDto employeeDto = DtoUtility.convertToDto(service.getEmployee(id));
-      return ResponseEntity.ok(employeeDto);
-    } catch (Exception e) {
-      return ResponseEntity.badRequest().body(e.getMessage());
-    }
-  }
-
-  /**
    * RESTful API to get all employees
    * 
    * @return List of all employees
