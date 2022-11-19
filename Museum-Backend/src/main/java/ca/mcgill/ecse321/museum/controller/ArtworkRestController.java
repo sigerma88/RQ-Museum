@@ -20,6 +20,12 @@ import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.service.ArtworkService;
 import ca.mcgill.ecse321.museum.service.RoomService;
 
+/**
+ * RESTful api for Artwork to expose the business logic in the service layer to the frontend
+ * 
+ * @author Siger
+ * @author Zahra
+ */
 @CrossOrigin(origins = "*")
 @RestController
 public class ArtworkRestController {
@@ -101,22 +107,27 @@ public class ArtworkRestController {
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
-
   }
 
-  @GetMapping(value = { "/artworks/{room}", "/artworks/{room}/" })
-  public List<ArtworkDto> getAllArtworksByRoom(@PathVariable("room") Room room) {
-    List<ArtworkDto> artworkInRoomDtos = new ArrayList<ArtworkDto>();
-    List<Artwork> artworksInRoom = artworkService.getAllArtworksByRoom(room);
-    for (Artwork artwork : artworksInRoom) {
-      try {
-        artworkInRoomDtos.add(DtoUtility.convertToDto(artwork));
-      } catch (Exception e) {
-        e.printStackTrace();
+  /**
+   * RESTful API to get all artworks by room
+   * 
+   * @param roomId - long
+   * @return List of all artworks in the given room
+   * @author Siger
+   * @author Zahra
+   */
+  @GetMapping(value = { "/artworks/{roomId}", "/artworks/{roomId}/" })
+  public List<ArtworkDto> getAllArtworksByRoom(@PathVariable("roomId") Long roomId) {
+    try {
+      List<ArtworkDto> artworkDtos = new ArrayList<ArtworkDto>();
+      for (Artwork artwork : artworkService.getAllArtworksByRoom(roomId)) {
+        artworkDtos.add(DtoUtility.convertToDto(artwork));
       }
-
+      return ResponseEntity.ok(artworkDtos);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
     }
-    return artworkInRoomDtos;
   }
 
   /**
