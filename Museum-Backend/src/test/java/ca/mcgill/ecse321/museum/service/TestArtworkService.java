@@ -37,6 +37,7 @@ import ca.mcgill.ecse321.museum.model.Visitor;
  * @author Siger
  * @author kieyanmamiche
  */
+
 @ExtendWith(MockitoExtension.class)
 public class TestArtworkService {
 

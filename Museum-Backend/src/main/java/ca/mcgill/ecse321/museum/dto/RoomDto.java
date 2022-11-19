@@ -7,6 +7,7 @@ import ca.mcgill.ecse321.museum.model.RoomType;
  * 
  * @author Siger
  */
+
 public class RoomDto {
 
   private Long roomId;

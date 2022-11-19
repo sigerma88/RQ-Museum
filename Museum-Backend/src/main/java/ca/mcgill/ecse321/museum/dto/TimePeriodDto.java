@@ -2,6 +2,12 @@ package ca.mcgill.ecse321.museum.dto;
 
 import java.sql.Timestamp;
 
+/**
+ * Time period DTO
+ * 
+ * @author Victor
+ */
+
 public class TimePeriodDto {
 
     // TimePeriod Attributes

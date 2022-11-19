@@ -5,6 +5,7 @@ package ca.mcgill.ecse321.museum.dto;
  * 
  * @author Siger, Kevin
  */
+
 public class EmployeeDto extends MuseumUserDto {
 
   private ScheduleDto schedule;

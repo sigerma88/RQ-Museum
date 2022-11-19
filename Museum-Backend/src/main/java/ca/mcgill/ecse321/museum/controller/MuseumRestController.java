@@ -17,12 +17,22 @@ import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.service.MuseumService;
 import ca.mcgill.ecse321.museum.service.ScheduleService;
 
+/**
+ * MuseumRestController class is used as a controller where we call
+ * our API for our web application
+ * 
+ * @author Siger
+ * @author Victor
+ */
+
 @CrossOrigin(origins = "*")
 @RestController
+@RequestMapping("api/museum")
 public class MuseumRestController {
 
   @Autowired
   private MuseumService museumService;
+
   @Autowired
   private ScheduleService scheduleService;
 

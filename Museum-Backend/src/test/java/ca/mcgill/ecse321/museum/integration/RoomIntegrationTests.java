@@ -99,7 +99,7 @@ public class RoomIntegrationTests {
 
     // Test controller POST RESTful API
     ResponseEntity<RoomDto> response = client.postForEntity(
-        "/room" + "?roomName=" + roomName + "&roomType=" + roomType + "&museumId=" + museumId, null, RoomDto.class);
+        "/api/room" + "?roomName=" + roomName + "&roomType=" + roomType + "&museumId=" + museumId, null, RoomDto.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -127,7 +127,7 @@ public class RoomIntegrationTests {
 
     // Test controller POST RESTful API
     ResponseEntity<String> response = client.postForEntity(
-        "/room" + "?roomName=" + roomName + "&roomType=" + roomType + "&museumId=" + museumId, null, String.class);
+        "/api/room" + "?roomName=" + roomName + "&roomType=" + roomType + "&museumId=" + museumId, null, String.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -147,7 +147,7 @@ public class RoomIntegrationTests {
     Room room = roomService.getAllRooms().get(0);
 
     // Test controller GET RESTful API
-    ResponseEntity<RoomDto> response = client.getForEntity("/room/" + room.getRoomId(), RoomDto.class);
+    ResponseEntity<RoomDto> response = client.getForEntity("/api/room/" + room.getRoomId(), RoomDto.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -167,7 +167,7 @@ public class RoomIntegrationTests {
   @Test
   public void testGetRoomByInvalidId() {
     // Test controller GET RESTful API
-    ResponseEntity<String> response = client.getForEntity("/room/-1", String.class);
+    ResponseEntity<String> response = client.getForEntity("/api/room/-1", String.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -185,7 +185,7 @@ public class RoomIntegrationTests {
   @Test
   public void testGetAllRooms() {
     // Test controller GET RESTful API
-    ResponseEntity<RoomDto[]> response = client.getForEntity("/rooms", RoomDto[].class);
+    ResponseEntity<RoomDto[]> response = client.getForEntity("/api/room", RoomDto[].class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -205,7 +205,7 @@ public class RoomIntegrationTests {
     Long museumId = museumService.getAllMuseums().get(0).getMuseumId();
 
     // Test controller GET RESTful API
-    ResponseEntity<RoomDto[]> response = client.getForEntity("/rooms/" + museumId, RoomDto[].class);
+    ResponseEntity<RoomDto[]> response = client.getForEntity("/api/room/museum/" + museumId, RoomDto[].class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -223,7 +223,7 @@ public class RoomIntegrationTests {
   @Test
   public void testGetAllRoomsByInvalidMuseumId() {
     // Test controller GET RESTful API
-    ResponseEntity<String> response = client.getForEntity("/rooms/-1", String.class);
+    ResponseEntity<String> response = client.getForEntity("/api/room/museum/-1", String.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -258,7 +258,7 @@ public class RoomIntegrationTests {
 
     // Test controller PUT RESTful API
     ResponseEntity<RoomDto> response = client.exchange(
-        "/room/" + room.getRoomId() + "?roomName=" + roomName + "&roomType=" + roomType + "&museumId="
+        "/api/room/" + room.getRoomId() + "?roomName=" + roomName + "&roomType=" + roomType + "&museumId="
             + museum.getMuseumId(),
         HttpMethod.PUT, null, RoomDto.class);
 
@@ -285,7 +285,7 @@ public class RoomIntegrationTests {
 
     // Test controller PUT RESTful API
     ResponseEntity<String> response = client.exchange(
-        "/room/-1" + "?roomName=" + roomName + "&roomType=" + roomType, HttpMethod.PUT, null, String.class);
+        "/api/room/-1" + "?roomName=" + roomName + "&roomType=" + roomType, HttpMethod.PUT, null, String.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -310,7 +310,7 @@ public class RoomIntegrationTests {
 
     // Test controller PUT RESTful API
     ResponseEntity<String> response = client.exchange(
-        "/room/" + room.getRoomId() + "?roomName=" + roomName + "&roomType=" + roomType + "&museumId=-1",
+        "/api/room/" + room.getRoomId() + "?roomName=" + roomName + "&roomType=" + roomType + "&museumId=-1",
         HttpMethod.PUT,
         null, String.class);
 
@@ -332,7 +332,7 @@ public class RoomIntegrationTests {
     Room room = roomService.getAllRooms().get(0);
 
     // Test controller PUT RESTful API
-    ResponseEntity<String> response = client.exchange("/room/" + room.getRoomId(), HttpMethod.PUT, null, String.class);
+    ResponseEntity<String> response = client.exchange("/api/room/" + room.getRoomId(), HttpMethod.PUT, null, String.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -353,7 +353,7 @@ public class RoomIntegrationTests {
     Room room = roomService.getAllRooms().get(0);
 
     // Test controller DELETE RESTful API
-    ResponseEntity<RoomDto> response = client.exchange("/room/" + room.getRoomId(), HttpMethod.DELETE, null,
+    ResponseEntity<RoomDto> response = client.exchange("/api/room/" + room.getRoomId(), HttpMethod.DELETE, null,
         RoomDto.class);
 
     // Check status and body of response are correct
@@ -374,7 +374,7 @@ public class RoomIntegrationTests {
   @Test
   public void testDeleteRoomWithInvalidRoomId() {
     // Test controller DELETE RESTful API
-    ResponseEntity<String> response = client.exchange("/room/-1", HttpMethod.DELETE, null, String.class);
+    ResponseEntity<String> response = client.exchange("/api/room/-1", HttpMethod.DELETE, null, String.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -394,7 +394,7 @@ public class RoomIntegrationTests {
     Room room = roomService.getAllRooms().get(0);
 
     // Test controller GET RESTful API
-    ResponseEntity<Integer> response = client.exchange("/room/maxArtworks/" + room.getRoomId(),
+    ResponseEntity<Integer> response = client.exchange("/api/room/maxArtworks/" + room.getRoomId(),
         HttpMethod.GET, null, Integer.class);
 
     // Check status and body of response are correct
@@ -412,7 +412,7 @@ public class RoomIntegrationTests {
   @Test
   public void testGetMaxArtworksWithInvalidRoomId() {
     // Test controller GET RESTful API
-    ResponseEntity<String> response = client.exchange("/room/maxArtworks/-1", HttpMethod.GET, null, String.class);
+    ResponseEntity<String> response = client.exchange("/api/room/maxArtworks/-1", HttpMethod.GET, null, String.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -434,7 +434,7 @@ public class RoomIntegrationTests {
       Long roomId3 = artworkDtoList.get(2).getRoom().getRoomId(); // Storage room
 
       // Get the capacity of room 1 using get request -- SMALL ROOM
-      ResponseEntity<Integer> response = client.getForEntity("/getRoomCapacity/" + roomId1.toString(), Integer.class);
+      ResponseEntity<Integer> response = client.getForEntity("/api/room/getRoomCapacity/" + roomId1.toString(), Integer.class);
       assertNotNull(response);
       assertEquals(HttpStatus.OK, response.getStatusCode());
       assertNotNull(response.getBody(), "Response has body");
@@ -442,7 +442,7 @@ public class RoomIntegrationTests {
       assertEquals(199, response.getBody(), "Response correctly said that the capacity is 199");
 
       // Get the capacity of room 2 using get request -- LARGE ROOM
-      ResponseEntity<Integer> response2 = client.getForEntity("/getRoomCapacity/" + roomId2.toString(), Integer.class);
+      ResponseEntity<Integer> response2 = client.getForEntity("/api/room/getRoomCapacity/" + roomId2.toString(), Integer.class);
       assertNotNull(response2);
       assertEquals(HttpStatus.OK, response2.getStatusCode());
       assertNotNull(response2.getBody(), "Response has body");
@@ -450,7 +450,7 @@ public class RoomIntegrationTests {
       assertEquals(299, response2.getBody(), "Response correctly said that the capacity is 299");
 
       // Get the capacity of room 3 using get request -- STORAGE ROOM
-      ResponseEntity<Integer> response3 = client.getForEntity("/getRoomCapacity/" + roomId3.toString(), Integer.class);
+      ResponseEntity<Integer> response3 = client.getForEntity("/api/room/getRoomCapacity/" + roomId3.toString(), Integer.class);
       assertNotNull(response3);
       assertEquals(HttpStatus.OK, response3.getStatusCode());
       assertNotNull(response3.getBody(), "Response has body");
@@ -470,7 +470,7 @@ public class RoomIntegrationTests {
       String roomIdBad = "1232445";
 
       // We do a get request to see if our controller handles bad request well
-      ResponseEntity<String> response = client.getForEntity("/getRoomCapacity/" + roomIdBad, String.class);
+      ResponseEntity<String> response = client.getForEntity("/api/room/getRoomCapacity/" + roomIdBad, String.class);
       assertNotNull(response);
       System.out.println(response.getBody());
       assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());

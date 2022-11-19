@@ -23,6 +23,7 @@ import ca.mcgill.ecse321.museum.model.Visitor;
  * 
  * @author Kevin
  */
+
 @Service
 public class RegistrationService {
 

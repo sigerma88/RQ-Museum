@@ -24,11 +24,13 @@ import ca.mcgill.ecse321.museum.service.RoomService;
 /**
  * RoomRestController class is used as a controller where we call
  * our API for our web application
+ * 
  * @author Siger
- * @author kianmamicheafara
  */
+
 @CrossOrigin(origins = "*")
 @RestController
+@RequestMapping("api/room")
 public class RoomRestController {
 
   @Autowired
@@ -46,7 +48,8 @@ public class RoomRestController {
    * @return created room
    * @author Siger
    */
-  @PostMapping(value = { "/room", "/room/" }, produces = "application/json")
+
+  @PostMapping(value = { "/", "" }, produces = "application/json")
   public ResponseEntity<?> createRoom(@RequestParam(name = "roomName") String roomName,
       @RequestParam(name = "roomType") RoomType roomType, @RequestParam(name = "museumId") Long museumId) {
     try {
@@ -70,7 +73,8 @@ public class RoomRestController {
    * @return List of all rooms
    * @author Siger
    */
-  @GetMapping(value = { "/rooms", "/rooms/" })
+
+  @GetMapping(value = { "/", "" })
   public ResponseEntity<?> getAllRooms() {
     try {
       List<RoomDto> roomDtos = new ArrayList<>();
@@ -90,7 +94,8 @@ public class RoomRestController {
    * @return room with the given id
    * @author Siger
    */
-  @GetMapping(value = { "/room/{roomId}", "/room/{roomId}/" })
+
+  @GetMapping(value = { "/{roomId}", "/{roomId}/" })
   public ResponseEntity<?> getRoomById(@PathVariable Long roomId) {
     try {
       Room room = roomService.getRoomById(roomId);
@@ -107,7 +112,8 @@ public class RoomRestController {
    * @return List of all rooms of the museum with the given id
    * @author Siger
    */
-  @GetMapping(value = { "/rooms/{museumId}", "/rooms/{museumId}/" })
+
+  @GetMapping(value = { "/museum/{museumId}", "/museum/{museumId}/" })
   public ResponseEntity<?> getAllRoomsByMuseumId(@PathVariable Long museumId) {
     try {
       // Get museum
@@ -137,7 +143,8 @@ public class RoomRestController {
    * @return updated room
    * @author Siger
    */
-  @PutMapping(value = { "/room/{roomId}", "/room/{roomId}/" }, produces = "application/json")
+
+  @PutMapping(value = { "/{roomId}", "/{roomId}/" }, produces = "application/json")
   public ResponseEntity<?> editRoom(@PathVariable("roomId") Long roomId,
       @RequestParam(name = "roomName", required = false) String roomName,
       @RequestParam(name = "roomType", required = false) RoomType roomType,
@@ -167,7 +174,8 @@ public class RoomRestController {
    * @return deleted room
    * @author Siger
    */
-  @DeleteMapping(value = { "/room/{roomId}", "/room/{roomId}/" })
+
+  @DeleteMapping(value = { "/{roomId}", "/{roomId}/" })
   public ResponseEntity<?> deleteRoom(@PathVariable("roomId") Long roomId) {
     try {
       Room result = roomService.deleteRoom(roomId);
@@ -184,7 +192,8 @@ public class RoomRestController {
    * @return maximum number of artworks of the room with the given id
    * @author Siger
    */
-  @GetMapping(value = { "/room/maxArtworks/{roomId}", "/room/maxArtworks/{roomId}/" })
+
+  @GetMapping(value = { "/maxArtworks/{roomId}", "/maxArtworks/{roomId}/" })
   public ResponseEntity<?> getMaxArtworks(@PathVariable("roomId") Long roomId) {
     try {
       Room room = roomService.getRoomById(roomId);
@@ -195,9 +204,5 @@ public class RoomRestController {
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
-  }/**
- * @author kianmamicheafara
- * RoomRestController class is used as a controller where we call
- * our API for our web application
- */
+  }
 }

@@ -16,17 +16,28 @@ import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
 import ca.mcgill.ecse321.museum.model.TimePeriod;
 
+/**
+ * Business logic for museumController
+ * 
+ * @author Victor
+ * @author Siger
+ */
+
 @Service
 public class MuseumService {
 
   @Autowired
   private MuseumRepository museumRepository;
+
   @Autowired
   private ScheduleRepository scheduleRepository;
+
   @Autowired
   private ScheduleOfTimePeriodRepository scheduleOfTimePeriodRepository;
+
   @Autowired
   private TimePeriodRepository timePeriodRepository;
+
   @Autowired
   private TimePeriodService timePeriodService;
 
@@ -49,6 +60,7 @@ public class MuseumService {
    * @return List of all museums
    * @author Siger
    */
+
   @Transactional
   public List<Museum> getAllMuseums() {
     return toList(museumRepository.findAll());
@@ -60,6 +72,7 @@ public class MuseumService {
    * @author VZ
    * @return
    */
+
   @Transactional
   public Museum createMuseum(String name, double visitFee, Schedule schedule) {
     if (name == null || name.trim().length() == 0) {
@@ -89,6 +102,7 @@ public class MuseumService {
    * @param schedule
    * @return
    */
+
   @Transactional
   public Museum editMuseum(long museumId, String name, double visitFee, Schedule schedule) {
     if (name == null || name.trim().length() == 0) {
@@ -116,6 +130,7 @@ public class MuseumService {
    * @param museumId
    * @return
    */
+
   @Transactional
   public Schedule getMuseumSchedule(long museumId) {
     Museum museum = museumRepository.findMuseumByMuseumId(museumId);
@@ -136,6 +151,7 @@ public class MuseumService {
    * @param museumId
    * @return
    */
+
   @Transactional
   public List<TimePeriod> getMuseumTimePeriods(long museumId) {
     Museum museum = museumRepository.findMuseumByMuseumId(museumId);
@@ -158,6 +174,7 @@ public class MuseumService {
    * @param timePeriodId
    * @return
    */
+
   @Transactional
   public Museum addMuseumTimePeriodAssociation(long museumId, long timePeriodId) {
     Museum museum = museumRepository.findMuseumByMuseumId(museumId);
@@ -188,6 +205,7 @@ public class MuseumService {
    * @param timePeriodId
    * @return
    */
+
   @Transactional
   public Museum removeMuseumTimePeriodAssociation(long museumId, long timePeriodId) {
 
@@ -217,6 +235,7 @@ public class MuseumService {
    * @return List
    * @author From tutorial notes
    */
+
   private <T> List<T> toList(Iterable<T> iterable) {
     List<T> resultList = new ArrayList<T>();
     for (T t : iterable) {

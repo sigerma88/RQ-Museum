@@ -7,6 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
 import ca.mcgill.ecse321.museum.model.Schedule;
 
+/**
+ * Business logic for scheduleController
+ * 
+ * @author Victor
+ */
+
 @Service
 public class ScheduleService {
     @Autowired
@@ -21,6 +27,7 @@ public class ScheduleService {
      * @param scheduleId
      * @return
      */
+
     @Transactional
     public Schedule getSchedule(long scheduleId) {
         return scheduleRepository.findScheduleByScheduleId(scheduleId);
@@ -31,6 +38,7 @@ public class ScheduleService {
      * @author VZ
      * @return
      */
+
     @Transactional
     public Schedule createSchedule() {
         Schedule schedule = new Schedule();

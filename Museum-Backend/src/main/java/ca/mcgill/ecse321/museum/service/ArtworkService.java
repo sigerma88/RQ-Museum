@@ -12,6 +12,14 @@ import ca.mcgill.ecse321.museum.model.Loan;
 import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.model.RoomType;
 
+/**
+ * Service for Artwork class
+ * 
+ * @author Zahra
+ * @author Siger
+ * @author kieyanmamiche
+ */
+
 @Service
 public class ArtworkService {
 
@@ -38,6 +46,7 @@ public class ArtworkService {
    * @return artwork
    * @author Siger
    */
+
   @Transactional
   public Artwork createArtwork(String name, String artist, Boolean isAvailableForLoan, Double loanFee, String image,
       Boolean isOnLoan, Room room) {
@@ -96,6 +105,7 @@ public class ArtworkService {
    * @return artwork
    * @author Siger
    */
+
   @Transactional
   public Artwork getArtwork(Long artworkId) {
     // Error handling
@@ -113,6 +123,7 @@ public class ArtworkService {
    * @return list of all artworks
    * @author Zahra
    */
+
   @Transactional
   public List<Artwork> getAllArtworks() {
     return toList(artworkRepository.findAll());
@@ -128,6 +139,7 @@ public class ArtworkService {
    * @author Siger
    * @author kieyanmamiche
    */
+
   @Transactional
   public List<Artwork> getAllArtworksByRoom(Long roomId) {
     // Get room
@@ -149,6 +161,7 @@ public class ArtworkService {
    * @author Zahra
    * @author Siger
    */
+
   @Transactional
   public List<Artwork> getAllArtworksByAvailabilityForLoan(Boolean isAvailableForLoan) {
     // Error handling
@@ -169,6 +182,7 @@ public class ArtworkService {
    * @return artwork
    * @author Siger
    */
+
   @Transactional
   public Artwork editArtworkInfo(Long artworkId, String name, String artist, String image) {
     // Get artwork and check if it exists and error handling
@@ -200,6 +214,7 @@ public class ArtworkService {
    * @return artwork
    * @author Siger
    */
+
   @Transactional
   public Artwork editArtworkLoanInfo(Long artworkId, Boolean isAvailableForLoan, Double loanFee) {
     // Get artwork and check if it exists and error handling
@@ -232,6 +247,7 @@ public class ArtworkService {
    * @return if the artwork was deleted (success)
    * @author Siger
    */
+
   @Transactional
   public Artwork deleteArtwork(Long artworkId) {
     // Get artwork and check if it exists and error handling
@@ -259,6 +275,7 @@ public class ArtworkService {
    * @return The status of an artwork
    * @author kieyanmamiche
    */
+
   @Transactional
   public String getArtworkStatus(long artworkId) {
     Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
@@ -299,6 +316,7 @@ public class ArtworkService {
    * @return The number of artworks in a room
    * @author kieyanmamiche
    */
+
   @Transactional
   public int getNumberOfArtworksInRoom(long roomId){
     List<Artwork> artworkList = new ArrayList<Artwork>();
@@ -322,6 +340,7 @@ public class ArtworkService {
    * @return The artwork we moved
    * @author kieyanmamiche
    */
+
   @Transactional
   public Artwork moveArtworkToRoom(long artworkId,long roomId){
     // Find artwork
@@ -369,6 +388,7 @@ public class ArtworkService {
    * @return The artwork we removed
    * @author kieyanmamiche
    */
+
   @Transactional
   public Artwork removeArtworkFromRoom(long artworkId){
     // Find artwork
@@ -400,6 +420,7 @@ public class ArtworkService {
    * @return The status of an artwork
    * @author kieyanmamiche
    */
+
   @Transactional
   public String getArtworkStatus(long artworkId) {
     Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
@@ -440,6 +461,7 @@ public class ArtworkService {
    * @return The number of artworks in a room
    * @author kieyanmamiche
    */
+
   @Transactional
   public int getNumberOfArtworksInRoom(long roomId){
     List<Artwork> artworkList = new ArrayList<Artwork>();
@@ -463,6 +485,7 @@ public class ArtworkService {
    * @return The artwork we moved
    * @author kieyanmamiche
    */
+
   @Transactional
   public Artwork moveArtworkToRoom(long artworkId,long roomId){
     // Find artwork
@@ -510,6 +533,7 @@ public class ArtworkService {
    * @return The artwork we removed
    * @author kieyanmamiche
    */
+
   @Transactional
   public Artwork removeArtworkFromRoom(long artworkId){
     // Find artwork
@@ -541,6 +565,7 @@ public class ArtworkService {
    * @return List
    * @author Tutorial notes
    */
+
   private <T> List<T> toList(Iterable<T> iterable) {
     List<T> resultList = new ArrayList<T>();
     for (T t : iterable) {

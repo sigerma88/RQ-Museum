@@ -29,10 +29,12 @@ import ca.mcgill.ecse321.museum.service.RegistrationService;
  * 
  * @author Kevin
  */
+
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("api/profile")
 public class RegistrationRestController {
+
   @Autowired
   private RegistrationService registrationService;
 
@@ -141,6 +143,7 @@ public class RegistrationRestController {
    * @return employeeDto
    * @author Kevin
    */
+
   @GetMapping(value = {"/employee/{id}", "/{id}/"}, produces = "application/json")
   public ResponseEntity<?> getEmployee(HttpServletRequest request, @PathVariable("id") long id) {
     try {
@@ -263,6 +266,4 @@ public class RegistrationRestController {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
-
-
 }

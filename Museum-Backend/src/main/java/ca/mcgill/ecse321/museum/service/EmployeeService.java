@@ -16,6 +16,13 @@ import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
 import ca.mcgill.ecse321.museum.model.TimePeriod;
 
+/**
+ * Business logic for employeeController
+ * 
+ * @author Victor
+ * @author Siger
+ */
+
 @Service
 public class EmployeeService {
 
@@ -35,30 +42,13 @@ public class EmployeeService {
   private TimePeriodService timePeriodService;
 
   /**
-   * Method to view an employee and get them by their id
-   * 
-   * @author VZ
-   * @author SM
-   * @param employeeId - employee id
-   * @return employee
-   */
-  @Transactional
-  public Employee getEmployee(Long employeeId) {
-    // Error handling
-    if (employeeId == null) {
-      throw new IllegalArgumentException("Employee id cannot be null");
-    }
-
-    return employeeRepository.findEmployeeByMuseumUserId(employeeId);
-  }
-
-  /**
    * Method to get all the employees in the database
    * Allows the manager to view the list of employees
    * 
    * @return List of all employees
    * @author Siger
    */
+
   @Transactional
   public List<Employee> getAllEmployees() {
     return toList(employeeRepository.findAll());
@@ -71,6 +61,7 @@ public class EmployeeService {
    * @param employeeId - id of employee
    * @return
    */
+
   @Transactional
   public Schedule getEmployeeSchedule(long employeeId) {
     Employee employee = employeeRepository.findEmployeeByMuseumUserId(employeeId);
@@ -157,6 +148,7 @@ public class EmployeeService {
    * @param timePeriodId
    * @return
    */
+
   @Transactional
   public Employee deleteEmployeeTimePeriodAssociation(long employeeId, long timePeriodId) {
     /*
@@ -193,6 +185,7 @@ public class EmployeeService {
    * @return if the employee was deleted (success)
    * @author Siger
    */
+
   @Transactional
   public boolean deleteEmployee(Long employeeId) {
     // Check if the employee exists and error handling
@@ -222,6 +215,7 @@ public class EmployeeService {
    * @return List
    * @author From tutorial notes
    */
+
   private <T> List<T> toList(Iterable<T> iterable) {
     List<T> resultList = new ArrayList<T>();
     for (T t : iterable) {

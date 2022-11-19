@@ -25,8 +25,15 @@ import ca.mcgill.ecse321.museum.service.EmployeeService;
 import ca.mcgill.ecse321.museum.service.MuseumService;
 import ca.mcgill.ecse321.museum.service.TimePeriodService;
 
+/**
+ * SchedulingRestController class is used as a controller where we call
+ * our API for our web application
+ * 
+ * @author Victor
+ */
 @CrossOrigin(origins = "*")
 @RestController
+@RequestMapping("api/scheduling")
 public class SchedulingRestController {
     @Autowired
     private EmployeeService employeeService;

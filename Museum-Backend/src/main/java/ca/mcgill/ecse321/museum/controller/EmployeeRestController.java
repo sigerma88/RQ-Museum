@@ -20,6 +20,12 @@ import ca.mcgill.ecse321.museum.controller.utilities.AuthenticationUtility;
 import ca.mcgill.ecse321.museum.dto.EmployeeDto;
 import ca.mcgill.ecse321.museum.service.EmployeeService;
 
+/**
+ * EmployeeRestController class is used as a controller where we call
+ * our API for our web application
+ * @author Siger
+ * @author Kevin
+ */
 
 @CrossOrigin(origins = "*")
 @RequestMapping("api/employee")
@@ -35,7 +41,8 @@ public class EmployeeRestController {
    * @return List of all employees
    * @author Siger, Kevin
    */
-  @GetMapping(value = {"/", "/"})
+
+  @GetMapping(value = {"/", ""})
   public ResponseEntity<?> getAllEmployees(HttpServletRequest request) {
     try {
       if (!AuthenticationUtility.isLoggedIn(request.getSession())) {
@@ -61,6 +68,7 @@ public class EmployeeRestController {
    * @return if the employee was deleted (success)
    * @author Siger, Kevin
    */
+
   @DeleteMapping(value = {"/{employeeId}", "/{employeeId}/"})
   public ResponseEntity<?> deleteEmployee(@PathVariable("employeeId") long employeeId, HttpServletRequest request) {
     try {

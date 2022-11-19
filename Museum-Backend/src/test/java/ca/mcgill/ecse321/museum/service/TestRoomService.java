@@ -33,6 +33,7 @@ import ca.mcgill.ecse321.museum.model.Schedule;
  * 
  * @author Siger
  */
+
 @ExtendWith(MockitoExtension.class)
 public class TestRoomService {
 

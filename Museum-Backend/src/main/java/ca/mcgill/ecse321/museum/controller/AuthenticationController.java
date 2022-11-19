@@ -30,6 +30,7 @@ import ca.mcgill.ecse321.museum.service.AuthenticationService;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthenticationController {
+
   @Autowired
   private AuthenticationService authenticationService;
 
@@ -81,7 +82,6 @@ public class AuthenticationController {
    * @return if the user was logged out (success)
    * @author Kevin
    */
-
 
   @PostMapping("/logout")
   public ResponseEntity<?> logout(HttpServletRequest request) {

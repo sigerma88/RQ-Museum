@@ -5,6 +5,7 @@ package ca.mcgill.ecse321.museum.dto;
  * 
  * @author Siger
  */
+
 public class ScheduleDto {
 
   private Long scheduleId;

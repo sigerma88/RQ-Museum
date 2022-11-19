@@ -6,6 +6,7 @@ package ca.mcgill.ecse321.museum.dto;
  * @author Siger
  * @author Victor
  */
+
 public class MuseumDto {
 
   private Long museumId;

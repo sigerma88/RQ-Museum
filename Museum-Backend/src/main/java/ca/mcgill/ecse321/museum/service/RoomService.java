@@ -12,6 +12,13 @@ import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.model.RoomType;
 
+/**
+ * Business logic for roomController
+ * 
+ * @author Siger
+ * @author kieyanmamiche
+ */
+
 @Service
 public class RoomService {
 
@@ -30,6 +37,7 @@ public class RoomService {
    * @return room
    * @author Siger
    */
+
   @Transactional
   public Room createRoom(String roomName, RoomType roomType, Museum museum) {
     // Error handling
@@ -60,6 +68,7 @@ public class RoomService {
    * @return room
    * @author Siger
    */
+
   @Transactional
   public Room getRoomById(Long roomId) {
     // Error handling
@@ -77,6 +86,7 @@ public class RoomService {
    * @return list of rooms
    * @author Siger
    */
+
   @Transactional
   public List<Room> getAllRooms() {
     return toList(roomRepository.findAll());
@@ -89,6 +99,7 @@ public class RoomService {
    * @return list of rooms
    * @author Siger
    */
+
   @Transactional
   public List<Room> getAllRoomsByMuseum(Museum museum) {
     // Error handling
@@ -109,6 +120,7 @@ public class RoomService {
    * @return room
    * @author Siger
    */
+
   @Transactional
   public Room editRoom(Long roomId, String roomName, RoomType roomType, Museum museum) {
     // Get room and check if it exists
@@ -139,6 +151,7 @@ public class RoomService {
    * @return room
    * @author Siger
    */
+
   @Transactional
   public Room deleteRoom(Long roomId) {
     // Get room and check if it exists and error handling
@@ -166,6 +179,7 @@ public class RoomService {
    * @return maximum number of artworks
    * @author Siger
    */
+
   @Transactional
   public int getMaxNumberOfArtwork(RoomType roomType) {
     // Error handling
@@ -196,6 +210,7 @@ public class RoomService {
    * @return room
    * @author Siger
    */
+
   public Room changeCurrentNumberOfArtwork(Long roomId, Integer currentNumberOfArtwork) {
     // Get room and check if it exists and error handling
     Room room = roomRepository.findRoomByRoomId(roomId);
@@ -230,6 +245,7 @@ public class RoomService {
    * @return The capacity of a room
    * @author kieyanmamiche
    */
+
   @Transactional
   public int getRoomCapacity(long roomId) {
 
@@ -285,6 +301,7 @@ public class RoomService {
    * @return List
    * @author From tutorial notes
    */
+
   private <T> List<T> toList(Iterable<T> iterable) {
     List<T> resultList = new ArrayList<T>();
     for (T t : iterable) {

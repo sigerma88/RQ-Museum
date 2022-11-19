@@ -6,6 +6,7 @@ package ca.mcgill.ecse321.museum.dto;
  * @author Zahra
  * @author Siger
  */
+
 public class ArtworkDto {
 
   private Long artworkId;

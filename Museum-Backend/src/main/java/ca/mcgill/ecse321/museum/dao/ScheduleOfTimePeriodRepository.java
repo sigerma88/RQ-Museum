@@ -15,6 +15,7 @@ import ca.mcgill.ecse321.museum.model.TimePeriod;
  * @author Siger
  * @author VZ
  */
+
 public interface ScheduleOfTimePeriodRepository extends CrudRepository<ScheduleOfTimePeriod, Long> {
 
   ScheduleOfTimePeriod findScheduleOfTimePeriodByScheduleOfTimePeriodId(Long scheduleOfTimePeriodId);
