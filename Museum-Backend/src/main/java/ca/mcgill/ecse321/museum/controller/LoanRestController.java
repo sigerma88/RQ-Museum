@@ -61,9 +61,9 @@ public class LoanRestController {
             for (Loan loan : loanService.getAllLoans()) {
               loanDtos.add(DtoUtility.convertToDto(loan));
             }
-            return ResponseEntity.ok(loanDtos);
+            return new ResponseEntity<>(loanDtos, HttpStatus.FOUND);
           } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
           }
     }
 
@@ -71,17 +71,14 @@ public class LoanRestController {
      * This method is called when an employee approves or denies a loan request
      */
     @PatchMapping(value = { "/patchLoan", "/patchLoan/" })
-    public ResponseEntity<?> patchLoan(@RequestParam(name = "loanDto") LoanDto loanDto) {
+    public ResponseEntity<?> patchLoan(@RequestBody LoanDto loanDto) {
         try {
             Loan patchedLoan = loanService.patchLoanById(loanDto.getLoanId(), loanDto.getRequestAccepted());
             LoanDto returnDto = DtoUtility.convertToDto(patchedLoan);
 
-            // TODO: Send email to user about the status of their loan request
-
-            // TODO: Update the room of the artwork to null
-            return ResponseEntity.ok(returnDto);
+            return new ResponseEntity<>(returnDto, HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
