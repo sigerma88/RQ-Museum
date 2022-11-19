@@ -5,8 +5,6 @@ import ca.mcgill.ecse321.museum.dao.VisitorRepository;
 import ca.mcgill.ecse321.museum.dto.TicketDto;
 import ca.mcgill.ecse321.museum.model.Ticket;
 import ca.mcgill.ecse321.museum.model.Visitor;
-import com.sun.xml.bind.v2.schemagen.xmlschema.List;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.sql.Date;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -33,72 +29,52 @@ public class TicketIntegrationTests {
   @Autowired
   private VisitorRepository visitorRepository;
 
-
-  private static final long VISITOR_ID_1 = 777;
+  //visitor 1 attributes
   private static final String VISITOR_EMAIL_1 = "bob@mail.com";
   private static final String VISITOR_NAME_1 = "Bob Barbier";
   private static final String VISITOR_PASSWORD_1 = "MyPassword";
 
-  private static final long VISITOR_ID_2 = 768;
+  //visitor 2 attributes
   private static final String VISITOR_EMAIL_2 = "marie@mail.com";
   private static final String VISITOR_NAME_2 = "Marie B";
   private static final String VISITOR_PASSWORD_2 = "password";
-
-  private static final LocalDate LOCAL_VISIT_DATE_1 = LocalDate.of(2023, 10, 05); // valueOf("2023-10-05")
-                                                                                  // ;
   private static final String VISIT_DATE_2 = "2023-04-20";
   private static final String VISIT_DATE_1 = "2023-10-05";
-  private static final int TICKETS_VISITOR_2 = 2;
-  private static final long TICKET_ID_2 = 666;
-  private static final long TICKET_ID_1 = 555;
-  private static final long TICKET_ID_3 = 444;
-
-
-  @AfterEach
-  public void clearDatabase() {
-
-    // ticketRepository.deleteAll();
-    // visitorRepository.deleteAll();
-  }
 
   @BeforeEach
   public void setUp() {
-
+    //clear all repositories
     ticketRepository.deleteAll();
     visitorRepository.deleteAll();
 
+    //create visitors
     Visitor visitor1 = new Visitor();
     visitor1.setName(VISITOR_NAME_1);
     visitor1.setPassword(VISITOR_PASSWORD_1);
     visitor1.setEmail(VISITOR_EMAIL_1);
-    // visitor1.setMuseumUserId(VISITOR_ID_1);
     visitorRepository.save(visitor1);
-
 
     Visitor visitor2 = new Visitor();
     visitor2.setEmail(VISITOR_EMAIL_2);
     visitor2.setName(VISITOR_NAME_2);
     visitor2.setPassword(VISITOR_PASSWORD_2);
-    // visitor2.setMuseumUserId(VISITOR_ID_2);
     visitorRepository.save(visitor2);
 
+    //create tickets
     Ticket ticket1 = new Ticket();
-    // ticket1.setTicketId(TICKET_ID_1);
     ticket1.setVisitor(visitorRepository.findVisitorByName(VISITOR_NAME_1));
     ticket1.setVisitDate(Date.valueOf(VISIT_DATE_1));
     ticketRepository.save(ticket1);
-
 
     Ticket ticket2 = new Ticket();
     ticket2.setVisitDate(Date.valueOf(VISIT_DATE_2));
     ticket2.setVisitor(visitorRepository.findVisitorByName(VISITOR_NAME_2));
     ticketRepository.save(ticket2);
 
-
   }
 
   /**
-   * Test for getTicketsByVisitor Fail scenario : invalid user Id given
+   * Test to get all tickets possessed by an  invalid visitor
    *
    * @author Zahra
    */
@@ -111,7 +87,7 @@ public class TicketIntegrationTests {
   }
 
   /**
-   * Test for getTicketsByVisitor Success scenario
+   * Test to get all tickets possessed by an existing visitor
    *
    * @author Zahra
    */
@@ -120,7 +96,7 @@ public class TicketIntegrationTests {
 
     long visitorId = visitorRepository.findVisitorByName(VISITOR_NAME_1).getMuseumUserId();
     ResponseEntity<TicketDto[]> response =
-        client.getForEntity("/tickets/" + visitorId + "/", TicketDto[].class);
+            client.getForEntity("/tickets/" + visitorId + "/", TicketDto[].class);
     assertNotNull(response.getBody(), "Response has body");
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertEquals(1, response.getBody().length);
@@ -130,7 +106,7 @@ public class TicketIntegrationTests {
   }
 
   /**
-   * Test for createTickets Success scenario
+   * Test to successfully create tickets
    *
    * @author Zahra
    */
@@ -140,9 +116,8 @@ public class TicketIntegrationTests {
     long visitorId = visitorRepository.findVisitorByName(VISITOR_NAME_2).getMuseumUserId();
     TicketDto ticketDto = new TicketDto(VISIT_DATE_1, visitorId);
 
-
     ResponseEntity<TicketDto[]> response = client
-        .postForEntity("/tickets/purchase?number=" + numOfTickets, ticketDto, TicketDto[].class);
+            .postForEntity("/tickets/purchase?number=" + numOfTickets, ticketDto, TicketDto[].class);
     assertNotNull(response.getBody(), "Response has body");
     assertEquals(HttpStatus.CREATED, response.getStatusCode());
     assertNotNull(response.getBody(), "Response has body");
@@ -152,7 +127,7 @@ public class TicketIntegrationTests {
   }
 
   /**
-   * Test for createTickets Fail scenario : given number of Tickets is invalid
+   * Test to create tickets with invalid number
    *
    * @author Zahra
    */
@@ -160,15 +135,14 @@ public class TicketIntegrationTests {
   public void testCreateTicketsWithInvalidNumber() {
     int numOfTickets = 0;
     TicketDto ticketDto = new TicketDto(VISIT_DATE_1,
-        visitorRepository.findVisitorByName(VISITOR_NAME_1).getMuseumUserId());
+            visitorRepository.findVisitorByName(VISITOR_NAME_1).getMuseumUserId());
 
     ResponseEntity<String> response =
-        client.postForEntity("/tickets/purchase?number=" + numOfTickets, ticketDto, String.class);
+            client.postForEntity("/tickets/purchase?number=" + numOfTickets, ticketDto, String.class);
     assertNotNull(response, "Response has body");
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     assertEquals("Number of tickets must be at least 1", response.getBody());
 
   }
-
 
 }

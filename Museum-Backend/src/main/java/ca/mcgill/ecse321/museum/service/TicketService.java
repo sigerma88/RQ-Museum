@@ -24,9 +24,9 @@ public class TicketService {
   /**
    * Method to create a list of tickets
    *
-   * @param visitorID
-   * @param date
-   * @param numberOfTickets
+   * @param visitorID       visitor's ID
+   * @param date            chosen date of visit
+   * @param numberOfTickets number of tickets to create
    * @return ticketsBought
    * @author Zahra
    */
@@ -50,7 +50,6 @@ public class TicketService {
       ticketsBought.add(ticket);
     }
 
-    System.out.println(ticketsBought);
     return ticketsBought;
 
   }
@@ -80,26 +79,14 @@ public class TicketService {
   }
 
   /**
-   * Feature 6
+   * Method to get a list of all tickets possessed by a visitor
+   *
+   * @param visitorID - id of the visitor
+   * @return allTicketsOfVisitor
+   * @author Zahra
    */
   @Transactional
   public List<Ticket> getTicketsByVisitor(long visitorID) {
-
-    // if (visitorRepository.findVisitorByMuseumUserId(visitorID) == null) {
-    // throw new IllegalArgumentException("Visitor doesn't exist");
-    // }
-    // List<Ticket> allTicketsOfVisitor = new ArrayList<>();
-    // List<Ticket> allTickets = toList(ticketRepository.findAll());
-    // for (Ticket ticket : allTickets) {
-
-    // if (ticket != null && ticket.getVisitor().getMuseumUserId() == visitorID) {
-    // allTicketsOfVisitor.add(ticket);
-    // }
-
-    // }
-
-    // return allTicketsOfVisitor;
-
     Visitor visitor = visitorRepository.findVisitorByMuseumUserId(visitorID);
     if (visitor == null) {
       throw new IllegalArgumentException("Visitor doesn't exist");
