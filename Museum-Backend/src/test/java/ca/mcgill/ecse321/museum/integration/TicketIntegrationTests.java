@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -54,6 +53,7 @@ public class TicketIntegrationTests {
 
   @AfterEach
   public void clearDatabase() {
+
     ticketRepository.deleteAll();
     visitorRepository.deleteAll();
   }
@@ -61,30 +61,35 @@ public class TicketIntegrationTests {
   @BeforeEach
   public void setUp() {
 
+    ticketRepository.deleteAll();
+    visitorRepository.deleteAll();
+
     Visitor visitor1 = new Visitor();
     visitor1.setName(VISITOR_NAME_1);
     visitor1.setPassword(VISITOR_PASSWORD_1);
     visitor1.setEmail(VISITOR_EMAIL_1);
-    visitor1.setMuseumUserId(VISITOR_ID_1);
+    // visitor1.setMuseumUserId(VISITOR_ID_1);
     visitorRepository.save(visitor1);
+
 
     Visitor visitor2 = new Visitor();
     visitor2.setEmail(VISITOR_EMAIL_2);
     visitor2.setName(VISITOR_NAME_2);
     visitor2.setPassword(VISITOR_PASSWORD_2);
-    visitor2.setMuseumUserId(VISITOR_ID_2);
+    //visitor2.setMuseumUserId(VISITOR_ID_2);
     visitorRepository.save(visitor2);
 
     Ticket ticket1 = new Ticket();
-    ticket1.setTicketId(TICKET_ID_1);
-    ticket1.setVisitor(visitorRepository.findVisitorByMuseumUserId(VISITOR_ID_1));
+    //ticket1.setTicketId(TICKET_ID_1);
+    ticket1.setVisitor(visitorRepository.findVisitorByName(VISITOR_NAME_1));
     ticket1.setVisitDate(Date.valueOf(VISIT_DATE_1));
     ticketRepository.save(ticket1);
 
+
     Ticket ticket2 = new Ticket();
-    ticket2.setTicketId(TICKET_ID_2);
+    //ticket2.setTicketId(TICKET_ID_2);
     ticket2.setVisitDate(Date.valueOf(VISIT_DATE_2));
-    ticket2.setVisitor(visitorRepository.findVisitorByMuseumUserId(VISITOR_ID_2));
+    ticket2.setVisitor(visitorRepository.findVisitorByName(VISITOR_NAME_2));
     ticketRepository.save(ticket2);
 
 
@@ -94,17 +99,18 @@ public class TicketIntegrationTests {
   /**
    * Test for getTicketsByVisitor
    * Fail scenario : invalid user Id given
+   * ALMOST
    *
    * @author Zahra
    */
 
   @Test
   public void testGetTicketByInvalidVisitor() {
-    ResponseEntity<String> response = client.getForEntity("/visitor/tickets/" + -1, String.class);
+    ResponseEntity<String> response = client.getForEntity("/tickets/" + "Nobody" + "/", String.class);
     assertNotNull(response);
     assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     //assertTrue(response.getBody().contains("Visitor doesn't exist"));
-    // assertEquals("Visitor doesn't exist", response.getBody());
+    assertEquals("Visitor doesn't exist", response.getBody(), "Correct response body message");
   }
 
   /**
@@ -116,11 +122,16 @@ public class TicketIntegrationTests {
   @Test
   public void testGetTicketsByVisitor() {
     // List<TicketDto> ticketDtoList = createTicketDto();
+    //int toList(visitorRepository.findAll())
+    //long visitorId = visitorRepository.findVisitorByName(VISITOR_NAME_1).getMuseumUserId();
 
-    ResponseEntity<TicketDto[]> response = client.getForEntity("/tickets/" + VISITOR_ID_1, TicketDto[].class);
+    ResponseEntity<TicketDto[]> response = client.getForEntity("/" + VISITOR_NAME_1 + "/tickets/", TicketDto[].class);
     assertNotNull(response.getBody(), "Response has body");
     assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertEquals(VISITOR_ID_1, Arrays.stream(response.getBody()).toList().get(1).getVisitor().getUserId());
+    assertEquals(1, response.getBody().length);
+    assertEquals(VISITOR_NAME_1, response.getBody()[0].getVisitor().getName());
+    assertTrue(VISIT_DATE_1 == response.getBody()[0].getVisitDate().toString());
+    // assertEquals(VISITOR_ID_1, Arrays.stream(response.getBody()).toList().get(1).getVisitor().getUserId());
   }
 
   /**
@@ -132,13 +143,13 @@ public class TicketIntegrationTests {
   @Test
   public void testCreateTickets() {
     int numOfTickets = 2;
-    ResponseEntity<TicketDto[]> response = client.postForEntity("ticket/purchase/?visitorId=" + VISITOR_ID_2 + "&visitDate=" + Date.valueOf(VISIT_DATE_2) + "&number=" + numOfTickets, new ArrayList<TicketDto>(), TicketDto[].class);
+    ResponseEntity<TicketDto[]> response = client.postForEntity("/ticket/purchase/?visitorName=" + VISITOR_NAME_2 + "&visitDate=" + VISIT_DATE_2 + "&number=" + numOfTickets + "/", new ArrayList<TicketDto>(), TicketDto[].class);
     assertNotNull(response);
     assertEquals(HttpStatus.CREATED, response.getStatusCode());
     assertNotNull(response.getBody(), "Response has body");
     assertEquals(numOfTickets, response.getBody().length);
-    assertEquals(VISIT_DATE_2, Arrays.stream(response.getBody()).toList().get(1).getVisitDate().toString());
-    assertEquals(VISITOR_ID_2, Arrays.stream(response.getBody()).toList().get(1).getVisitor().getUserId());
+    //assertEquals(VISIT_DATE_2, Arrays.stream(response.getBody()).toList().get(1).getVisitDate().toString());
+    //assertEquals(VISITOR_NAME_2, Arrays.stream(response.getBody()).toList().get(1).getVisitor().getName());
   }
 
   /**
@@ -148,30 +159,12 @@ public class TicketIntegrationTests {
    * @author Zahra
    */
   @Test
-  public void testCreateicketsWithInvalidNumber() {
-    ResponseEntity<String> response = client.postForEntity("ticket/purchase/?visitorId=" + VISITOR_ID_2 + "&visitDate=" + Date.valueOf(VISIT_DATE_2) + "&number=" + 0, new ArrayList<TicketDto>(), String.class);
+  public void testCreateTicketsWithInvalidNumber() {
+    ResponseEntity<String> response = client.postForEntity("/ticket/purchase/?visitorName=" + VISITOR_NAME_2 + "&visitDate=" + Date.valueOf(VISIT_DATE_2) + "&number=" + 0 + "/", new ArrayList<TicketDto>(), String.class);
     assertNotNull(response, "Response has body");
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     assertTrue(response.getBody().contains("Number of tickets must be at least 1"));
   }
-
-  /**
-   * Test for createTickets
-   * Fail scenario : given date is invalid
-   *
-   * @author Zahra
-   */
-  /*@Test
-
-  public void testBuyTicketsWithInvalidDate() {
-    int numberOfArtworks = 3;
-    ResponseEntity<String> response = client.postForEntity("ticket/purchase/?visitorId=" + VISITOR_ID_2 + "&visitDate=" + Date.valueOf(INVALID_DATE) + "&number=" + numberOfArtworks, new ArrayList<TicketDto>(), String.class);
-    assertNotNull(response, "Response has body");
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    assertTrue(response.getBody().contains("Number of tickets must be at least 1"));
-
-  }
-  */
 
 
 }

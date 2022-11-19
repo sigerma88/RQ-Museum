@@ -5,6 +5,7 @@ import ca.mcgill.ecse321.museum.model.Ticket;
 import ca.mcgill.ecse321.museum.model.Visitor;
 import ca.mcgill.ecse321.museum.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,18 +26,18 @@ public class TicketRestController {
    *
    * @param visitDate
    * @param numberOfTickets
-   * @param visitorID
+   * @param visitorName
    * @return boughtTickets
    */
   @PostMapping(value = {"/tickets/purchase", "/tickets/purchase/"})
-  public ResponseEntity<?> createTickets(@RequestParam(name = "visitorId") Long visitorID, @RequestParam Date visitDate, @RequestParam(name = "number") int numberOfTickets) {
+  public ResponseEntity<?> createTickets(@RequestParam(name = "visitorName") String visitorName, @RequestParam Date visitDate, @RequestParam(name = "number") int numberOfTickets) {
     try {
       List<TicketDto> boughtTickets = new ArrayList<>();
-      for (Ticket ticket : ticketService.createTickets(visitorID, visitDate, numberOfTickets)) {
+      for (Ticket ticket : ticketService.createTickets(visitorName, visitDate, numberOfTickets)) {
         boughtTickets.add(DtoUtility.convertToDto(ticket));
       }
       return new ResponseEntity<>(boughtTickets, HttpStatus.CREATED);
-    } catch (Exception e) {
+    } catch (IllegalArgumentException e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
@@ -45,20 +46,20 @@ public class TicketRestController {
   /**
    * RESTful API to get all ticktets by visitor
    *
-   * @param visitorId
+   * @param visitorName
    * @return allTicketsOfVisitor
    * @author Zahra
    */
-  @GetMapping(value = {"/{visitor}/tickets", "/{visitor}/tickets/"})
-  public ResponseEntity<?> getTicketsByVisitor(@PathVariable("visitor") long visitorId) {
+  @GetMapping(value = {"/tickets/{visitor}", "/tickets/{visitor}/"})
+  public ResponseEntity<?> getTicketsByVisitor(@PathVariable("visitor") String visitorName) {
     try {
       List<TicketDto> allTicketsOfVisitor = new ArrayList<>();
-      for (Ticket ticket : ticketService.getTicketsByVisitor(visitorId)) {
+      for (Ticket ticket : ticketService.getTicketsByVisitor(visitorName)) {
         allTicketsOfVisitor.add(DtoUtility.convertToDto(ticket));
       }
       return new ResponseEntity<>(allTicketsOfVisitor, HttpStatus.OK);
     } catch (Exception e) {
-      return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
 

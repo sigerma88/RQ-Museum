@@ -5,6 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.TimeZone;
+
 @RestController
 @SpringBootApplication
 public class MuseumApplication {
@@ -16,5 +18,10 @@ public class MuseumApplication {
   @RequestMapping("/")
   public String greeting() {
     return "Hello world!";
+  }
+
+  void started() {
+
+    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
   }
 }

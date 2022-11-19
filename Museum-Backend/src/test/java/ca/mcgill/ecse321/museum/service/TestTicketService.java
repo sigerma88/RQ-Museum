@@ -66,15 +66,15 @@ public class TestTicketService {
   @BeforeEach
   public void setMockOutput() {
 
-    lenient().when(visitorRepository.findVisitorByMuseumUserId(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
-      if (invocation.getArgument(0).equals(VISITOR_ID_1)) {
+    lenient().when(visitorRepository.findVisitorByName(anyString())).thenAnswer((InvocationOnMock invocation) -> {
+      if (invocation.getArgument(0).equals(VISITOR_NAME_1)) {
         Visitor visitor = new Visitor();
         visitor.setEmail(VISITOR_EMAIL_1);
         visitor.setName(VISITOR_NAME_1);
         visitor.setPassword(VISITOR_PASSWORD_1);
         visitor.setMuseumUserId(VISITOR_ID_1);
         return visitor;
-      } else if (invocation.getArgument(0).equals(VISITOR_ID_2)) {
+      } else if (invocation.getArgument(0).equals(VISITOR_NAME_2)) {
         Visitor visitor2 = new Visitor();
         visitor2.setEmail(VISITOR_EMAIL_2);
         visitor2.setName(VISITOR_NAME_2);
@@ -92,19 +92,19 @@ public class TestTicketService {
       List<Ticket> allTickets = new ArrayList<>();
       Ticket ticket1 = new Ticket();
       ticket1.setTicketId(TICKET_ID_1);
-      ticket1.setVisitor(visitorRepository.findVisitorByMuseumUserId(VISITOR_ID_1));
+      ticket1.setVisitor(visitorRepository.findVisitorByName(VISITOR_NAME_1));
       ticket1.setVisitDate(Date.valueOf(VISIT_DATE_1));
       allTickets.add(ticket1);
 
       Ticket ticket2 = new Ticket();
       ticket2.setTicketId(TICKET_ID_2);
       ticket2.setVisitDate(Date.valueOf(VISIT_DATE_2));
-      ticket2.setVisitor(visitorRepository.findVisitorByMuseumUserId(VISITOR_ID_2));
+      ticket2.setVisitor(visitorRepository.findVisitorByName(VISITOR_NAME_2));
       allTickets.add(ticket2);
 
       Ticket ticket3 = new Ticket();
       ticket3.setTicketId(TICKET_ID_3);
-      ticket3.setVisitor(visitorRepository.findVisitorByMuseumUserId(VISITOR_ID_2));
+      ticket3.setVisitor(visitorRepository.findVisitorByName(VISITOR_NAME_2));
       ticket3.setVisitDate(Date.valueOf(VISIT_DATE_2));
       allTickets.add(ticket3);
 
@@ -127,7 +127,7 @@ public class TestTicketService {
     //long visitorID = VISITOR_ID_1;
     Ticket ticket = null;
     try {
-      ticket = ticketService.createTicket(VISITOR_ID_1, visitDate);
+      ticket = ticketService.createTicket(VISITOR_NAME_1, visitDate);
     } catch (Exception exception) {
 
       fail(exception.getMessage());
@@ -151,7 +151,7 @@ public class TestTicketService {
     Date visitDate = null;
     long visitorID = VISITOR_ID_1;
     try {
-      ticket = ticketService.createTicket(visitorID, visitDate);
+      ticket = ticketService.createTicket(VISITOR_NAME_1, visitDate);
     } catch (IllegalArgumentException e) {
       error = e.getMessage();
     }
@@ -174,7 +174,7 @@ public class TestTicketService {
     Visitor visitor = visitorRepository.findVisitorByMuseumUserId(VISITOR_ID_1);
     long visitorID = VISITOR_ID_1;
     try {
-      ticket = ticketService.createTicket(visitorID, Date.valueOf(visitDate));
+      ticket = ticketService.createTicket(VISITOR_NAME_1, Date.valueOf(visitDate));
     } catch (IllegalArgumentException e) {
       error = e.getMessage();
     }
@@ -195,9 +195,10 @@ public class TestTicketService {
     Ticket ticket = null;
     String visitDate = "2023-04-21";
     long visitorId = 0;
+    String visitorName = "John";
     String error = "";
     try {
-      ticket = ticketService.createTicket(visitorId, Date.valueOf(visitDate));
+      ticket = ticketService.createTicket(visitorName, Date.valueOf(visitDate));
     } catch (IllegalArgumentException e) {
       error = e.getMessage();
     }
@@ -220,7 +221,7 @@ public class TestTicketService {
     int number = 4;
     long visitorID = VISITOR_ID_1;
     try {
-      createdTickets = ticketService.createTickets(visitorID, Date.valueOf(visitDate), number);
+      createdTickets = ticketService.createTickets(VISITOR_NAME_1, Date.valueOf(visitDate), number);
 
     } catch (IllegalArgumentException e) {
       fail();
@@ -246,8 +247,9 @@ public class TestTicketService {
     int number = 5;
     long visitorId = 0;
     String error = "";
+    String visitorName = "John";
     try {
-      createdTickets = ticketService.createTickets(visitorId, Date.valueOf(visitDate), number);
+      createdTickets = ticketService.createTickets(visitorName, Date.valueOf(visitDate), number);
     } catch (IllegalArgumentException e) {
       error = e.getMessage();
     }
@@ -267,9 +269,10 @@ public class TestTicketService {
     String visitDate = "2023-04-22";
     String error = "";
     long visitorID = VISITOR_ID_1;
+    String visitorName = "John";
     int number = 0;
     try {
-      createdTickets = ticketService.createTickets(visitorID, Date.valueOf(visitDate), number);
+      createdTickets = ticketService.createTickets(visitorName, Date.valueOf(visitDate), number);
     } catch (IllegalArgumentException e) {
 
       error = e.getMessage();
@@ -294,7 +297,7 @@ public class TestTicketService {
     long visitorID = VISITOR_ID_1;
     int number = 7;
     try {
-      createdTickets = ticketService.createTickets(visitorID, Date.valueOf(visitDate), number);
+      createdTickets = ticketService.createTickets(VISITOR_NAME_1, Date.valueOf(visitDate), number);
     } catch (IllegalArgumentException e) {
 
       error = e.getMessage();
@@ -314,14 +317,14 @@ public class TestTicketService {
   @Test
   public void testGetTicketsByVisitor() {
     List<Ticket> allTicketsOfVisitor = null;
-    long visitorId = VISITOR_ID_2;
+    Visitor visitor = visitorRepository.findVisitorByName(VISITOR_NAME_2);
 
-    allTicketsOfVisitor = ticketService.getTicketsByVisitor(visitorId);
+    allTicketsOfVisitor = ticketService.getTicketsByVisitor(VISITOR_NAME_2);
 
     assertNotNull(allTicketsOfVisitor);
     assertEquals(TICKETS_VISITOR_2, allTicketsOfVisitor.size());
     assertEquals(VISIT_DATE_2, allTicketsOfVisitor.get(1).getVisitDate().toString());
-    assertEquals(VISITOR_ID_2, allTicketsOfVisitor.get(1).getVisitor().getMuseumUserId());
+    assertEquals(VISITOR_NAME_2, allTicketsOfVisitor.get(1).getVisitor().getName());
 
   }
 
@@ -335,9 +338,10 @@ public class TestTicketService {
   public void testGetTicketsWithNonExistingVisitor() {
     long visitorId = 0;
     String error = null;
+    String visitorName = "John";
     List<Ticket> allTicketsOfVisitor = new ArrayList<>();
     try {
-      allTicketsOfVisitor = ticketService.getTicketsByVisitor(visitorId);
+      allTicketsOfVisitor = ticketService.getTicketsByVisitor(visitorName);
     } catch (IllegalArgumentException e) {
       error = e.getMessage();
     }
