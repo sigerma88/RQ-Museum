@@ -87,7 +87,6 @@ public class RegistrationService {
   @Transactional
   public Visitor getVisitorPersonalInformation(long museumUserId) throws Exception {
     Visitor visitor = visitorRepository.findVisitorByMuseumUserId(museumUserId);
-    // Employee employee = employeeRepository.findEmployeeByMuseumUserId(museumUserId);
     if (visitor == null) {
       throw new Exception("Account was not found in out system. ");
     }

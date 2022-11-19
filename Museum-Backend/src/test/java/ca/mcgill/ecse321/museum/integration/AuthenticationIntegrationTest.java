@@ -175,7 +175,7 @@ public class AuthenticationIntegrationTest {
   /**
    * Create a visitor Dto
    * 
-   * @param visitor
+   * @param visitor - visitor to be created
    * @return visitorDto
    */
 

@@ -36,7 +36,7 @@ public class AuthenticationController {
   /**
    * POST to login a user
    * 
-   * @param user - MuseumUserDto
+   * @param museumUser - MuseumUserDto
    * @return if the user was logged in (success)
    * @author Kevin
    */

@@ -870,7 +870,7 @@ public class RegistrationIntegrationTest {
     /**
      * Create employee and login
      * 
-     * @param employee - employee to login
+     * @param newEmployee - employee to login
      * @return EmployeeDto - the logged in employee
      * @author Kevin
      */
