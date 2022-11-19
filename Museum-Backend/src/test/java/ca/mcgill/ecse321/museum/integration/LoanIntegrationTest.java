@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Collections;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -22,7 +27,6 @@ import ca.mcgill.ecse321.museum.dao.MuseumRepository;
 import ca.mcgill.ecse321.museum.dao.RoomRepository;
 import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
-import ca.mcgill.ecse321.museum.dto.LoanDto;
 import ca.mcgill.ecse321.museum.model.Artwork;
 import ca.mcgill.ecse321.museum.model.Loan;
 import ca.mcgill.ecse321.museum.model.Museum;
@@ -113,6 +117,13 @@ public class LoanIntegrationTest {
 	}
 
 	private Long testCreateLoan() {
+
+		// create headers
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+
 		Artwork artwork = artworkService.getAllArtworks().get(0);
 		Visitor visitor = visitorRepository.findVisitorByName("Please");
 
@@ -122,7 +133,7 @@ public class LoanIntegrationTest {
 		loan.setVisitor(visitor);
 		LoanDto loanDto = DtoUtility.convertToDto(loan);
 
-		HttpEntity<LoanDto> request = new HttpEntity<>(loanDto);
+		HttpEntity<LoanDto> request = new HttpEntity<>(loanDto, headers);
 		
 
 		ResponseEntity<LoanDto> response = client.postForEntity("/postLoan", request, LoanDto.class);
@@ -146,5 +157,15 @@ public class LoanIntegrationTest {
 		assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
 		assertNotNull(response.getBody(), "Response has body");
     
+	}
+
+	class LoanDto {
+		private Long loanId;
+		private Boolean requestAccepted;
+		private VisitorDto visitorDto;
+		private ArtworkDto artworkDto;
+
+		public LoanDto loanDto() {
+		}
 	}
 }
