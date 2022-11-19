@@ -1,5 +1,9 @@
 package ca.mcgill.ecse321.museum.dto;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class LoanDto {
 
     private Long loanId;
@@ -53,11 +57,52 @@ public class LoanDto {
         return artworkDto;
     }
 
-    public void setVisitor(VisitorDto aVisitorDto) {
+    public void setVisitorDto(VisitorDto aVisitorDto) {
         visitorDto = aVisitorDto;
     }
 
-    public void setArtwork(ArtworkDto aArtworkDto) {
+    public void setArtworkDto(ArtworkDto aArtworkDto) {
         artworkDto = aArtworkDto;
     }
+
+    @JsonProperty("ArtworkDto")
+    public void setArtworkId(ArtworkDtoDeserializer artworkDtoDeserializer) {
+        artworkDto.setArtworkId(artworkDtoDeserializer.getArtworkId());
+    }
+
+    @JsonProperty("ArtworkDto")
+    public void setName(ArtworkDtoDeserializer artworkDtoDeserializer) {
+        artworkDto.setName(artworkDtoDeserializer.getName());
+    }
+
+    @JsonProperty("ArtworkDto")
+    public void setArtist(ArtworkDtoDeserializer artworkDtoDeserializer) {
+        artworkDto.setArtist(artworkDtoDeserializer.getArtist());
+    }
+
+    @JsonProperty("ArtworkDto")
+    public void setIsAvailableForLoan(ArtworkDtoDeserializer artworkDtoDeserializer) {
+        artworkDto.setIsAvailableForLoan(artworkDtoDeserializer.getIsAvailableForLoan());
+    }
+
+    @JsonProperty("ArtworkDto")
+    public void setLoanFee(ArtworkDtoDeserializer artworkDtoDeserializer) {
+        artworkDto.setLoanFee(artworkDtoDeserializer.getLoanFee());
+    }
+
+    @JsonProperty("ArtworkDto")
+    public void setImage(ArtworkDtoDeserializer artworkDtoDeserializer) {
+        artworkDto.setImage(artworkDtoDeserializer.getImage());
+    }
+
+    @JsonProperty("ArtworkDto")
+    public void setIsOnLoan(ArtworkDtoDeserializer artworkDtoDeserializer) {
+        artworkDto.setIsOnLoan(artworkDtoDeserializer.getIsOnLoan());
+    }
+
+    @JsonProperty("ArtworkDto")
+    public void setRoom(ArtworkDtoDeserializer artworkDtoDeserializer) {
+        artworkDto.setRoom(artworkDtoDeserializer.getRoom());
+    }
 }
+

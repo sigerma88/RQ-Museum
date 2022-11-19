@@ -8,6 +8,10 @@ public class VisitorDto {
     private String name;
     private String password;
 
+    public VisitorDto () {
+        
+    }
+
     public Long getUserId() {
         return userId;
     }
