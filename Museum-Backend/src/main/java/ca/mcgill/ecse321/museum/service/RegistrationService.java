@@ -20,6 +20,8 @@ import ca.mcgill.ecse321.museum.model.Visitor;
 
 /**
  * Business logic for registrationController
+ * 
+ * @author Kevin
  */
 @Service
 public class RegistrationService {
@@ -288,8 +290,9 @@ public class RegistrationService {
    * @param oldPassword - old password of manager
    * @param newPassword - new password of manager
    * @return Manager - the manager that was updated
-   * @throws Exception
+   * @author Kevin
    */
+
   public Manager editManagerInformation(long id, String oldPassword, String newPassword)
       throws Exception {
     Manager manager = managerRepository.findManagerByMuseumUserId(id);
@@ -386,6 +389,7 @@ public class RegistrationService {
    * 
    * @param email - email to be checked
    * @return boolean - true if email exists, false otherwise
+   * @author Kevin
    */
   public boolean checkIfEmailExists(String email) throws Exception {
     Visitor visitor = visitorRepository.findVisitorByEmail(email);
