@@ -58,7 +58,7 @@ public class LoanRestController {
     @GetMapping(value = { "/loans", "/loans/" }) 
     public ResponseEntity<?> getLoans() {
         try {
-            LoanDto[] loanDtos;
+            List<LoanDto> loanDtos = new ArrayList<LoanDto>();
             for (Loan loan : loanService.getAllLoans()) {
               loanDtos.add(DtoUtility.convertToDto(loan));
             }
