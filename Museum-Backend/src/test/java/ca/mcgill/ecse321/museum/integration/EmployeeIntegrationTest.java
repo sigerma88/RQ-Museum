@@ -244,6 +244,12 @@ public class EmployeeIntegrationTest {
                 "Correct response body message");
     }
 
+    /**
+     * Test delete employee when not logged in
+     * 
+     * @author Kevin
+     */
+
     @Test
     public void testDeleteEmployeeNotLoggedIn() {
         ManagerDto manager = createManagerDto(createManager(FIRST_VALID_MANAGER_NAME,
