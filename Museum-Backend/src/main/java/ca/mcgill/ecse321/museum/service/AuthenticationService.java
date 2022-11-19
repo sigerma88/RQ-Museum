@@ -12,6 +12,12 @@ import ca.mcgill.ecse321.museum.model.Manager;
 import ca.mcgill.ecse321.museum.model.MuseumUser;
 import ca.mcgill.ecse321.museum.model.Visitor;
 
+/**
+ * Business logic for authenticationController
+ * 
+ * @author Kevin
+ */
+
 @Service
 public class AuthenticationService {
     @Autowired
@@ -20,6 +26,15 @@ public class AuthenticationService {
     private EmployeeRepository employeeRepository;
     @Autowired
     private ManagerRepository managerRepository;
+
+    /**
+     * Authenticate user when logging in
+     * 
+     * @param email - email of user
+     * @param password - password of user
+     * @return MuseumUser - the user that was authenticated
+     * @author Kevin
+     */
 
     @Transactional
     public MuseumUser authenticateUser(String email, String password) throws Exception {

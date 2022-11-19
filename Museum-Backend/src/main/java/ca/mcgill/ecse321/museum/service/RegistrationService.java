@@ -11,13 +11,14 @@ import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Manager;
 import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.Visitor;
-
 import java.util.regex.Pattern;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.regex.Matcher;
 
-
+/**
+ * Business logic for registrationController
+ */
 @Service
 public class RegistrationService {
   @Autowired
@@ -29,8 +30,14 @@ public class RegistrationService {
   @Autowired
   private ManagerRepository managerRepository;
 
-  /*
-   *
+  /**
+   * Register a new visitor
+   * 
+   * @param email - email of visitor
+   * @param password - password of visitor
+   * @param name - name of visitor
+   * @return Visitor - the visitor that was created
+   * @author Kevin
    */
 
   @Transactional
@@ -66,9 +73,12 @@ public class RegistrationService {
     return visitor;
   }
 
-
-  /*
-   *
+  /**
+   * Get visitor personal information
+   * 
+   * @param museumUserId - id of visitor
+   * @return Visitor - the visitor that was found
+   * @author Kevin
    */
 
   @Transactional
@@ -81,9 +91,14 @@ public class RegistrationService {
     return visitor;
   }
 
-  /*
-   *
+  /**
+   * Get employee personal information
+   * 
+   * @param museumUserId - id of museumUser
+   * @return Employee - the employee that was found
+   * @author Kevin
    */
+
   public Employee getEmployeePersonalInformation(long museumUserId) throws Exception {
     Employee employee = employeeRepository.findEmployeeByMuseumUserId(museumUserId);
     if (employee == null) {
@@ -93,9 +108,16 @@ public class RegistrationService {
     return employee;
   }
 
-
-  /*
-   *
+  /**
+   * Update visitor personal information
+   * 
+   * @param visitorId - id of visitor
+   * @param email - new email of visitor
+   * @param oldPassword - old password of visitor
+   * @param newPassword - new password of visitor
+   * @param name - new name of visitor
+   * @return Visitor - the visitor that was updated
+   * @author Kevin
    */
 
   @Transactional
@@ -142,8 +164,12 @@ public class RegistrationService {
   }
 
 
-  /*
-   *
+  /**
+   * Register a new employee
+   * 
+   * @param name - name of employee
+   * @return Employee - the employee that was created
+   * @author Kevin
    */
 
   public Employee createEmployee(String name) throws Exception {
@@ -187,7 +213,12 @@ public class RegistrationService {
   }
 
   /**
-   *
+   * Edit employee information
+   * 
+   * @param oldPassword - old password of employee
+   * @param newPassword - new password of employee
+   * @return Employee - the employee that was updated
+   * @author Kevin
    */
 
   public Employee editEmployeeInformation(long employeeId, String oldPassword, String newPassword)
@@ -215,8 +246,12 @@ public class RegistrationService {
   }
 
 
-  /*
-   *
+  /**
+   * Check password validity
+   * 
+   * @param password - password to be checked
+   * @return boolean - true if password is valid, false otherwise
+   * @author Kevin
    */
 
   public boolean passwordValidityChecker(String password) {
@@ -228,8 +263,12 @@ public class RegistrationService {
   }
 
 
-  /*
-   *
+  /**
+   * Check email validity
+   * 
+   * @param email - email to be checked
+   * @return boolean - true if email is valid, false otherwise
+   * @author Kevin
    */
 
   public boolean emailValidityChecker(String email) {
@@ -241,8 +280,11 @@ public class RegistrationService {
   }
 
 
-  /*
-   *
+  /**
+   * Generate a random password
+   * 
+   * @return String - the generated password
+   * @author Kevin
    */
 
   public String passwordGenerator() {
@@ -274,17 +316,29 @@ public class RegistrationService {
     return employeePassword;
   }
 
-  /*
-   *
+
+  /**
+   * Get a random number
+   * 
+   * @param min - minimum number
+   * @param max - maximum number
+   * @return int - the random number
+   * @author Kevin
    */
 
   public int getRandomNumber(int min, int max) {
     return (int) ((Math.random() * (max - min)) + min);
   }
 
-  /*
-   *
+
+  /**
+   * Check validity of name
+   * 
+   * @param name - name to be checked
+   * @return boolean - true if name is valid, false otherwise
+   * @author Kevin
    */
+
   public boolean nameChecker(String name) {
     String namePattern = "^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$";
     Pattern pattern = Pattern.compile(namePattern);
@@ -292,6 +346,12 @@ public class RegistrationService {
     return nameMatcher.matches();
   }
 
+  /**
+   * Check if email exists
+   * 
+   * @param email - email to be checked
+   * @return boolean - true if email exists, false otherwise
+   */
   public boolean checkIfEmailExists(String email) {
     Visitor visitor = visitorRepository.findVisitorByEmail(email);
     Employee employee = employeeRepository.findEmployeeByEmail(email);
@@ -299,12 +359,4 @@ public class RegistrationService {
 
     return visitor != null || employee != null || manager != null;
   }
-
-  // public boolean checkIfNameExists(String name) {
-  // Visitor visitor = visitorRepository.findVisitorByName(name);
-  // Employee employee = employeeRepository.findEmployeeByName(name);
-  // Manager manager = managerRepository.findManagerByName(name);
-
-  // return visitor != null || employee != null || manager != null;
-  // }
 }

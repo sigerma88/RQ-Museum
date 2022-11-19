@@ -1,5 +1,11 @@
 package ca.mcgill.ecse321.museum.dto;
 
+/**
+ * MuseumUser DTO
+ * 
+ * @author Kevin
+ */
+
 public class MuseumUserDto {
     private long userId;
     private String email;

@@ -3,7 +3,7 @@ package ca.mcgill.ecse321.museum.dto;
 /**
  * Employee DTO
  * 
- * @author Siger
+ * @author Siger, Kevin
  */
 public class EmployeeDto extends MuseumUserDto {
 

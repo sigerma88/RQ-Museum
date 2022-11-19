@@ -23,7 +23,9 @@ import ca.mcgill.ecse321.museum.model.Visitor;
 /**
  * This class tests the Authentication Service
  * 
+ * @author Kevin
  */
+
 @ExtendWith(MockitoExtension.class)
 public class TestAuthenticationService {
   @Mock

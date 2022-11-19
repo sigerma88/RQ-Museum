@@ -22,7 +22,11 @@ import ca.mcgill.ecse321.museum.dao.VisitorRepository;
 import ca.mcgill.ecse321.museum.dto.VisitorDto;
 import ca.mcgill.ecse321.museum.model.Visitor;
 
-
+/**
+ * This class tests the authentication rest controller
+ * 
+ * @author Kevin
+ */
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class AuthenticationIntegrationTest {
   @Autowired
@@ -34,6 +38,11 @@ public class AuthenticationIntegrationTest {
   @Autowired
   private VisitorRepository visitorRepository;
 
+  /**
+   * Delete all the employees and visitors in the database
+   * 
+   * @author Kevin
+   */
   @BeforeEach
   @AfterEach
   public void clearDatabase() {
@@ -62,7 +71,7 @@ public class AuthenticationIntegrationTest {
   }
 
   /**
-   * Test whe visitor login with wrong password
+   * Test when visitor login with wrong password
    * 
    * @author Kevin
    */

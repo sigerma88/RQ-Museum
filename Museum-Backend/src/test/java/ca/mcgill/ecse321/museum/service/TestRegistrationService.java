@@ -20,6 +20,13 @@ import ca.mcgill.ecse321.museum.dto.VisitorDto;
 import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Visitor;
 
+/**
+ * This class tests the Registration Service
+ * 
+ * @author Kevin
+ * 
+ */
+
 @ExtendWith(MockitoExtension.class)
 public class TestRegistrationService {
   @Mock

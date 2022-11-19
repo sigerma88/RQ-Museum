@@ -72,6 +72,7 @@ public class RegistrationRestController {
    * 
    * @param id - long (employee id)
    * @return employeeDto
+   * @author Kevin
    */
 
   @GetMapping(value = "/visitor/{id}", produces = "application/json")
@@ -102,6 +103,7 @@ public class RegistrationRestController {
    * 
    * @param Map<String,String> - map containing oldPassword, newPassword, email and name
    * @return visitorDto
+   * @author Kevin
    */
 
   @PutMapping(value = "/visitor/edit/{id}", produces = "application/json")
@@ -131,6 +133,7 @@ public class RegistrationRestController {
    * 
    * @param id - long (employee id)
    * @return employeeDto
+   * @author Kevin
    */
   @GetMapping(value = {"/employee/{id}", "/{id}/"}, produces = "application/json")
   public ResponseEntity<?> getEmployee(HttpServletRequest request, @PathVariable("id") long id) {
@@ -160,6 +163,7 @@ public class RegistrationRestController {
    * 
    * @param employeeName - Name of new employee
    * @return employeeDto
+   * @author Kevin
    */
 
   @PostMapping(value = "employee/register", produces = "application/json")
@@ -189,6 +193,7 @@ public class RegistrationRestController {
    * 
    * @param Map<String,String> - map containing oldPassword, newPassword
    * @return employeeDto
+   * @author Kevin
    */
 
   @PostMapping(value = "employee/edit/{id}", produces = "application/json")

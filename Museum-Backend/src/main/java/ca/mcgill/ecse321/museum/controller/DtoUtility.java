@@ -49,7 +49,7 @@ public class DtoUtility {
    */
   public static VisitorDto convertToDto(Visitor visitor) {
     if (visitor == null) {
-      throw new IllegalArgumentException("There is no such employee");
+      throw new IllegalArgumentException("There is no such visitor");
     }
 
     VisitorDto visitorDto = new VisitorDto();
@@ -61,7 +61,7 @@ public class DtoUtility {
   }
 
   /**
-   * Method to convert an visitor to a DTO
+   * Method to convert an Manager to a DTO
    * 
    * @param museumUser - Visitor
    * @return visitor DTO
@@ -69,14 +69,14 @@ public class DtoUtility {
    */
   public static ManagerDto convertToDto(Manager manager) {
     if (manager == null) {
-      throw new IllegalArgumentException("There is no such employee");
+      throw new IllegalArgumentException("There is no such manager");
     }
 
     ManagerDto managerDto = new ManagerDto();
     managerDto.setEmail(manager.getEmail());
     managerDto.setName(manager.getName());
     managerDto.setPassword(manager.getPassword());
-    managerDto.setUserId(manager.getMuseumUserId());
+    managerDto.setMuseumUserId(manager.getMuseumUserId());
     return managerDto;
   }
 }
