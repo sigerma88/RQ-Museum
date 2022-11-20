@@ -37,7 +37,6 @@ public class ArtworkService {
   @Autowired
   RoomService roomService;
 
-
   /**
    * Method to create an artwork
    *
@@ -85,8 +84,6 @@ public class ArtworkService {
     } else if (room == null) {
       throw new IllegalArgumentException("Room cannot be null if artwork is not on loan");
     } else {
-      // Update room artwork count
-      RoomService roomService = new RoomService();
       roomService.changeCurrentNumberOfArtwork(room.getRoomId(), room.getCurrentNumberOfArtwork() + 1);
     }
 
@@ -366,7 +363,6 @@ public class ArtworkService {
       throw new IllegalArgumentException("Room does not exist");
     }
 
-    int capacity = roomService.getRoomCapacity(roomId);
     // Update room of artwork if the room has capacity
     if (roomService.getRoomCapacity(roomId) == -1 || roomService.getRoomCapacity(roomId) > 0) {
       // Reduce amount of artwork in old room

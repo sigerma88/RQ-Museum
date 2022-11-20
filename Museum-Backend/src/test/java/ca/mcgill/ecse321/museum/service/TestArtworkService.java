@@ -419,6 +419,21 @@ public class TestArtworkService {
       }
     });
 
+    lenient().when(roomService.getRoomCapacity(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
+      if (invocation.getArgument(0).equals(ROOM_ID_1)) {
+        // Small room
+        return 200 - CURRENT_NUMBER_OF_ARTWORK_1;
+      } else if (invocation.getArgument(0).equals(ROOM_ID_2)) {
+        // Storage room
+        return Integer.MAX_VALUE;
+      } else if (invocation.getArgument(0).equals(ROOM_ID_3)) {
+        // Large room
+        return 300 - CURRENT_NUMBER_OF_ARTWORK_3;
+      } else {
+        return null;
+      }
+    });
+
     lenient().when(artworkRepository.save(any(Artwork.class))).thenAnswer(returnParameterAsAnswer);
   }
 
