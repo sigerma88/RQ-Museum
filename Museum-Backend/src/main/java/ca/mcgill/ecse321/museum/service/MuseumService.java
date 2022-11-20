@@ -24,6 +24,7 @@ import java.util.List;
 
 /**
  * Service class for Museum
+ *
  * @author
  */
 @Service
@@ -71,12 +72,12 @@ public class MuseumService {
   /**
    * Method to create a museum
    *
-   * @return
-   * @author VZ
-   * @param name - name of the museum
+   * @param name     - name of the museum
    * @param visitFee - visit fee of the museum
    * @param schedule - schedule of the museum
+   * @return
    * @return museum
+   * @author VZ
    */
 
   @Transactional
@@ -101,13 +102,13 @@ public class MuseumService {
 
   /**
    * Method to edit a museum's name, visit fee or schedule given the museum's id.
-   * 
-   * @author VZ
+   *
    * @param museumId - museum id
-   * @param name - new name of the museum
+   * @param name     - new name of the museum
    * @param visitFee - new visit fee of the museum
    * @param schedule - new schedule of the museum
    * @return
+   * @author VZ
    */
 
   @Transactional
@@ -121,7 +122,7 @@ public class MuseumService {
       throw new IllegalArgumentException("Nothing to edit, all fields are empty");
     }
     if (name != null) {
-      if(name.trim().length() == 0) {
+      if (name.trim().length() == 0) {
         throw new IllegalArgumentException("Name cannot be empty!");
       }
       museum.setName(name);
@@ -140,10 +141,10 @@ public class MuseumService {
 
   /**
    * Method to get a museum's schedule
-   * 
-   * @author VZ
+   *
    * @param museumId - museum id
    * @return schedule of museum
+   * @author VZ
    */
 
   @Transactional
@@ -159,10 +160,10 @@ public class MuseumService {
 
   /**
    * Method to get all of museum's shifts
-   * 
-   * @author VZ
+   *
    * @param museumId - museum id
    * @return list of shifts of museum
+   * @author VZ
    */
 
   @Transactional
@@ -180,11 +181,11 @@ public class MuseumService {
 
   /**
    * Method to add a time period to a museum's schedule
-   * 
-   * @author VZ 
-   * @param museumId - museum id
+   *
+   * @param museumId     - museum id
    * @param timePeriodId - time period id
    * @return Museum with added time period
+   * @author VZ
    */
 
   @Transactional
@@ -209,11 +210,11 @@ public class MuseumService {
 
   /**
    * Method to remove a time period from a museum's schedule
-   * 
-   * @author VZ
-   * @param museumId - museum id
+   *
+   * @param museumId     - museum id
    * @param timePeriodId - time period id
    * @return Museum with removed time period
+   * @author VZ
    */
 
   @Transactional
@@ -256,10 +257,10 @@ public class MuseumService {
 
   /**
    * Helper method to get the time periods of a schedule
-   * 
-   * @author VZ
+   *
    * @param schedule - schedule
    * @return list of time periods of schedule
+   * @author VZ
    */
 
   public List<TimePeriod> getTimePeriodsOfSchedule(Schedule schedule) {

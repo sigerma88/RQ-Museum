@@ -55,10 +55,10 @@ public class EmployeeService {
 
   /**
    * Method to view an employee's schedule
-   * 
-   * @author VZ
+   *
    * @param employeeId - id of employee
    * @return employee's schedule
+   * @author VZ
    */
 
   @Transactional
@@ -75,10 +75,10 @@ public class EmployeeService {
 
   /**
    * Method to get all of employee's shifts
-   * 
-   * @author VZ
+   *
    * @param employeeId - id of employee
    * @return list of employee's shifts
+   * @author VZ
    */
 
   @Transactional
@@ -98,11 +98,11 @@ public class EmployeeService {
 
   /**
    * Method to add a shift to an employee's schedule
-   * 
-   * @author VZ
-   * @param employeeId - id of employee
+   *
+   * @param employeeId   - id of employee
    * @param timePeriodId - id of time period
    * @return Employee with added shift
+   * @author VZ
    */
 
   @Transactional
@@ -135,11 +135,11 @@ public class EmployeeService {
   /**
    * Method to delete a time period from an employee's schedule, in other words
    * lessen an employee's workload.
-   * 
-   * @author VZ
-   * @param employeeId - id of employee
+   *
+   * @param employeeId   - id of employee
    * @param timePeriodId - id of time period
    * @return Employee with deleted shift
+   * @author VZ
    */
 
   @Transactional
@@ -217,10 +217,10 @@ public class EmployeeService {
 
   /**
    * Helper method to get the time periods of a schedule
-   * 
-   * @author VZ
+   *
    * @param schedule - schedule
    * @return list of time periods that are associated to the schedule
+   * @author VZ
    */
 
   public List<TimePeriod> getTimePeriodsOfSchedule(Schedule schedule) {

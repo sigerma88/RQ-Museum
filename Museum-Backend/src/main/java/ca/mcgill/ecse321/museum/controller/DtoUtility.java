@@ -1,9 +1,9 @@
 package ca.mcgill.ecse321.museum.controller;
 
-import java.text.SimpleDateFormat;
-
 import ca.mcgill.ecse321.museum.dto.*;
 import ca.mcgill.ecse321.museum.model.*;
+
+import java.text.SimpleDateFormat;
 
 /**
  * DtoUtility class is used to convert our model objects to DTO objects
@@ -98,13 +98,14 @@ public class DtoUtility {
   /**
    * Method to convert a time period to a DTO.
    * It converts the start and end date to a String.
-   * @author VZ
+   *
    * @param timePeriod
    * @return
+   * @author VZ
    */
 
   static TimePeriodDto convertToDto(TimePeriod timePeriod) {
-    if(timePeriod == null) {
+    if (timePeriod == null) {
       throw new IllegalArgumentException("There is no such time period");
     }
     String startDateString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timePeriod.getStartDate());

@@ -1,18 +1,5 @@
 package ca.mcgill.ecse321.museum.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import ca.mcgill.ecse321.museum.dto.MuseumDto;
 import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Schedule;
@@ -22,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * MuseumRestController class is used as a controller where we call
@@ -44,12 +34,12 @@ public class MuseumRestController {
 
   /**
    * API to get a museum by id
-   * 
-   * @author VZ
+   *
    * @param id the id of the museum
    * @return museum with the given id
+   * @author VZ
    */
-  @GetMapping(value = { "/{id}", "/{id}/" })
+  @GetMapping(value = {"/{id}", "/{id}/"})
   public ResponseEntity<?> getMuseum(@PathVariable("id") long id) {
     try {
       return new ResponseEntity<>(DtoUtility.convertToDto(museumService.getMuseum(id)), HttpStatus.OK);
@@ -60,11 +50,11 @@ public class MuseumRestController {
 
   /**
    * API to create a museum
-   * 
-   * @author VZ
-   * @param name the name of the museum
+   *
+   * @param name     the name of the museum
    * @param visitFee the visit fee of the museum
    * @return the created museum
+   * @author VZ
    */
   @PostMapping(value = {"/app", "/app/"})
   public ResponseEntity<?> createMuseum(
@@ -82,13 +72,14 @@ public class MuseumRestController {
 
   /**
    * API to edit the museum's name or visit fee
-   * @author VZ
-   * @param id the id of the museum
-   * @param name the new name of the museum
+   *
+   * @param id       the id of the museum
+   * @param name     the new name of the museum
    * @param visitFee the new visit fee of the museum
    * @return the edited museum
+   * @author VZ
    */
-  @PostMapping(value = { "/app/edit/{id}/", "/app/edit/{id}" })
+  @PostMapping(value = {"/app/edit/{id}/", "/app/edit/{id}"})
   public ResponseEntity<?> editMuseum(
       @PathVariable("id") long id,
       @RequestParam(name = "name", required = false) String name,
@@ -104,11 +95,11 @@ public class MuseumRestController {
 
   /**
    * API to get all museums
-   * 
-   * @author VZ
+   *
    * @return all museums
+   * @author VZ
    */
-  @GetMapping(value = { "", "/" })
+  @GetMapping(value = {"", "/"})
   public ResponseEntity<?> getAllMuseums() {
     try {
       List<MuseumDto> museums = new ArrayList<>();

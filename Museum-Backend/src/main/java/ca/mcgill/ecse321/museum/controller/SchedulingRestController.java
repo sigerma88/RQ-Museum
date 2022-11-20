@@ -1,21 +1,20 @@
 package ca.mcgill.ecse321.museum.controller;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-
+import ca.mcgill.ecse321.museum.dto.TimePeriodDto;
+import ca.mcgill.ecse321.museum.model.Employee;
+import ca.mcgill.ecse321.museum.model.Museum;
+import ca.mcgill.ecse321.museum.model.TimePeriod;
+import ca.mcgill.ecse321.museum.service.EmployeeService;
+import ca.mcgill.ecse321.museum.service.MuseumService;
+import ca.mcgill.ecse321.museum.service.TimePeriodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import ca.mcgill.ecse321.museum.model.Employee;
-import ca.mcgill.ecse321.museum.model.Museum;
-import ca.mcgill.ecse321.museum.model.TimePeriod;
-import ca.mcgill.ecse321.museum.dto.TimePeriodDto;
-import ca.mcgill.ecse321.museum.service.EmployeeService;
-import ca.mcgill.ecse321.museum.service.MuseumService;
-import ca.mcgill.ecse321.museum.service.TimePeriodService;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * SchedulingRestController class is used as a controller where we call
@@ -177,7 +176,7 @@ public class SchedulingRestController {
   /**
    * RESTful api to edit a timeperiod in the database
    *
-   * @param id        the id of the timeperiod
+   * @param id            the id of the timeperiod
    * @param timePeriodDto the new timeperiod Dto
    * @return the edited timeperiod dto
    * @author VZ
@@ -198,8 +197,8 @@ public class SchedulingRestController {
   /**
    * RESTful api to add a time period to an employee
    *
-   * @param employeeId   the employee id
-   * @param tpId the time period id
+   * @param employeeId the employee id
+   * @param tpId       the time period id
    * @return the employeedto with an added timeperiod
    * @author VZ
    */
