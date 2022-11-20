@@ -1,0 +1,154 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ScheduleService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ca.mcgill.ecse321.museum.service</a>
+</div>
+
+<h1>Coverage Summary for Class: ScheduleService (ca.mcgill.ecse321.museum.service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ScheduleService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ScheduleService$$EnhancerBySpringCGLIB$$81803ac4</td>
+  </tr>
+  <tr>
+    <td class="name">ScheduleService$$EnhancerBySpringCGLIB$$81803ac4$$FastClassBySpringCGLIB$$e45a434e</td>
+  </tr>
+  <tr>
+    <td class="name">ScheduleService$$FastClassBySpringCGLIB$$bbd56abb</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package ca.mcgill.ecse321.museum.service;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
+<i class="no-highlight">4</i>&nbsp;import ca.mcgill.ecse321.museum.model.Schedule;
+<i class="no-highlight">5</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i class="no-highlight">6</i>&nbsp;import org.springframework.stereotype.Service;
+<i class="no-highlight">7</i>&nbsp;import org.springframework.transaction.annotation.Transactional;
+<i class="no-highlight">8</i>&nbsp;
+<i class="no-highlight">9</i>&nbsp;/**
+<i class="no-highlight">10</i>&nbsp; * This is the service class for schedule
+<i class="no-highlight">11</i>&nbsp; *
+<i class="no-highlight">12</i>&nbsp; * @author VZ
+<i class="no-highlight">13</i>&nbsp; */
+<i class="no-highlight">14</i>&nbsp;@Service
+<b class="fc"><i class="no-highlight">15</i>&nbsp;public class ScheduleService {</b>
+<i class="no-highlight">16</i>&nbsp;  @Autowired
+<i class="no-highlight">17</i>&nbsp;  private ScheduleRepository scheduleRepository;
+<i class="no-highlight">18</i>&nbsp;
+<i class="no-highlight">19</i>&nbsp;  /**
+<i class="no-highlight">20</i>&nbsp;   * Method to create a schedule
+<i class="no-highlight">21</i>&nbsp;   *
+<i class="no-highlight">22</i>&nbsp;   * @return created schedule
+<i class="no-highlight">23</i>&nbsp;   * @author VZ
+<i class="no-highlight">24</i>&nbsp;   */
+<i class="no-highlight">25</i>&nbsp;  @Transactional
+<i class="no-highlight">26</i>&nbsp;  public Schedule createSchedule() {
+<b class="fc"><i class="no-highlight">27</i>&nbsp;    Schedule schedule = new Schedule();</b>
+<b class="fc"><i class="no-highlight">28</i>&nbsp;    scheduleRepository.save(schedule);</b>
+<b class="fc"><i class="no-highlight">29</i>&nbsp;    return schedule;</b>
+<i class="no-highlight">30</i>&nbsp;
+<i class="no-highlight">31</i>&nbsp;  }
+<i class="no-highlight">32</i>&nbsp;
+<i class="no-highlight">33</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-11-19 21:51</div>
+</div>
+</body>
+</html>

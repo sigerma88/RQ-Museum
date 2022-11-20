@@ -1,0 +1,389 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ArtworkRestController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ca.mcgill.ecse321.museum.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: ArtworkRestController (ca.mcgill.ecse321.museum.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ArtworkRestController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (12/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    91.7%
+  </span>
+  <span class="absValue">
+    (55/60)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package ca.mcgill.ecse321.museum.controller;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import ca.mcgill.ecse321.museum.dto.ArtworkDto;
+<i class="no-highlight">4</i>&nbsp;import ca.mcgill.ecse321.museum.model.Artwork;
+<i class="no-highlight">5</i>&nbsp;import ca.mcgill.ecse321.museum.model.Room;
+<i class="no-highlight">6</i>&nbsp;import ca.mcgill.ecse321.museum.service.ArtworkService;
+<i class="no-highlight">7</i>&nbsp;import ca.mcgill.ecse321.museum.service.RoomService;
+<i class="no-highlight">8</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i class="no-highlight">9</i>&nbsp;import org.springframework.http.ResponseEntity;
+<i class="no-highlight">10</i>&nbsp;import org.springframework.web.bind.annotation.*;
+<i class="no-highlight">11</i>&nbsp;
+<i class="no-highlight">12</i>&nbsp;import java.util.ArrayList;
+<i class="no-highlight">13</i>&nbsp;import java.util.List;
+<i class="no-highlight">14</i>&nbsp;
+<i class="no-highlight">15</i>&nbsp;/**
+<i class="no-highlight">16</i>&nbsp; * RESTful api for Artwork to expose the business logic in the service layer to the frontend
+<i class="no-highlight">17</i>&nbsp; *
+<i class="no-highlight">18</i>&nbsp; * @author Siger
+<i class="no-highlight">19</i>&nbsp; * @author Zahra
+<i class="no-highlight">20</i>&nbsp; * @author kieyanmamiche
+<i class="no-highlight">21</i>&nbsp; */
+<i class="no-highlight">22</i>&nbsp;
+<i class="no-highlight">23</i>&nbsp;@CrossOrigin(origins = &quot;*&quot;)
+<i class="no-highlight">24</i>&nbsp;@RestController
+<i class="no-highlight">25</i>&nbsp;@RequestMapping(&quot;/api/artwork&quot;)
+<b class="fc"><i class="no-highlight">26</i>&nbsp;public class ArtworkRestController {</b>
+<i class="no-highlight">27</i>&nbsp;
+<i class="no-highlight">28</i>&nbsp;  @Autowired
+<i class="no-highlight">29</i>&nbsp;  private ArtworkService artworkService;
+<i class="no-highlight">30</i>&nbsp;
+<i class="no-highlight">31</i>&nbsp;  @Autowired
+<i class="no-highlight">32</i>&nbsp;  private RoomService roomService;
+<i class="no-highlight">33</i>&nbsp;
+<i class="no-highlight">34</i>&nbsp;  /**
+<i class="no-highlight">35</i>&nbsp;   * RESTful API to create an artwork
+<i class="no-highlight">36</i>&nbsp;   *
+<i class="no-highlight">37</i>&nbsp;   * @param name               - name of the artwork
+<i class="no-highlight">38</i>&nbsp;   * @param artist             - artist of the artwork
+<i class="no-highlight">39</i>&nbsp;   * @param isAvailableForLoan - availability of the artwork for loans
+<i class="no-highlight">40</i>&nbsp;   * @param loanFee            - loan fee of the artwork
+<i class="no-highlight">41</i>&nbsp;   * @param image              - image of the artwork
+<i class="no-highlight">42</i>&nbsp;   * @param isOnLoan           - loan status of the artwork
+<i class="no-highlight">43</i>&nbsp;   * @param roomId             - id of the room of the artwork
+<i class="no-highlight">44</i>&nbsp;   * @return created artwork
+<i class="no-highlight">45</i>&nbsp;   * @author Siger
+<i class="no-highlight">46</i>&nbsp;   */
+<i class="no-highlight">47</i>&nbsp;
+<i class="no-highlight">48</i>&nbsp;  @PostMapping(value = {&quot;/&quot;, &quot;&quot;}, produces = &quot;application/json&quot;)
+<i class="no-highlight">49</i>&nbsp;  public ResponseEntity&lt;?&gt; createArtwork(@RequestParam(name = &quot;name&quot;) String name,
+<i class="no-highlight">50</i>&nbsp;                                         @RequestParam(name = &quot;artist&quot;) String artist,
+<i class="no-highlight">51</i>&nbsp;                                         @RequestParam(name = &quot;isAvailableForLoan&quot;) Boolean isAvailableForLoan,
+<i class="no-highlight">52</i>&nbsp;                                         @RequestParam(name = &quot;loanFee&quot;, required = false) Double loanFee, @RequestParam(name = &quot;image&quot;) String image,
+<i class="no-highlight">53</i>&nbsp;                                         @RequestParam(name = &quot;isOnLoan&quot;) Boolean isOnLoan, @RequestParam(name = &quot;roomId&quot;, required = false) Long roomId) {
+<i class="no-highlight">54</i>&nbsp;    try {
+<i class="no-highlight">55</i>&nbsp;      // Get room
+<b class="fc"><i class="no-highlight">56</i>&nbsp;      Room room = null;</b>
+<b class="fc"><i class="no-highlight">57</i>&nbsp;      if (roomId != null) {</b>
+<b class="fc"><i class="no-highlight">58</i>&nbsp;        room = roomService.getRoomById(roomId);</b>
+<b class="fc"><i class="no-highlight">59</i>&nbsp;        if (room == null) {</b>
+<b class="nc"><i class="no-highlight">60</i>&nbsp;          return ResponseEntity.badRequest().body(&quot;Room with id &quot; + roomId + &quot; does not exist&quot;);</b>
+<i class="no-highlight">61</i>&nbsp;        }
+<i class="no-highlight">62</i>&nbsp;      }
+<i class="no-highlight">63</i>&nbsp;
+<i class="no-highlight">64</i>&nbsp;      // Create artwork
+<b class="fc"><i class="no-highlight">65</i>&nbsp;      Artwork result = artworkService.createArtwork(name, artist, isAvailableForLoan, loanFee, image, isOnLoan, room);</b>
+<b class="fc"><i class="no-highlight">66</i>&nbsp;      return ResponseEntity.ok(DtoUtility.convertToDto(result));</b>
+<b class="fc"><i class="no-highlight">67</i>&nbsp;    } catch (Exception e) {</b>
+<b class="fc"><i class="no-highlight">68</i>&nbsp;      return ResponseEntity.badRequest().body(e.getMessage());</b>
+<i class="no-highlight">69</i>&nbsp;    }
+<i class="no-highlight">70</i>&nbsp;  }
+<i class="no-highlight">71</i>&nbsp;
+<i class="no-highlight">72</i>&nbsp;  /**
+<i class="no-highlight">73</i>&nbsp;   * RESTful API to get an artwork by its id
+<i class="no-highlight">74</i>&nbsp;   *
+<i class="no-highlight">75</i>&nbsp;   * @param artworkId - long
+<i class="no-highlight">76</i>&nbsp;   * @return artwork with the given id
+<i class="no-highlight">77</i>&nbsp;   * @author Siger
+<i class="no-highlight">78</i>&nbsp;   */
+<i class="no-highlight">79</i>&nbsp;
+<i class="no-highlight">80</i>&nbsp;  @GetMapping(value = {&quot;/{artworkId}&quot;, &quot;/{artworkId}/&quot;})
+<i class="no-highlight">81</i>&nbsp;  public ResponseEntity&lt;?&gt; getArtworkById(@PathVariable(&quot;artworkId&quot;) long artworkId) {
+<i class="no-highlight">82</i>&nbsp;    try {
+<b class="fc"><i class="no-highlight">83</i>&nbsp;      Artwork artwork = artworkService.getArtwork(artworkId);</b>
+<b class="fc"><i class="no-highlight">84</i>&nbsp;      return ResponseEntity.ok(DtoUtility.convertToDto(artwork));</b>
+<b class="fc"><i class="no-highlight">85</i>&nbsp;    } catch (Exception e) {</b>
+<b class="fc"><i class="no-highlight">86</i>&nbsp;      return ResponseEntity.badRequest().body(e.getMessage());</b>
+<i class="no-highlight">87</i>&nbsp;    }
+<i class="no-highlight">88</i>&nbsp;  }
+<i class="no-highlight">89</i>&nbsp;
+<i class="no-highlight">90</i>&nbsp;  /**
+<i class="no-highlight">91</i>&nbsp;   * RESTful API to get all artworks
+<i class="no-highlight">92</i>&nbsp;   *
+<i class="no-highlight">93</i>&nbsp;   * @return List of all artworks
+<i class="no-highlight">94</i>&nbsp;   * @author Zahra
+<i class="no-highlight">95</i>&nbsp;   */
+<i class="no-highlight">96</i>&nbsp;
+<i class="no-highlight">97</i>&nbsp;  @GetMapping(value = {&quot;/&quot;, &quot;&quot;})
+<i class="no-highlight">98</i>&nbsp;  public ResponseEntity&lt;?&gt; getAllArtworks() {
+<i class="no-highlight">99</i>&nbsp;    try {
+<b class="fc"><i class="no-highlight">100</i>&nbsp;      List&lt;ArtworkDto&gt; artworkDtos = new ArrayList&lt;ArtworkDto&gt;();</b>
+<b class="fc"><i class="no-highlight">101</i>&nbsp;      for (Artwork artwork : artworkService.getAllArtworks()) {</b>
+<b class="fc"><i class="no-highlight">102</i>&nbsp;        artworkDtos.add(DtoUtility.convertToDto(artwork));</b>
+<b class="fc"><i class="no-highlight">103</i>&nbsp;      }</b>
+<b class="fc"><i class="no-highlight">104</i>&nbsp;      return ResponseEntity.ok(artworkDtos);</b>
+<b class="nc"><i class="no-highlight">105</i>&nbsp;    } catch (Exception e) {</b>
+<b class="nc"><i class="no-highlight">106</i>&nbsp;      return ResponseEntity.badRequest().body(e.getMessage());</b>
+<i class="no-highlight">107</i>&nbsp;    }
+<i class="no-highlight">108</i>&nbsp;  }
+<i class="no-highlight">109</i>&nbsp;
+<i class="no-highlight">110</i>&nbsp;  /**
+<i class="no-highlight">111</i>&nbsp;   * RESTful API to get all artworks by room
+<i class="no-highlight">112</i>&nbsp;   *
+<i class="no-highlight">113</i>&nbsp;   * @param roomId - long
+<i class="no-highlight">114</i>&nbsp;   * @return List of all artworks in the given room
+<i class="no-highlight">115</i>&nbsp;   * @author Siger
+<i class="no-highlight">116</i>&nbsp;   * @author Zahra
+<i class="no-highlight">117</i>&nbsp;   * @author kieyanmamiche
+<i class="no-highlight">118</i>&nbsp;   */
+<i class="no-highlight">119</i>&nbsp;
+<i class="no-highlight">120</i>&nbsp;  @GetMapping(value = {&quot;/room/{roomId}&quot;, &quot;/room/{roomId}/&quot;})
+<i class="no-highlight">121</i>&nbsp;  public ResponseEntity&lt;?&gt; getAllArtworksByRoom(@PathVariable(&quot;roomId&quot;) Long roomId) {
+<i class="no-highlight">122</i>&nbsp;    try {
+<b class="fc"><i class="no-highlight">123</i>&nbsp;      List&lt;ArtworkDto&gt; artworkDtos = new ArrayList&lt;ArtworkDto&gt;();</b>
+<b class="fc"><i class="no-highlight">124</i>&nbsp;      for (Artwork artwork : artworkService.getAllArtworksByRoom(roomId)) {</b>
+<b class="fc"><i class="no-highlight">125</i>&nbsp;        artworkDtos.add(DtoUtility.convertToDto(artwork));</b>
+<b class="fc"><i class="no-highlight">126</i>&nbsp;      }</b>
+<b class="fc"><i class="no-highlight">127</i>&nbsp;      return ResponseEntity.ok(artworkDtos);</b>
+<b class="fc"><i class="no-highlight">128</i>&nbsp;    } catch (Exception e) {</b>
+<b class="fc"><i class="no-highlight">129</i>&nbsp;      return ResponseEntity.badRequest().body(e.getMessage());</b>
+<i class="no-highlight">130</i>&nbsp;    }
+<i class="no-highlight">131</i>&nbsp;  }
+<i class="no-highlight">132</i>&nbsp;
+<i class="no-highlight">133</i>&nbsp;  /**
+<i class="no-highlight">134</i>&nbsp;   * RESTful API to get all artworks by if they are available for loan
+<i class="no-highlight">135</i>&nbsp;   *
+<i class="no-highlight">136</i>&nbsp;   * @param isAvailableForLoan - boolean
+<i class="no-highlight">137</i>&nbsp;   * @return List of all artworks that are available for loan or not available for loan depending on the given boolean value
+<i class="no-highlight">138</i>&nbsp;   * @author Siger
+<i class="no-highlight">139</i>&nbsp;   */
+<i class="no-highlight">140</i>&nbsp;
+<i class="no-highlight">141</i>&nbsp;  @GetMapping(value = {&quot;/availableForLoan/{isAvailableForLoan}&quot;, &quot;/availableForLoan/{isAvailableForLoan}/&quot;})
+<i class="no-highlight">142</i>&nbsp;  public ResponseEntity&lt;?&gt; getAllArtworksByAvailabilityForLoan(@PathVariable(&quot;isAvailableForLoan&quot;) Boolean isAvailableForLoan) {
+<i class="no-highlight">143</i>&nbsp;    try {
+<b class="fc"><i class="no-highlight">144</i>&nbsp;      List&lt;ArtworkDto&gt; artworkDtos = new ArrayList&lt;ArtworkDto&gt;();</b>
+<b class="fc"><i class="no-highlight">145</i>&nbsp;      for (Artwork artwork : artworkService.getAllArtworksByAvailabilityForLoan(isAvailableForLoan)) {</b>
+<b class="fc"><i class="no-highlight">146</i>&nbsp;        artworkDtos.add(DtoUtility.convertToDto(artwork));</b>
+<b class="fc"><i class="no-highlight">147</i>&nbsp;      }</b>
+<b class="fc"><i class="no-highlight">148</i>&nbsp;      return ResponseEntity.ok(artworkDtos);</b>
+<b class="nc"><i class="no-highlight">149</i>&nbsp;    } catch (Exception e) {</b>
+<b class="nc"><i class="no-highlight">150</i>&nbsp;      return ResponseEntity.badRequest().body(e.getMessage());</b>
+<i class="no-highlight">151</i>&nbsp;    }
+<i class="no-highlight">152</i>&nbsp;  }
+<i class="no-highlight">153</i>&nbsp;
+<i class="no-highlight">154</i>&nbsp;  /**
+<i class="no-highlight">155</i>&nbsp;   * RESTful API to edit an artwork&#39;s information
+<i class="no-highlight">156</i>&nbsp;   *
+<i class="no-highlight">157</i>&nbsp;   * @param artworkId - id of artwork to be edited
+<i class="no-highlight">158</i>&nbsp;   * @param name      - new name of artwork
+<i class="no-highlight">159</i>&nbsp;   * @param artist    - new artist of artwork
+<i class="no-highlight">160</i>&nbsp;   * @param image     - new image of artwork
+<i class="no-highlight">161</i>&nbsp;   * @return edited artwork
+<i class="no-highlight">162</i>&nbsp;   * @author Siger
+<i class="no-highlight">163</i>&nbsp;   */
+<i class="no-highlight">164</i>&nbsp;
+<i class="no-highlight">165</i>&nbsp;  @PutMapping(value = {&quot;/info/{artworkId}&quot;, &quot;/info/{artworkId}/&quot;}, produces = &quot;application/json&quot;)
+<i class="no-highlight">166</i>&nbsp;  public ResponseEntity&lt;?&gt; editArtworkInfo(@PathVariable(&quot;artworkId&quot;) Long artworkId,
+<i class="no-highlight">167</i>&nbsp;                                           @RequestParam(name = &quot;name&quot;, required = false) String name,
+<i class="no-highlight">168</i>&nbsp;                                           @RequestParam(name = &quot;artist&quot;, required = false) String artist,
+<i class="no-highlight">169</i>&nbsp;                                           @RequestParam(name = &quot;image&quot;, required = false) String image) {
+<i class="no-highlight">170</i>&nbsp;    try {
+<b class="fc"><i class="no-highlight">171</i>&nbsp;      Artwork result = artworkService.editArtworkInfo(artworkId, name, artist, image);</b>
+<b class="fc"><i class="no-highlight">172</i>&nbsp;      return ResponseEntity.ok(DtoUtility.convertToDto(result));</b>
+<b class="fc"><i class="no-highlight">173</i>&nbsp;    } catch (Exception e) {</b>
+<b class="fc"><i class="no-highlight">174</i>&nbsp;      return ResponseEntity.badRequest().body(e.getMessage());</b>
+<i class="no-highlight">175</i>&nbsp;    }
+<i class="no-highlight">176</i>&nbsp;  }
+<i class="no-highlight">177</i>&nbsp;
+<i class="no-highlight">178</i>&nbsp;  /**
+<i class="no-highlight">179</i>&nbsp;   * RESTful API to edit an artwork&#39;s loan availability and loan fee
+<i class="no-highlight">180</i>&nbsp;   *
+<i class="no-highlight">181</i>&nbsp;   * @param artworkId          - id of artwork to be edited
+<i class="no-highlight">182</i>&nbsp;   * @param isAvailableForLoan - new availability of artwork
+<i class="no-highlight">183</i>&nbsp;   * @param loanFee            - new loan fee of artwork
+<i class="no-highlight">184</i>&nbsp;   * @return edited artwork
+<i class="no-highlight">185</i>&nbsp;   * @author Siger
+<i class="no-highlight">186</i>&nbsp;   */
+<i class="no-highlight">187</i>&nbsp;
+<i class="no-highlight">188</i>&nbsp;  @PutMapping(value = {&quot;/loanInfo/{artworkId}&quot;, &quot;/loanInfo/{artworkId}/&quot;}, produces = &quot;application/json&quot;)
+<i class="no-highlight">189</i>&nbsp;  public ResponseEntity&lt;?&gt; editArtworkLoanInfo(@PathVariable(&quot;artworkId&quot;) Long artworkId,
+<i class="no-highlight">190</i>&nbsp;                                               @RequestParam(name = &quot;isAvailableForLoan&quot;) boolean isAvailableForLoan,
+<i class="no-highlight">191</i>&nbsp;                                               @RequestParam(name = &quot;loanFee&quot;, required = false) Double loanFee) {
+<i class="no-highlight">192</i>&nbsp;    try {
+<b class="fc"><i class="no-highlight">193</i>&nbsp;      Artwork result = artworkService.editArtworkLoanInfo(artworkId, isAvailableForLoan, loanFee);</b>
+<b class="fc"><i class="no-highlight">194</i>&nbsp;      return ResponseEntity.ok(DtoUtility.convertToDto(result));</b>
+<b class="fc"><i class="no-highlight">195</i>&nbsp;    } catch (Exception e) {</b>
+<b class="fc"><i class="no-highlight">196</i>&nbsp;      return ResponseEntity.badRequest().body(e.getMessage());</b>
+<i class="no-highlight">197</i>&nbsp;    }
+<i class="no-highlight">198</i>&nbsp;  }
+<i class="no-highlight">199</i>&nbsp;
+<i class="no-highlight">200</i>&nbsp;  /**
+<i class="no-highlight">201</i>&nbsp;   * RESTful API to delete an artwork
+<i class="no-highlight">202</i>&nbsp;   *
+<i class="no-highlight">203</i>&nbsp;   * @param artworkId - long
+<i class="no-highlight">204</i>&nbsp;   * @return if the artwork was deleted (success)
+<i class="no-highlight">205</i>&nbsp;   * @author Siger
+<i class="no-highlight">206</i>&nbsp;   */
+<i class="no-highlight">207</i>&nbsp;
+<i class="no-highlight">208</i>&nbsp;  @DeleteMapping(value = {&quot;/{artworkId}&quot;, &quot;/{artworkId}/&quot;})
+<i class="no-highlight">209</i>&nbsp;  public ResponseEntity&lt;?&gt; deleteArtwork(@PathVariable(&quot;artworkId&quot;) Long artworkId) {
+<i class="no-highlight">210</i>&nbsp;    try {
+<i class="no-highlight">211</i>&nbsp;      // Delete the artwork
+<b class="fc"><i class="no-highlight">212</i>&nbsp;      Artwork artwork = artworkService.deleteArtwork(artworkId);</b>
+<b class="fc"><i class="no-highlight">213</i>&nbsp;      return ResponseEntity.ok(DtoUtility.convertToDto(artwork));</b>
+<b class="fc"><i class="no-highlight">214</i>&nbsp;    } catch (Exception e) {</b>
+<b class="fc"><i class="no-highlight">215</i>&nbsp;      return ResponseEntity.badRequest().body(e.getMessage());</b>
+<i class="no-highlight">216</i>&nbsp;    }
+<i class="no-highlight">217</i>&nbsp;  }
+<i class="no-highlight">218</i>&nbsp;
+<i class="no-highlight">219</i>&nbsp;
+<i class="no-highlight">220</i>&nbsp;  /**
+<i class="no-highlight">221</i>&nbsp;   * RESTful API to get the artwork status
+<i class="no-highlight">222</i>&nbsp;   * &lt;p&gt;
+<i class="no-highlight">223</i>&nbsp;   * Note:
+<i class="no-highlight">224</i>&nbsp;   * Returns a status string of 4 options: loan/on display/in storage
+<i class="no-highlight">225</i>&nbsp;   * 1. &quot;loan&quot; -&gt; The artwork is on loan
+<i class="no-highlight">226</i>&nbsp;   * 2. &quot;display&quot; -&gt; The artwork is on Display
+<i class="no-highlight">227</i>&nbsp;   * 3. &quot;storage&quot; -&gt; The artwork is in storage
+<i class="no-highlight">228</i>&nbsp;   * &lt;p&gt;
+<i class="no-highlight">229</i>&nbsp;   * Getting artwork status - FR7
+<i class="no-highlight">230</i>&nbsp;   *
+<i class="no-highlight">231</i>&nbsp;   * @param artworkId - The id of the artwork we want to get the status of
+<i class="no-highlight">232</i>&nbsp;   * @return The status of the artwork
+<i class="no-highlight">233</i>&nbsp;   * @author kieyanmamiche
+<i class="no-highlight">234</i>&nbsp;   */
+<i class="no-highlight">235</i>&nbsp;
+<i class="no-highlight">236</i>&nbsp;  @GetMapping(value = {&quot;/getArtworkStatus/{artworkId}&quot;, &quot;/getArtworkStatus/{artworkId}/&quot;})
+<i class="no-highlight">237</i>&nbsp;  public ResponseEntity&lt;?&gt; getArtworkStatus(@PathVariable(&quot;artworkId&quot;) long artworkId) {
+<i class="no-highlight">238</i>&nbsp;    try {
+<b class="fc"><i class="no-highlight">239</i>&nbsp;      String status = artworkService.getArtworkStatus(artworkId);</b>
+<b class="fc"><i class="no-highlight">240</i>&nbsp;      return ResponseEntity.ok(status);</b>
+<b class="fc"><i class="no-highlight">241</i>&nbsp;    } catch (Exception e) {</b>
+<b class="fc"><i class="no-highlight">242</i>&nbsp;      return ResponseEntity.badRequest().body(e.getMessage());</b>
+<i class="no-highlight">243</i>&nbsp;    }
+<i class="no-highlight">244</i>&nbsp;  }
+<i class="no-highlight">245</i>&nbsp;
+<i class="no-highlight">246</i>&nbsp;  /**
+<i class="no-highlight">247</i>&nbsp;   * RESTful API to get number of artworks in a room
+<i class="no-highlight">248</i>&nbsp;   *
+<i class="no-highlight">249</i>&nbsp;   * @param roomId - The id of a room we want to get the number artworks in
+<i class="no-highlight">250</i>&nbsp;   * @return Number of artworks in specific room
+<i class="no-highlight">251</i>&nbsp;   * @author kieyanmamiche
+<i class="no-highlight">252</i>&nbsp;   */
+<i class="no-highlight">253</i>&nbsp;
+<i class="no-highlight">254</i>&nbsp;  @GetMapping(value = {&quot;/getNumberOfArtworksInRoom/{roomId}&quot;, &quot;/getNumberOfArtworksInRoom/{roomId}/&quot;})
+<i class="no-highlight">255</i>&nbsp;  public ResponseEntity&lt;?&gt; getNumberOfArtworksInRoom(@PathVariable(&quot;roomId&quot;) long roomId) {
+<i class="no-highlight">256</i>&nbsp;    try {
+<b class="fc"><i class="no-highlight">257</i>&nbsp;      int numberOfArtworksInRoom = artworkService.getNumberOfArtworksInRoom(roomId);</b>
+<b class="fc"><i class="no-highlight">258</i>&nbsp;      return ResponseEntity.ok(numberOfArtworksInRoom);</b>
+<b class="fc"><i class="no-highlight">259</i>&nbsp;    } catch (Exception e) {</b>
+<i class="no-highlight">260</i>&nbsp;      // return error message
+<b class="fc"><i class="no-highlight">261</i>&nbsp;      return ResponseEntity.badRequest().body(e.getMessage());</b>
+<i class="no-highlight">262</i>&nbsp;    }
+<i class="no-highlight">263</i>&nbsp;  }
+<i class="no-highlight">264</i>&nbsp;
+<i class="no-highlight">265</i>&nbsp;  /**
+<i class="no-highlight">266</i>&nbsp;   * RESTful API to move artwork to different room
+<i class="no-highlight">267</i>&nbsp;   *
+<i class="no-highlight">268</i>&nbsp;   * @param artworkId - The id of the artwork we want to move
+<i class="no-highlight">269</i>&nbsp;   * @param roomId    - The id of a room we want to move the artwork to
+<i class="no-highlight">270</i>&nbsp;   * @return The artwork which has been moved
+<i class="no-highlight">271</i>&nbsp;   * @author kieyanmamiche
+<i class="no-highlight">272</i>&nbsp;   */
+<i class="no-highlight">273</i>&nbsp;
+<i class="no-highlight">274</i>&nbsp;  @PostMapping(value = {&quot;/moveArtworkToRoom/{artworkId}/{roomId}&quot;, &quot;/moveArtworkToRoom/{artworkId}/{roomId}/&quot;})
+<i class="no-highlight">275</i>&nbsp;  public ResponseEntity&lt;?&gt; moveArtworkToRoom(@PathVariable(&quot;artworkId&quot;) long artworkId, @PathVariable(&quot;roomId&quot;) long roomId) {
+<i class="no-highlight">276</i>&nbsp;    try {
+<b class="fc"><i class="no-highlight">277</i>&nbsp;      Artwork artwork = artworkService.moveArtworkToRoom(artworkId, roomId);</b>
+<b class="fc"><i class="no-highlight">278</i>&nbsp;      ArtworkDto artworkDto = DtoUtility.convertToDto(artwork);</b>
+<b class="fc"><i class="no-highlight">279</i>&nbsp;      return ResponseEntity.ok(artworkDto);</b>
+<b class="fc"><i class="no-highlight">280</i>&nbsp;    } catch (Exception e) {</b>
+<b class="fc"><i class="no-highlight">281</i>&nbsp;      return ResponseEntity.badRequest().body(e.getMessage());</b>
+<i class="no-highlight">282</i>&nbsp;    }
+<i class="no-highlight">283</i>&nbsp;  }
+<i class="no-highlight">284</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-11-19 21:51</div>
+</div>
+</body>
+</html>

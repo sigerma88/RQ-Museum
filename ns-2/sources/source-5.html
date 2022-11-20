@@ -1,0 +1,224 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > LoanRestController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ca.mcgill.ecse321.museum.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: LoanRestController (ca.mcgill.ecse321.museum.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">LoanRestController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    74.1%
+  </span>
+  <span class="absValue">
+    (20/27)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package ca.mcgill.ecse321.museum.controller;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import ca.mcgill.ecse321.museum.dto.LoanDto;
+<i class="no-highlight">4</i>&nbsp;import ca.mcgill.ecse321.museum.model.Loan;
+<i class="no-highlight">5</i>&nbsp;import ca.mcgill.ecse321.museum.service.LoanService;
+<i class="no-highlight">6</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i class="no-highlight">7</i>&nbsp;import org.springframework.http.HttpStatus;
+<i class="no-highlight">8</i>&nbsp;import org.springframework.http.ResponseEntity;
+<i class="no-highlight">9</i>&nbsp;import org.springframework.web.bind.annotation.*;
+<i class="no-highlight">10</i>&nbsp;
+<i class="no-highlight">11</i>&nbsp;import java.util.ArrayList;
+<i class="no-highlight">12</i>&nbsp;import java.util.List;
+<i class="no-highlight">13</i>&nbsp;
+<i class="no-highlight">14</i>&nbsp;@CrossOrigin(origins = &quot;*&quot;)
+<i class="no-highlight">15</i>&nbsp;@RestController
+<i class="no-highlight">16</i>&nbsp;@RequestMapping(&quot;/api/loan&quot;)
+<b class="fc"><i class="no-highlight">17</i>&nbsp;public class LoanRestController {</b>
+<i class="no-highlight">18</i>&nbsp;
+<i class="no-highlight">19</i>&nbsp;  @Autowired
+<i class="no-highlight">20</i>&nbsp;  private LoanService loanService;
+<i class="no-highlight">21</i>&nbsp;
+<i class="no-highlight">22</i>&nbsp;  /**
+<i class="no-highlight">23</i>&nbsp;   * RESTful API to get loan by their loan id
+<i class="no-highlight">24</i>&nbsp;   *
+<i class="no-highlight">25</i>&nbsp;   * @param loanId - Long Id loan
+<i class="no-highlight">26</i>&nbsp;   * @return loanDto with loanId
+<i class="no-highlight">27</i>&nbsp;   * @author Eric
+<i class="no-highlight">28</i>&nbsp;   */
+<i class="no-highlight">29</i>&nbsp;  @GetMapping(value = {&quot;/{loanId}&quot;, &quot;/{loanId}/&quot;})
+<i class="no-highlight">30</i>&nbsp;  public ResponseEntity&lt;?&gt; getLoanById(@PathVariable(&quot;loanId&quot;) Long loanId) {
+<i class="no-highlight">31</i>&nbsp;    try {
+<i class="no-highlight">32</i>&nbsp;      // Check if loan exists
+<b class="fc"><i class="no-highlight">33</i>&nbsp;      Loan loan = loanService.getLoanById(loanId);</b>
+<b class="fc"><i class="no-highlight">34</i>&nbsp;      if (loan == null) {</b>
+<b class="nc"><i class="no-highlight">35</i>&nbsp;        return ResponseEntity.badRequest().body(&quot;Loan does not exist&quot;);</b>
+<i class="no-highlight">36</i>&nbsp;      }
+<b class="fc"><i class="no-highlight">37</i>&nbsp;      LoanDto loanDto = DtoUtility.convertToDto(loan);</b>
+<b class="fc"><i class="no-highlight">38</i>&nbsp;      return ResponseEntity.ok(loanDto);</b>
+<b class="nc"><i class="no-highlight">39</i>&nbsp;    } catch (Exception e) {</b>
+<b class="nc"><i class="no-highlight">40</i>&nbsp;      return ResponseEntity.badRequest().body(e.getMessage());</b>
+<i class="no-highlight">41</i>&nbsp;    }
+<i class="no-highlight">42</i>&nbsp;  }
+<i class="no-highlight">43</i>&nbsp;
+<i class="no-highlight">44</i>&nbsp;  /**
+<i class="no-highlight">45</i>&nbsp;   * RESTful API to get all loans
+<i class="no-highlight">46</i>&nbsp;   *
+<i class="no-highlight">47</i>&nbsp;   * @return List of all loans
+<i class="no-highlight">48</i>&nbsp;   * @author Eric
+<i class="no-highlight">49</i>&nbsp;   */
+<i class="no-highlight">50</i>&nbsp;  @GetMapping(value = {&quot;&quot;, &quot;/&quot;})
+<i class="no-highlight">51</i>&nbsp;  public ResponseEntity&lt;?&gt; getLoans() {
+<i class="no-highlight">52</i>&nbsp;    try {
+<b class="fc"><i class="no-highlight">53</i>&nbsp;      List&lt;LoanDto&gt; loanDtos = new ArrayList&lt;LoanDto&gt;();</b>
+<b class="fc"><i class="no-highlight">54</i>&nbsp;      for (Loan loan : loanService.getAllLoans()) {</b>
+<b class="fc"><i class="no-highlight">55</i>&nbsp;        loanDtos.add(DtoUtility.convertToDto(loan));</b>
+<b class="fc"><i class="no-highlight">56</i>&nbsp;      }</b>
+<b class="fc"><i class="no-highlight">57</i>&nbsp;      return new ResponseEntity&lt;&gt;(loanDtos, HttpStatus.FOUND);</b>
+<b class="nc"><i class="no-highlight">58</i>&nbsp;    } catch (Exception e) {</b>
+<b class="nc"><i class="no-highlight">59</i>&nbsp;      return new ResponseEntity&lt;&gt;(e.getMessage(), HttpStatus.BAD_REQUEST);</b>
+<i class="no-highlight">60</i>&nbsp;    }
+<i class="no-highlight">61</i>&nbsp;  }
+<i class="no-highlight">62</i>&nbsp;
+<i class="no-highlight">63</i>&nbsp;  /**
+<i class="no-highlight">64</i>&nbsp;   * RESTful API to put loan
+<i class="no-highlight">65</i>&nbsp;   *
+<i class="no-highlight">66</i>&nbsp;   * @param loanDto - RequestBody to be converted to a loanDto object
+<i class="no-highlight">67</i>&nbsp;   * @return loanDto of patched loan if successful
+<i class="no-highlight">68</i>&nbsp;   * @author Eric
+<i class="no-highlight">69</i>&nbsp;   */
+<i class="no-highlight">70</i>&nbsp;  @PutMapping(value = {&quot;/edit&quot;, &quot;/edit/&quot;})
+<i class="no-highlight">71</i>&nbsp;  public ResponseEntity&lt;?&gt; putLoan(@RequestBody LoanDto loanDto) {
+<i class="no-highlight">72</i>&nbsp;    try {
+<b class="fc"><i class="no-highlight">73</i>&nbsp;      return new ResponseEntity&lt;&gt;(((DtoUtility.convertToDto(loanService.putLoanById(loanDto.getLoanId(), loanDto.getRequestAccepted())))), HttpStatus.OK);</b>
+<b class="nc"><i class="no-highlight">74</i>&nbsp;    } catch (Exception e) {</b>
+<b class="nc"><i class="no-highlight">75</i>&nbsp;      return new ResponseEntity&lt;&gt;(e.getMessage(), HttpStatus.BAD_REQUEST);</b>
+<i class="no-highlight">76</i>&nbsp;    }
+<i class="no-highlight">77</i>&nbsp;  }
+<i class="no-highlight">78</i>&nbsp;
+<i class="no-highlight">79</i>&nbsp;
+<i class="no-highlight">80</i>&nbsp;  /**
+<i class="no-highlight">81</i>&nbsp;   * RESTful API to create a loan
+<i class="no-highlight">82</i>&nbsp;   *
+<i class="no-highlight">83</i>&nbsp;   * @param loanDto - RequestBody to be converted to a loanDto object
+<i class="no-highlight">84</i>&nbsp;   * @return List of all
+<i class="no-highlight">85</i>&nbsp;   * @author Eric
+<i class="no-highlight">86</i>&nbsp;   */
+<i class="no-highlight">87</i>&nbsp;  @PostMapping(value = {&quot;/create&quot;, &quot;/create/&quot;})
+<i class="no-highlight">88</i>&nbsp;  public ResponseEntity&lt;?&gt; postLoan(@RequestBody LoanDto loanDto) {
+<i class="no-highlight">89</i>&nbsp;    try {
+<i class="no-highlight">90</i>&nbsp;
+<b class="fc"><i class="no-highlight">91</i>&nbsp;      Loan persistedLoan = loanService.createLoan(loanDto);</b>
+<i class="no-highlight">92</i>&nbsp;
+<b class="fc"><i class="no-highlight">93</i>&nbsp;      LoanDto persistedLoanDto = DtoUtility.convertToDto(persistedLoan);</b>
+<i class="no-highlight">94</i>&nbsp;
+<b class="fc"><i class="no-highlight">95</i>&nbsp;      return new ResponseEntity&lt;&gt;(persistedLoanDto, HttpStatus.CREATED);</b>
+<b class="fc"><i class="no-highlight">96</i>&nbsp;    } catch (Exception e) {</b>
+<b class="fc"><i class="no-highlight">97</i>&nbsp;      return new ResponseEntity&lt;&gt;(e.getMessage(), HttpStatus.BAD_REQUEST);</b>
+<i class="no-highlight">98</i>&nbsp;    }
+<i class="no-highlight">99</i>&nbsp;  }
+<i class="no-highlight">100</i>&nbsp;
+<i class="no-highlight">101</i>&nbsp;  /**
+<i class="no-highlight">102</i>&nbsp;   * RESTful API to delete loan by their loanId
+<i class="no-highlight">103</i>&nbsp;   *
+<i class="no-highlight">104</i>&nbsp;   * @param loanId - PathVariable loanId of the loan to be deleted
+<i class="no-highlight">105</i>&nbsp;   * @return String &quot;Loan deleted&quot; if successful
+<i class="no-highlight">106</i>&nbsp;   * @author Eric
+<i class="no-highlight">107</i>&nbsp;   */
+<i class="no-highlight">108</i>&nbsp;  @DeleteMapping(value = {&quot;/delete/{loanId}&quot;, &quot;/delete/{loanId}/&quot;})
+<i class="no-highlight">109</i>&nbsp;  public ResponseEntity&lt;?&gt; deleteLoan(@PathVariable(&quot;loanId&quot;) Long loanId) {
+<i class="no-highlight">110</i>&nbsp;    try {
+<b class="fc"><i class="no-highlight">111</i>&nbsp;      loanService.deleteLoanByLoanId(loanId);</b>
+<i class="no-highlight">112</i>&nbsp;
+<b class="fc"><i class="no-highlight">113</i>&nbsp;      return new ResponseEntity&lt;&gt;(&quot;Loan deleted&quot;, HttpStatus.OK);</b>
+<b class="fc"><i class="no-highlight">114</i>&nbsp;    } catch (Exception e) {</b>
+<b class="fc"><i class="no-highlight">115</i>&nbsp;      return new ResponseEntity&lt;&gt;(e.getMessage(), HttpStatus.BAD_REQUEST);</b>
+<i class="no-highlight">116</i>&nbsp;    }
+<i class="no-highlight">117</i>&nbsp;  }
+<i class="no-highlight">118</i>&nbsp;
+<i class="no-highlight">119</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-11-19 21:51</div>
+</div>
+</body>
+</html>

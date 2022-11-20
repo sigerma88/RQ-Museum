@@ -1,0 +1,277 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > LoanService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ca.mcgill.ecse321.museum.service</a>
+</div>
+
+<h1>Coverage Summary for Class: LoanService (ca.mcgill.ecse321.museum.service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">LoanService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    97.6%
+  </span>
+  <span class="absValue">
+    (41/42)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">LoanService$$EnhancerBySpringCGLIB$$8d19b139</td>
+  </tr>
+  <tr>
+    <td class="name">LoanService$$EnhancerBySpringCGLIB$$8d19b139$$FastClassBySpringCGLIB$$f361bac0</td>
+  </tr>
+  <tr>
+    <td class="name">LoanService$$FastClassBySpringCGLIB$$16368c2</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    97.6%
+  </span>
+  <span class="absValue">
+    (41/42)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package ca.mcgill.ecse321.museum.service;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
+<i class="no-highlight">4</i>&nbsp;import ca.mcgill.ecse321.museum.dao.LoanRepository;
+<i class="no-highlight">5</i>&nbsp;import ca.mcgill.ecse321.museum.dao.VisitorRepository;
+<i class="no-highlight">6</i>&nbsp;import ca.mcgill.ecse321.museum.dto.LoanDto;
+<i class="no-highlight">7</i>&nbsp;import ca.mcgill.ecse321.museum.model.Artwork;
+<i class="no-highlight">8</i>&nbsp;import ca.mcgill.ecse321.museum.model.Loan;
+<i class="no-highlight">9</i>&nbsp;import ca.mcgill.ecse321.museum.model.Visitor;
+<i class="no-highlight">10</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i class="no-highlight">11</i>&nbsp;import org.springframework.stereotype.Service;
+<i class="no-highlight">12</i>&nbsp;import org.springframework.transaction.annotation.Transactional;
+<i class="no-highlight">13</i>&nbsp;
+<i class="no-highlight">14</i>&nbsp;import java.util.ArrayList;
+<i class="no-highlight">15</i>&nbsp;import java.util.List;
+<i class="no-highlight">16</i>&nbsp;
+<i class="no-highlight">17</i>&nbsp;@Service
+<b class="fc"><i class="no-highlight">18</i>&nbsp;public class LoanService {</b>
+<i class="no-highlight">19</i>&nbsp;
+<i class="no-highlight">20</i>&nbsp;  @Autowired
+<i class="no-highlight">21</i>&nbsp;  private LoanRepository loanRepository;
+<i class="no-highlight">22</i>&nbsp;  @Autowired
+<i class="no-highlight">23</i>&nbsp;  private ArtworkRepository artworkRepository;
+<i class="no-highlight">24</i>&nbsp;  @Autowired
+<i class="no-highlight">25</i>&nbsp;  private VisitorRepository visitorRepository;
+<i class="no-highlight">26</i>&nbsp;  @Autowired
+<i class="no-highlight">27</i>&nbsp;  private ArtworkService artworkService;
+<i class="no-highlight">28</i>&nbsp;
+<i class="no-highlight">29</i>&nbsp;  /**
+<i class="no-highlight">30</i>&nbsp;   * Method to get loan from the database by their loanId
+<i class="no-highlight">31</i>&nbsp;   *
+<i class="no-highlight">32</i>&nbsp;   * @param loanId - Long primary key of loan
+<i class="no-highlight">33</i>&nbsp;   * @return loan identified by loanId
+<i class="no-highlight">34</i>&nbsp;   * @author Eric
+<i class="no-highlight">35</i>&nbsp;   */
+<i class="no-highlight">36</i>&nbsp;  @Transactional
+<i class="no-highlight">37</i>&nbsp;  public Loan getLoanById(Long loanId) {
+<b class="fc"><i class="no-highlight">38</i>&nbsp;    Loan loan = loanRepository.findLoanByLoanId(loanId);</b>
+<b class="fc"><i class="no-highlight">39</i>&nbsp;    if (loan == null) {</b>
+<b class="fc"><i class="no-highlight">40</i>&nbsp;      throw new IllegalArgumentException(&quot;Loan does not exist&quot;);</b>
+<i class="no-highlight">41</i>&nbsp;    }
+<b class="fc"><i class="no-highlight">42</i>&nbsp;    return loan;</b>
+<i class="no-highlight">43</i>&nbsp;  }
+<i class="no-highlight">44</i>&nbsp;
+<i class="no-highlight">45</i>&nbsp;  /**
+<i class="no-highlight">46</i>&nbsp;   * Method to get all loans from the database
+<i class="no-highlight">47</i>&nbsp;   *
+<i class="no-highlight">48</i>&nbsp;   * @return list&lt;Loan&gt; of all loans from the database
+<i class="no-highlight">49</i>&nbsp;   * @author Eric
+<i class="no-highlight">50</i>&nbsp;   */
+<i class="no-highlight">51</i>&nbsp;  @Transactional
+<i class="no-highlight">52</i>&nbsp;  public List&lt;Loan&gt; getAllLoans() {
+<b class="fc"><i class="no-highlight">53</i>&nbsp;    return toList(loanRepository.findAll());</b>
+<i class="no-highlight">54</i>&nbsp;  }
+<i class="no-highlight">55</i>&nbsp;
+<i class="no-highlight">56</i>&nbsp;  /**
+<i class="no-highlight">57</i>&nbsp;   * Method to create loan
+<i class="no-highlight">58</i>&nbsp;   *
+<i class="no-highlight">59</i>&nbsp;   * @param loanDto - loanDto
+<i class="no-highlight">60</i>&nbsp;   * @return loan created using the attributes of loanDto
+<i class="no-highlight">61</i>&nbsp;   * @author Eric
+<i class="no-highlight">62</i>&nbsp;   */
+<i class="no-highlight">63</i>&nbsp;  @Transactional
+<i class="no-highlight">64</i>&nbsp;  public Loan createLoan(LoanDto loanDto) {
+<i class="no-highlight">65</i>&nbsp;    // Error handling associations
+<b class="fc"><i class="no-highlight">66</i>&nbsp;    Artwork artwork = artworkRepository.findArtworkByArtworkId(loanDto.getArtworkDto().getArtworkId());</b>
+<b class="fc"><i class="no-highlight">67</i>&nbsp;    Visitor visitor = visitorRepository.findVisitorByMuseumUserId(loanDto.getVisitorDto().getMuseumUserId());</b>
+<b class="fc"><i class="no-highlight">68</i>&nbsp;    if (artwork == null) {</b>
+<b class="fc"><i class="no-highlight">69</i>&nbsp;      throw new IllegalArgumentException(&quot;Artwork does not exist&quot;);</b>
+<i class="no-highlight">70</i>&nbsp;    }
+<b class="fc"><i class="no-highlight">71</i>&nbsp;    if (artwork.getIsAvailableForLoan() == false) {</b>
+<b class="fc"><i class="no-highlight">72</i>&nbsp;      throw new IllegalArgumentException(&quot;Artwork is not available for loan&quot;);</b>
+<i class="no-highlight">73</i>&nbsp;    }
+<b class="fc"><i class="no-highlight">74</i>&nbsp;    if (artwork.getIsOnLoan() == true) {</b>
+<b class="fc"><i class="no-highlight">75</i>&nbsp;      throw new IllegalArgumentException(&quot;Cannot create a loan request for an artwork that is on loan&quot;);</b>
+<i class="no-highlight">76</i>&nbsp;    }
+<b class="fc"><i class="no-highlight">77</i>&nbsp;    if (visitor == null) {</b>
+<b class="fc"><i class="no-highlight">78</i>&nbsp;      throw new IllegalArgumentException(&quot;Visitor does not exist&quot;);</b>
+<i class="no-highlight">79</i>&nbsp;    }
+<i class="no-highlight">80</i>&nbsp;
+<b class="fc"><i class="no-highlight">81</i>&nbsp;    Loan loan = new Loan();</b>
+<b class="fc"><i class="no-highlight">82</i>&nbsp;    loan.setRequestAccepted(loanDto.getRequestAccepted());</b>
+<b class="fc"><i class="no-highlight">83</i>&nbsp;    loan.setArtwork(artwork);</b>
+<b class="fc"><i class="no-highlight">84</i>&nbsp;    loan.setVisitor(visitor);</b>
+<i class="no-highlight">85</i>&nbsp;
+<i class="no-highlight">86</i>&nbsp;    // Error handling loan attributes
+<b class="fc"><i class="no-highlight">87</i>&nbsp;    if (loanDto.getRequestAccepted() != null) {</b>
+<b class="fc"><i class="no-highlight">88</i>&nbsp;      throw new IllegalArgumentException(&quot;Loan getRequestAccepted must be null because only an employee can define&quot;);</b>
+<i class="no-highlight">89</i>&nbsp;    }
+<i class="no-highlight">90</i>&nbsp;    // TODO: find out how findBySingleColumn works to determine if this implementation would work
+<i class="no-highlight">91</i>&nbsp;    // loanRepository.findLoanByArtworkAndVisitor does not seem to work but this does
+<b class="fc"><i class="no-highlight">92</i>&nbsp;    if (loanRepository.findLoanByArtworkAndVisitor(artwork, visitor) != null) {</b>
+<b class="fc"><i class="no-highlight">93</i>&nbsp;      throw new IllegalArgumentException(&quot;Cannot create a duplicate loan request&quot;);</b>
+<i class="no-highlight">94</i>&nbsp;    }
+<i class="no-highlight">95</i>&nbsp;
+<b class="fc"><i class="no-highlight">96</i>&nbsp;    Loan persistedLoan = loanRepository.save(loan);</b>
+<i class="no-highlight">97</i>&nbsp;
+<b class="fc"><i class="no-highlight">98</i>&nbsp;    return persistedLoan;</b>
+<i class="no-highlight">99</i>&nbsp;  }
+<i class="no-highlight">100</i>&nbsp;
+<i class="no-highlight">101</i>&nbsp;  /**
+<i class="no-highlight">102</i>&nbsp;   * Method to update loan given loanId and requestAccepted
+<i class="no-highlight">103</i>&nbsp;   *
+<i class="no-highlight">104</i>&nbsp;   * @param loanId          - Long primary key of loan
+<i class="no-highlight">105</i>&nbsp;   * @param requestAccepted - Boolean loan request
+<i class="no-highlight">106</i>&nbsp;   * @return updated loan
+<i class="no-highlight">107</i>&nbsp;   * @author Eric
+<i class="no-highlight">108</i>&nbsp;   */
+<i class="no-highlight">109</i>&nbsp;  @Transactional
+<i class="no-highlight">110</i>&nbsp;  public Loan putLoanById(Long loanId, Boolean requestAccepted) {
+<b class="fc"><i class="no-highlight">111</i>&nbsp;    Loan loan = loanRepository.findLoanByLoanId(loanId);</b>
+<b class="fc"><i class="no-highlight">112</i>&nbsp;    if (loan == null) {</b>
+<b class="nc"><i class="no-highlight">113</i>&nbsp;      throw new IllegalArgumentException(&quot;Loan does not exist&quot;);</b>
+<i class="no-highlight">114</i>&nbsp;    }
+<i class="no-highlight">115</i>&nbsp;
+<i class="no-highlight">116</i>&nbsp;    // If the patch is to accept the loan request, the artwork must be removed from the room it&#39;s in
+<b class="fc"><i class="no-highlight">117</i>&nbsp;    loan.setRequestAccepted(requestAccepted);</b>
+<b class="fc"><i class="no-highlight">118</i>&nbsp;    if (requestAccepted) {</b>
+<b class="fc"><i class="no-highlight">119</i>&nbsp;      loan.setArtwork(artworkService.removeArtworkFromRoom(loan.getArtwork().getArtworkId()));</b>
+<i class="no-highlight">120</i>&nbsp;    }
+<b class="fc"><i class="no-highlight">121</i>&nbsp;    return loanRepository.save(loan);</b>
+<i class="no-highlight">122</i>&nbsp;  }
+<i class="no-highlight">123</i>&nbsp;
+<i class="no-highlight">124</i>&nbsp;  /**
+<i class="no-highlight">125</i>&nbsp;   * Method to delete loan given their loanId
+<i class="no-highlight">126</i>&nbsp;   *
+<i class="no-highlight">127</i>&nbsp;   * @param loanId - Long primary key of loan
+<i class="no-highlight">128</i>&nbsp;   * @author Eric
+<i class="no-highlight">129</i>&nbsp;   */
+<i class="no-highlight">130</i>&nbsp;  @Transactional
+<i class="no-highlight">131</i>&nbsp;  public void deleteLoanByLoanId(Long loanId) {
+<b class="fc"><i class="no-highlight">132</i>&nbsp;    Loan loan = loanRepository.findLoanByLoanId(loanId);</b>
+<b class="fc"><i class="no-highlight">133</i>&nbsp;    if (loan == null) {</b>
+<b class="fc"><i class="no-highlight">134</i>&nbsp;      throw new IllegalArgumentException(&quot;Loan does not exist&quot;);</b>
+<i class="no-highlight">135</i>&nbsp;    }
+<i class="no-highlight">136</i>&nbsp;
+<b class="fc"><i class="no-highlight">137</i>&nbsp;    loanRepository.deleteLoanByLoanId(loanId);</b>
+<i class="no-highlight">138</i>&nbsp;  }
+<i class="no-highlight">139</i>&nbsp;
+<i class="no-highlight">140</i>&nbsp;  /**
+<i class="no-highlight">141</i>&nbsp;   * Method to convert an Iterable to a List
+<i class="no-highlight">142</i>&nbsp;   *
+<i class="no-highlight">143</i>&nbsp;   * @param iterable -Iterable
+<i class="no-highlight">144</i>&nbsp;   * @return List
+<i class="no-highlight">145</i>&nbsp;   * @author Tutorial notes
+<i class="no-highlight">146</i>&nbsp;   */
+<i class="no-highlight">147</i>&nbsp;  private &lt;T&gt; List&lt;T&gt; toList(Iterable&lt;T&gt; iterable) {
+<b class="fc"><i class="no-highlight">148</i>&nbsp;    List&lt;T&gt; resultList = new ArrayList&lt;T&gt;();</b>
+<b class="fc"><i class="no-highlight">149</i>&nbsp;    for (T t : iterable) {</b>
+<b class="fc"><i class="no-highlight">150</i>&nbsp;      resultList.add(t);</b>
+<b class="fc"><i class="no-highlight">151</i>&nbsp;    }</b>
+<b class="fc"><i class="no-highlight">152</i>&nbsp;    return resultList;</b>
+<i class="no-highlight">153</i>&nbsp;  }
+<i class="no-highlight">154</i>&nbsp;
+<i class="no-highlight">155</i>&nbsp;
+<i class="no-highlight">156</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-11-19 21:51</div>
+</div>
+</body>
+</html>
