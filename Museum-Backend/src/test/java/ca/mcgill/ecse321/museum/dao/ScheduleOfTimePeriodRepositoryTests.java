@@ -1,24 +1,23 @@
 package ca.mcgill.ecse321.museum.dao;
 
-import java.sql.Timestamp;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import ca.mcgill.ecse321.museum.model.Schedule;
+import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
+import ca.mcgill.ecse321.museum.model.TimePeriod;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;  
+import org.springframework.boot.test.context.SpringBootTest;
 
-import ca.mcgill.ecse321.museum.model.Schedule;
-import ca.mcgill.ecse321.museum.model.TimePeriod;
-import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
+import java.sql.Timestamp;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Test the persistence layer for the ScheduleOfTimePeriodRepository. Testing reading and writing of
  * objects, attributes and references to the database.
  * ScheduleOfTimePeriodRepository is associated with Schedule and TimePeriod.
- * 
+ *
  * @author Siger
  */
 @SpringBootTest
@@ -65,7 +64,7 @@ public class ScheduleOfTimePeriodRepositoryTests {
     //save 2 TimePeriod
     timePeriodOne = timePeriodRepository.save(timePeriodOne);
     timePeriodTwo = timePeriodRepository.save(timePeriodTwo);
-    
+
     //create 3 ScheduleOfTimePeriod
     ScheduleOfTimePeriod scheduleOfTimePeriodOne = new ScheduleOfTimePeriod(); //scheduleOne, timePeriodOne
     scheduleOfTimePeriodOne.setSchedule(scheduleOne);
@@ -83,14 +82,14 @@ public class ScheduleOfTimePeriodRepositoryTests {
     scheduleOfTimePeriodRepository.save(scheduleOfTimePeriodOne);
     long scheduleOfTimePeriodOneId = scheduleOfTimePeriodOne.getScheduleOfTimePeriodId();
     long scheduleOneIdFromFirst = scheduleOfTimePeriodOne.getSchedule().getScheduleId();
-    long timePeriodOneIdFromFirst = scheduleOfTimePeriodOne.getTimePeriod().getTimePeriodId();    
-    
+    long timePeriodOneIdFromFirst = scheduleOfTimePeriodOne.getTimePeriod().getTimePeriodId();
+
     //save second ScheduleOfTimePeriod
     scheduleOfTimePeriodRepository.save(scheduleOfTimePeriodTwo);
     long scheduleOfTimePeriodTwoId = scheduleOfTimePeriodTwo.getScheduleOfTimePeriodId();
     long scheduleTwoIdFromSecond = scheduleOfTimePeriodTwo.getSchedule().getScheduleId();
     long timePeriodOneIdFromSecond = scheduleOfTimePeriodTwo.getTimePeriod().getTimePeriodId();
-    
+
     //save third ScheduleOfTimePeriod
     scheduleOfTimePeriodRepository.save(scheduleOfTimePeriodThree);
     long scheduleOfTimePeriodThreeId = scheduleOfTimePeriodThree.getScheduleOfTimePeriodId();

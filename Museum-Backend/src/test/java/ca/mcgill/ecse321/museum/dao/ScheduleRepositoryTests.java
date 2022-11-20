@@ -1,22 +1,21 @@
 package ca.mcgill.ecse321.museum.dao;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import ca.mcgill.ecse321.museum.model.Employee;
+import ca.mcgill.ecse321.museum.model.Museum;
+import ca.mcgill.ecse321.museum.model.Schedule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;  
+import org.springframework.boot.test.context.SpringBootTest;
 
-import ca.mcgill.ecse321.museum.model.Schedule;
-import ca.mcgill.ecse321.museum.model.Museum;
-import ca.mcgill.ecse321.museum.model.Employee;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- * Test the persistence layer for the ScheduleRepository. Testing reading and writing of 
+ * Test the persistence layer for the ScheduleRepository. Testing reading and writing of
  * objects, attributes and references to the database.
  * Also tested museum and employee references owning a schedule.
- * 
+ *
  * @author Siger
  */
 @SpringBootTest
@@ -39,7 +38,7 @@ public class ScheduleRepositoryTests {
 
   /**
    * Test that a schedule can be persisted and loaded from the database.
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -64,7 +63,7 @@ public class ScheduleRepositoryTests {
   /**
    * Test that a schedule can be persisted and loaded from the database.
    * Also test that a museum can own a schedule.
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -110,7 +109,7 @@ public class ScheduleRepositoryTests {
   /**
    * Test that a schedule can be persisted and loaded from the database.
    * Also test that an employee can own a schedule.
-   * 
+   *
    * @author Siger
    */
   @Test

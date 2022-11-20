@@ -17,7 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.lenient;
 
 
@@ -64,56 +65,56 @@ public class TestTicketService {
   public void setMockOutput() {
 
     lenient().when(visitorRepository.findVisitorByMuseumUserId(anyLong()))
-            .thenAnswer((InvocationOnMock invocation) -> {
-              if (invocation.getArgument(0).equals(VISITOR_ID_1)) {
-                Visitor visitor = new Visitor();
-                visitor.setEmail(VISITOR_EMAIL_1);
-                visitor.setName(VISITOR_NAME_1);
-                visitor.setPassword(VISITOR_PASSWORD_1);
-                visitor.setMuseumUserId(VISITOR_ID_1);
-                return visitor;
-              } else if (invocation.getArgument(0).equals(VISITOR_ID_2)) {
-                Visitor visitor2 = new Visitor();
-                visitor2.setEmail(VISITOR_EMAIL_2);
-                visitor2.setName(VISITOR_NAME_2);
-                visitor2.setPassword(VISITOR_PASSWORD_2);
-                visitor2.setMuseumUserId(VISITOR_ID_2);
+        .thenAnswer((InvocationOnMock invocation) -> {
+          if (invocation.getArgument(0).equals(VISITOR_ID_1)) {
+            Visitor visitor = new Visitor();
+            visitor.setEmail(VISITOR_EMAIL_1);
+            visitor.setName(VISITOR_NAME_1);
+            visitor.setPassword(VISITOR_PASSWORD_1);
+            visitor.setMuseumUserId(VISITOR_ID_1);
+            return visitor;
+          } else if (invocation.getArgument(0).equals(VISITOR_ID_2)) {
+            Visitor visitor2 = new Visitor();
+            visitor2.setEmail(VISITOR_EMAIL_2);
+            visitor2.setName(VISITOR_NAME_2);
+            visitor2.setPassword(VISITOR_PASSWORD_2);
+            visitor2.setMuseumUserId(VISITOR_ID_2);
 
-                return visitor2;
-              } else {
-                return null;
-              }
+            return visitor2;
+          } else {
+            return null;
+          }
 
-            });
+        });
 
     lenient().when(ticketRepository.findTicketByVisitor(any()))
-            .thenAnswer((InvocationOnMock invocation) -> {
-              Visitor visitor = invocation.getArgument(0);
+        .thenAnswer((InvocationOnMock invocation) -> {
+          Visitor visitor = invocation.getArgument(0);
 
-              List<Ticket> allTickets = new ArrayList<>();
-              Ticket ticket1 = new Ticket();
-              ticket1.setTicketId(TICKET_ID_1);
-              ticket1
-                      .setVisitor(visitorRepository.findVisitorByMuseumUserId(visitor.getMuseumUserId()));
-              ticket1.setVisitDate(Date.valueOf(VISIT_DATE_1));
-              allTickets.add(ticket1);
+          List<Ticket> allTickets = new ArrayList<>();
+          Ticket ticket1 = new Ticket();
+          ticket1.setTicketId(TICKET_ID_1);
+          ticket1
+              .setVisitor(visitorRepository.findVisitorByMuseumUserId(visitor.getMuseumUserId()));
+          ticket1.setVisitDate(Date.valueOf(VISIT_DATE_1));
+          allTickets.add(ticket1);
 
-              Ticket ticket2 = new Ticket();
-              ticket2.setTicketId(TICKET_ID_2);
-              ticket2.setVisitDate(Date.valueOf(VISIT_DATE_2));
-              ticket2
-                      .setVisitor(visitorRepository.findVisitorByMuseumUserId(visitor.getMuseumUserId()));
-              allTickets.add(ticket2);
+          Ticket ticket2 = new Ticket();
+          ticket2.setTicketId(TICKET_ID_2);
+          ticket2.setVisitDate(Date.valueOf(VISIT_DATE_2));
+          ticket2
+              .setVisitor(visitorRepository.findVisitorByMuseumUserId(visitor.getMuseumUserId()));
+          allTickets.add(ticket2);
 
-              Ticket ticket3 = new Ticket();
-              ticket3.setTicketId(TICKET_ID_3);
-              ticket3
-                      .setVisitor(visitorRepository.findVisitorByMuseumUserId(visitor.getMuseumUserId()));
-              ticket3.setVisitDate(Date.valueOf(VISIT_DATE_2));
-              allTickets.add(ticket3);
-              return allTickets;
-            });
-    
+          Ticket ticket3 = new Ticket();
+          ticket3.setTicketId(TICKET_ID_3);
+          ticket3
+              .setVisitor(visitorRepository.findVisitorByMuseumUserId(visitor.getMuseumUserId()));
+          ticket3.setVisitDate(Date.valueOf(VISIT_DATE_2));
+          allTickets.add(ticket3);
+          return allTickets;
+        });
+
   }
 
   /**

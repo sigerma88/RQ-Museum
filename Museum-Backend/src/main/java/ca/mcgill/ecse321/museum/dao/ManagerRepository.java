@@ -1,12 +1,11 @@
 package ca.mcgill.ecse321.museum.dao;
 
-import org.springframework.data.repository.CrudRepository;
-
 import ca.mcgill.ecse321.museum.model.Manager;
+import org.springframework.data.repository.CrudRepository;
 
 /**
  * This is the repository for the Manager class
- * 
+ *
  * @author VZ
  */
 

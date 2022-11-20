@@ -1,20 +1,19 @@
 package ca.mcgill.ecse321.museum.dao;
 
-import java.sql.Timestamp;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import ca.mcgill.ecse321.museum.model.TimePeriod;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import ca.mcgill.ecse321.museum.model.TimePeriod;
+import java.sql.Timestamp;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Test the persistence layer for the TimePeriodRepository. Testing reading and writing of objects,
  * attributes and references to the database.
- * 
+ *
  * @author Siger
  */
 @SpringBootTest

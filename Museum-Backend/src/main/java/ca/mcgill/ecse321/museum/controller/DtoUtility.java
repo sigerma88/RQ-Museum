@@ -5,19 +5,6 @@ import ca.mcgill.ecse321.museum.model.*;
 
 import java.text.SimpleDateFormat;
 
-/**
- * DtoUtility class is used to convert our model objects to DTO objects
- *
- * @author Siger
- * @author Kevin
- * @author Victor
- * @author Zahra
- * @author Eric
- */
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 public class DtoUtility {
 
   /**

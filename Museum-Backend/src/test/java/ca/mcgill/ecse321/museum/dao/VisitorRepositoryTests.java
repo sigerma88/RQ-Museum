@@ -1,20 +1,19 @@
 package ca.mcgill.ecse321.museum.dao;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import ca.mcgill.ecse321.museum.model.Visitor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import ca.mcgill.ecse321.museum.model.Visitor;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Visitor Repository test class
  * Here we test the visitor repository interface by saving a visitor into the database, querying for it,
  * and then checking if the results are consistent
- * 
+ *
  * @author Kieyan
  */
 @SpringBootTest

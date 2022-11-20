@@ -36,7 +36,7 @@ public class TicketRestController {
       System.out.println(ticketDto.getVisitDate());
       System.out.println(ticketDto.getVisitor());
       for (Ticket ticket : ticketService.createTickets(ticketDto.getVisitor(),
-              Date.valueOf(ticketDto.getVisitDate()), numberOfTickets)) {
+          Date.valueOf(ticketDto.getVisitDate()), numberOfTickets)) {
         boughtTickets.add(DtoUtility.convertToDto(ticket));
       }
       System.out.println(boughtTickets);

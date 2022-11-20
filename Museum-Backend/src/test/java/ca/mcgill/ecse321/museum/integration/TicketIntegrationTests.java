@@ -103,7 +103,7 @@ public class TicketIntegrationTests {
 
     long visitorId = visitorRepository.findVisitorByName(VISITOR_NAME_1).getMuseumUserId();
     ResponseEntity<TicketDto[]> response =
-            client.getForEntity("/api/ticket/visitor/" + visitorId + "/", TicketDto[].class);
+        client.getForEntity("/api/ticket/visitor/" + visitorId + "/", TicketDto[].class);
     assertNotNull(response.getBody(), "Response has body");
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertEquals(1, response.getBody().length);
@@ -124,7 +124,7 @@ public class TicketIntegrationTests {
     TicketDto ticketDto = new TicketDto(VISIT_DATE_1, visitorId);
 
     ResponseEntity<TicketDto[]> response = client
-            .postForEntity("/api/ticket/purchase?number=" + numOfTickets, ticketDto, TicketDto[].class);
+        .postForEntity("/api/ticket/purchase?number=" + numOfTickets, ticketDto, TicketDto[].class);
     assertNotNull(response.getBody(), "Response has body");
     assertEquals(HttpStatus.CREATED, response.getStatusCode());
     assertNotNull(response.getBody(), "Response has body");
@@ -142,10 +142,10 @@ public class TicketIntegrationTests {
   public void testCreateTicketsWithInvalidNumber() {
     int numOfTickets = 0;
     TicketDto ticketDto = new TicketDto(VISIT_DATE_1,
-            visitorRepository.findVisitorByName(VISITOR_NAME_1).getMuseumUserId());
+        visitorRepository.findVisitorByName(VISITOR_NAME_1).getMuseumUserId());
 
     ResponseEntity<String> response =
-            client.postForEntity("/api/ticket/purchase?number=" + numOfTickets, ticketDto, String.class);
+        client.postForEntity("/api/ticket/purchase?number=" + numOfTickets, ticketDto, String.class);
     assertNotNull(response, "Response has body");
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     assertEquals("Number of tickets must be at least 1", response.getBody());

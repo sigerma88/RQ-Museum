@@ -1,22 +1,22 @@
 package ca.mcgill.ecse321.museum.dao;
 
-import java.sql.Date;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import ca.mcgill.ecse321.museum.model.Ticket;
+import ca.mcgill.ecse321.museum.model.Visitor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import ca.mcgill.ecse321.museum.model.Ticket;
-import ca.mcgill.ecse321.museum.model.Visitor;
+import java.sql.Date;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Test class for the TicketRepository
+ *
  * @author VZ
- * 
+ * <p>
  * Since the Ticket class has a unidirectional association with the Visitor class, we must create
  * both a ticket object and a visitor object in order to test the TicketRepository.
  */
@@ -30,8 +30,8 @@ public class TicketRepositoryTests {
 
   @AfterEach
   public void clearDatabase() {
-      ticketRepository.deleteAll();
-      visitorRepository.deleteAll();
+    ticketRepository.deleteAll();
+    visitorRepository.deleteAll();
   }
 
   @Test

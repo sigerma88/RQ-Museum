@@ -1,25 +1,24 @@
 package ca.mcgill.ecse321.museum.dao;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
 import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.model.RoomType;
 import ca.mcgill.ecse321.museum.model.Schedule;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Test class for the RoomRepository
- * 
- * Since the Room class has a unidirectional association with the Museum class, and the 
- * Museum class has a unidirectional association with the Schedule class, we must create a Room, 
+ * <p>
+ * Since the Room class has a unidirectional association with the Museum class, and the
+ * Museum class has a unidirectional association with the Schedule class, we must create a Room,
  * a Museum and a Schedule object in order to test the RoomRepository.
- * 
+ *
  * @author VZ
  */
 @SpringBootTest

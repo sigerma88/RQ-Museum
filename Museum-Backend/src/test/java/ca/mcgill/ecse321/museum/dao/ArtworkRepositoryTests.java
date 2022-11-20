@@ -1,20 +1,15 @@
 package ca.mcgill.ecse321.museum.dao;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import ca.mcgill.ecse321.museum.model.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import ca.mcgill.ecse321.museum.model.Schedule;
-import ca.mcgill.ecse321.museum.model.Museum;
-import ca.mcgill.ecse321.museum.model.Room;
-import ca.mcgill.ecse321.museum.model.Artwork;
-import ca.mcgill.ecse321.museum.model.RoomType;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Testing the persistence layer for the ArtworkRepository. Testing the items stored in the database
@@ -45,18 +40,18 @@ public class ArtworkRepositoryTests {
   /**
    * Function that compares the artwork stored in the database with the artwork created.
    *
-   * @param artwork - The saved artwork from the repository
-   * @param artworkName - The expected name of the artwork
-   * @param artist - The expected name of the artist
+   * @param artwork            - The saved artwork from the repository
+   * @param artworkName        - The expected name of the artwork
+   * @param artist             - The expected name of the artist
    * @param isAvailableForLoan - The expected loan availability of the artwork
-   * @param loanFee - The expected loan fee of the artwork
-   * @param image - The expected url of the image of the artwork
-   * @param room - The expected room of the artwork
-   * @param isOnLoan - The expected loan status of the artwork
+   * @param loanFee            - The expected loan fee of the artwork
+   * @param image              - The expected url of the image of the artwork
+   * @param room               - The expected room of the artwork
+   * @param isOnLoan           - The expected loan status of the artwork
    */
   public void compareUniqueArtwork(Artwork artwork, long artworkId, String artworkName,
-      String artist, boolean isAvailableForLoan, double loanFee, String image, Room room,
-      boolean isOnLoan) {
+                                   String artist, boolean isAvailableForLoan, double loanFee, String image, Room room,
+                                   boolean isOnLoan) {
     assertNotNull(artwork);
     assertEquals(artworkId, artwork.getArtworkId());
     assertEquals(artworkName, artwork.getName());

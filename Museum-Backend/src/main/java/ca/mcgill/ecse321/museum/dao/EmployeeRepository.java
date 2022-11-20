@@ -1,12 +1,11 @@
 package ca.mcgill.ecse321.museum.dao;
 
-import org.springframework.data.repository.CrudRepository;
-
 import ca.mcgill.ecse321.museum.model.Employee;
+import org.springframework.data.repository.CrudRepository;
 
 /**
  * This is the repository for the Employee class
- * 
+ *
  * @author Victor
  * @author Siger
  */
