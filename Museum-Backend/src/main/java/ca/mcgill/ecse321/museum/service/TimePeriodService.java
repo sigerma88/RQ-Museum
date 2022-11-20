@@ -1,15 +1,20 @@
 package ca.mcgill.ecse321.museum.service;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-
+import ca.mcgill.ecse321.museum.dao.TimePeriodRepository;
+import ca.mcgill.ecse321.museum.model.TimePeriod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ca.mcgill.ecse321.museum.dao.TimePeriodRepository;
-import ca.mcgill.ecse321.museum.model.TimePeriod;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Business logic for timePeriodController
+ *
+ * @author Victor
+ */
 
 @Service
 public class TimePeriodService {
@@ -45,24 +50,23 @@ public class TimePeriodService {
     @Transactional
     public TimePeriod createTimePeriod(Timestamp startDate, Timestamp endDate) {
 
-        // input validation
-        if (startDate == null || endDate == null) {
-            throw new IllegalArgumentException("Start date and end date cannot be null");
-        }
-        if (startDate.after(endDate)) {
-            throw new IllegalArgumentException("Start date cannot be after end date");
-        }
-        // create TimePeriod
-        TimePeriod timePeriod = new TimePeriod();
-
-        timePeriod.setStartDate(startDate);
-        timePeriod.setEndDate(endDate);
-        timePeriodRepository.save(timePeriod);
-        return timePeriod;
+    // input validation
+    if (startDate == null || endDate == null) {
+      throw new IllegalArgumentException("Start date and end date cannot be null");
     }
+    if (startDate.after(endDate)) {
+      throw new IllegalArgumentException("Start date cannot be after end date");
+    }
+    // create TimePeriod
+    TimePeriod timePeriod = new TimePeriod();
 
-    // DELETE
+    timePeriod.setStartDate(startDate);
+    timePeriod.setEndDate(endDate);
+    timePeriodRepository.save(timePeriod);
+    return timePeriod;
+  }
 
+  // DELETE
     /**
      * Delete a TimePeriod from database by ID
      * 

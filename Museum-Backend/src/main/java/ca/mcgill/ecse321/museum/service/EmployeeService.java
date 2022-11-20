@@ -1,12 +1,5 @@
 package ca.mcgill.ecse321.museum.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
 import ca.mcgill.ecse321.museum.dao.ScheduleOfTimePeriodRepository;
 import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
@@ -15,6 +8,19 @@ import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
 import ca.mcgill.ecse321.museum.model.TimePeriod;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Business logic for employeeController
+ *
+ * @author Victor
+ * @author Siger
+ */
 
 @Service
 public class EmployeeService {
@@ -31,34 +37,17 @@ public class EmployeeService {
   @Autowired
   private TimePeriodRepository timePeriodRepository;
 
-  /**
-   * Method to view an employee and get them by their id
-   * 
-   * @author VZ
-   * @author SM
-   * @param employeeId - employee id
-   * @return employee
-   */
-  @Transactional
-  public Employee getEmployee(Long employeeId) {
-    // Error handling
-    if (employeeId == null) {
-      throw new IllegalArgumentException("Employee id cannot be null");
-    }
-    Employee employee = employeeRepository.findEmployeeByMuseumUserId(employeeId);
-    if (employee == null) {
-      throw new IllegalArgumentException("Employee does not exist");
-    }
-    return employee;
-  }
+  @Autowired
+  private TimePeriodService timePeriodService;
 
   /**
    * Method to get all the employees in the database
    * Allows the manager to view the list of employees
-   * 
+   *
    * @return List of all employees
    * @author Siger
    */
+
   @Transactional
   public List<Employee> getAllEmployees() {
     return toList(employeeRepository.findAll());
@@ -71,6 +60,7 @@ public class EmployeeService {
    * @param employeeId - id of employee
    * @return employee's schedule
    */
+
   @Transactional
   public Schedule getEmployeeSchedule(long employeeId) {
     Employee employee = employeeRepository.findEmployeeByMuseumUserId(employeeId);
@@ -151,9 +141,10 @@ public class EmployeeService {
    * @param timePeriodId - id of time period
    * @return Employee with deleted shift
    */
+
   @Transactional
   public Employee deleteEmployeeTimePeriodAssociation(long employeeId, long timePeriodId) {
-    /**
+    /*
      * 1. Find the employee's schedule first and then delete the
      * ScheduleOfTimePeriod that is associated with the TimePeriod that we
      * want to remove from the employee's schedule.
@@ -180,15 +171,16 @@ public class EmployeeService {
   /**
    * Method to delete an employee from the database by their id
    * Allows the manager to delete an employee
-   * 
-   * @param id - Long
+   *
+   * @param employeeId - Long
    * @return if the employee was deleted (success)
    * @author Siger
    */
+
   @Transactional
-  public boolean deleteEmployee(Long id) {
+  public boolean deleteEmployee(Long employeeId) {
     // Check if the employee exists and error handling
-    Employee employee = employeeRepository.findEmployeeByMuseumUserId(id);
+    Employee employee = employeeRepository.findEmployeeByMuseumUserId(employeeId);
     if (employee == null) {
       throw new IllegalArgumentException("Employee does not exist");
     }
@@ -201,19 +193,20 @@ public class EmployeeService {
     }
 
     // Delete employee
-    employeeRepository.deleteEmployeeByMuseumUserId(id);
+    employeeRepository.deleteEmployeeByMuseumUserId(employeeId);
 
     // Check if employee was deleted
-    return getEmployee(id) == null;
+    return employeeRepository.findEmployeeByMuseumUserId(employeeId) == null;
   }
 
   /**
    * Method to convert an Iterable to a List
-   * 
+   *
    * @param iterable - Iterable
    * @return List
    * @author From tutorial notes
    */
+
   private <T> List<T> toList(Iterable<T> iterable) {
     List<T> resultList = new ArrayList<T>();
     for (T t : iterable) {

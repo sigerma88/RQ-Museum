@@ -2,7 +2,8 @@ package ca.mcgill.ecse321.museum.dto;
 
 /**
  * Time period DTO
- * @author VZ
+ *
+ * @author Victor
  */
 
 public class TimePeriodDto {
@@ -13,12 +14,12 @@ public class TimePeriodDto {
     private String startDate;
     private String endDate;
 
-    // ------------------------
-    // CONSTRUCTOR
-    // ------------------------
+  // ------------------------
+  // CONSTRUCTOR
+  // ------------------------
 
-    public TimePeriodDto() {
-    }
+  public TimePeriodDto() {
+  }
 
     public TimePeriodDto(Long timePeriodId, String startDate, String endDate) {
         this.timePeriodId = timePeriodId;
@@ -31,9 +32,9 @@ public class TimePeriodDto {
         this.endDate = endDate;
     }
 
-    public Long getTimePeriodId() {
-        return timePeriodId;
-    }
+  public Long getTimePeriodId() {
+    return timePeriodId;
+  }
 
     public void setTimePeriodId(Long timePeriodId){
         this.timePeriodId = timePeriodId;

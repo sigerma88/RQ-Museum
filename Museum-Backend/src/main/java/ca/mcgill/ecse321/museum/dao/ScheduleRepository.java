@@ -10,6 +10,7 @@ import ca.mcgill.ecse321.museum.model.Schedule;
  * @author Kieyan
  * @author Siger
  */
+
 public interface ScheduleRepository extends CrudRepository<Schedule, Long> {
 
   Schedule findScheduleByScheduleId(Long scheduleId);

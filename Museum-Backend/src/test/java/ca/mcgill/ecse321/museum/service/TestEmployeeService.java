@@ -1,45 +1,38 @@
 package ca.mcgill.ecse321.museum.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.sql.Timestamp;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
+import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
+import ca.mcgill.ecse321.museum.dao.ScheduleOfTimePeriodRepository;
+import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
+import ca.mcgill.ecse321.museum.dao.TimePeriodRepository;
+import ca.mcgill.ecse321.museum.model.Employee;
+import ca.mcgill.ecse321.museum.model.Schedule;
+import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
+import ca.mcgill.ecse321.museum.model.TimePeriod;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
-import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
-import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
-import ca.mcgill.ecse321.museum.dao.TimePeriodRepository;
-import ca.mcgill.ecse321.museum.dao.ScheduleOfTimePeriodRepository;
-import ca.mcgill.ecse321.museum.model.Employee;
-import ca.mcgill.ecse321.museum.model.Schedule;
-import ca.mcgill.ecse321.museum.model.TimePeriod;
-import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 
 /**
  * This is the test class for the EmployeeService class
- * 
+ *
  * @author Siger
  * @author VZ
  */
+
 @ExtendWith(MockitoExtension.class)
 public class TestEmployeeService {
   @Mock
@@ -57,34 +50,33 @@ public class TestEmployeeService {
   @InjectMocks
   private EmployeeService employeeService;
 
-  private static final long EMPLOYEE_ID = 1;
+  private static final Long EMPLOYEE_ID = 0L;
   private static final String EMPLOYEE_EMAIL = "emile.zola@assommoir.com";
   private static final String EMPLOYEE_NAME = "Emile Zola";
   private static final String EMPLOYEE_PASSWORD = "Password123";
 
-  private static final long SECOND_EMPLOYEE_ID = 2;
+  private static final Long SECOND_EMPLOYEE_ID = 1L;
   private static final String SECOND_EMPLOYEE_EMAIL = "victor.hugo@miserables.com";
   private static final String SECOND_EMPLOYEE_NAME = "Victor Hugo";
   private static final String SECOND_EMPLOYEE_PASSWORD = "Password123";
 
   private static final long NON_EXISTING_EMPLOYEE_ID = 3;
 
-  private static final long SCHEDULE_ID = 1;
-  private static final long SECOND_SCHEDULE_ID = 2;
+  private static final Long SCHEDULE_ID = 0L;
+  private static final Long SECOND_SCHEDULE_ID = 1L;
 
   private static final long TIME_PERIOD_ID = 1;
   private static final long NON_EXISTING_TIME_PERIOD_ID = 2;
   private static final Timestamp STARTDATE = Timestamp.valueOf("2022-10-28 08:30:00.0");
   private static final Timestamp ENDDATE = Timestamp.valueOf("2022-10-28 17:35:00.0");
 
-  private static final long SCHEDULE_OF_TIME_PERIOD_ID = 1;
+  private static final Long SCHEDULE_OF_TIME_PERIOD_ID = 0L;
 
   /**
-   * This method sets up the mock objects
-   * There is an employee with an empty schedule and an employee with a non empty
-   * schedule.
-   * A non empty schedule has a schedule of time period with a time period.
-   * 
+   * This method sets up the mock objects There is an employee with an empty schedule and an
+   * employee with a non empty schedule. A non empty schedule has a schedule of time period with a
+   * time period.
+   *
    * @author Siger
    */
   @BeforeEach
@@ -93,20 +85,13 @@ public class TestEmployeeService {
       return invocation.getArgument(0);
     };
 
-    lenient().when(scheduleRepository.findScheduleByScheduleId(SCHEDULE_ID))
+    lenient().when(scheduleRepository.findScheduleByScheduleId(anyLong()))
         .thenAnswer((InvocationOnMock invocation) -> {
           if (invocation.getArgument(0).equals(SCHEDULE_ID)) {
             Schedule schedule = new Schedule();
             schedule.setScheduleId(SCHEDULE_ID);
             return schedule;
-          } else {
-            return null;
-          }
-        });
-
-    lenient().when(scheduleRepository.findScheduleByScheduleId(SECOND_SCHEDULE_ID))
-        .thenAnswer((InvocationOnMock invocation) -> {
-          if (invocation.getArgument(0).equals(SECOND_SCHEDULE_ID)) {
+          } else if (invocation.getArgument(0).equals(SECOND_SCHEDULE_ID)) {
             Schedule schedule = new Schedule();
             schedule.setScheduleId(SECOND_SCHEDULE_ID);
             return schedule;
@@ -128,20 +113,24 @@ public class TestEmployeeService {
           }
         });
 
-    lenient().when(scheduleOfTimePeriodRepository.findScheduleOfTimePeriodByScheduleOfTimePeriodId(anyLong()))
+    lenient()
+        .when(scheduleOfTimePeriodRepository
+            .findScheduleOfTimePeriodByScheduleOfTimePeriodId(anyLong()))
         .thenAnswer((InvocationOnMock invocation) -> {
           if (invocation.getArgument(0).equals(SCHEDULE_OF_TIME_PERIOD_ID)) {
             ScheduleOfTimePeriod scheduleOfTimePeriod = new ScheduleOfTimePeriod();
             scheduleOfTimePeriod.setScheduleOfTimePeriodId(SCHEDULE_OF_TIME_PERIOD_ID);
-            scheduleOfTimePeriod.setSchedule(scheduleRepository.findScheduleByScheduleId(SECOND_SCHEDULE_ID));
-            scheduleOfTimePeriod.setTimePeriod(timePeriodRepository.findTimePeriodByTimePeriodId(TIME_PERIOD_ID));
+            scheduleOfTimePeriod
+                .setSchedule(scheduleRepository.findScheduleByScheduleId(SECOND_SCHEDULE_ID));
+            scheduleOfTimePeriod
+                .setTimePeriod(timePeriodRepository.findTimePeriodByTimePeriodId(TIME_PERIOD_ID));
             return scheduleOfTimePeriod;
           } else {
             return null;
           }
         });
 
-    lenient().when(employeeRepository.findEmployeeByMuseumUserId(EMPLOYEE_ID))
+    lenient().when(employeeRepository.findEmployeeByMuseumUserId(anyLong()))
         .thenAnswer((InvocationOnMock invocation) -> {
           if (invocation.getArgument(0).equals(EMPLOYEE_ID)) {
             Employee employee = new Employee();
@@ -151,14 +140,7 @@ public class TestEmployeeService {
             employee.setPassword(EMPLOYEE_PASSWORD);
             employee.setSchedule(scheduleRepository.findScheduleByScheduleId(SCHEDULE_ID));
             return employee;
-          } else {
-            return null;
-          }
-        });
-
-    lenient().when(employeeRepository.findEmployeeByMuseumUserId(SECOND_EMPLOYEE_ID))
-        .thenAnswer((InvocationOnMock invocation) -> {
-          if (invocation.getArgument(0).equals(SECOND_EMPLOYEE_ID)) {
+          } else if (invocation.getArgument(0).equals(SECOND_EMPLOYEE_ID)) {
             Employee employee = new Employee();
             employee.setMuseumUserId(SECOND_EMPLOYEE_ID);
             employee.setEmail(SECOND_EMPLOYEE_EMAIL);
@@ -172,7 +154,7 @@ public class TestEmployeeService {
         });
 
     lenient().when(employeeRepository.findAll()).thenAnswer((InvocationOnMock invocation) -> {
-      Iterable<Employee> employees = new ArrayList<Employee>();
+      ArrayList<Employee> employees = new ArrayList<Employee>();
 
       Employee employee = new Employee();
       employee.setMuseumUserId(EMPLOYEE_ID);
@@ -180,7 +162,7 @@ public class TestEmployeeService {
       employee.setName(EMPLOYEE_NAME);
       employee.setPassword(EMPLOYEE_PASSWORD);
       employee.setSchedule(scheduleRepository.findScheduleByScheduleId(SCHEDULE_ID));
-      ((ArrayList<Employee>) employees).add(employee);
+      employees.add(employee);
 
       Employee secondEmployee = new Employee();
       secondEmployee.setMuseumUserId(SECOND_EMPLOYEE_ID);
@@ -188,64 +170,26 @@ public class TestEmployeeService {
       secondEmployee.setName(SECOND_EMPLOYEE_NAME);
       secondEmployee.setPassword(SECOND_EMPLOYEE_PASSWORD);
       secondEmployee.setSchedule(scheduleRepository.findScheduleByScheduleId(SECOND_SCHEDULE_ID));
-      ((ArrayList<Employee>) employees).add(secondEmployee);
+      employees.add(secondEmployee);
 
       return employees;
     });
 
-    lenient().when(scheduleRepository.save(any(Schedule.class))).thenAnswer(returnParameterAsAnswer);
-    lenient().when(timePeriodRepository.save(any(TimePeriod.class))).thenAnswer(returnParameterAsAnswer);
+    lenient().when(scheduleRepository.save(any(Schedule.class)))
+        .thenAnswer(returnParameterAsAnswer);
+    lenient().when(timePeriodRepository.save(any(TimePeriod.class)))
+        .thenAnswer(returnParameterAsAnswer);
     lenient().when(scheduleOfTimePeriodRepository.save(any(ScheduleOfTimePeriod.class)))
         .thenAnswer(returnParameterAsAnswer);
-    lenient().when(employeeRepository.save(any(Employee.class))).thenAnswer(returnParameterAsAnswer);
-    lenient().when(employeeRepository.saveAll(any(Iterable.class))).thenAnswer(returnParameterAsAnswer);
-  }
-
-  /**
-   * Test method for getting an employee by id.
-   * 
-   * @author Siger
-   */
-  @Test
-  public void testGetEmployee() {
-    Employee employee = employeeService.getEmployee(EMPLOYEE_ID);
-    assertEquals(EMPLOYEE_ID, employee.getMuseumUserId());
-    assertEquals(EMPLOYEE_EMAIL, employee.getEmail());
-    assertEquals(EMPLOYEE_NAME, employee.getName());
-    assertEquals(EMPLOYEE_PASSWORD, employee.getPassword());
-    assertEquals(SCHEDULE_ID, employee.getSchedule().getScheduleId());
-  }
-
-  /**
-   * Test method for getting an employee by id when the employee does not exist.
-   * 
-   * @author Siger and VZ
-   * 
-   */
-  @Test
-  public void testGetEmployeeNonExisting() {
-    assertThrows(IllegalArgumentException.class, () -> employeeService.getEmployee(NON_EXISTING_EMPLOYEE_ID));
-  }
-
-  /**
-   * Test method for getting an employee by id when id is null.
-   * 
-   * @author Siger
-   */
-  @Test
-  public void testGetEmployeeNull() {
-    String error = null;
-    try {
-      employeeService.getEmployee(null);
-    } catch (IllegalArgumentException e) {
-      error = e.getMessage();
-    }
-    assertEquals("Employee id cannot be null", error);
+    lenient().when(employeeRepository.save(any(Employee.class)))
+        .thenAnswer(returnParameterAsAnswer);
+    lenient().when(employeeRepository.saveAll(any(Iterable.class)))
+        .thenAnswer(returnParameterAsAnswer);
   }
 
   /**
    * Test method for getting all employees.
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -256,7 +200,7 @@ public class TestEmployeeService {
   /**
    * Test method for deleting an employee by id when the employee has an empty
    * schedule.
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -271,7 +215,7 @@ public class TestEmployeeService {
   /**
    * Test method for deleting an employee by id when the employee has a non empty
    * schedule.
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -285,7 +229,7 @@ public class TestEmployeeService {
 
   /**
    * Test method for deleting an employee by id when the employee does not exist.
-   * 
+   *
    * @author Siger
    */
   @Test
@@ -301,7 +245,7 @@ public class TestEmployeeService {
 
   /**
    * Test method for getting an employee's schedule
-   * 
+   *
    * @author VZ
    */
   @Test
@@ -320,7 +264,7 @@ public class TestEmployeeService {
   /**
    * Test method for getting an employee's schedule when the employee does not
    * exist.
-   * 
+   *
    * @author VZ
    */
   @Test
@@ -334,7 +278,7 @@ public class TestEmployeeService {
 
   /**
    * Test method for getting an employee's timeperiods
-   * 
+   *
    * @author VZ
    */
   @Test
@@ -405,7 +349,7 @@ public class TestEmployeeService {
   /**
    * Test method for getting an employee's timeperiods when the employee does not
    * exist.
-   * 
+   *
    * @author VZ
    */
   @Test
@@ -420,7 +364,7 @@ public class TestEmployeeService {
   /**
    * Test method for getting an employee's timeperiods when employee's schedule
    * has no shift
-   * 
+   *
    * @author VZ
    */
   @Test
@@ -452,7 +396,7 @@ public class TestEmployeeService {
 
   /**
    * Test for adding an existing timeperiod to an employee's schedule
-   * 
+   *
    * @author VZ
    */
   @Test
@@ -489,13 +433,12 @@ public class TestEmployeeService {
     assertNotNull(testEmployee);
     // test that service actually saved museum
     verify(employeeRepository, times(1)).save(employee);
-
   }
 
   /**
    * Test for adding a an existing timeperiod to a non existing employee's
    * schedule
-   * 
+   *
    * @author VZ
    */
   @Test
@@ -509,7 +452,7 @@ public class TestEmployeeService {
 
   /**
    * Test for adding a non existing timeperiod to an employee's schedule
-   * 
+   *
    * @author VZ
    */
   @Test
@@ -523,7 +466,7 @@ public class TestEmployeeService {
 
   /**
    * Test for removing an existing timeperiod from an employee's schedule
-   * 
+   *
    * @author VZ
    */
   @Test
@@ -567,7 +510,7 @@ public class TestEmployeeService {
 
   /**
    * Test for removing a timeperiod from a non existing employee's schedule
-   * 
+   *
    * @author VZ
    */
   @Test
@@ -583,7 +526,7 @@ public class TestEmployeeService {
    * Test for removing an existing timeperiod from an employee's schedule that
    * doesn't
    * contain the mentioned timeperiod
-   * 
+   *
    * @author VZ
    */
   @Test
@@ -619,7 +562,7 @@ public class TestEmployeeService {
 
   /**
    * Test for removing a non existing timeperiod from an employee's schedule
-   * 
+   *
    * @author VZ
    */
   @Test

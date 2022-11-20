@@ -34,6 +34,27 @@ import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
 import ca.mcgill.ecse321.museum.model.TimePeriod;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
+
+import java.sql.Timestamp;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
+
+/**
+ * This is the test class for the MuseumService class.
+ * 
+ * @author VZ
+ * 
+ */
 
 /**
  * This is the test class for the MuseumService class.
@@ -45,17 +66,17 @@ import ca.mcgill.ecse321.museum.model.TimePeriod;
 @ExtendWith(MockitoExtension.class)
 public class TestMuseumService {
 
-    @Mock
-    private MuseumRepository museumRepository;
-    @Mock
-    private ScheduleRepository scheduleRepository;
-    @Mock
-    private TimePeriodRepository timePeriodRepository;
-    @Mock
-    private ScheduleOfTimePeriodRepository scheduleOfTimePeriodRepository;
+  @Mock
+  private MuseumRepository museumRepository;
+  @Mock
+  private ScheduleRepository scheduleRepository;
+  @Mock
+  private TimePeriodRepository timePeriodRepository;
+  @Mock
+  private ScheduleOfTimePeriodRepository scheduleOfTimePeriodRepository;
 
-    @InjectMocks
-    private MuseumService museumService;
+  @InjectMocks
+  private MuseumService museumService;
 
     private static final Long MUSEUM_ID = 1L;
     private static final String MUSEUM_NAME = "RQ museum";
@@ -78,11 +99,11 @@ public class TestMuseumService {
 
     private static final Long SCHEDULE_OF_TIME_PERIOD_ID = 1L;
 
-    /**
-     * This method is called before each test and is used to set up the mock objects
-     * 
-     * @author VZ
-     */
+  /**
+   * This method is called before each test and is used to set up the mock objects
+   *
+   * @author VZ
+   */
 
     @BeforeEach
     public void setMockOutput() {
@@ -150,17 +171,17 @@ public class TestMuseumService {
                     }
                 });
 
-        // whenever anything is saved, just return the parameter object
-        Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
-            return invocation.getArgument(0);
-        };
+    // whenever anything is saved, just return the parameter object
+    Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
+      return invocation.getArgument(0);
+    };
 
-        lenient().when(museumRepository.save(any(Museum.class))).thenAnswer(returnParameterAsAnswer);
-        lenient().when(scheduleRepository.save(any(Schedule.class))).thenAnswer(returnParameterAsAnswer);
-        lenient().when(scheduleOfTimePeriodRepository.save(any(ScheduleOfTimePeriod.class)))
-                .thenAnswer(returnParameterAsAnswer);
-        lenient().when(timePeriodRepository.save(any(TimePeriod.class))).thenAnswer(returnParameterAsAnswer);
-    }
+    lenient().when(museumRepository.save(any(Museum.class))).thenAnswer(returnParameterAsAnswer);
+    lenient().when(scheduleRepository.save(any(Schedule.class))).thenAnswer(returnParameterAsAnswer);
+    lenient().when(scheduleOfTimePeriodRepository.save(any(ScheduleOfTimePeriod.class)))
+        .thenAnswer(returnParameterAsAnswer);
+    lenient().when(timePeriodRepository.save(any(TimePeriod.class))).thenAnswer(returnParameterAsAnswer);
+  }
 
     /**
      * This method is used to test the creation of a museum
@@ -266,7 +287,7 @@ public class TestMuseumService {
             error = e.getMessage();
         }
         assertNull(museum);
-        assertEquals("Visit fee cannot be negative!", error);
+        assertEquals("Visit fee cannot be negative or null!", error);
     }
 
     /**

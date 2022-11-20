@@ -1,11 +1,5 @@
 package ca.mcgill.ecse321.museum.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ca.mcgill.ecse321.museum.dao.MuseumRepository;
 import ca.mcgill.ecse321.museum.dao.ScheduleOfTimePeriodRepository;
 import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
@@ -14,6 +8,19 @@ import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.ScheduleOfTimePeriod;
 import ca.mcgill.ecse321.museum.model.TimePeriod;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Business logic for museumController
+ *
+ * @author Victor
+ * @author Siger
+ */
 
 /**
  * Service class for Museum
@@ -24,49 +31,61 @@ public class MuseumService {
 
   @Autowired
   private MuseumRepository museumRepository;
+
   @Autowired
   private ScheduleRepository scheduleRepository;
+
   @Autowired
   private ScheduleOfTimePeriodRepository scheduleOfTimePeriodRepository;
+
   @Autowired
   private TimePeriodRepository timePeriodRepository;
 
+  @Autowired
+  private TimePeriodService timePeriodService;
+
   /**
    * Method to view a museum
-   * 
-   * @author VZ
+   *
    * @param museumId - museum id
    * @return museum
    */
 
   @Transactional
-  public Museum getMuseum(Long museumId) {
-    if (museumId == null) {
-      throw new IllegalArgumentException("Museum id cannot be null");
-    }
-    Museum museum = museumRepository.findMuseumByMuseumId(museumId);
-    if (museum == null) {
-      throw new IllegalArgumentException("Museum does not exist");
-    }
-    return museum;
+  public Museum getMuseum(long museumId) {
+    return museumRepository.findMuseumByMuseumId(museumId);
+  }
+
+  /**
+   * Method to get all the museums in the database
+   *
+   * @return List of all museums
+   * @author Siger
+   */
+
+  @Transactional
+  public List<Museum> getAllMuseums() {
+    return toList(museumRepository.findAll());
   }
 
   /**
    * Method to create a museum
-   * 
+   *
+   * @return
    * @author VZ
    * @param name - name of the museum
    * @param visitFee - visit fee of the museum
    * @param schedule - schedule of the museum
    * @return museum
    */
+
   @Transactional
-  public Museum createMuseum(String name, double visitFee, Schedule schedule) {
+  public Museum createMuseum(String name, Double visitFee, Schedule schedule) {
     if (name == null || name.trim().length() == 0) {
       throw new IllegalArgumentException("Name cannot be empty!");
     }
-    if (visitFee < 0) {
-      throw new IllegalArgumentException("Visit fee cannot be negative!");
+    if (visitFee == null || visitFee < 0) {
+      throw new IllegalArgumentException("Visit fee cannot be negative or null!");
     }
     if (schedule == null) {
       throw new IllegalArgumentException("Schedule cannot be null!");
@@ -90,6 +109,7 @@ public class MuseumService {
    * @param schedule - new schedule of the museum
    * @return
    */
+
   @Transactional
   public Museum editMuseum(long museumId, String name, Double visitFee, Schedule schedule) {
     Museum museum = museumRepository.findMuseumByMuseumId(museumId);
@@ -125,6 +145,7 @@ public class MuseumService {
    * @param museumId - museum id
    * @return schedule of museum
    */
+
   @Transactional
   public Schedule getMuseumSchedule(long museumId) {
     Museum museum = museumRepository.findMuseumByMuseumId(museumId);
@@ -143,6 +164,7 @@ public class MuseumService {
    * @param museumId - museum id
    * @return list of shifts of museum
    */
+
   @Transactional
   public List<TimePeriod> getMuseumTimePeriods(long museumId) {
     Museum museum = museumRepository.findMuseumByMuseumId(museumId);
@@ -164,6 +186,7 @@ public class MuseumService {
    * @param timePeriodId - time period id
    * @return Museum with added time period
    */
+
   @Transactional
   public Museum addMuseumTimePeriodAssociation(long museumId, long timePeriodId) {
     Museum museum = museumRepository.findMuseumByMuseumId(museumId);
@@ -192,6 +215,7 @@ public class MuseumService {
    * @param timePeriodId - time period id
    * @return Museum with removed time period
    */
+
   @Transactional
   public Museum deleteMuseumTimePeriodAssociation(long museumId, long timePeriodId) {
 
@@ -216,28 +240,18 @@ public class MuseumService {
 
   /**
    * Method to convert an Iterable to a List
-   * 
+   *
    * @param iterable - Iterable
    * @return List
    * @author From tutorial notes
    */
+
   private <T> List<T> toList(Iterable<T> iterable) {
     List<T> resultList = new ArrayList<T>();
     for (T t : iterable) {
       resultList.add(t);
     }
     return resultList;
-  }
-
-  /**
-   * Method to get all the museums in the database
-   * 
-   * @return List of all museums
-   * @author Siger
-   */
-  @Transactional
-  public List<Museum> getAllMuseums() {
-    return toList(museumRepository.findAll());
   }
 
   /**
