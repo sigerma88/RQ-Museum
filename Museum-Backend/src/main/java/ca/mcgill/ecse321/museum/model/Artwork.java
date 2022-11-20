@@ -21,11 +21,11 @@ public class Artwork {
   // ------------------------
 
   // Artwork Attributes
-  private long artworkId;
+  private Long artworkId;
   private String name;
   private String artist;
   private Boolean isAvailableForLoan;
-  private double loanFee;
+  private Double loanFee;
   private String image;
   private Boolean isOnLoan;
 
@@ -44,7 +44,7 @@ public class Artwork {
 
   @Id
   @GeneratedValue
-  public long getArtworkId() {
+  public Long getArtworkId() {
     return artworkId;
   }
 
@@ -64,7 +64,7 @@ public class Artwork {
   }
 
   @Column(nullable = true)
-  public double getLoanFee() {
+  public Double getLoanFee() {
     return loanFee;
   }
 
@@ -85,7 +85,7 @@ public class Artwork {
     return room;
   }
 
-  public boolean setArtworkId(long aArtworkId) {
+  public boolean setArtworkId(Long aArtworkId) {
     boolean wasSet = false;
     artworkId = aArtworkId;
     wasSet = true;
@@ -106,14 +106,14 @@ public class Artwork {
     return wasSet;
   }
 
-  public boolean setIsAvailableForLoan(boolean aIsAvailableForLoan) {
+  public boolean setIsAvailableForLoan(Boolean aIsAvailableForLoan) {
     boolean wasSet = false;
     isAvailableForLoan = aIsAvailableForLoan;
     wasSet = true;
     return wasSet;
   }
 
-  public boolean setLoanFee(double aLoanFee) {
+  public boolean setLoanFee(Double aLoanFee) {
     boolean wasSet = false;
     loanFee = aLoanFee;
     wasSet = true;
@@ -127,20 +127,23 @@ public class Artwork {
     return wasSet;
   }
 
-  public boolean setIsOnLoan(boolean aIsOnLoan){
+  public boolean setIsOnLoan(Boolean aIsOnLoan){
     boolean wasSet = false;
     isOnLoan = aIsOnLoan;
     wasSet = true;
     return wasSet;
   }
 
-  /* Code from template association_SetUnidirectionalOne */
+  /**
+   * Changed setRoom so that it can set room to null
+   * 
+   * @author Eric
+   * @author Kieyan
+   * @param aNewRoom
+   * @return
+   */
   public boolean setRoom(Room aNewRoom) {
-    boolean wasSet = false;
-    if (aNewRoom != null) {
-      room = aNewRoom;
-      wasSet = true;
-    }
-    return wasSet;
+    room = aNewRoom;
+    return true;
   }
 }

@@ -45,7 +45,7 @@ public class Loan {
     return loanId;
   }
 
-  @Column(nullable = false)
+  @Column(nullable = true)
   public Boolean getRequestAccepted() {
     return requestAccepted;
   }
@@ -71,7 +71,7 @@ public class Loan {
     return wasSet;
   }
 
-  public boolean setRequestAccepted(boolean aRequestAccepted) {
+  public Boolean setRequestAccepted(Boolean aRequestAccepted) {
     boolean wasSet = false;
     requestAccepted = aRequestAccepted;
     wasSet = true;

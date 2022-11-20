@@ -5,6 +5,7 @@ import ca.mcgill.ecse321.museum.dao.VisitorRepository;
 import ca.mcgill.ecse321.museum.dto.TicketDto;
 import ca.mcgill.ecse321.museum.model.Ticket;
 import ca.mcgill.ecse321.museum.model.Visitor;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +74,12 @@ public class TicketIntegrationTests {
 
   }
 
+  @AfterEach
+  public void clearDatabase() {
+    ticketRepository.deleteAll();
+    visitorRepository.deleteAll();
+  }
+
   /**
    * Test to get all tickets possessed by an  invalid visitor
    *
@@ -80,7 +87,7 @@ public class TicketIntegrationTests {
    */
   @Test
   public void testGetTicketByInvalidVisitor() {
-    ResponseEntity<String> response = client.getForEntity("/tickets/" + -1 + "/", String.class);
+    ResponseEntity<String> response = client.getForEntity("/api/ticket/visitor/" + -1 + "/", String.class);
     assertNotNull(response);
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     assertEquals("Visitor doesn't exist", response.getBody(), "Correct response body message");
@@ -96,7 +103,7 @@ public class TicketIntegrationTests {
 
     long visitorId = visitorRepository.findVisitorByName(VISITOR_NAME_1).getMuseumUserId();
     ResponseEntity<TicketDto[]> response =
-            client.getForEntity("/tickets/" + visitorId + "/", TicketDto[].class);
+            client.getForEntity("/api/ticket/visitor/" + visitorId + "/", TicketDto[].class);
     assertNotNull(response.getBody(), "Response has body");
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertEquals(1, response.getBody().length);
@@ -117,7 +124,7 @@ public class TicketIntegrationTests {
     TicketDto ticketDto = new TicketDto(VISIT_DATE_1, visitorId);
 
     ResponseEntity<TicketDto[]> response = client
-            .postForEntity("/tickets/purchase?number=" + numOfTickets, ticketDto, TicketDto[].class);
+            .postForEntity("/api/ticket/purchase?number=" + numOfTickets, ticketDto, TicketDto[].class);
     assertNotNull(response.getBody(), "Response has body");
     assertEquals(HttpStatus.CREATED, response.getStatusCode());
     assertNotNull(response.getBody(), "Response has body");
@@ -138,7 +145,7 @@ public class TicketIntegrationTests {
             visitorRepository.findVisitorByName(VISITOR_NAME_1).getMuseumUserId());
 
     ResponseEntity<String> response =
-            client.postForEntity("/tickets/purchase?number=" + numOfTickets, ticketDto, String.class);
+            client.postForEntity("/api/ticket/purchase?number=" + numOfTickets, ticketDto, String.class);
     assertNotNull(response, "Response has body");
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     assertEquals("Number of tickets must be at least 1", response.getBody());

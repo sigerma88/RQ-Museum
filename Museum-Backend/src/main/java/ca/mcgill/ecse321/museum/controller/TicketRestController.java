@@ -14,6 +14,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
+@RequestMapping("/api/ticket")
 public class TicketRestController {
 
   @Autowired
@@ -26,7 +27,7 @@ public class TicketRestController {
    * @param numberOfTickets number of tickets to purchase
    * @return boughtTickets list of created tickets
    */
-  @PostMapping(value = {"/tickets/purchase", "/tickets/purchase/"})
+  @PostMapping(value = {"/purchase", "/purchase/"})
   public ResponseEntity<?> createTickets(@RequestBody TicketDto ticketDto,
                                          @RequestParam(name = "number") int numberOfTickets) {
 
@@ -53,8 +54,8 @@ public class TicketRestController {
    * @return allTicketsOfVisitor list of tickets possessed by visitor
    * @author Zahra
    */
-  @GetMapping(value = {"/tickets/{visitor}", "/tickets/{visitor}/"})
-  public ResponseEntity<?> getTicketsByVisitor(@PathVariable("visitor") long visitorId) {
+  @GetMapping(value = {"/visitor/{visitorId}", "/visitor/{visitorId}/"})
+  public ResponseEntity<?> getTicketsByVisitor(@PathVariable("visitorId") long visitorId) {
     try {
       List<TicketDto> allTicketsOfVisitor = new ArrayList<>();
       for (Ticket ticket : ticketService.getTicketsByVisitor(visitorId)) {

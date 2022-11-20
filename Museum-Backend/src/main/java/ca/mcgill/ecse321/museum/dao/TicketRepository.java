@@ -11,11 +11,11 @@ import ca.mcgill.ecse321.museum.model.Visitor;
  * 
  * @author Victor
  */
-public interface TicketRepository extends CrudRepository<Ticket, Long> {
+
+public interface TicketRepository extends CrudRepository<Ticket, Long>{
 
   Ticket findTicketByTicketId(Long ticketId);
 
   List<Ticket> findTicketByVisitor(Visitor visitor);
-
 
 }

@@ -34,7 +34,7 @@ public class TicketService {
   public List<Ticket> createTickets(long visitorID, Date date, int numberOfTickets) {
     List<Ticket> ticketsBought = new ArrayList<>();
 
-    if (numberOfTickets > 0) {
+    if (numberOfTickets < 1) {
       throw new IllegalArgumentException("Number of tickets must be at least 1");
     }
     if (visitorRepository.findVisitorByMuseumUserId(visitorID) == null) {

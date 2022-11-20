@@ -2,9 +2,10 @@ package ca.mcgill.ecse321.museum.dto;
 
 /**
  * Schedule DTO
- * 
+ *
  * @author Siger
  */
+
 public class ScheduleDto {
 
   private Long scheduleId;
@@ -16,7 +17,7 @@ public class ScheduleDto {
     this.scheduleId = scheduleId;
   }
 
-  public void setSheduleId(Long scheduleId) {
+  public void setScheduleId(Long scheduleId) {
     this.scheduleId = scheduleId;
   }
 
