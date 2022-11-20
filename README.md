@@ -65,24 +65,25 @@ Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/De
 Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/Deliverable-2) to view the project report for Deliverable 2.
 
 **Roles**
+|         Name         | Roles                                              |
+| :------------------: | -------------------------------------------------- |
+|       Siger Ma       |     Manager, Reviewer, Testing, Merging     |
+|     Victor Zhao      |     Manager, Testing, Documenting      |
+|     Zahra Landou     |     Testing     |
+|      Eric Joung      |     Testing     |
+| Kieyan Mamiche Afara |     Testing, Documenting     |
+|      Kevin Luo       |     Testing, Documenting    |
 
-|         Name         | Roles                               |
-| :------------------: | ----------------------------------- |
-|       Siger Ma       | Manager, Reviewer, Testing, Merging |
-|     Victor Zhao      | Manager, Testing, Documenting       |
-|     Zahra Landou     | Testing                             |
-|      Eric Joung      | Testing                             |
-| Kieyan Mamiche Afara | Testing, Documenting                |
-|      Kevin Luo       | Testing, Documenting                |
+# Effort Table
 
-**Contributions**
-| Name | Contributions | Effort (hours) |
+|         Name         | Contributions                                            | Effort (hours) |
 | :------------------: | -------------------------------------------------------- | :------------: |
-| Siger Ma | Responsible for pull requests, Room, parts of Artwork, parts of Employee. Wrote service classes, controller classes, unit tests and integration tests. | 49 |
-| Victor Zhao | Responsible for Museum, Employee and Scheduling. Wrote service classes, controller classes, unit tests and integration tests. Documented. | 55 |
-| Zahra Landou | Responsible for parts Artwork and Ticket. Wrote service classes, controller classes, unit tests and integration tests. | 47 |
-| Eric Joung | Responsible for Loan. Wrote service classes, controller classes, units tests and integration tests. | 34 |
-| Kieyan Mamiche Afara | Responsible for parts of Artwork and Room. Wrote service classes, controller classes, unit tests and integration tests. Documented. | 34 |
-| Kevin Luo | Responsible for Authentication and Registration. Wrote service classes, controller classes, unit tests and integration tests. Documented. | 41 |
+|       Siger Ma       | Responsible for pull requests, Room, parts of Artwork, parts of Employee. Wrote service classes, controller classes, unit tests and integration tests. |      49       |
+|     Victor Zhao      | Responsible for Museum, Employee and Scheduling. Wrote service classes, controller classes, unit tests and integration tests. Documented. |      55       |
+|     Zahra Landou     | Responsible for parts Artwork and Ticket. Wrote service classes, controller classes, unit tests and integration tests. |      47       |
+|      Eric Joung      | Responsible for Loan. Wrote service classes, controller classes, units tests and integration tests. |     34        |
+| Kieyan Mamiche Afara | Responsible for parts of Artwork and Room. Wrote service classes, controller classes, unit tests and integration tests. Documented. |      36       |
+|      Kevin Luo       | Responsible for Authentication and Registration. Wrote service classes, controller classes, unit tests and integration tests. Documented. |     41      |
+
 
 ### Deliverable 3
