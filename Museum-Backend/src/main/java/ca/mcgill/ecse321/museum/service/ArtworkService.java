@@ -26,13 +26,13 @@ import java.util.List;
 public class ArtworkService {
 
   @Autowired
-  ArtworkRepository artworkRepository;
+  private ArtworkRepository artworkRepository;
 
   @Autowired
-  LoanRepository loanRepository;
+  private RoomRepository roomRepository;
 
   @Autowired
-  RoomRepository roomRepository;
+  private LoanRepository loanRepository;
 
   @Autowired
   RoomService roomService;

@@ -36,7 +36,6 @@ import static org.mockito.Mockito.*;
  * This is the test class for the MuseumService class.
  *
  * @author VZ
- *
  */
 
 @ExtendWith(MockitoExtension.class)
@@ -185,7 +184,6 @@ public class TestMuseumService {
    * museum name is null
    *
    * @author VZ
-   *
    */
   @Test
   public void testCreateMuseumNullName() {
@@ -206,7 +204,6 @@ public class TestMuseumService {
    * test for creating a museum with an empty name
    *
    * @author VZ
-   *
    */
   @Test
   public void testCreateMuseumEmptyName() {
@@ -227,7 +224,6 @@ public class TestMuseumService {
    * Test for creating a museum with name [space]
    *
    * @author VZ
-   *
    */
   @Test
   public void testCreateMuseumSpaceName() {
@@ -288,7 +284,6 @@ public class TestMuseumService {
    * test for editing a museum's attributes
    *
    * @author VZ
-   *
    */
   @Test
   public void testEditMuseum() {
@@ -309,7 +304,6 @@ public class TestMuseumService {
    * test method for editing a museum that doesn't exist.
    *
    * @author VZ
-   *
    */
   @Test
   public void testEditNonExistingMuseum() {
@@ -391,7 +385,6 @@ public class TestMuseumService {
    * test for editing a museum by setting a negative visit fee
    *
    * @author VZ
-   *
    */
   @Test
   public void testEditMuseumWithNegativeVisitFee() {
@@ -411,7 +404,6 @@ public class TestMuseumService {
   }
 
   /**
-   *
    * test for editing a museum by only changing schedule
    *
    * @author VZ
@@ -641,7 +633,6 @@ public class TestMuseumService {
   }
 
   /**
-   *
    * test for adding a timeperiod association to a museum with an invalid museum
    * id
    *
@@ -766,7 +757,7 @@ public class TestMuseumService {
     } catch (IllegalArgumentException e) {
       error = e.getMessage();
     }
-      assertNull(testMuseum);
+    assertNull(testMuseum);
     assertEquals("Time period doesn't exist in museum's schedule!", error);
   }
 
@@ -854,7 +845,6 @@ public class TestMuseumService {
    * Test for getting all museums when there is one
    *
    * @author VZ
-   *
    */
   @Test
   public void testGetAllMuseumsOne() {

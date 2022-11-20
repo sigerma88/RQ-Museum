@@ -24,10 +24,10 @@ import java.util.List;
 public class RoomService {
 
   @Autowired
-  RoomRepository roomRepository;
+  private RoomRepository roomRepository;
 
   @Autowired
-  ArtworkRepository artworkRepository;
+  private ArtworkRepository artworkRepository;
 
   /**
    * Method to create a room

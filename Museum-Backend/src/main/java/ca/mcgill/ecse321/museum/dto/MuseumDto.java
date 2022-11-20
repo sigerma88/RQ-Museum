@@ -18,17 +18,18 @@ public class MuseumDto {
   public MuseumDto() {
   }
 
-    public MuseumDto(Long museumId, String name, double visitFee, ScheduleDto schedule) {
-        this.museumId = museumId;
-        this.name = name;
-        this.visitFee = visitFee;
-        this.schedule = schedule;
-    }
-    public MuseumDto(String name, double visitFee, ScheduleDto schedule) {
-        this.name = name;
-        this.visitFee = visitFee;
-        this.schedule = schedule;
-    }
+  public MuseumDto(Long museumId, String name, double visitFee, ScheduleDto schedule) {
+    this.museumId = museumId;
+    this.name = name;
+    this.visitFee = visitFee;
+    this.schedule = schedule;
+  }
+
+  public MuseumDto(String name, double visitFee, ScheduleDto schedule) {
+    this.name = name;
+    this.visitFee = visitFee;
+    this.schedule = schedule;
+  }
 
   public Long getMuseumId() {
     return museumId;

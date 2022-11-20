@@ -134,6 +134,14 @@ public class Artwork {
     return wasSet;
   }
 
+  /**
+   * Changed setRoom so that it can set room to null
+   * 
+   * @author Eric
+   * @author Kieyan
+   * @param aNewRoom
+   * @return
+   */
   public boolean setRoom(Room aNewRoom) {
     room = aNewRoom;
     return true;

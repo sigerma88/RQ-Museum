@@ -108,5 +108,14 @@ public class LoanRepositoryTests {
     //assert that loan has correct associations
     assertNotNull(loan.getArtwork());
     assertEquals(artworkId, loan.getArtwork().getArtworkId());
+
+    //get loan from artworkId and visitorId
+    Loan newLoan = loanRepository.findLoanByArtworkAndVisitor(monalisa, visitor);
+
+    assertNotNull(newLoan);
+    assertEquals(monalisa.getArtworkId(), newLoan.getArtwork().getArtworkId());
+    assertEquals(visitor.getMuseumUserId(), newLoan.getVisitor().getMuseumUserId());
+
+    assertEquals(loan.getLoanId(), newLoan.getLoanId());
   }
 }

@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
  * @author Kevin
  * @author Victor
  * @author Zahra
+ * @author Eric
  */
 
 public class DtoUtility {
@@ -111,6 +112,23 @@ public class DtoUtility {
     String startDateString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timePeriod.getStartDate());
     String endDateString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timePeriod.getEndDate());
     return new TimePeriodDto(timePeriod.getTimePeriodId(), startDateString, endDateString);
+  }
+
+  /**
+   * Method to convert a loan to a DTO
+   *
+   * @param loan - Loan
+   * @return loan DTO
+   * @author Eric
+   */
+  public static LoanDto convertToDto(Loan loan) {
+    if (loan == null) {
+      throw new IllegalArgumentException("There is no such Loan");
+    }
+    VisitorDto visitorDto = convertToDto(loan.getVisitor());
+    ArtworkDto artworkDto = convertToDto(loan.getArtwork());
+    LoanDto loanDto = new LoanDto(loan.getLoanId(), loan.getRequestAccepted(), visitorDto, artworkDto);
+    return loanDto;
   }
 
   /**

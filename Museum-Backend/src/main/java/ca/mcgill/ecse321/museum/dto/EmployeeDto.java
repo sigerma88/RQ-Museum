@@ -26,5 +26,5 @@ public class EmployeeDto extends MuseumUserDto {
   public void setSchedule(ScheduleDto schedule) {
     this.schedule = schedule;
   }
-  
+
 }
