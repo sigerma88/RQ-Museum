@@ -22,6 +22,11 @@ import java.util.List;
  * @author Siger
  */
 
+/**
+ * Service class for Museum
+ *
+ * @author
+ */
 @Service
 public class MuseumService {
 
@@ -45,7 +50,6 @@ public class MuseumService {
    *
    * @param museumId - museum id
    * @return museum
-   * @author VZ
    */
 
   @Transactional
@@ -68,17 +72,21 @@ public class MuseumService {
   /**
    * Method to create a museum
    *
+   * @param name     - name of the museum
+   * @param visitFee - visit fee of the museum
+   * @param schedule - schedule of the museum
    * @return
+   * @return museum
    * @author VZ
    */
 
   @Transactional
-  public Museum createMuseum(String name, double visitFee, Schedule schedule) {
+  public Museum createMuseum(String name, Double visitFee, Schedule schedule) {
     if (name == null || name.trim().length() == 0) {
       throw new IllegalArgumentException("Name cannot be empty!");
     }
-    if (visitFee < 0) {
-      throw new IllegalArgumentException("Visit fee cannot be negative!");
+    if (visitFee == null || visitFee < 0) {
+      throw new IllegalArgumentException("Visit fee cannot be negative or null!");
     }
     if (schedule == null) {
       throw new IllegalArgumentException("Schedule cannot be null!");
@@ -95,38 +103,47 @@ public class MuseumService {
   /**
    * Method to edit a museum's name, visit fee or schedule given the museum's id.
    *
-   * @param museumId
-   * @param name
-   * @param visitFee
-   * @param schedule
+   * @param museumId - museum id
+   * @param name     - new name of the museum
+   * @param visitFee - new visit fee of the museum
+   * @param schedule - new schedule of the museum
    * @return
+   * @author VZ
    */
 
   @Transactional
-  public Museum editMuseum(long museumId, String name, double visitFee, Schedule schedule) {
-    if (name == null || name.trim().length() == 0) {
-      throw new IllegalArgumentException("Name cannot be empty!");
-    }
-    if (visitFee < 0) {
-      throw new IllegalArgumentException("Visit fee cannot be negative!");
-    }
-    if (schedule == null) {
-      throw new IllegalArgumentException("Schedule cannot be null!");
-    }
-
+  public Museum editMuseum(long museumId, String name, Double visitFee, Schedule schedule) {
     Museum museum = museumRepository.findMuseumByMuseumId(museumId);
-    museum.setName(name);
-    museum.setVisitFee(visitFee);
-    museum.setSchedule(schedule);
+    if (museum == null) {
+      throw new IllegalArgumentException("Museum does not exist");
+    }
 
+    if ((name == null || name.trim().length() == 0) && visitFee == null && schedule == null) {
+      throw new IllegalArgumentException("Nothing to edit, all fields are empty");
+    }
+    if (name != null) {
+      if (name.trim().length() == 0) {
+        throw new IllegalArgumentException("Name cannot be empty!");
+      }
+      museum.setName(name);
+    }
+    if (visitFee != null) {
+      if (visitFee < 0) {
+        throw new IllegalArgumentException("Visit fee cannot be negative!");
+      }
+      museum.setVisitFee(visitFee);
+    }
+    if (schedule != null) {
+      museum.setSchedule(schedule);
+    }
     return museumRepository.save(museum);
   }
 
   /**
    * Method to get a museum's schedule
    *
-   * @param museumId
-   * @return
+   * @param museumId - museum id
+   * @return schedule of museum
    * @author VZ
    */
 
@@ -137,17 +154,15 @@ public class MuseumService {
       throw new IllegalArgumentException("Museum doesn't exist!");
     }
     Schedule schedule = museum.getSchedule();
-    if (schedule == null) {
-      throw new IllegalArgumentException("Schedule doesn't exist!");
-    }
+
     return schedule;
   }
 
   /**
    * Method to get all of museum's shifts
    *
-   * @param museumId
-   * @return
+   * @param museumId - museum id
+   * @return list of shifts of museum
    * @author VZ
    */
 
@@ -158,19 +173,18 @@ public class MuseumService {
       throw new IllegalArgumentException("Museum doesn't exist!");
     }
     Schedule schedule = museum.getSchedule();
-    if (schedule == null) {
-      throw new IllegalArgumentException("Schedule doesn't exist!");
-    }
-    List<TimePeriod> timePeriods = timePeriodService.getTimePeriodsOfSchedule(schedule);
+
+    List<TimePeriod> timePeriods = getTimePeriodsOfSchedule(schedule);
+
     return timePeriods;
   }
 
   /**
    * Method to add a time period to a museum's schedule
    *
-   * @param museumId
-   * @param timePeriodId
-   * @return
+   * @param museumId     - museum id
+   * @param timePeriodId - time period id
+   * @return Museum with added time period
    * @author VZ
    */
 
@@ -185,9 +199,7 @@ public class MuseumService {
       throw new IllegalArgumentException("Time period doesn't exist!");
     }
     Schedule schedule = museum.getSchedule();
-    if (schedule == null) {
-      throw new IllegalArgumentException("Schedule doesn't exist!");
-    }
+
     ScheduleOfTimePeriod scheduleOfTimePeriod = new ScheduleOfTimePeriod();
     scheduleOfTimePeriod.setTimePeriod(timePeriod);
     scheduleOfTimePeriod.setSchedule(schedule);
@@ -199,24 +211,24 @@ public class MuseumService {
   /**
    * Method to remove a time period from a museum's schedule
    *
-   * @param museumId
-   * @param timePeriodId
-   * @return
+   * @param museumId     - museum id
+   * @param timePeriodId - time period id
+   * @return Museum with removed time period
    * @author VZ
    */
 
   @Transactional
-  public Museum removeMuseumTimePeriodAssociation(long museumId, long timePeriodId) {
+  public Museum deleteMuseumTimePeriodAssociation(long museumId, long timePeriodId) {
 
     Museum museum = museumRepository.findMuseumByMuseumId(museumId);
     if (museum == null) {
       throw new IllegalArgumentException("Museum doesn't exist!");
     }
     TimePeriod timePeriod = timePeriodRepository.findTimePeriodByTimePeriodId(timePeriodId);
-    Schedule schedule = museum.getSchedule();
-    if (schedule == null) {
-      throw new IllegalArgumentException("Schedule doesn't exist!");
+    if (timePeriod == null) {
+      throw new IllegalArgumentException("Time period doesn't exist!");
     }
+    Schedule schedule = museum.getSchedule();
 
     if (scheduleOfTimePeriodRepository.findScheduleOfTimePeriodByScheduleAndTimePeriod(schedule, timePeriod) == null) {
       throw new IllegalArgumentException("Time period doesn't exist in museum's schedule!");
@@ -242,4 +254,28 @@ public class MuseumService {
     }
     return resultList;
   }
+
+  /**
+   * Helper method to get the time periods of a schedule
+   *
+   * @param schedule - schedule
+   * @return list of time periods of schedule
+   * @author VZ
+   */
+
+  public List<TimePeriod> getTimePeriodsOfSchedule(Schedule schedule) {
+
+    List<ScheduleOfTimePeriod> scheduleOfTimePeriods = scheduleOfTimePeriodRepository
+        .findScheduleOfTimePeriodBySchedule(schedule);
+    if (scheduleOfTimePeriods == null || scheduleOfTimePeriods.isEmpty()) {
+      return null;
+    }
+    List<TimePeriod> timePeriods = new ArrayList<TimePeriod>();
+    for (ScheduleOfTimePeriod scheduleOfTimePeriod : scheduleOfTimePeriods) {
+      timePeriods.add(scheduleOfTimePeriod.getTimePeriod());
+    }
+
+    return timePeriods;
+  }
+
 }

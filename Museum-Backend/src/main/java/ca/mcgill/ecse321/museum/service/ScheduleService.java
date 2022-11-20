@@ -7,50 +7,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Business logic for scheduleController
+ * This is the service class for schedule
  *
- * @author Victor
+ * @author VZ
  */
-
 @Service
 public class ScheduleService {
   @Autowired
   private ScheduleRepository scheduleRepository;
 
-  // GET
-
   /**
-   * Method to get a schedule
+   * Method to create a schedule
    *
-   * @param scheduleId
-   * @return
+   * @return created schedule
    * @author VZ
    */
-
-  @Transactional
-  public Schedule getSchedule(long scheduleId) {
-    return scheduleRepository.findScheduleByScheduleId(scheduleId);
-  }
-
-  // CREATE
-
-  /**
-   * @return
-   * @author VZ
-   */
-
   @Transactional
   public Schedule createSchedule() {
     Schedule schedule = new Schedule();
     scheduleRepository.save(schedule);
     return schedule;
 
-  }
-
-  // DELETE
-  @Transactional
-  public void deleteSchedule(long scheduleId) {
-    scheduleRepository.deleteById(scheduleId);
   }
 
 }

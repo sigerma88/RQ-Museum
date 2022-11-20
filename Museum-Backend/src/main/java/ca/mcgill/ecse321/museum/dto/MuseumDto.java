@@ -5,6 +5,7 @@ package ca.mcgill.ecse321.museum.dto;
  *
  * @author Siger
  * @author Victor
+ * @author VZ
  */
 
 public class MuseumDto {
@@ -17,12 +18,17 @@ public class MuseumDto {
   public MuseumDto() {
   }
 
-  public MuseumDto(Long museumId, String name, Double visitFee, ScheduleDto schedule) {
-    this.museumId = museumId;
-    this.name = name;
-    this.visitFee = visitFee;
-    this.schedule = schedule;
-  }
+    public MuseumDto(Long museumId, String name, double visitFee, ScheduleDto schedule) {
+        this.museumId = museumId;
+        this.name = name;
+        this.visitFee = visitFee;
+        this.schedule = schedule;
+    }
+    public MuseumDto(String name, double visitFee, ScheduleDto schedule) {
+        this.name = name;
+        this.visitFee = visitFee;
+        this.schedule = schedule;
+    }
 
   public Long getMuseumId() {
     return museumId;

@@ -40,9 +40,6 @@ public class EmployeeService {
   @Autowired
   private TimePeriodService timePeriodService;
 
-  @Autowired
-  private RegistrationService registrationService;
-
   /**
    * Method to get all the employees in the database
    * Allows the manager to view the list of employees
@@ -60,7 +57,7 @@ public class EmployeeService {
    * Method to view an employee's schedule
    *
    * @param employeeId - id of employee
-   * @return
+   * @return employee's schedule
    * @author VZ
    */
 
@@ -72,17 +69,15 @@ public class EmployeeService {
     }
 
     Schedule schedule = employee.getSchedule();
-    if (schedule == null) {
-      System.out.println("No schedule found");
-    }
+
     return schedule;
   }
 
   /**
    * Method to get all of employee's shifts
    *
-   * @param employeeId
-   * @return
+   * @param employeeId - id of employee
+   * @return list of employee's shifts
    * @author VZ
    */
 
@@ -96,21 +91,17 @@ public class EmployeeService {
 
     Schedule schedule = employee.getSchedule();
 
-    if (schedule == null) {
-      throw new IllegalArgumentException("Employee has empty schedule");
-    }
+    List<TimePeriod> timePeriods = getTimePeriodsOfSchedule(schedule);
 
-    List<TimePeriod> timePeriods = timePeriodService.getTimePeriodsOfSchedule(schedule);
     return timePeriods;
   }
 
   /**
-   * Method to add a time period to employee's schedule, in other words
-   * give more work to an employee.
+   * Method to add a shift to an employee's schedule
    *
-   * @param employee
-   * @param timeperiod
-   * @return
+   * @param employeeId   - id of employee
+   * @param timePeriodId - id of time period
+   * @return Employee with added shift
    * @author VZ
    */
 
@@ -145,9 +136,9 @@ public class EmployeeService {
    * Method to delete a time period from an employee's schedule, in other words
    * lessen an employee's workload.
    *
-   * @param employeeId
-   * @param timePeriodId
-   * @return
+   * @param employeeId   - id of employee
+   * @param timePeriodId - id of time period
+   * @return Employee with deleted shift
    * @author VZ
    */
 
@@ -155,8 +146,8 @@ public class EmployeeService {
   public Employee deleteEmployeeTimePeriodAssociation(long employeeId, long timePeriodId) {
     /*
      * 1. Find the employee's schedule first and then delete the
-     * ScheduleOfTimePeriod that associates with
-     * the TimePeriod that we want to remove from the employee's schedule.
+     * ScheduleOfTimePeriod that is associated with the TimePeriod that we
+     * want to remove from the employee's schedule.
      */
     Employee employee = employeeRepository.findEmployeeByMuseumUserId(employeeId);
     if (employee == null) {
@@ -167,9 +158,7 @@ public class EmployeeService {
       throw new IllegalArgumentException("There is no such time period");
     }
     Schedule employeeSchedule = employee.getSchedule();
-    if (employeeSchedule == null) {
-      throw new IllegalArgumentException("Employee has empty schedule");
-    }
+
     if (scheduleOfTimePeriodRepository.findScheduleOfTimePeriodByScheduleAndTimePeriod(employeeSchedule,
         timePeriod) == null) {
       throw new IllegalArgumentException("Time period does not exist in employee's schedule");
@@ -224,5 +213,28 @@ public class EmployeeService {
       resultList.add(t);
     }
     return resultList;
+  }
+
+  /**
+   * Helper method to get the time periods of a schedule
+   *
+   * @param schedule - schedule
+   * @return list of time periods that are associated to the schedule
+   * @author VZ
+   */
+
+  public List<TimePeriod> getTimePeriodsOfSchedule(Schedule schedule) {
+
+    List<ScheduleOfTimePeriod> scheduleOfTimePeriods = scheduleOfTimePeriodRepository
+        .findScheduleOfTimePeriodBySchedule(schedule);
+    if (scheduleOfTimePeriods == null || scheduleOfTimePeriods.isEmpty()) {
+      return null;
+    }
+    List<TimePeriod> timePeriods = new ArrayList<TimePeriod>();
+    for (ScheduleOfTimePeriod scheduleOfTimePeriod : scheduleOfTimePeriods) {
+      timePeriods.add(scheduleOfTimePeriod.getTimePeriod());
+    }
+
+    return timePeriods;
   }
 }

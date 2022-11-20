@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class EmployeeIntegrationTest {
+public class EmployeeIntegrationTests {
 
   private static final String FIRST_EMPLOYEE_VALID_EMAIL = "sebastien.vettel@gmail.com";
   private static final String FIRST_EMPLOYEE_NAME = "Sebastien Vettel";

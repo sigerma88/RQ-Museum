@@ -2,8 +2,7 @@ package ca.mcgill.ecse321.museum.dto;
 
 /**
  * Schedule of time period DTO
- *
- * @author Victor
+ * @author VZ
  */
 
 public class ScheduleOfTimePeriodDto {
