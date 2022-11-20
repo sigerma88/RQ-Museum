@@ -134,13 +134,8 @@ public class Artwork {
     return wasSet;
   }
 
-  /* Code from template association_SetUnidirectionalOne */
   public boolean setRoom(Room aNewRoom) {
-    boolean wasSet = false;
-    if (aNewRoom != null) {
-      room = aNewRoom;
-      wasSet = true;
-    }
-    return wasSet;
+    room = aNewRoom;
+    return true;
   }
 }

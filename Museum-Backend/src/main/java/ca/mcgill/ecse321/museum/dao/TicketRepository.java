@@ -9,6 +9,7 @@ import ca.mcgill.ecse321.museum.model.Ticket;
  * 
  * @author Victor
  */
+
 public interface TicketRepository extends CrudRepository<Ticket, Long>{
 
   Ticket findTicketByTicketId(Long ticketId);

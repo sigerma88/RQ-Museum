@@ -10,6 +10,7 @@ import ca.mcgill.ecse321.museum.model.TimePeriod;
  * @author Kieyan
  * @author Siger
  */
+
 public interface TimePeriodRepository extends CrudRepository<TimePeriod, Long> {
 
   TimePeriod findTimePeriodByTimePeriodId(Long timePeriodId);

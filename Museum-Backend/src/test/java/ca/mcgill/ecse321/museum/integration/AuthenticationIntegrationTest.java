@@ -1,9 +1,10 @@
 package ca.mcgill.ecse321.museum.integration;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import java.util.List;
+import ca.mcgill.ecse321.museum.controller.DtoUtility;
+import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
+import ca.mcgill.ecse321.museum.dao.VisitorRepository;
+import ca.mcgill.ecse321.museum.dto.VisitorDto;
+import ca.mcgill.ecse321.museum.model.Visitor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,20 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import ca.mcgill.ecse321.museum.controller.DtoUtility;
-import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
-import ca.mcgill.ecse321.museum.dao.VisitorRepository;
-import ca.mcgill.ecse321.museum.dto.VisitorDto;
-import ca.mcgill.ecse321.museum.model.Visitor;
+import org.springframework.http.*;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * This class tests the authentication rest controller
- * 
+ *
  * @author Kevin
  */
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -40,7 +37,7 @@ public class AuthenticationIntegrationTest {
 
   /**
    * Delete all the employees and visitors in the database
-   * 
+   *
    * @author Kevin
    */
   @BeforeEach
@@ -52,7 +49,7 @@ public class AuthenticationIntegrationTest {
 
   /**
    * Test to see if a visitor can login
-   * 
+   *
    * @author Kevin
    */
 
@@ -72,7 +69,7 @@ public class AuthenticationIntegrationTest {
 
   /**
    * Test when visitor login with wrong password
-   * 
+   *
    * @author Kevin
    */
 
@@ -90,7 +87,7 @@ public class AuthenticationIntegrationTest {
 
   /**
    * Test login with invalid email
-   * 
+   *
    * @author Kevin
    */
 
@@ -109,7 +106,7 @@ public class AuthenticationIntegrationTest {
 
   /**
    * Test login when already logged in
-   * 
+   *
    * @author Kevin
    */
 
@@ -133,7 +130,7 @@ public class AuthenticationIntegrationTest {
 
   /**
    * Test user logout
-   * 
+   *
    * @author Kevin
    */
 
@@ -155,7 +152,7 @@ public class AuthenticationIntegrationTest {
 
   /**
    * Test logout when not logged in
-   * 
+   *
    * @author Kevin
    */
 
@@ -174,11 +171,10 @@ public class AuthenticationIntegrationTest {
 
   /**
    * Create a visitor Dto
-   * 
+   *
    * @param visitor - Visitor
    * @return visitorDto
    * @author Kevin
-   * 
    */
 
   public VisitorDto createVisitorDto(Visitor visitor) {
@@ -187,7 +183,7 @@ public class AuthenticationIntegrationTest {
 
   /**
    * Create a visitor
-   * 
+   *
    * @return visitor
    * @author Kevin
    */
@@ -203,10 +199,9 @@ public class AuthenticationIntegrationTest {
 
   /**
    * Create a visitor and save it
-   * 
+   *
    * @return visitor
    * @author Kevin
-   * 
    */
 
   public Visitor createVisitorAndSave() {
@@ -217,7 +212,7 @@ public class AuthenticationIntegrationTest {
 
   /**
    * Create a visitor and login
-   * 
+   *
    * @return visitorDto
    * @author Kevin
    */

@@ -12,6 +12,7 @@ import ca.mcgill.ecse321.museum.model.Visitor;
  * @author Kieyan
  * @author Siger
  */
+
 public interface LoanRepository extends CrudRepository<Loan, Long> {
 
   Loan findLoanByLoanId(Long loanId);
@@ -25,5 +26,4 @@ public interface LoanRepository extends CrudRepository<Loan, Long> {
   void deleteLoanByVisitor(Visitor visitor);
 
   void deleteLoanByArtwork(Artwork artwork);
-
 }

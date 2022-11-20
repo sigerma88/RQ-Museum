@@ -1,15 +1,5 @@
 package ca.mcgill.ecse321.museum.service;
 
-import java.util.regex.Pattern;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.regex.Matcher;
-
-import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
 import ca.mcgill.ecse321.museum.dao.ManagerRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
@@ -17,12 +7,21 @@ import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Manager;
 import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.Visitor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Business logic for registrationController
- * 
+ *
  * @author Kevin
  */
+
 @Service
 public class RegistrationService {
 
@@ -37,10 +36,10 @@ public class RegistrationService {
 
   /**
    * Register a new visitor
-   * 
-   * @param email - email of visitor
+   *
+   * @param email    - email of visitor
    * @param password - password of visitor
-   * @param name - name of visitor
+   * @param name     - name of visitor
    * @return Visitor - the visitor that was created
    * @author Kevin
    */
@@ -80,7 +79,7 @@ public class RegistrationService {
 
   /**
    * Get visitor personal information
-   * 
+   *
    * @param museumUserId - id of visitor
    * @return Visitor - the visitor that was found
    * @author Kevin
@@ -97,7 +96,7 @@ public class RegistrationService {
 
   /**
    * Get employee personal information
-   * 
+   *
    * @param museumUserId - id of museumUser
    * @return Employee - the employee that was found
    * @author Kevin
@@ -114,19 +113,19 @@ public class RegistrationService {
 
   /**
    * Update visitor personal information
-   * 
-   * @param visitorId - id of visitor
-   * @param email - new email of visitor
+   *
+   * @param visitorId   - id of visitor
+   * @param email       - new email of visitor
    * @param oldPassword - old password of visitor
    * @param newPassword - new password of visitor
-   * @param name - new name of visitor
+   * @param name        - new name of visitor
    * @return Visitor - the visitor that was updated
    * @author Kevin
    */
 
   @Transactional
   public Visitor editVisitorInformation(long visitorId, String email, String oldPassword,
-      String newPassword, String name) throws Exception {
+                                        String newPassword, String name) throws Exception {
     Visitor visitor = visitorRepository.findVisitorByMuseumUserId(visitorId);
 
     if (visitor == null) {
@@ -170,7 +169,7 @@ public class RegistrationService {
 
   /**
    * Register a new employee
-   * 
+   *
    * @param name - name of employee
    * @return Employee - the employee that was created
    * @author Kevin
@@ -218,7 +217,7 @@ public class RegistrationService {
 
   /**
    * Edit employee information
-   * 
+   *
    * @param oldPassword - old password of employee
    * @param newPassword - new password of employee
    * @return Employee - the employee that was updated
@@ -252,7 +251,7 @@ public class RegistrationService {
 
   /**
    * Check password validity
-   * 
+   *
    * @param password - password to be checked
    * @return boolean - true if password is valid, false otherwise
    * @author Kevin
@@ -269,7 +268,7 @@ public class RegistrationService {
 
   /**
    * Check email validity
-   * 
+   *
    * @param email - email to be checked
    * @return boolean - true if email is valid, false otherwise
    * @author Kevin
@@ -285,8 +284,8 @@ public class RegistrationService {
 
   /**
    * Edit manager information
-   * 
-   * @param id - id of manager
+   *
+   * @param id          - id of manager
    * @param oldPassword - old password of manager
    * @param newPassword - new password of manager
    * @return Manager - the manager that was updated
@@ -320,7 +319,7 @@ public class RegistrationService {
 
   /**
    * Generate a random password
-   * 
+   *
    * @return String - the generated password
    * @author Kevin
    */
@@ -357,7 +356,7 @@ public class RegistrationService {
 
   /**
    * Get a random number
-   * 
+   *
    * @param min - minimum number
    * @param max - maximum number
    * @return int - the random number
@@ -371,7 +370,7 @@ public class RegistrationService {
 
   /**
    * Check validity of name
-   * 
+   *
    * @param name - name to be checked
    * @return boolean - true if name is valid, false otherwise
    * @author Kevin
@@ -386,7 +385,7 @@ public class RegistrationService {
 
   /**
    * Check if email exists
-   * 
+   *
    * @param email - email to be checked
    * @return boolean - true if email exists, false otherwise
    * @author Kevin

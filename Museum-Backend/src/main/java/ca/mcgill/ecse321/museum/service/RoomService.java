@@ -1,18 +1,24 @@
 package ca.mcgill.ecse321.museum.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
 import ca.mcgill.ecse321.museum.dao.RoomRepository;
 import ca.mcgill.ecse321.museum.model.Artwork;
 import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.model.RoomType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Business logic for roomController
+ *
+ * @author Siger
+ * @author kieyanmamiche
+ */
 
 @Service
 public class RoomService {
@@ -25,13 +31,14 @@ public class RoomService {
 
   /**
    * Method to create a room
-   * 
+   *
    * @param roomName - name of the room
    * @param roomType - type of the room
    * @param museum   - museum of the room
    * @return room
    * @author Siger
    */
+
   @Transactional
   public Room createRoom(String roomName, RoomType roomType, Museum museum) {
     // Error handling
@@ -57,11 +64,12 @@ public class RoomService {
 
   /**
    * Method to get room by id
-   * 
+   *
    * @param roomId - id of the room
    * @return room
    * @author Siger
    */
+
   @Transactional
   public Room getRoomById(Long roomId) {
     // Error handling
@@ -75,10 +83,11 @@ public class RoomService {
 
   /**
    * Method to get all rooms
-   * 
+   *
    * @return list of rooms
    * @author Siger
    */
+
   @Transactional
   public List<Room> getAllRooms() {
     return toList(roomRepository.findAll());
@@ -86,11 +95,12 @@ public class RoomService {
 
   /**
    * Method to get all rooms by museum
-   * 
+   *
    * @param museum - museum of the room
    * @return list of rooms
    * @author Siger
    */
+
   @Transactional
   public List<Room> getAllRoomsByMuseum(Museum museum) {
     // Error handling
@@ -103,7 +113,7 @@ public class RoomService {
 
   /**
    * Method to edit a room
-   * 
+   *
    * @param roomId   - id of the room
    * @param roomName - name of the room
    * @param roomType - type of the room
@@ -111,6 +121,7 @@ public class RoomService {
    * @return room
    * @author Siger
    */
+
   @Transactional
   public Room editRoom(Long roomId, String roomName, RoomType roomType, Museum museum) {
     // Get room and check if it exists
@@ -136,11 +147,12 @@ public class RoomService {
 
   /**
    * Method to delete a room
-   * 
+   *
    * @param roomId - id of the room
    * @return room
    * @author Siger
    */
+
   @Transactional
   public Room deleteRoom(Long roomId) {
     // Get room and check if it exists and error handling
@@ -163,11 +175,12 @@ public class RoomService {
   /**
    * Method to get the maximum number of artworks in a room
    * -1 if room has no limit
-   * 
+   *
    * @param roomType - type of the room
    * @return maximum number of artworks
    * @author Siger
    */
+
   @Transactional
   public int getMaxNumberOfArtwork(RoomType roomType) {
     // Error handling
@@ -192,12 +205,13 @@ public class RoomService {
 
   /**
    * Method to change current number of artworks in a room
-   * 
+   *
    * @param roomId                 - id of the room
    * @param currentNumberOfArtwork - number of artworks in the room
    * @return room
    * @author Siger
    */
+
   public Room changeCurrentNumberOfArtwork(Long roomId, Integer currentNumberOfArtwork) {
     // Get room and check if it exists and error handling
     Room room = roomRepository.findRoomByRoomId(roomId);
@@ -226,12 +240,42 @@ public class RoomService {
   }
 
   /**
+   * Method to get room capacity
+   * -1 if room has no limit
+   *
+   * @param roomId - ID of room we want to capacity of
+   * @return The capacity of a room
+   * @author kieyanmamiche
+   * @author Siger
+   */
+
+  @Transactional
+  public int getRoomCapacity(long roomId) {
+
+    Room room = roomRepository.findRoomByRoomId(roomId);
+
+    // Check if the room is not in the DB
+    if (room == null) {
+      throw new IllegalArgumentException("Room does not exist");
+    }
+
+    int maxCapacity = getMaxNumberOfArtwork(room.getRoomType());
+
+    if (maxCapacity == -1) {
+      return -1;
+    } else {
+      return maxCapacity - room.getCurrentNumberOfArtwork();
+    }
+  }
+
+  /**
    * Method to convert an Iterable to a List
-   * 
+   *
    * @param iterable - Iterable
    * @return List
    * @author From tutorial notes
    */
+
   private <T> List<T> toList(Iterable<T> iterable) {
     List<T> resultList = new ArrayList<T>();
     for (T t : iterable) {

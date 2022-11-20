@@ -1,23 +1,19 @@
 package ca.mcgill.ecse321.museum.controller;
 
-import ca.mcgill.ecse321.museum.model.Artwork;
-import ca.mcgill.ecse321.museum.model.Employee;
-import ca.mcgill.ecse321.museum.model.Manager;
-import ca.mcgill.ecse321.museum.model.Museum;
-import ca.mcgill.ecse321.museum.model.Room;
-import ca.mcgill.ecse321.museum.model.Schedule;
-import ca.mcgill.ecse321.museum.model.Visitor;
-import ca.mcgill.ecse321.museum.model.TimePeriod;
-import ca.mcgill.ecse321.museum.dto.ArtworkDto;
-import ca.mcgill.ecse321.museum.dto.EmployeeDto;
-import ca.mcgill.ecse321.museum.dto.ManagerDto;
-import ca.mcgill.ecse321.museum.dto.MuseumDto;
-import ca.mcgill.ecse321.museum.dto.RoomDto;
-import ca.mcgill.ecse321.museum.dto.ScheduleDto;
-import ca.mcgill.ecse321.museum.dto.VisitorDto;
-import ca.mcgill.ecse321.museum.dto.TimePeriodDto;
+import ca.mcgill.ecse321.museum.dto.*;
+import ca.mcgill.ecse321.museum.model.*;
+
+/**
+ * DtoUtility class is used to convert our model objects to DTO objects
+ *
+ * @author Siger
+ * @author Kevin
+ * @author Victor
+ * @author Zahra
+ */
 
 public class DtoUtility {
+
   /**
    * Method to convert an employee to a DTO
    *
@@ -25,6 +21,7 @@ public class DtoUtility {
    * @return employee DTO
    * @author Siger
    */
+
   public static EmployeeDto convertToDto(Employee employee) {
     // Error handling
     if (employee == null) {
@@ -38,11 +35,12 @@ public class DtoUtility {
 
   /**
    * Method to convert an visitor to a DTO
-   * 
+   *
    * @param visitor - Visitor
    * @return visitor DTO
    * @author Kevin
    */
+
   public static VisitorDto convertToDto(Visitor visitor) {
     if (visitor == null) {
       throw new IllegalArgumentException("There is no such visitor");
@@ -58,11 +56,12 @@ public class DtoUtility {
 
   /**
    * Method to convert an Manager to a DTO
-   * 
+   *
    * @param manager - Manager
    * @return visitor DTO
    * @author Kevin
    */
+
   public static ManagerDto convertToDto(Manager manager) {
     if (manager == null) {
       throw new IllegalArgumentException("There is no such manager");
@@ -83,7 +82,8 @@ public class DtoUtility {
    * @return schedule DTO
    * @author Siger
    */
-  static ScheduleDto convertToDto(Schedule schedule) {
+
+  public static ScheduleDto convertToDto(Schedule schedule) {
     // Error handling
     if (schedule == null) {
       throw new IllegalArgumentException("There is no such schedule");
@@ -100,7 +100,7 @@ public class DtoUtility {
    * @return timePeriod DTO
    * @author Victor
    */
-  static TimePeriodDto convertToDto(TimePeriod timePeriod) {
+  public static TimePeriodDto convertToDto(TimePeriod timePeriod) {
     if (timePeriod == null) {
       throw new IllegalArgumentException("There is no such time period");
     }
@@ -115,7 +115,8 @@ public class DtoUtility {
    * @author Zahra
    * @author Siger
    */
-  static ArtworkDto convertToDto(Artwork artwork) {
+
+  public static ArtworkDto convertToDto(Artwork artwork) {
     // Error handling
     if (artwork == null) {
       throw new IllegalArgumentException("There is no such artwork");
@@ -134,12 +135,13 @@ public class DtoUtility {
 
   /**
    * Method to convert a room to DTO
-   * 
+   *
    * @param room - Room
    * @return room DTO
    * @author Siger
    */
-  static RoomDto convertToDto(Room room) {
+
+  public static RoomDto convertToDto(Room room) {
     // Error handling
     if (room == null) {
       throw new IllegalArgumentException("There is no such room");
@@ -155,13 +157,14 @@ public class DtoUtility {
 
   /**
    * Method to convert a museum to DTO
-   * 
+   *
    * @param museum - Museum
    * @return museum DTO
    * @author Siger
    * @author Victor
    */
-  static MuseumDto convertToDto(Museum museum) {
+
+  public static MuseumDto convertToDto(Museum museum) {
     // Error handling
     if (museum == null) {
       throw new IllegalArgumentException("There is no such museum");

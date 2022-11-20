@@ -14,10 +14,10 @@ import ca.mcgill.ecse321.museum.model.Room;
  * @author Zahra
  * @author Siger
  */
+
 public interface RoomRepository extends CrudRepository<Room, Long> {
 
   Room findRoomByRoomId(Long roomId);
 
   List<Room> findRoomByMuseum(Museum museum);
-
 }
