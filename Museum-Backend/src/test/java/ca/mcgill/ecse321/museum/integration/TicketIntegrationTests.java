@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.museum.integration;
 
+import ca.mcgill.ecse321.museum.controller.utilities.DtoUtility;
 import ca.mcgill.ecse321.museum.dao.TicketRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
 import ca.mcgill.ecse321.museum.dto.TicketDto;
@@ -107,7 +108,7 @@ public class TicketIntegrationTests {
     assertNotNull(response.getBody(), "Response has body");
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertEquals(1, response.getBody().length);
-    assertEquals(visitorId, response.getBody()[0].getVisitor());
+    assertEquals(visitorId, response.getBody()[0].getVisitor().getMuseumUserId());
     assertTrue(VISIT_DATE_1.equals(response.getBody()[0].getVisitDate()));
 
   }
@@ -120,8 +121,8 @@ public class TicketIntegrationTests {
   @Test
   public void testCreateTickets() {
     int numOfTickets = 2;
-    long visitorId = visitorRepository.findVisitorByName(VISITOR_NAME_2).getMuseumUserId();
-    TicketDto ticketDto = new TicketDto(VISIT_DATE_1, visitorId);
+    Visitor visitor = visitorRepository.findVisitorByName(VISITOR_NAME_2);
+    TicketDto ticketDto = new TicketDto(VISIT_DATE_1, DtoUtility.convertToDto(visitor));
 
     ResponseEntity<TicketDto[]> response = client
         .postForEntity("/api/ticket/purchase?number=" + numOfTickets, ticketDto, TicketDto[].class);
@@ -130,7 +131,7 @@ public class TicketIntegrationTests {
     assertNotNull(response.getBody(), "Response has body");
     assertEquals(numOfTickets, response.getBody().length);
     assertEquals(VISIT_DATE_1, response.getBody()[0].getVisitDate());
-    assertEquals(visitorId, response.getBody()[0].getVisitor());
+    assertEquals(visitor.getMuseumUserId(), response.getBody()[0].getVisitor().getMuseumUserId());
   }
 
   /**
@@ -141,8 +142,7 @@ public class TicketIntegrationTests {
   @Test
   public void testCreateTicketsWithInvalidNumber() {
     int numOfTickets = 0;
-    TicketDto ticketDto = new TicketDto(VISIT_DATE_1,
-        visitorRepository.findVisitorByName(VISITOR_NAME_1).getMuseumUserId());
+    TicketDto ticketDto = new TicketDto(VISIT_DATE_1, DtoUtility.convertToDto(visitorRepository.findVisitorByName(VISITOR_NAME_1)));
 
     ResponseEntity<String> response =
         client.postForEntity("/api/ticket/purchase?number=" + numOfTickets, ticketDto, String.class);

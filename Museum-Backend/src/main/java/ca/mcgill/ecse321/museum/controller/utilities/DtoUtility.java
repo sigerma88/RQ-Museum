@@ -200,18 +200,14 @@ public class DtoUtility {
    * @author Zahra
    */
   public static TicketDto convertToDto(Ticket ticket) {
+    // Error handling
     if (ticket == null) {
       throw new IllegalArgumentException("There is no such ticket");
     }
+
+    // Convert visitor to DTO
     VisitorDto visitorDto = convertToDto(ticket.getVisitor());
 
-    TicketDto ticketDto = new TicketDto();
-    ticketDto.setVisitor(visitorDto.getMuseumUserId());
-    ticketDto.setTicketId(ticket.getTicketId());
-    String visitDateString = new SimpleDateFormat("yyyy-MM-dd").format(ticket.getVisitDate());
-    ticketDto.setVisitDate(visitDateString);
-    return ticketDto;
+    return new TicketDto(ticket.getTicketId(), ticket.getVisitDate().toString(), visitorDto);
   }
-
-
 }

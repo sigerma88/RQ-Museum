@@ -30,10 +30,9 @@ public class TicketRestController {
    */
   @PostMapping(value = {"/purchase", "/purchase/"})
   public ResponseEntity<?> createTickets(@RequestBody TicketDto ticketDto, @RequestParam(name = "number") int numberOfTickets) {
-
     try {
       List<TicketDto> boughtTickets = new ArrayList<>();
-      for (Ticket ticket : ticketService.createTickets(ticketDto.getVisitor(),
+      for (Ticket ticket : ticketService.createTickets(ticketDto.getVisitor().getMuseumUserId(),
           Date.valueOf(ticketDto.getVisitDate()), numberOfTickets)) {
         boughtTickets.add(DtoUtility.convertToDto(ticket));
       }
