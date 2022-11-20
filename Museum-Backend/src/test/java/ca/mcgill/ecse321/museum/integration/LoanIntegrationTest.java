@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.museum.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterEach;
@@ -31,7 +32,6 @@ import ca.mcgill.ecse321.museum.model.RoomType;
 import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.Visitor;
 
-
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 
 public class LoanIntegrationTest {
@@ -56,10 +56,12 @@ public class LoanIntegrationTest {
     loanRepository.deleteAll();
     artworkRepository.deleteAll();
     visitorRepository.deleteAll();
+    roomRepository.deleteAll();
   }
 
   /**
-   * Test suite that combines successfully creating a loan and getting that same loan
+   * Test suite that combines successfully creating a loan and getting that same
+   * loan
    * 
    * @author Eric
    */
@@ -69,11 +71,10 @@ public class LoanIntegrationTest {
     testGetLoan(id);
   }
 
-
   /**
    * Test to create a loan successfully
    * 
-   * @param Long - loanId 
+   * @param Long - loanId
    * @author Eric
    */
   private Long testCreateLoan() {
@@ -166,7 +167,6 @@ public class LoanIntegrationTest {
 
     HttpEntity<LoanDto> request = new HttpEntity<LoanDto>(loanDto);
 
-
     ResponseEntity<LoanDto> response = client.exchange("/putLoan/", HttpMethod.PUT, request, LoanDto.class);
 
     // Check status and body of response are correct
@@ -184,7 +184,8 @@ public class LoanIntegrationTest {
   }
 
   /**
-   * Test suite that combines successfully creating a loan and patching that loan requestAccepted to
+   * Test suite that combines successfully creating a loan and patching that loan
+   * requestAccepted to
    * false
    * 
    * @author Eric
@@ -192,6 +193,7 @@ public class LoanIntegrationTest {
   @Test
   public void testPatchLoanSuccessfullyToTrue() {
     Artwork artwork = createArtwork();
+    Room room = artwork.getRoom();
     Visitor visitor = createVisitor();
 
     Loan loan = new Loan();
@@ -215,7 +217,10 @@ public class LoanIntegrationTest {
         "Response has correct visitorDto");
     assertEquals(artwork.getArtworkId(), response.getBody().getArtworkDto().getArtworkId(),
         "Response has correct artworkDto");
+    assertNull(response.getBody().getArtworkDto().getRoom(), "Artwork is no longer associated to room");
     assertTrue(response.getBody().getLoanId() > 0, "Response has valid ID");
+    assertEquals(0, roomRepository.findRoomByRoomId(room.getRoomId()).getCurrentNumberOfArtwork(),
+        "Room that previously had artwork has now 1 less artwork");
 
   }
 
@@ -270,7 +275,6 @@ public class LoanIntegrationTest {
     loan3.setVisitor(visitor);
     loanRepository.save(loan3);
 
-
     ResponseEntity<LoanDto[]> response = client.getForEntity("/loans/", LoanDto[].class);
 
     assertNotNull(response);
@@ -285,7 +289,7 @@ public class LoanIntegrationTest {
    */
   @Test
   public void testDeleteLoan() {
-	  Artwork artwork = createArtwork();
+    Artwork artwork = createArtwork();
     Visitor visitor = createVisitor();
 
     Loan loan = new Loan();
@@ -293,12 +297,13 @@ public class LoanIntegrationTest {
     loan.setArtwork(artwork);
     loan.setVisitor(visitor);
     loanRepository.save(loan);
-	  Long loanId = loan.getLoanId();
+    Long loanId = loan.getLoanId();
 
-	  HttpEntity<?> request = new HttpEntity<>(null);
+    HttpEntity<?> request = new HttpEntity<>(null);
 
-	  ResponseEntity<String> response = client.exchange("/deleteLoan/" + loanId, HttpMethod.DELETE, request, String.class);
-	  assertEquals(HttpStatus.OK, response.getStatusCode());
+    ResponseEntity<String> response = client.exchange("/deleteLoan/" + loanId, HttpMethod.DELETE, request,
+        String.class);
+    assertEquals(HttpStatus.OK, response.getStatusCode());
     assertEquals("Loan deleted", response.getBody());
   }
 
@@ -313,13 +318,16 @@ public class LoanIntegrationTest {
 
     HttpEntity<?> request = new HttpEntity<>(null);
 
-    ResponseEntity<String> response = client.exchange("/deleteLoan/" + loanId, HttpMethod.DELETE, request, String.class);
+    ResponseEntity<String> response = client.exchange("/deleteLoan/" + loanId, HttpMethod.DELETE, request,
+        String.class);
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     assertNotNull("Loan does not exist", response.getBody());
   }
 
   /**
-   * Helper method to create artwork associated to a room associated to a museum associated to a schedule
+   * Helper method to create artwork associated to a room associated to a museum
+   * associated to a schedule
+   * 
    * @return artwork
    * @author Eric
    */
@@ -360,7 +368,8 @@ public class LoanIntegrationTest {
 
   /**
    * Helper method to create visitor
-   * @return visitor 
+   * 
+   * @return visitor
    * @author Eric
    */
   public Visitor createVisitor() {
