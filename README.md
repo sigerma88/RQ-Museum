@@ -27,12 +27,12 @@ We are 6 McGill University students in the ECSE department.
 
 |         Name         | Sprint 1 Efforts (hours) | Sprint 2 Efforts (hours) | Sprint 3 Efforts (hours) | Total Effort (hours) |
 | :------------------: | :----------------------: | :----------------------: | :----------------------: | :------------------: |
-|       Siger Ma       |            35            |            0             |            0             |          0           |
-|     Victor Zhao      |            19            |            0             |            0             |          0           |
-|     Zahra Landou     |            18            |            0             |            0             |          0           |
-|      Eric Joung      |            16            |            0             |            0             |          0           |
-| Kieyan Mamiche Afara |            18            |            0             |            0             |          0           |
-|      Kevin Luo       |            26            |            0             |            0             |          0           |
+|       Siger Ma       |            35            |            49             |            0             |          0           |
+|     Victor Zhao      |            19            |            55             |            0             |          0           |
+|     Zahra Landou     |            18            |            47             |            0             |          0           |
+|      Eric Joung      |            16            |            34             |            0             |          0           |
+| Kieyan Mamiche Afara |            18            |            36             |            0             |          0           |
+|      Kevin Luo       |            26            |            41             |            0             |          0           |
 
 ## Deliverable Reports
 
@@ -78,8 +78,8 @@ Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/De
 **Contributions**
 | Name | Contributions | Effort (hours) |
 | :------------------: | -------------------------------------------------------- | :------------: |
-| Siger Ma | Responsible for pull requests, Room, parts of Artwork, parts of Employee. Wrote service classes, controller classes, unit tests and integration tests. | 40 |
-| Victor Zhao | Responsible for Museum, Employee and Scheduling. Wrote service classes, controller classes, unit tests and integration tests. Documented. | 50 |
+| Siger Ma | Responsible for pull requests, Room, parts of Artwork, parts of Employee. Wrote service classes, controller classes, unit tests and integration tests. | 49 |
+| Victor Zhao | Responsible for Museum, Employee and Scheduling. Wrote service classes, controller classes, unit tests and integration tests. Documented. | 54 |
 | Zahra Landou | Responsible for parts Artwork and Ticket. Wrote service classes, controller classes, unit tests and integration tests. | 47 |
 | Eric Joung | Responsible for Loan. Wrote service classes, controller classes, units tests and integration tests. | 34 |
 | Kieyan Mamiche Afara | Responsible for parts of Artwork and Room. Wrote service classes, controller classes, unit tests and integration tests. Documented. | 34 |
