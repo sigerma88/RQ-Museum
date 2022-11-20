@@ -4,9 +4,10 @@ import ca.mcgill.ecse321.museum.model.RoomType;
 
 /**
  * Room DTO
- * 
+ *
  * @author Siger
  */
+
 public class RoomDto {
 
   private Long roomId;
@@ -18,7 +19,7 @@ public class RoomDto {
   public RoomDto() {
   }
 
-  public RoomDto(Long roomId, String roomName, RoomType roomType, Integer currentNumberOfArtwork,  MuseumDto museum) {
+  public RoomDto(Long roomId, String roomName, RoomType roomType, Integer currentNumberOfArtwork, MuseumDto museum) {
     this.roomId = roomId;
     this.roomName = roomName;
     this.roomType = roomType;

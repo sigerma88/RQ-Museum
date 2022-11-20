@@ -2,10 +2,12 @@ package ca.mcgill.ecse321.museum.dto;
 
 /**
  * Museum DTO
- * 
+ *
  * @author Siger
  * @author Victor
+ * @author VZ
  */
+
 public class MuseumDto {
 
   private Long museumId;
@@ -16,8 +18,14 @@ public class MuseumDto {
   public MuseumDto() {
   }
 
-  public MuseumDto(Long museumId, String name, Double visitFee, ScheduleDto schedule) {
+  public MuseumDto(Long museumId, String name, double visitFee, ScheduleDto schedule) {
     this.museumId = museumId;
+    this.name = name;
+    this.visitFee = visitFee;
+    this.schedule = schedule;
+  }
+
+  public MuseumDto(String name, double visitFee, ScheduleDto schedule) {
     this.name = name;
     this.visitFee = visitFee;
     this.schedule = schedule;

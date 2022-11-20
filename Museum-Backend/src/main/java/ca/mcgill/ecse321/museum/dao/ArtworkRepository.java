@@ -14,6 +14,7 @@ import ca.mcgill.ecse321.museum.model.Room;
  * @author Kevin
  * @author Siger
  */
+
 public interface ArtworkRepository extends CrudRepository<Artwork, Long> {
 
   Artwork findArtworkByArtworkId(Long artworkId);
@@ -24,6 +25,7 @@ public interface ArtworkRepository extends CrudRepository<Artwork, Long> {
 
   List<Artwork> findArtworkByRoom(Room room);
 
-  void deleteArtworkByArtworkId(Long artworkId);
+  List<Artwork> findArtworkByIsAvailableForLoan(Boolean isAvailableForLoan);
 
+  void deleteArtworkByArtworkId(Long artworkId);
 }

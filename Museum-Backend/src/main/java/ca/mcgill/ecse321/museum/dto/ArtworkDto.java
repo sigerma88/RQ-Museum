@@ -1,13 +1,12 @@
 package ca.mcgill.ecse321.museum.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
  * Artwork DTO
  *
  * @author Zahra
  * @author Siger
  */
+
 public class ArtworkDto {
 
   private Long artworkId;
@@ -22,6 +21,7 @@ public class ArtworkDto {
   public ArtworkDto() {
   }
 
+  // Constructor with every attribute including associations
   public ArtworkDto(Long artworkId, String name, String artist, Boolean isAvailableForLoan, Double loanFee, String image, Boolean isOnLoan, RoomDto room) {
     this.artworkId = artworkId;
     this.name = name;
@@ -31,6 +31,17 @@ public class ArtworkDto {
     this.image = image;
     this.isOnLoan = isOnLoan;
     this.room = room;
+  }
+
+  // Constructor with all attributes except associations - associations can be set
+  public ArtworkDto(long artworkId, String name, String artist, boolean isAvailableForLoan, double loanFee, String image, boolean isOnLoan) {
+    this.artworkId = artworkId;
+    this.name = name;
+    this.artist = artist;
+    this.isAvailableForLoan = isAvailableForLoan;
+    this.loanFee = loanFee;
+    this.image = image;
+    this.isOnLoan = isOnLoan;
   }
 
   public Long getArtworkId() {
