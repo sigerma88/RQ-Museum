@@ -74,7 +74,7 @@ Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/De
 | Kieyan Mamiche Afara |     Testing, Documenting     |
 |      Kevin Luo       |     Testing, Documenting    |
 
-# Effort Table
+**Contributions**
 
 |         Name         | Contributions                                            | Effort (hours) |
 | :------------------: | -------------------------------------------------------- | :------------: |
