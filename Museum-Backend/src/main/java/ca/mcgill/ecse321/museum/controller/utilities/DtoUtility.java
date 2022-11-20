@@ -95,7 +95,7 @@ public class DtoUtility {
    * @author VZ
    */
 
-  static TimePeriodDto convertToDto(TimePeriod timePeriod) {
+  public static TimePeriodDto convertToDto(TimePeriod timePeriod) {
     if (timePeriod == null) {
       throw new IllegalArgumentException("There is no such time period");
     }
@@ -199,7 +199,7 @@ public class DtoUtility {
    * @return ticket DTO
    * @author Zahra
    */
-  static TicketDto convertToDto(Ticket ticket) {
+  public static TicketDto convertToDto(Ticket ticket) {
     if (ticket == null) {
       throw new IllegalArgumentException("There is no such ticket");
     }
