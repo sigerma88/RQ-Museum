@@ -15,6 +15,9 @@ import java.text.SimpleDateFormat;
  * @author Eric
  */
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 public class DtoUtility {
 
   /**
@@ -37,7 +40,7 @@ public class DtoUtility {
   }
 
   /**
-   * Method to convert an visitor to a DTO
+   * Method to convert a visitor to a DTO
    *
    * @param visitor - Visitor
    * @return visitor DTO
@@ -200,4 +203,28 @@ public class DtoUtility {
     // Convert museum to DTO
     return new MuseumDto(museum.getMuseumId(), museum.getName(), museum.getVisitFee(), scheduleDto);
   }
+
+
+  /**
+   * Method to convert a ticket to a DTO
+   *
+   * @param ticket - Ticket
+   * @return ticket DTO
+   * @author Zahra
+   */
+  static TicketDto convertToDto(Ticket ticket) {
+    if (ticket == null) {
+      throw new IllegalArgumentException("There is no such ticket");
+    }
+    VisitorDto visitorDto = convertToDto(ticket.getVisitor());
+
+    TicketDto ticketDto = new TicketDto();
+    ticketDto.setVisitor(visitorDto.getMuseumUserId());
+    ticketDto.setTicketId(ticket.getTicketId());
+    String visitDateString = new SimpleDateFormat("yyyy-MM-dd").format(ticket.getVisitDate());
+    ticketDto.setVisitDate(visitDateString);
+    return ticketDto;
+  }
+
+
 }
