@@ -21,7 +21,6 @@ import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
 import ca.mcgill.ecse321.museum.dao.LoanRepository;
 import ca.mcgill.ecse321.museum.dao.MuseumRepository;
 import ca.mcgill.ecse321.museum.dao.RoomRepository;
-import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
 import ca.mcgill.ecse321.museum.dto.LoanDto;
 import ca.mcgill.ecse321.museum.model.Artwork;
@@ -46,8 +45,6 @@ public class LoanIntegrationTest {
   private ArtworkRepository artworkRepository;
   @Autowired
   private VisitorRepository visitorRepository;
-  @Autowired
-  private ScheduleRepository scheduleRepository;
   @Autowired
   private MuseumRepository museumRepository;
   @Autowired
@@ -170,8 +167,7 @@ public class LoanIntegrationTest {
     HttpEntity<LoanDto> request = new HttpEntity<LoanDto>(loanDto);
 
 
-    ResponseEntity<LoanDto> response =
-        client.exchange("/putLoan/", HttpMethod.PUT, request, LoanDto.class);
+    ResponseEntity<LoanDto> response = client.exchange("/putLoan/", HttpMethod.PUT, request, LoanDto.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -207,8 +203,7 @@ public class LoanIntegrationTest {
 
     HttpEntity<LoanDto> request = new HttpEntity<LoanDto>(loanDto);
 
-    ResponseEntity<LoanDto> response =
-        client.exchange("/putLoan/", HttpMethod.PUT, request, LoanDto.class);
+    ResponseEntity<LoanDto> response = client.exchange("/putLoan/", HttpMethod.PUT, request, LoanDto.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -290,7 +285,7 @@ public class LoanIntegrationTest {
    */
   @Test
   public void testDeleteLoan() {
-	Artwork artwork = createArtwork();
+	  Artwork artwork = createArtwork();
     Visitor visitor = createVisitor();
 
     Loan loan = new Loan();
@@ -298,12 +293,12 @@ public class LoanIntegrationTest {
     loan.setArtwork(artwork);
     loan.setVisitor(visitor);
     loanRepository.save(loan);
-	Long loanId = loan.getLoanId();
+	  Long loanId = loan.getLoanId();
 
-	HttpEntity<?> request = new HttpEntity<>(null);
+	  HttpEntity<?> request = new HttpEntity<>(null);
 
-	ResponseEntity<String> response = client.exchange("/deleteLoan/" + loanId, HttpMethod.DELETE, request, String.class);
-	assertEquals(HttpStatus.OK, response.getStatusCode());
+	  ResponseEntity<String> response = client.exchange("/deleteLoan/" + loanId, HttpMethod.DELETE, request, String.class);
+	  assertEquals(HttpStatus.OK, response.getStatusCode());
     assertEquals("Loan deleted", response.getBody());
   }
 
@@ -314,12 +309,12 @@ public class LoanIntegrationTest {
    */
   @Test
   public void testDeleteLoanWithNonExistingLoan() {
-	Long loanId = (long) -1;
+    Long loanId = (long) -1;
 
-	HttpEntity<?> request = new HttpEntity<>(null);
+    HttpEntity<?> request = new HttpEntity<>(null);
 
-	ResponseEntity<String> response = client.exchange("/deleteLoan/" + loanId, HttpMethod.DELETE, request, String.class);
-	assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    ResponseEntity<String> response = client.exchange("/deleteLoan/" + loanId, HttpMethod.DELETE, request, String.class);
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     assertNotNull("Loan does not exist", response.getBody());
   }
 

@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.museum.dto.ArtworkDto;
 import ca.mcgill.ecse321.museum.model.Artwork;
-import java.util.HashMap;
 import ca.mcgill.ecse321.museum.model.Room;
-import java.util.Map;
 import ca.mcgill.ecse321.museum.service.ArtworkService;
 import ca.mcgill.ecse321.museum.service.RoomService;
 
@@ -100,7 +98,7 @@ public class ArtworkRestController {
     return artworkDtos;
   }
 
-  @GetMapping(value = {"/artworks/availabilty", "/artworks/availabilty/"})
+  @GetMapping(value = {"/artworks/availability", "/artworks/availability/"})
 public List<ArtworkDto> getAllArtworksByRoom(@PathVariable("room") Room room) {
     List<ArtworkDto> artworkInRoomDtos = new ArrayList<ArtworkDto>();
     List<Artwork> artworksInRoom = artworkService.getAllArtworksByRoom(room);
