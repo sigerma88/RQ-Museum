@@ -5,9 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.PostConstruct;
-import java.util.TimeZone;
-
 @RestController
 @SpringBootApplication
 public class MuseumApplication {
@@ -20,5 +17,5 @@ public class MuseumApplication {
   public String greeting() {
     return "Hello world!";
   }
-  
+
 }

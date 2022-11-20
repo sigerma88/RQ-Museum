@@ -27,14 +27,14 @@ public class TicketService {
    * @param visitorID       visitor's ID
    * @param date            chosen date of visit
    * @param numberOfTickets number of tickets to create
-   * @return ticketsBought
+   * @return ticketsBought  list of created tickets
    * @author Zahra
    */
   @Transactional
   public List<Ticket> createTickets(long visitorID, Date date, int numberOfTickets) {
     List<Ticket> ticketsBought = new ArrayList<>();
 
-    if (numberOfTickets == 0) {
+    if (numberOfTickets > 0) {
       throw new IllegalArgumentException("Number of tickets must be at least 1");
     }
     if (visitorRepository.findVisitorByMuseumUserId(visitorID) == null) {
@@ -59,7 +59,8 @@ public class TicketService {
    *
    * @param visitorID visitor's ID
    * @param visitDate chosen date of visit
-   * @return ticket
+   * @return ticket   a ticket
+   * @author Zahra
    */
   @Transactional
   public Ticket createTicket(Long visitorID, Date visitDate) {

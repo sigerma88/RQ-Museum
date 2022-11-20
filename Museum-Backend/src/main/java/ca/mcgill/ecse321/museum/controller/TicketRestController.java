@@ -30,7 +30,6 @@ public class TicketRestController {
   public ResponseEntity<?> createTickets(@RequestBody TicketDto ticketDto,
                                          @RequestParam(name = "number") int numberOfTickets) {
 
-    System.out.println("TicketDto: " + ticketDto.getVisitDate());
     try {
       List<TicketDto> boughtTickets = new ArrayList<>();
       System.out.println(ticketDto.getVisitDate());
