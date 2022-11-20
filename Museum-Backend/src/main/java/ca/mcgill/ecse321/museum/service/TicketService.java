@@ -51,7 +51,6 @@ public class TicketService {
     }
 
     return ticketsBought;
-
   }
 
   /**
@@ -75,8 +74,7 @@ public class TicketService {
     }
     ticket.setVisitDate(visitDate);
     ticket.setVisitor(visitor);
-    return ticket;
-
+    return ticketRepository.save(ticket);
   }
 
   /**
@@ -109,5 +107,4 @@ public class TicketService {
     }
     return resultList;
   }
-
 }
