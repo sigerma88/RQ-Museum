@@ -17,5 +17,4 @@ public class MuseumApplication {
   public String greeting() {
     return "Hello world!";
   }
-
 }

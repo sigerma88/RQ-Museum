@@ -1,4 +1,4 @@
-package ca.mcgill.ecse321.museum.controller;
+package ca.mcgill.ecse321.museum.controller.utilities;
 
 import ca.mcgill.ecse321.museum.dto.*;
 import ca.mcgill.ecse321.museum.model.*;

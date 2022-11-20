@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.museum.controller;
 
+import ca.mcgill.ecse321.museum.controller.utilities.DtoUtility;
 import ca.mcgill.ecse321.museum.dto.TicketDto;
 import ca.mcgill.ecse321.museum.model.Ticket;
 import ca.mcgill.ecse321.museum.service.TicketService;
@@ -28,18 +29,14 @@ public class TicketRestController {
    * @return boughtTickets list of created tickets
    */
   @PostMapping(value = {"/purchase", "/purchase/"})
-  public ResponseEntity<?> createTickets(@RequestBody TicketDto ticketDto,
-                                         @RequestParam(name = "number") int numberOfTickets) {
+  public ResponseEntity<?> createTickets(@RequestBody TicketDto ticketDto, @RequestParam(name = "number") int numberOfTickets) {
 
     try {
       List<TicketDto> boughtTickets = new ArrayList<>();
-      System.out.println(ticketDto.getVisitDate());
-      System.out.println(ticketDto.getVisitor());
       for (Ticket ticket : ticketService.createTickets(ticketDto.getVisitor(),
           Date.valueOf(ticketDto.getVisitDate()), numberOfTickets)) {
         boughtTickets.add(DtoUtility.convertToDto(ticket));
       }
-      System.out.println(boughtTickets);
       return new ResponseEntity<>(boughtTickets, HttpStatus.CREATED);
     } catch (Exception e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

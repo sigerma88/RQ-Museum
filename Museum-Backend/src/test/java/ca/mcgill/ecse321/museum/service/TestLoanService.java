@@ -1,6 +1,6 @@
 package ca.mcgill.ecse321.museum.service;
 
-import ca.mcgill.ecse321.museum.controller.DtoUtility;
+import ca.mcgill.ecse321.museum.controller.utilities.DtoUtility;
 import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
 import ca.mcgill.ecse321.museum.dao.LoanRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;

@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.museum.controller;
 
 import ca.mcgill.ecse321.museum.controller.utilities.AuthenticationUtility;
+import ca.mcgill.ecse321.museum.controller.utilities.DtoUtility;
 import ca.mcgill.ecse321.museum.dto.EmployeeDto;
 import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.service.EmployeeService;

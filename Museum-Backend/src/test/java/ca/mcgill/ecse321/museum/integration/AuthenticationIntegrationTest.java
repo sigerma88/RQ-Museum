@@ -1,6 +1,6 @@
 package ca.mcgill.ecse321.museum.integration;
 
-import ca.mcgill.ecse321.museum.controller.DtoUtility;
+import ca.mcgill.ecse321.museum.controller.utilities.DtoUtility;
 import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
 import ca.mcgill.ecse321.museum.dto.VisitorDto;
