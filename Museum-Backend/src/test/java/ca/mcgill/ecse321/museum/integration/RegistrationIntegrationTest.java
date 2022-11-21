@@ -7,9 +7,9 @@ import ca.mcgill.ecse321.museum.dao.VisitorRepository;
 import ca.mcgill.ecse321.museum.dto.EmployeeDto;
 import ca.mcgill.ecse321.museum.dto.ManagerDto;
 import ca.mcgill.ecse321.museum.dto.VisitorDto;
+import ca.mcgill.ecse321.museum.integration.utilities.UserUtilities;
 import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Manager;
-import ca.mcgill.ecse321.museum.model.Schedule;
 import ca.mcgill.ecse321.museum.model.Visitor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -85,8 +85,8 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testRegisterVisitor() {
-    VisitorDto visitor = createVisitorDto(
-        createVisitor(FIRST_VALID_VISITOR_NAME, FIRST_VISITOR_VALID_EMAIL, VALID_PASSWORD));
+    VisitorDto visitor = UserUtilities.createVisitorDto(UserUtilities
+        .createVisitor(FIRST_VALID_VISITOR_NAME, FIRST_VISITOR_VALID_EMAIL, VALID_PASSWORD));
 
     ResponseEntity<VisitorDto> response =
         client.postForEntity("/api/profile/visitor/register", visitor, VisitorDto.class);
@@ -109,16 +109,15 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testRegisterVisitorInvalidEmail() {
-    VisitorDto visitor = createVisitorDto(
-        createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
+    VisitorDto visitor = UserUtilities.createVisitorDto(UserUtilities
+        .createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
     visitor.setEmail("sebastien.vettelgmail.com");
 
     ResponseEntity<String> response =
         client.postForEntity("/api/profile/visitor/register", visitor, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
-        "Response has correct status");
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
   }
 
@@ -136,8 +135,7 @@ public class RegistrationIntegrationTest {
         client.postForEntity("/api/profile/visitor/register", visitor, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
-        "Response has correct status");
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
   }
 
   /**
@@ -148,16 +146,15 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testRegisterVisitorInvalidPassword() {
-    VisitorDto visitor = createVisitorDto(
-        createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
+    VisitorDto visitor = UserUtilities.createVisitorDto(UserUtilities
+        .createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
     visitor.setPassword("123");
 
     ResponseEntity<String> response =
         client.postForEntity("/api/profile/visitor/register", visitor, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
-        "Response has correct status");
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
   }
 
   /**
@@ -168,20 +165,18 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testViewVisitorProfile() {
-    VisitorDto visitor = createVisitorAndLogin(
-        createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
+    Visitor visitor = UserUtilities.createVisitor(FIRST_VISITOR_VALID_EMAIL,
+        FIRST_VALID_VISITOR_NAME, VALID_PASSWORD);
     long visitorId = visitor.getMuseumUserId();
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Cookie", visitor.getSessionId());
-    HttpEntity<String> entity = new HttpEntity<String>(headers);
+
+    HttpEntity<String> entity = new HttpEntity<String>(loginSetupVisitor(visitor));
     ResponseEntity<VisitorDto> response = client.exchange("/api/profile/visitor/" + visitorId,
         HttpMethod.GET, entity, VisitorDto.class);
 
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
-    assertEquals(visitor.getEmail(), response.getBody().getEmail(),
-        "Response has correct email");
+    assertEquals(visitor.getEmail(), response.getBody().getEmail(), "Response has correct email");
     assertEquals(visitor.getName(), response.getBody().getName(), "Response has correct name");
     assertEquals(visitor.getPassword(), response.getBody().getPassword(),
         "Response has correct password");
@@ -197,17 +192,17 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testViewVisitorProfileWithoutLogin() {
-    Visitor visitor = createVisitorAndSave(
-        createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
-    VisitorDto visitorDto = createVisitorDto(visitor);
+    Visitor visitor = UserUtilities.createVisitor(FIRST_VISITOR_VALID_EMAIL,
+        FIRST_VALID_VISITOR_NAME, VALID_PASSWORD);
+    visitorRepository.save(visitor);
+    VisitorDto visitorDto = UserUtilities.createVisitorDto(visitor);
     long visitorId = visitorDto.getMuseumUserId();
 
     ResponseEntity<String> response =
         client.getForEntity("/api/profile/visitor/" + visitorId, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode(),
-        "Response has correct status");
+    assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode(), "Response has correct status");
     assertEquals("You are not logged in.", response.getBody(), "Response has correct message");
   }
 
@@ -219,21 +214,19 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testViewUnauthorizedVisitor() {
-    VisitorDto visitor = createVisitorAndLogin(
-        createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
+    Visitor visitor = UserUtilities.createVisitor(FIRST_VISITOR_VALID_EMAIL,
+        FIRST_VALID_VISITOR_NAME, VALID_PASSWORD);
     long visitorId = visitor.getMuseumUserId() + 1;
 
     // TestRestTemplate does not pass session so we pass the sessionId we get from login
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Cookie", visitor.getSessionId());
-    HttpEntity<String> entity = new HttpEntity<>(headers);
+    HttpEntity<String> entity = new HttpEntity<>(loginSetupVisitor(visitor));
 
-    ResponseEntity<String> response = client.exchange("/api/profile/visitor/" + visitorId,
-        HttpMethod.GET, entity, String.class);
+    ResponseEntity<String> response =
+        client.exchange("/api/profile/visitor/" + visitorId, HttpMethod.GET, entity, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode(),
-        "Response has correct status");
+    assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertEquals("You are not authorized to view this profile.", response.getBody(),
         "Response has correct message");
@@ -246,8 +239,8 @@ public class RegistrationIntegrationTest {
    */
   @Test
   public void testUpdateVisitorInformation() {
-    VisitorDto visitor = createVisitorAndLogin(
-        createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
+    Visitor visitor = UserUtilities.createVisitor(FIRST_VISITOR_VALID_EMAIL,
+        FIRST_VALID_VISITOR_NAME, VALID_PASSWORD);
     long visitorId = visitor.getMuseumUserId();
 
     Map<String, String> updatedCredentials = new HashMap<>();
@@ -257,12 +250,10 @@ public class RegistrationIntegrationTest {
     updatedCredentials.put("newPassword", "#AbuDhabiGp2022");
 
 
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Cookie", visitor.getSessionId());
-    HttpEntity<?> entity = new HttpEntity<>(updatedCredentials, headers);
+    HttpEntity<?> entity = new HttpEntity<>(updatedCredentials, loginSetupVisitor(visitor));
 
-    ResponseEntity<VisitorDto> response = client.exchange(
-        "/api/profile/visitor/edit/" + visitorId, HttpMethod.PUT, entity, VisitorDto.class);
+    ResponseEntity<VisitorDto> response = client.exchange("/api/profile/visitor/edit/" + visitorId,
+        HttpMethod.PUT, entity, VisitorDto.class);
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
@@ -281,9 +272,10 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testUpdateVisitorInformationWithoutLogin() {
-    Visitor visitor = createVisitorAndSave(
-        createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
-    VisitorDto visitorDto = createVisitorDto(visitor);
+    Visitor visitor = UserUtilities.createVisitor(FIRST_VISITOR_VALID_EMAIL,
+        FIRST_VALID_VISITOR_NAME, VALID_PASSWORD);
+    visitorRepository.save(visitor);
+    VisitorDto visitorDto = UserUtilities.createVisitorDto(visitor);
     long visitorId = visitorDto.getMuseumUserId();
 
     Map<String, String> updatedCredentials = new HashMap<>();
@@ -295,8 +287,7 @@ public class RegistrationIntegrationTest {
         HttpMethod.PUT, entity, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
-        "Response has correct status");
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertEquals("You are not logged in.", response.getBody(), "Response has correct message");
   }
@@ -309,28 +300,23 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testUpdateUnauthorizedVisitor() {
-    VisitorDto firstVisitor = createVisitorAndLogin(
-        createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
-    VisitorDto secondVisitor = createVisitorAndLogin(createVisitor(SECOND_VISITOR_VALID_EMAIL,
-        SECOND_VALID_VISITOR_NAME, VALID_PASSWORD));
+    VisitorDto firstVisitor = createVisitorAndLogin(UserUtilities
+        .createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
+    Visitor secondVisitor = UserUtilities.createVisitor(SECOND_VISITOR_VALID_EMAIL,
+        SECOND_VALID_VISITOR_NAME, VALID_PASSWORD);
     long firstVisitorId = firstVisitor.getMuseumUserId();
 
     Map<String, String> updatedCredentials = new HashMap<>();
     updatedCredentials.put("name", "Fernando Alonso");
 
+    HttpEntity<Map<String, String>> entity =
+        new HttpEntity<>(updatedCredentials, loginSetupVisitor(secondVisitor));
 
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Cookie", secondVisitor.getSessionId());
-
-    HttpEntity<Map<String, String>> entity = new HttpEntity<>(updatedCredentials, headers);
-
-    ResponseEntity<String> response =
-        client.exchange("/api/profile/visitor/edit/" + firstVisitorId, HttpMethod.PUT,
-            entity, String.class);
+    ResponseEntity<String> response = client.exchange("/api/profile/visitor/edit/" + firstVisitorId,
+        HttpMethod.PUT, entity, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
-        "Response has correct status");
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertEquals("Not allowed to edit this account", response.getBody(),
         "Response has correct message");
@@ -344,8 +330,8 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testUpdateVisitorInformationWithInvalidEmail() {
-    VisitorDto visitor = createVisitorAndLogin(
-        createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
+    VisitorDto visitor = createVisitorAndLogin(UserUtilities
+        .createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
     long visitorId = visitor.getMuseumUserId();
 
     Map<String, String> updatedCredentials = new HashMap<>();
@@ -359,8 +345,7 @@ public class RegistrationIntegrationTest {
         HttpMethod.PUT, entity, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
-        "Response has correct status");
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertEquals("Invalid email. ", response.getBody(), "Response has correct message");
   }
@@ -373,8 +358,8 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testUpdateVisitorInformationWithInvalidPassword() {
-    VisitorDto visitor = createVisitorAndLogin(
-        createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
+    VisitorDto visitor = createVisitorAndLogin(UserUtilities
+        .createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
     long visitorId = visitor.getMuseumUserId();
 
     Map<String, String> updatedCredentials = new HashMap<>();
@@ -388,8 +373,7 @@ public class RegistrationIntegrationTest {
         HttpMethod.PUT, entity, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
-        "Response has correct status");
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertEquals(
         "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special character. ",
@@ -404,8 +388,8 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testUpdateVisitorWithWrongPassword() {
-    VisitorDto visitor = createVisitorAndLogin(
-        createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
+    VisitorDto visitor = createVisitorAndLogin(UserUtilities
+        .createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
     long visitorId = visitor.getMuseumUserId();
 
     Map<String, String> updatedCredentials = new HashMap<>();
@@ -419,8 +403,7 @@ public class RegistrationIntegrationTest {
         HttpMethod.PUT, entity, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
-        "Response has correct status");
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertEquals("Old password incorrect", response.getBody(), "Response has correct message");
   }
@@ -433,8 +416,8 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testEmployeeRegister() {
-    ManagerDto manager = createManagerAndLogin(
-        createManager(FIRST_VALID_MANAGER_NAME, FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
+    ManagerDto manager = createManagerAndLogin(UserUtilities.createManager(FIRST_VALID_MANAGER_NAME,
+        FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("Cookie", manager.getSessionId());
@@ -460,19 +443,18 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testEmployeeRegisterWithInvalidName() {
-    ManagerDto manager = createManagerAndLogin(
-        createManager(FIRST_VALID_MANAGER_NAME, FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
+    ManagerDto manager = createManagerAndLogin(UserUtilities.createManager(FIRST_VALID_MANAGER_NAME,
+        FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("Cookie", manager.getSessionId());
     HttpEntity<String> entity = new HttpEntity<>(INVALID_EMPLOYEE_NAME, headers);
 
-    ResponseEntity<String> response = client.exchange("/api/profile/employee/register",
-        HttpMethod.POST, entity, String.class);
+    ResponseEntity<String> response =
+        client.exchange("/api/profile/employee/register", HttpMethod.POST, entity, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
-        "Response has correct status");
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertEquals("Name must be in the format of Firstname Lastname", response.getBody(),
         "Response has correct message");
@@ -486,19 +468,18 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testUnauthorizedRegisterEmployee() {
-    VisitorDto visitor = createVisitorAndLogin(
-        createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
+    VisitorDto visitor = createVisitorAndLogin(UserUtilities
+        .createVisitor(FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_NAME, VALID_PASSWORD));
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("Cookie", visitor.getSessionId());
     HttpEntity<String> entity = new HttpEntity<>(FIRST_VALID_EMPLOYEE_NAME, headers);
 
-    ResponseEntity<String> response = client.exchange("/api/profile/employee/register",
-        HttpMethod.POST, entity, String.class);
+    ResponseEntity<String> response =
+        client.exchange("/api/profile/employee/register", HttpMethod.POST, entity, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
-        "Response has correct status");
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertEquals("You must be a manager to register an employee", response.getBody(),
         "Response has correct message");
@@ -514,12 +495,11 @@ public class RegistrationIntegrationTest {
   public void testRegisterEmployeeWithoutLogin() {
     HttpEntity<String> entity = new HttpEntity<>(FIRST_VALID_EMPLOYEE_NAME);
 
-    ResponseEntity<String> response = client.exchange("/api/profile/employee/register",
-        HttpMethod.POST, entity, String.class);
+    ResponseEntity<String> response =
+        client.exchange("/api/profile/employee/register", HttpMethod.POST, entity, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
-        "Response has correct status");
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertEquals("You must be logged in to register an employee", response.getBody(),
         "Response has correct message");
@@ -533,8 +513,8 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testEditEmployee() {
-    EmployeeDto employee = createEmployeeAndLogin(createEmployee(FIRST_VALID_EMPLOYEE_NAME,
-        FIRST_VALID_EMPLOYEE_EMAIL, VALID_PASSWORD));
+    EmployeeDto employee = createEmployeeAndLogin(UserUtilities
+        .createEmployee(FIRST_VALID_EMPLOYEE_NAME, FIRST_VALID_EMPLOYEE_EMAIL, VALID_PASSWORD));
 
     Map<String, String> updatedCredentials = new HashMap<>();
     updatedCredentials.put("oldPassword", employee.getPassword());
@@ -545,8 +525,8 @@ public class RegistrationIntegrationTest {
     HttpEntity<Map<String, String>> entity = new HttpEntity<>(updatedCredentials, headers);
 
     ResponseEntity<EmployeeDto> response =
-        client.exchange("/api/profile/employee/edit/" + employee.getMuseumUserId(),
-            HttpMethod.POST, entity, EmployeeDto.class);
+        client.exchange("/api/profile/employee/edit/" + employee.getMuseumUserId(), HttpMethod.POST,
+            entity, EmployeeDto.class);
 
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
@@ -567,8 +547,8 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testEditEmployeeWithInvalidId() {
-    EmployeeDto employee = createEmployeeAndLogin(createEmployee(FIRST_VALID_EMPLOYEE_NAME,
-        FIRST_VALID_EMPLOYEE_EMAIL, VALID_PASSWORD));
+    EmployeeDto employee = createEmployeeAndLogin(UserUtilities
+        .createEmployee(FIRST_VALID_EMPLOYEE_NAME, FIRST_VALID_EMPLOYEE_EMAIL, VALID_PASSWORD));
 
     Map<String, String> updatedCredentials = new HashMap<>();
     updatedCredentials.put("oldPassword", employee.getPassword());
@@ -584,8 +564,7 @@ public class RegistrationIntegrationTest {
         HttpMethod.POST, entity, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
-        "Response has correct status");
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertEquals("You can only edit your own information", response.getBody(),
         "Response has correct message");
@@ -599,8 +578,8 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testEditEmployeeWithInvalidOldPassword() {
-    EmployeeDto employee = createEmployeeAndLogin(createEmployee(FIRST_VALID_EMPLOYEE_NAME,
-        FIRST_VALID_EMPLOYEE_EMAIL, VALID_PASSWORD));
+    EmployeeDto employee = createEmployeeAndLogin(UserUtilities
+        .createEmployee(FIRST_VALID_EMPLOYEE_NAME, FIRST_VALID_EMPLOYEE_EMAIL, VALID_PASSWORD));
 
     Map<String, String> updatedCredentials = new HashMap<>();
     updatedCredentials.put("oldPassword", "invalidPassword");
@@ -611,12 +590,11 @@ public class RegistrationIntegrationTest {
     HttpEntity<Map<String, String>> entity = new HttpEntity<>(updatedCredentials, headers);
 
     ResponseEntity<String> response =
-        client.exchange("/api/profile/employee/edit/" + employee.getMuseumUserId(),
-            HttpMethod.POST, entity, String.class);
+        client.exchange("/api/profile/employee/edit/" + employee.getMuseumUserId(), HttpMethod.POST,
+            entity, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
-        "Response has correct status");
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertEquals("Old password incorrect", response.getBody(), "Response has correct message");
   }
@@ -629,8 +607,8 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testEditEmployeeWithInvalidNewPassword() {
-    EmployeeDto employee = createEmployeeAndLogin(createEmployee(FIRST_VALID_EMPLOYEE_NAME,
-        FIRST_VALID_EMPLOYEE_EMAIL, VALID_PASSWORD));
+    EmployeeDto employee = createEmployeeAndLogin(UserUtilities
+        .createEmployee(FIRST_VALID_EMPLOYEE_NAME, FIRST_VALID_EMPLOYEE_EMAIL, VALID_PASSWORD));
 
     Map<String, String> updatedCredentials = new HashMap<>();
     updatedCredentials.put("oldPassword", employee.getPassword());
@@ -641,12 +619,11 @@ public class RegistrationIntegrationTest {
     HttpEntity<Map<String, String>> entity = new HttpEntity<>(updatedCredentials, headers);
 
     ResponseEntity<String> response =
-        client.exchange("/api/profile/employee/edit/" + employee.getMuseumUserId(),
-            HttpMethod.POST, entity, String.class);
+        client.exchange("/api/profile/employee/edit/" + employee.getMuseumUserId(), HttpMethod.POST,
+            entity, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
-        "Response has correct status");
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertEquals(
         "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special character. ",
@@ -661,8 +638,8 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testEditEmployeeWithoutLogin() {
-    EmployeeDto employee = createEmployeeDto(createEmployee(FIRST_VALID_EMPLOYEE_NAME,
-        FIRST_VALID_EMPLOYEE_EMAIL, VALID_PASSWORD));
+    EmployeeDto employee = UserUtilities.createEmployeeDto(UserUtilities
+        .createEmployee(FIRST_VALID_EMPLOYEE_NAME, FIRST_VALID_EMPLOYEE_EMAIL, VALID_PASSWORD));
 
     Map<String, String> updatedCredentials = new HashMap<>();
     updatedCredentials.put("oldPassword", employee.getPassword());
@@ -671,12 +648,11 @@ public class RegistrationIntegrationTest {
     HttpEntity<Map<String, String>> entity = new HttpEntity<>(updatedCredentials);
 
     ResponseEntity<String> response =
-        client.exchange("/api/profile/employee/edit/" + employee.getMuseumUserId(),
-            HttpMethod.POST, entity, String.class);
+        client.exchange("/api/profile/employee/edit/" + employee.getMuseumUserId(), HttpMethod.POST,
+            entity, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
-        "Response has correct status");
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertEquals("You must be logged in to edit an employee", response.getBody(),
         "Response has correct message");
@@ -690,16 +666,16 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testViewEmployeeWithValidId() {
-    EmployeeDto employee = createEmployeeAndLogin(createEmployee(FIRST_VALID_EMPLOYEE_NAME,
-        FIRST_VALID_EMPLOYEE_EMAIL, VALID_PASSWORD));
+    EmployeeDto employee = createEmployeeAndLogin(UserUtilities
+        .createEmployee(FIRST_VALID_EMPLOYEE_NAME, FIRST_VALID_EMPLOYEE_EMAIL, VALID_PASSWORD));
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("Cookie", employee.getSessionId());
     HttpEntity<EmployeeDto> entity = new HttpEntity<>(employee, headers);
 
     ResponseEntity<EmployeeDto> response =
-        client.exchange("/api/profile/employee/" + employee.getMuseumUserId(),
-            HttpMethod.GET, entity, EmployeeDto.class);
+        client.exchange("/api/profile/employee/" + employee.getMuseumUserId(), HttpMethod.GET,
+            entity, EmployeeDto.class);
 
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
@@ -708,8 +684,7 @@ public class RegistrationIntegrationTest {
         "Response has correct name");
     assertEquals(FIRST_VALID_EMPLOYEE_EMAIL, response.getBody().getEmail(),
         "Response has correct email");
-    assertEquals(VALID_PASSWORD, response.getBody().getPassword(),
-        "Response has correct password");
+    assertEquals(VALID_PASSWORD, response.getBody().getPassword(), "Response has correct password");
   }
 
   /**
@@ -720,20 +695,19 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void viewEmployeeWithoutLogin() {
-    EmployeeDto employee = createEmployeeDto(createEmployee(FIRST_VALID_EMPLOYEE_NAME,
-        FIRST_VALID_EMPLOYEE_EMAIL, VALID_PASSWORD));
+    EmployeeDto employee = UserUtilities.createEmployeeDto(UserUtilities
+        .createEmployee(FIRST_VALID_EMPLOYEE_NAME, FIRST_VALID_EMPLOYEE_EMAIL, VALID_PASSWORD));
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("Cookie", employee.getSessionId());
     HttpEntity<String> entity = new HttpEntity<>(headers);
 
     ResponseEntity<String> response =
-        client.exchange("/api/profile/employee/" + employee.getMuseumUserId(),
-            HttpMethod.GET, entity, String.class);
+        client.exchange("/api/profile/employee/" + employee.getMuseumUserId(), HttpMethod.GET,
+            entity, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode(),
-        "Response has correct status");
+    assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertEquals("You are not logged in", response.getBody(), "Response has correct message");
   }
@@ -746,20 +720,19 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testViewEmployeeWithInvalidId() {
-    EmployeeDto employee = createEmployeeAndLogin(createEmployee(FIRST_VALID_EMPLOYEE_NAME,
-        FIRST_VALID_EMPLOYEE_EMAIL, VALID_PASSWORD));
+    EmployeeDto employee = createEmployeeAndLogin(UserUtilities
+        .createEmployee(FIRST_VALID_EMPLOYEE_NAME, FIRST_VALID_EMPLOYEE_EMAIL, VALID_PASSWORD));
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("Cookie", employee.getSessionId());
     HttpEntity<String> entity = new HttpEntity<>(headers);
 
     ResponseEntity<String> response =
-        client.exchange("/api/profile/employee/" + employee.getMuseumUserId() + 1,
-            HttpMethod.GET, entity, String.class);
+        client.exchange("/api/profile/employee/" + employee.getMuseumUserId() + 1, HttpMethod.GET,
+            entity, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode(),
-        "Response has correct status");
+    assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertEquals("You can only view your own information", response.getBody(),
         "Response has correct message");
@@ -773,8 +746,8 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testEditManagerInformation() {
-    ManagerDto manager = createManagerAndLogin(
-        createManager(FIRST_VALID_MANAGER_NAME, FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
+    ManagerDto manager = createManagerAndLogin(UserUtilities.createManager(FIRST_VALID_MANAGER_NAME,
+        FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
 
     Map<String, String> updatedCredentials = new HashMap<>();
     updatedCredentials.put("oldPassword", manager.getPassword());
@@ -785,8 +758,8 @@ public class RegistrationIntegrationTest {
     HttpEntity<Map<String, String>> entity = new HttpEntity<>(updatedCredentials, headers);
 
     ResponseEntity<ManagerDto> response =
-        client.exchange("/api/profile/manager/edit/" + manager.getMuseumUserId(),
-            HttpMethod.PUT, entity, ManagerDto.class);
+        client.exchange("/api/profile/manager/edit/" + manager.getMuseumUserId(), HttpMethod.PUT,
+            entity, ManagerDto.class);
 
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
@@ -802,8 +775,8 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testEditManagerWithoutLogin() {
-    ManagerDto manager = createManagerDto(
-        createManager(FIRST_VALID_MANAGER_NAME, FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
+    ManagerDto manager = UserUtilities.createManagerDto(UserUtilities
+        .createManager(FIRST_VALID_MANAGER_NAME, FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
 
     Map<String, String> updatedCredentials = new HashMap<>();
     updatedCredentials.put("oldPassword", manager.getPassword());
@@ -812,12 +785,11 @@ public class RegistrationIntegrationTest {
     HttpEntity<Map<String, String>> entity = new HttpEntity<>(updatedCredentials);
 
     ResponseEntity<String> response =
-        client.exchange("/api/profile/manager/edit/" + manager.getMuseumUserId(),
-            HttpMethod.PUT, entity, String.class);
+        client.exchange("/api/profile/manager/edit/" + manager.getMuseumUserId(), HttpMethod.PUT,
+            entity, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
-        "Response has correct status");
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertEquals("You must be logged in to edit a manager", response.getBody(),
         "Response has correct message");
@@ -831,8 +803,8 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testEditManagerWithInvalidRole() {
-    EmployeeDto employee = createEmployeeAndLogin(createEmployee(FIRST_VALID_MANAGER_NAME,
-        FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
+    EmployeeDto employee = createEmployeeAndLogin(UserUtilities
+        .createEmployee(FIRST_VALID_MANAGER_NAME, FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
 
     Map<String, String> updatedCredentials = new HashMap<>();
     updatedCredentials.put("oldPassword", employee.getPassword());
@@ -843,12 +815,11 @@ public class RegistrationIntegrationTest {
     HttpEntity<Map<String, String>> entity = new HttpEntity<>(updatedCredentials, headers);
 
     ResponseEntity<String> response =
-        client.exchange("/api/profile/manager/edit/" + employee.getMuseumUserId(),
-            HttpMethod.PUT, entity, String.class);
+        client.exchange("/api/profile/manager/edit/" + employee.getMuseumUserId(), HttpMethod.PUT,
+            entity, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
-        "Response has correct status");
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertEquals("You must be a manager to edit a manager", response.getBody(),
         "Response has correct message");
@@ -862,8 +833,8 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testEditManagerWithWrongOldPassword() {
-    ManagerDto manager = createManagerAndLogin(
-        createManager(FIRST_VALID_MANAGER_NAME, FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
+    ManagerDto manager = createManagerAndLogin(UserUtilities.createManager(FIRST_VALID_MANAGER_NAME,
+        FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
 
     Map<String, String> updatedCredentials = new HashMap<>();
     updatedCredentials.put("oldPassword", "wrongPassword");
@@ -874,12 +845,11 @@ public class RegistrationIntegrationTest {
     HttpEntity<Map<String, String>> entity = new HttpEntity<>(updatedCredentials, headers);
 
     ResponseEntity<String> response =
-        client.exchange("/api/profile/manager/edit/" + manager.getMuseumUserId(),
-            HttpMethod.PUT, entity, String.class);
+        client.exchange("/api/profile/manager/edit/" + manager.getMuseumUserId(), HttpMethod.PUT,
+            entity, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
-        "Response has correct status");
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertEquals("Old password incorrect", response.getBody(), "Response has correct message");
   }
@@ -892,8 +862,8 @@ public class RegistrationIntegrationTest {
 
   @Test
   public void testEditManagerWithInvalidNewPassword() {
-    ManagerDto manager = createManagerAndLogin(
-        createManager(FIRST_VALID_MANAGER_NAME, FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
+    ManagerDto manager = createManagerAndLogin(UserUtilities.createManager(FIRST_VALID_MANAGER_NAME,
+        FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
 
     Map<String, String> updatedCredentials = new HashMap<>();
     updatedCredentials.put("oldPassword", manager.getPassword());
@@ -904,61 +874,15 @@ public class RegistrationIntegrationTest {
     HttpEntity<Map<String, String>> entity = new HttpEntity<>(updatedCredentials, headers);
 
     ResponseEntity<String> response =
-        client.exchange("/api/profile/manager/edit/" + manager.getMuseumUserId(),
-            HttpMethod.PUT, entity, String.class);
+        client.exchange("/api/profile/manager/edit/" + manager.getMuseumUserId(), HttpMethod.PUT,
+            entity, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
-        "Response has correct status");
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertEquals(
         "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special character. ",
         response.getBody(), "Response has correct message");
-  }
-
-
-  /**
-   * Create an visitorDto
-   *
-   * @param visitor - the visitorDto to be created
-   * @return the created visitorDto
-   * @author Kevin
-   */
-
-  public VisitorDto createVisitorDto(Visitor visitor) {
-    return DtoUtility.convertToDto(visitor);
-  }
-
-  /**
-   * Create a visitor
-   *
-   * @param name     - name of the visitor
-   * @param email    - email of the visitor
-   * @param password - password of the visitor
-   * @return Visitor - the visitor created
-   * @author Kevin
-   */
-
-  public Visitor createVisitor(String name, String email, String password) {
-    Visitor visitor = new Visitor();
-    visitor.setEmail(email);
-    visitor.setPassword(password);
-    visitor.setName(name);
-
-    return visitor;
-  }
-
-  /**
-   * Create a visitor and save
-   *
-   * @param visitor - the visitor to save
-   * @return the saved visitor
-   * @author Kevin
-   */
-
-  public Visitor createVisitorAndSave(Visitor visitor) {
-    visitorRepository.save(visitor);
-    return visitor;
   }
 
   /**
@@ -970,7 +894,8 @@ public class RegistrationIntegrationTest {
    */
 
   public VisitorDto createVisitorAndLogin(Visitor newVisitor) {
-    VisitorDto visitor = createVisitorDto(createVisitorAndSave(newVisitor));
+    visitorRepository.save(newVisitor);
+    VisitorDto visitor = UserUtilities.createVisitorDto(newVisitor);
     ResponseEntity<String> response =
         client.postForEntity("/api/auth/login", visitor, String.class);
     List<String> session = response.getHeaders().get("Set-Cookie");
@@ -982,51 +907,6 @@ public class RegistrationIntegrationTest {
   }
 
   /**
-   * Create employeeDto
-   *
-   * @param employee - employee
-   * @return employeeDto - the employeeDto created
-   * @author Kevin
-   */
-
-  public EmployeeDto createEmployeeDto(Employee employee) {
-    return DtoUtility.convertToDto(employee);
-  }
-
-  /**
-   * Create a visitor and login
-   *
-   * @param name     - name of visitor to create and login
-   * @param email    - email of visitor to create and login
-   * @param password - password of visitor to create and login
-   * @return the logged in visitor
-   * @author Kevin
-   */
-
-  public Employee createEmployee(String name, String email, String password) {
-    Employee employee = new Employee();
-    employee.setName(name);
-    employee.setEmail(email);
-    employee.setPassword(password);
-    employee.setSchedule(new Schedule());
-
-    return employee;
-  }
-
-  /**
-   * Create employee and save
-   *
-   * @param employee - employee to save
-   * @return employee - the saved employee
-   * @author Kevin
-   */
-
-  public Employee createEmployeeAndSave(Employee employee) {
-    employeeRepository.save(employee);
-    return employee;
-  }
-
-  /**
    * Create employee and login
    *
    * @param newEmployee - employee to login
@@ -1035,7 +915,8 @@ public class RegistrationIntegrationTest {
    */
 
   public EmployeeDto createEmployeeAndLogin(Employee newEmployee) {
-    EmployeeDto employee = createEmployeeDto(createEmployeeAndSave(newEmployee));
+    employeeRepository.save(newEmployee);
+    EmployeeDto employee = UserUtilities.createEmployeeDto(newEmployee);
     ResponseEntity<String> response =
         client.postForEntity("/api/auth/login", employee, String.class);
     List<String> session = response.getHeaders().get("Set-Cookie");
@@ -1047,50 +928,6 @@ public class RegistrationIntegrationTest {
   }
 
   /**
-   * Create a managerDTO
-   *
-   * @param manager - the manager to be created
-   * @return ManagerDto
-   * @author Kevin
-   */
-
-  public ManagerDto createManagerDto(Manager manager) {
-    return DtoUtility.convertToDto(manager);
-  }
-
-  /**
-   * Create a manager
-   *
-   * @param name     - name of the manager
-   * @param email    - email of the manager
-   * @param password - password of the manager
-   * @return Manager - the manager created
-   * @author Kevin
-   */
-
-  public Manager createManager(String name, String email, String password) {
-    Manager manager = new Manager();
-    manager.setName(name);
-    manager.setEmail(email);
-    manager.setPassword(password);
-
-    return manager;
-  }
-
-  /**
-   * Create a manager and save
-   *
-   * @param manager - the manager to save
-   * @return Manager - the saved manager
-   * @author Kevin
-   */
-
-  public Manager createManagerAndSave(Manager manager) {
-    managerRepository.save(manager);
-    return manager;
-  }
-
-  /**
    * Create a manager and login
    *
    * @param newManager - the manager to login
@@ -1099,7 +936,8 @@ public class RegistrationIntegrationTest {
    */
 
   public ManagerDto createManagerAndLogin(Manager newManager) {
-    ManagerDto manager = createManagerDto(createManagerAndSave(newManager));
+    managerRepository.save(newManager);
+    ManagerDto manager = UserUtilities.createManagerDto(newManager);
     ResponseEntity<String> response =
         client.postForEntity("/api/auth/login", manager, String.class);
     List<String> session = response.getHeaders().get("Set-Cookie");
@@ -1109,4 +947,45 @@ public class RegistrationIntegrationTest {
 
     return manager;
   }
+
+  /**
+   * Create a museum and login
+   *
+   * @param newMuseum - the museum to login
+   * @return museumDto - the logged in museum
+   * @author Kevin
+   */
+  public HttpHeaders loginSetupManager() {
+    ManagerDto manager = createManagerAndLogin(UserUtilities.createManager(FIRST_VALID_MANAGER_NAME,
+        FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", manager.getSessionId());
+    return headers;
+  }
+
+  public HttpHeaders loginSetupEmployee(Employee employee) {
+    EmployeeDto employeeLogin = createEmployeeAndLogin(employee);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", employeeLogin.getSessionId());
+    return headers;
+  }
+
+  /**
+   * Create a museum and login
+   *
+   * @param newMuseum - the museum to login
+   * @return museumDto - the logged in museum
+   * @author Kevin
+   */
+  public HttpHeaders loginSetupVisitor(Visitor newVisitor) {
+    VisitorDto visitor = createVisitorAndLogin(newVisitor);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", visitor.getSessionId());
+    return headers;
+  }
+
+
 }

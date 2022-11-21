@@ -3,6 +3,8 @@ package ca.mcgill.ecse321.museum.integration;
 import ca.mcgill.ecse321.museum.controller.utilities.DtoUtility;
 import ca.mcgill.ecse321.museum.dao.*;
 import ca.mcgill.ecse321.museum.dto.LoanDto;
+import ca.mcgill.ecse321.museum.dto.VisitorDto;
+import ca.mcgill.ecse321.museum.integration.utilities.UserUtilities;
 import ca.mcgill.ecse321.museum.model.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
+import org.springframework.http.*;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 
@@ -47,8 +51,7 @@ public class LoanIntegrationTest {
   }
 
   /**
-   * Test suite that combines successfully creating a loan and getting that same
-   * loan
+   * Test suite that combines successfully creating a loan and getting that same loan
    *
    * @author Eric
    */
@@ -75,7 +78,8 @@ public class LoanIntegrationTest {
     loan.setVisitor(visitor);
     LoanDto loanDto = DtoUtility.convertToDto(loan);
 
-    ResponseEntity<LoanDto> response = client.postForEntity("/api/loan/create/", loanDto, LoanDto.class);
+    ResponseEntity<LoanDto> response =
+        client.postForEntity("/api/loan/create/", loanDto, LoanDto.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -129,7 +133,8 @@ public class LoanIntegrationTest {
     loan2.setVisitor(visitor);
     LoanDto loanDto = DtoUtility.convertToDto(loan2);
 
-    ResponseEntity<String> response = client.postForEntity("/api/loan/create/", loanDto, String.class);
+    ResponseEntity<String> response =
+        client.postForEntity("/api/loan/create/", loanDto, String.class);
 
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     assertEquals("Cannot create a duplicate loan request", response.getBody());
@@ -154,7 +159,8 @@ public class LoanIntegrationTest {
 
     HttpEntity<LoanDto> request = new HttpEntity<LoanDto>(loanDto);
 
-    ResponseEntity<LoanDto> response = client.exchange("/api/loan/edit/", HttpMethod.PUT, request, LoanDto.class);
+    ResponseEntity<LoanDto> response =
+        client.exchange("/api/loan/edit/", HttpMethod.PUT, request, LoanDto.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -171,8 +177,7 @@ public class LoanIntegrationTest {
   }
 
   /**
-   * Test suite that combines successfully creating a loan and patching that loan
-   * requestAccepted to
+   * Test suite that combines successfully creating a loan and patching that loan requestAccepted to
    * false
    *
    * @author Eric
@@ -192,7 +197,8 @@ public class LoanIntegrationTest {
 
     HttpEntity<LoanDto> request = new HttpEntity<LoanDto>(loanDto);
 
-    ResponseEntity<LoanDto> response = client.exchange("/api/loan/edit/", HttpMethod.PUT, request, LoanDto.class);
+    ResponseEntity<LoanDto> response =
+        client.exchange("/api/loan/edit/", HttpMethod.PUT, request, LoanDto.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -204,7 +210,8 @@ public class LoanIntegrationTest {
         "Response has correct visitorDto");
     assertEquals(artwork.getArtworkId(), response.getBody().getArtworkDto().getArtworkId(),
         "Response has correct artworkDto");
-    assertNull(response.getBody().getArtworkDto().getRoom(), "Artwork is no longer associated to room");
+    assertNull(response.getBody().getArtworkDto().getRoom(),
+        "Artwork is no longer associated to room");
     assertTrue(response.getBody().getLoanId() > 0, "Response has valid ID");
     assertEquals(0, roomRepository.findRoomByRoomId(room.getRoomId()).getCurrentNumberOfArtwork(),
         "Room that previously had artwork has now 1 less artwork");
@@ -288,8 +295,8 @@ public class LoanIntegrationTest {
 
     HttpEntity<?> request = new HttpEntity<>(null);
 
-    ResponseEntity<String> response = client.exchange("/api/loan/delete/" + loanId, HttpMethod.DELETE, request,
-        String.class);
+    ResponseEntity<String> response =
+        client.exchange("/api/loan/delete/" + loanId, HttpMethod.DELETE, request, String.class);
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertEquals("Loan deleted", response.getBody());
   }
@@ -305,15 +312,15 @@ public class LoanIntegrationTest {
 
     HttpEntity<?> request = new HttpEntity<>(null);
 
-    ResponseEntity<String> response = client.exchange("/api/loan/delete/" + loanId, HttpMethod.DELETE, request,
-        String.class);
+    ResponseEntity<String> response =
+        client.exchange("/api/loan/delete/" + loanId, HttpMethod.DELETE, request, String.class);
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     assertNotNull("Loan does not exist", response.getBody());
   }
 
   /**
-   * Helper method to create artwork associated to a room associated to a museum
-   * associated to a schedule
+   * Helper method to create artwork associated to a room associated to a museum associated to a
+   * schedule
    *
    * @return artwork
    * @author Eric
@@ -368,6 +375,42 @@ public class LoanIntegrationTest {
     visitor.setName("Please");
     visitor.setPassword("password");
     return visitorRepository.save(visitor);
+  }
+
+  /**
+   * Create a visitor and login
+   *
+   * @param newVisitor - the visitor to login
+   * @return the logged in visitor
+   * @author Kevin
+   */
+
+  public VisitorDto createVisitorAndLogin(Visitor newVisitor) {
+    visitorRepository.save(newVisitor);
+    VisitorDto visitor = UserUtilities.createVisitorDto(newVisitor);
+    ResponseEntity<String> response =
+        client.postForEntity("/api/auth/login", visitor, String.class);
+    List<String> session = response.getHeaders().get("Set-Cookie");
+
+    String sessionId = session.get(0);
+    visitor.setSessionId(sessionId);
+
+    return visitor;
+  }
+
+  /**
+   * Create a museum and login
+   *
+   * @param newMuseum - the museum to login
+   * @return museumDto - the logged in museum
+   * @author Kevin
+   */
+  public HttpHeaders loginSetupVisitor(Visitor newVisitor) {
+    VisitorDto visitor = createVisitorAndLogin(newVisitor);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", visitor.getSessionId());
+    return headers;
   }
 
 }
