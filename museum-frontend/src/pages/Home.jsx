@@ -26,7 +26,7 @@ function Home() {
               component="h1"
               style={{
                 color: "white",
-                fontFamily: "system-ui, sans-serif;",
+                fontFamily: "system-ui, sans-serif",
                 fontWeight: 600,
               }}
             >
