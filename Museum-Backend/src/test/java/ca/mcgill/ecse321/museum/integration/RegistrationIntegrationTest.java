@@ -167,9 +167,10 @@ public class RegistrationIntegrationTest {
   public void testViewVisitorProfile() {
     Visitor visitor = UserUtilities.createVisitor(FIRST_VISITOR_VALID_EMAIL,
         FIRST_VALID_VISITOR_NAME, VALID_PASSWORD);
+    visitorRepository.save(visitor);
     long visitorId = visitor.getMuseumUserId();
 
-    HttpEntity<String> entity = new HttpEntity<String>(loginSetupVisitor(visitor));
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupVisitor(visitor));
     ResponseEntity<VisitorDto> response = client.exchange("/api/profile/visitor/" + visitorId,
         HttpMethod.GET, entity, VisitorDto.class);
 
@@ -241,6 +242,7 @@ public class RegistrationIntegrationTest {
   public void testUpdateVisitorInformation() {
     Visitor visitor = UserUtilities.createVisitor(FIRST_VISITOR_VALID_EMAIL,
         FIRST_VALID_VISITOR_NAME, VALID_PASSWORD);
+    visitorRepository.save(visitor);
     long visitorId = visitor.getMuseumUserId();
 
     Map<String, String> updatedCredentials = new HashMap<>();
@@ -254,6 +256,7 @@ public class RegistrationIntegrationTest {
 
     ResponseEntity<VisitorDto> response = client.exchange("/api/profile/visitor/edit/" + visitorId,
         HttpMethod.PUT, entity, VisitorDto.class);
+
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");

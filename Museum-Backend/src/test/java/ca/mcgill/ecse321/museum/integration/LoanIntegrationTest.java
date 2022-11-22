@@ -57,8 +57,12 @@ public class LoanIntegrationTest {
    */
   @Test
   public void testCreateAndGetLoan() {
-    Long id = testCreateLoan();
-    testGetLoan(id);
+    Visitor visitor = createVisitor();
+
+    HttpHeaders headers = loginSetupVisitor(visitor);
+
+    Long id = testCreateLoan(headers, visitor);
+    testGetLoan(headers, id);
   }
 
   /**
@@ -67,10 +71,8 @@ public class LoanIntegrationTest {
    * @param Long - loanId
    * @author Eric
    */
-  private Long testCreateLoan() {
+  private Long testCreateLoan(HttpHeaders headers, Visitor visitor) {
     Artwork artwork = createArtwork();
-
-    Visitor visitor = createVisitor();
 
     Loan loan = new Loan();
     loan.setRequestAccepted(null);
@@ -78,8 +80,10 @@ public class LoanIntegrationTest {
     loan.setVisitor(visitor);
     LoanDto loanDto = DtoUtility.convertToDto(loan);
 
+    HttpEntity<?> entity = new HttpEntity<>(loanDto, headers);
+
     ResponseEntity<LoanDto> response =
-        client.postForEntity("/api/loan/create/", loanDto, LoanDto.class);
+        client.exchange("/api/loan/create/", HttpMethod.POST, entity, LoanDto.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -102,8 +106,10 @@ public class LoanIntegrationTest {
    * @param loanId - Long loanId used to find loan
    * @author Eric
    */
-  private void testGetLoan(Long LoanId) {
-    ResponseEntity<LoanDto> response = client.getForEntity("/api/loan/" + LoanId, LoanDto.class);
+  private void testGetLoan(HttpHeaders header, Long LoanId) {
+    HttpEntity<?> entity = new HttpEntity<>(header);
+    ResponseEntity<LoanDto> response =
+        client.exchange("/api/loan/" + LoanId, HttpMethod.GET, entity, LoanDto.class);
 
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
@@ -121,6 +127,8 @@ public class LoanIntegrationTest {
     Artwork artwork = createArtwork();
     Visitor visitor = createVisitor();
 
+
+
     Loan loan = new Loan();
     loan.setRequestAccepted(null);
     loan.setArtwork(artwork);
@@ -133,8 +141,10 @@ public class LoanIntegrationTest {
     loan2.setVisitor(visitor);
     LoanDto loanDto = DtoUtility.convertToDto(loan2);
 
+    HttpEntity<?> entity = new HttpEntity<>(loanDto, loginSetupVisitor(visitor));
+
     ResponseEntity<String> response =
-        client.postForEntity("/api/loan/create/", loanDto, String.class);
+        client.exchange("/api/loan/create/", HttpMethod.POST, entity, String.class);
 
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     assertEquals("Cannot create a duplicate loan request", response.getBody());
@@ -150,6 +160,7 @@ public class LoanIntegrationTest {
     Artwork artwork = createArtwork();
     Visitor visitor = createVisitor();
 
+
     Loan loan = new Loan();
     loan.setRequestAccepted(false);
     loan.setArtwork(artwork);
@@ -157,7 +168,7 @@ public class LoanIntegrationTest {
     loanRepository.save(loan);
     LoanDto loanDto = DtoUtility.convertToDto(loan);
 
-    HttpEntity<LoanDto> request = new HttpEntity<LoanDto>(loanDto);
+    HttpEntity<LoanDto> request = new HttpEntity<LoanDto>(loanDto, loginSetupVisitor(visitor));
 
     ResponseEntity<LoanDto> response =
         client.exchange("/api/loan/edit/", HttpMethod.PUT, request, LoanDto.class);
@@ -195,7 +206,7 @@ public class LoanIntegrationTest {
     loanRepository.save(loan);
     LoanDto loanDto = DtoUtility.convertToDto(loan);
 
-    HttpEntity<LoanDto> request = new HttpEntity<LoanDto>(loanDto);
+    HttpEntity<LoanDto> request = new HttpEntity<LoanDto>(loanDto, loginSetupVisitor(visitor));
 
     ResponseEntity<LoanDto> response =
         client.exchange("/api/loan/edit/", HttpMethod.PUT, request, LoanDto.class);
@@ -269,7 +280,10 @@ public class LoanIntegrationTest {
     loan3.setVisitor(visitor);
     loanRepository.save(loan3);
 
-    ResponseEntity<LoanDto[]> response = client.getForEntity("/api/loan/", LoanDto[].class);
+    HttpEntity<?> request = new HttpEntity<>(loginSetupVisitor(visitor));
+
+    ResponseEntity<LoanDto[]> response =
+        client.exchange("/api/loan/", HttpMethod.GET, request, LoanDto[].class);
 
     assertNotNull(response);
     assertEquals(HttpStatus.FOUND, response.getStatusCode());
@@ -293,7 +307,7 @@ public class LoanIntegrationTest {
     loanRepository.save(loan);
     Long loanId = loan.getLoanId();
 
-    HttpEntity<?> request = new HttpEntity<>(null);
+    HttpEntity<?> request = new HttpEntity<>(loginSetupVisitor(visitor));
 
     ResponseEntity<String> response =
         client.exchange("/api/loan/delete/" + loanId, HttpMethod.DELETE, request, String.class);
@@ -310,7 +324,7 @@ public class LoanIntegrationTest {
   public void testDeleteLoanWithNonExistingLoan() {
     Long loanId = (long) -1;
 
-    HttpEntity<?> request = new HttpEntity<>(null);
+    HttpEntity<?> request = new HttpEntity<>(loginSetupVisitor(createVisitor()));
 
     ResponseEntity<String> response =
         client.exchange("/api/loan/delete/" + loanId, HttpMethod.DELETE, request, String.class);

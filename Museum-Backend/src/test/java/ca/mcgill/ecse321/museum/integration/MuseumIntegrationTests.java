@@ -1,8 +1,12 @@
 package ca.mcgill.ecse321.museum.integration;
 
+import ca.mcgill.ecse321.museum.dao.ManagerRepository;
 import ca.mcgill.ecse321.museum.dao.MuseumRepository;
 import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
+import ca.mcgill.ecse321.museum.dto.ManagerDto;
 import ca.mcgill.ecse321.museum.dto.MuseumDto;
+import ca.mcgill.ecse321.museum.integration.utilities.UserUtilities;
+import ca.mcgill.ecse321.museum.model.Manager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,13 +14,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class MuseumIntegrationTests {
+  private static final String FIRST_VALID_MANAGER_NAME = "admin";
+  private static final String FIRST_VALID_MANAGER_EMAIL = "admin@mail.ca";
+
+  private static final String VALID_PASSWORD = "#BrazilGp2022";
 
   @Autowired
   private TestRestTemplate client;
@@ -24,6 +36,8 @@ public class MuseumIntegrationTests {
   private MuseumRepository museumRepository;
   @Autowired
   private ScheduleRepository scheduleRepository;
+  @Autowired
+  private ManagerRepository managerRepository;
 
   /**
    * Clear the database before and after each test
@@ -35,7 +49,7 @@ public class MuseumIntegrationTests {
   public void clearDatabase() {
     museumRepository.deleteAll();
     scheduleRepository.deleteAll();
-
+    managerRepository.deleteAll();
   }
 
   /**
@@ -45,9 +59,10 @@ public class MuseumIntegrationTests {
    */
   @Test
   public void testCreateGetAndEditMuseum() {
-    Long id = testCreateMuseum();
-    testGetMuseum(id);
-    testEditMuseum(id);
+    HttpHeaders header = loginSetupManager();
+    Long id = testCreateMuseum(header);
+    testGetMuseum(header, id);
+    testEditMuseum(header, id);
   }
 
   /**
@@ -56,9 +71,10 @@ public class MuseumIntegrationTests {
    * @return id of the created museum
    * @author VZ
    */
-  public Long testCreateMuseum() {
-    ResponseEntity<MuseumDto> response =
-        client.postForEntity("/api/museum/app?name=Museum&visitFee=10", null, MuseumDto.class);
+  public Long testCreateMuseum(HttpHeaders header) {
+    HttpEntity<?> entity = new HttpEntity<>(header);
+    ResponseEntity<MuseumDto> response = client.exchange("/api/museum/app?name=Museum&visitFee=10",
+        HttpMethod.POST, entity, MuseumDto.class);
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
@@ -75,9 +91,10 @@ public class MuseumIntegrationTests {
    * @param id of the museum to get
    * @author VZ
    */
-  public void testGetMuseum(Long id) {
+  public void testGetMuseum(HttpHeaders header, Long id) {
+    HttpEntity<?> entity = new HttpEntity<>(header);
     ResponseEntity<MuseumDto> response =
-        client.getForEntity("/api/museum/" + id, MuseumDto.class);
+        client.exchange("/api/museum/" + id, HttpMethod.GET, entity, MuseumDto.class);
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
@@ -92,11 +109,13 @@ public class MuseumIntegrationTests {
    * @param id of the museum to edit
    * @author VZ
    */
-  public void testEditMuseum(Long id) {
+  public void testEditMuseum(HttpHeaders header, Long id) {
     MuseumDto museumDto = new MuseumDto();
     museumDto.setMuseumId(id);
+    HttpEntity<?> entity = new HttpEntity<>(header);
     ResponseEntity<MuseumDto> response =
-        client.postForEntity("/api/museum/app/edit/" + id + "/?name=RQ&visitFee=20", null, MuseumDto.class);
+        client.exchange("/api/museum/app/edit/" + id + "/?name=RQ&visitFee=20", HttpMethod.POST,
+            entity, MuseumDto.class);
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
@@ -112,12 +131,14 @@ public class MuseumIntegrationTests {
    */
   @Test
   public void testGetMuseumWithInvalidId() {
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
     ResponseEntity<String> response =
-        client.getForEntity("/api/museum/1", String.class);
+        client.exchange("/api/museum/1", HttpMethod.GET, entity, String.class);
     assertNotNull(response);
     assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
-    assertEquals("There is no such museum", response.getBody(), "Response has correct error message");
+    assertEquals("There is no such museum", response.getBody(),
+        "Response has correct error message");
   }
 
   /**
@@ -127,8 +148,9 @@ public class MuseumIntegrationTests {
    */
   @Test
   public void testCreateMuseumWithInvalidName() {
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
     ResponseEntity<String> response =
-        client.postForEntity("/api/museum/app?name=&visitFee=10", null, String.class);
+        client.exchange("/api/museum/app?name=&visitFee=10", HttpMethod.POST, entity, String.class);
     assertNotNull(response);
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
@@ -142,8 +164,9 @@ public class MuseumIntegrationTests {
    */
   @Test
   public void testCreateInvalidMuseumWithoutVisitFee() {
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
     ResponseEntity<String> response =
-        client.postForEntity("/api/museum/app?name=Museum", null, String.class);
+        client.exchange("/api/museum/app?name=Museum", HttpMethod.POST, entity, String.class);
     assertNotNull(response);
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     assertNotNull(response.getBody(), "Response has body");
@@ -156,8 +179,10 @@ public class MuseumIntegrationTests {
    */
   @Test
   public void testCreateInvalidMuseumWithInvalidVisitFee() {
-    ResponseEntity<String> response =
-        client.postForEntity("/api/museum/app?name=Museum&visitFee=-10", null, String.class);
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
+    ResponseEntity<String> response = client.exchange("/api/museum/app?name=Museum&visitFee=-10",
+        HttpMethod.POST, entity, String.class);
+
     assertNotNull(response);
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     assertNotNull(response.getBody(), "Response has body");
@@ -171,11 +196,16 @@ public class MuseumIntegrationTests {
    */
   @Test
   public void testEditValidMuseumWithoutName() {
-    Long id = testCreateMuseum();
+    HttpHeaders header = loginSetupManager();
+
+    HttpEntity<?> entity = new HttpEntity<>(header);
+
+    Long id = testCreateMuseum(header);
     MuseumDto museumDto = new MuseumDto();
     museumDto.setMuseumId(id);
-    ResponseEntity<MuseumDto> response =
-        client.postForEntity("/api/museum/app/edit/" + id + "/?visitFee=20", null, MuseumDto.class);
+
+    ResponseEntity<MuseumDto> response = client.exchange(
+        "/api/museum/app/edit/" + id + "/?visitFee=20", HttpMethod.POST, entity, MuseumDto.class);
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertNotNull(response.getBody(), "Response has body");
@@ -189,11 +219,15 @@ public class MuseumIntegrationTests {
    */
   @Test
   public void testEditValidMuseumWithoutVisitFee() {
-    Long id = testCreateMuseum();
+    HttpHeaders header = loginSetupManager();
+
+    HttpEntity<?> entity = new HttpEntity<>(header);
+
+    Long id = testCreateMuseum(header);
     MuseumDto museumDto = new MuseumDto();
     museumDto.setMuseumId(id);
-    ResponseEntity<MuseumDto> response =
-        client.postForEntity("/api/museum/app/edit/" + id + "/?name=RQ", null, MuseumDto.class);
+    ResponseEntity<MuseumDto> response = client.exchange("/api/museum/app/edit/" + id + "/?name=RQ",
+        HttpMethod.POST, entity, MuseumDto.class);
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertNotNull(response.getBody(), "Response has body");
@@ -209,11 +243,15 @@ public class MuseumIntegrationTests {
    */
   @Test
   public void testEditInvalidMuseumWithInvalidVisitFee() {
-    Long id = testCreateMuseum();
+    HttpHeaders header = loginSetupManager();
+    Long id = testCreateMuseum(header);
+    HttpEntity<?> entity = new HttpEntity<>(header);
+
     MuseumDto museumDto = new MuseumDto();
     museumDto.setMuseumId(id);
     ResponseEntity<String> response =
-        client.postForEntity("/api/museum/app/edit/" + id + "/?name=RQ&visitFee=-10", null, String.class);
+        client.exchange("/api/museum/app/edit/" + id + "/?name=RQ&visitFee=-10", HttpMethod.POST,
+            entity, String.class);
     assertNotNull(response);
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     assertNotNull(response.getBody(), "Response has body");
@@ -227,14 +265,54 @@ public class MuseumIntegrationTests {
    */
   @Test
   public void testGetAllMuseums() {
-    testCreateMuseum();
-    testCreateMuseum();
-    testCreateMuseum();
+    HttpHeaders header = loginSetupManager();
+    HttpEntity<?> entity = new HttpEntity<>(header);
+
+    testCreateMuseum(header);
+    testCreateMuseum(header);
+    testCreateMuseum(header);
     ResponseEntity<MuseumDto[]> response =
-        client.getForEntity("/api/museum", MuseumDto[].class);
+        client.exchange("/api/museum", HttpMethod.GET, entity, MuseumDto[].class);
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertNotNull(response.getBody(), "Response has body");
     assertEquals(3, response.getBody().length, "Response has correct number of museums");
+  }
+
+  /**
+   * Create a manager and login
+   *
+   * @param newManager - the manager to login
+   * @return managerDto - the logged in manager
+   * @author Kevin
+   */
+
+  public ManagerDto createManagerAndLogin(Manager newManager) {
+    managerRepository.save(newManager);
+    ManagerDto manager = UserUtilities.createManagerDto(newManager);
+    ResponseEntity<String> response =
+        client.postForEntity("/api/auth/login", manager, String.class);
+    List<String> session = response.getHeaders().get("Set-Cookie");
+
+    String sessionId = session.get(0);
+    manager.setSessionId(sessionId);
+
+    return manager;
+  }
+
+  /**
+   * Create a museum and login
+   *
+   * @param newMuseum - the museum to login
+   * @return museumDto - the logged in museum
+   * @author Kevin
+   */
+  public HttpHeaders loginSetupManager() {
+    ManagerDto manager = createManagerAndLogin(UserUtilities.createManager(FIRST_VALID_MANAGER_NAME,
+        FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", manager.getSessionId());
+    return headers;
   }
 }

@@ -4,6 +4,8 @@ import ca.mcgill.ecse321.museum.controller.utilities.DtoUtility;
 import ca.mcgill.ecse321.museum.dao.TicketRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
 import ca.mcgill.ecse321.museum.dto.TicketDto;
+import ca.mcgill.ecse321.museum.dto.VisitorDto;
+import ca.mcgill.ecse321.museum.integration.utilities.UserUtilities;
 import ca.mcgill.ecse321.museum.model.Ticket;
 import ca.mcgill.ecse321.museum.model.Visitor;
 import org.junit.jupiter.api.AfterEach;
@@ -12,11 +14,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.sql.Date;
-
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -31,12 +34,12 @@ public class TicketIntegrationTests {
   @Autowired
   private VisitorRepository visitorRepository;
 
-  //visitor 1 attributes
+  // visitor 1 attributes
   private static final String VISITOR_EMAIL_1 = "bob@mail.com";
   private static final String VISITOR_NAME_1 = "Bob Barbier";
   private static final String VISITOR_PASSWORD_1 = "MyPassword";
 
-  //visitor 2 attributes
+  // visitor 2 attributes
   private static final String VISITOR_EMAIL_2 = "marie@mail.com";
   private static final String VISITOR_NAME_2 = "Marie B";
   private static final String VISITOR_PASSWORD_2 = "password";
@@ -45,24 +48,11 @@ public class TicketIntegrationTests {
 
   @BeforeEach
   public void setUp() {
-    //clear all repositories
+    // clear all repositories
     ticketRepository.deleteAll();
     visitorRepository.deleteAll();
 
-    //create visitors
-    Visitor visitor1 = new Visitor();
-    visitor1.setName(VISITOR_NAME_1);
-    visitor1.setPassword(VISITOR_PASSWORD_1);
-    visitor1.setEmail(VISITOR_EMAIL_1);
-    visitorRepository.save(visitor1);
-
-    Visitor visitor2 = new Visitor();
-    visitor2.setEmail(VISITOR_EMAIL_2);
-    visitor2.setName(VISITOR_NAME_2);
-    visitor2.setPassword(VISITOR_PASSWORD_2);
-    visitorRepository.save(visitor2);
-
-    //create tickets
+    // create tickets
     Ticket ticket1 = new Ticket();
     ticket1.setVisitor(visitorRepository.findVisitorByName(VISITOR_NAME_1));
     ticket1.setVisitDate(Date.valueOf(VISIT_DATE_1));
@@ -82,13 +72,14 @@ public class TicketIntegrationTests {
   }
 
   /**
-   * Test to get all tickets possessed by an  invalid visitor
+   * Test to get all tickets possessed by an invalid visitor
    *
    * @author Zahra
    */
   @Test
   public void testGetTicketByInvalidVisitor() {
-    ResponseEntity<String> response = client.getForEntity("/api/ticket/visitor/" + -1 + "/", String.class);
+    ResponseEntity<String> response =
+        client.getForEntity("/api/ticket/visitor/" + -1 + "/", String.class);
     assertNotNull(response);
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     assertEquals("Visitor doesn't exist", response.getBody(), "Correct response body message");
@@ -142,14 +133,51 @@ public class TicketIntegrationTests {
   @Test
   public void testCreateTicketsWithInvalidNumber() {
     int numOfTickets = 0;
-    TicketDto ticketDto = new TicketDto(VISIT_DATE_1, DtoUtility.convertToDto(visitorRepository.findVisitorByName(VISITOR_NAME_1)));
+    TicketDto ticketDto = new TicketDto(VISIT_DATE_1,
+        DtoUtility.convertToDto(visitorRepository.findVisitorByName(VISITOR_NAME_1)));
 
-    ResponseEntity<String> response =
-        client.postForEntity("/api/ticket/purchase?number=" + numOfTickets, ticketDto, String.class);
+    ResponseEntity<String> response = client
+        .postForEntity("/api/ticket/purchase?number=" + numOfTickets, ticketDto, String.class);
     assertNotNull(response, "Response has body");
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     assertEquals("Number of tickets must be at least 1", response.getBody());
 
+  }
+
+  /**
+   * Create a visitor and login
+   *
+   * @param newVisitor - the visitor to login
+   * @return the logged in visitor
+   * @author Kevin
+   */
+
+  public VisitorDto createVisitorAndLogin(Visitor newVisitor) {
+    visitorRepository.save(newVisitor);
+    VisitorDto visitor = UserUtilities.createVisitorDto(newVisitor);
+    ResponseEntity<String> response =
+        client.postForEntity("/api/auth/login", visitor, String.class);
+    List<String> session = response.getHeaders().get("Set-Cookie");
+
+    String sessionId = session.get(0);
+    visitor.setSessionId(sessionId);
+
+    return visitor;
+  }
+
+  /**
+   * Create a museum and login
+   *
+   * @param newMuseum - the museum to login
+   * @return museumDto - the logged in museum
+   * @author Kevin
+   */
+  public HttpHeaders loginSetupVisitor(Visitor newVisitor) {
+    VisitorDto visitor = createVisitorAndLogin(newVisitor);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", visitor.getSessionId());
+    return headers;
   }
 
 }

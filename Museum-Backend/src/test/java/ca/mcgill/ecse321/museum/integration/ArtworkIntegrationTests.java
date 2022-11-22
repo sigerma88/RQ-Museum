@@ -8,9 +8,7 @@ import ca.mcgill.ecse321.museum.dao.RoomRepository;
 import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
 import ca.mcgill.ecse321.museum.dto.ArtworkDto;
-import ca.mcgill.ecse321.museum.dto.EmployeeDto;
 import ca.mcgill.ecse321.museum.dto.ManagerDto;
-import ca.mcgill.ecse321.museum.dto.VisitorDto;
 import ca.mcgill.ecse321.museum.integration.utilities.UserUtilities;
 import ca.mcgill.ecse321.museum.model.*;
 import ca.mcgill.ecse321.museum.service.ArtworkService;
@@ -28,7 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.*;
 import java.util.ArrayList;
 import java.util.List;
-
+import javax.persistence.Entity;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -64,9 +62,10 @@ public class ArtworkIntegrationTests {
   @Autowired
   private ManagerRepository managerRepository;
 
-  private static final String FIRST_EMPLOYEE_VALID_EMAIL = "sebastien.vettel@gmail.com";
-  private static final String FIRST_EMPLOYEE_NAME = "Sebastien Vettel";
-  private static final String FIRST_EMPLOYEE_PASSWORD = "#BrazilGp2022";
+  private static final String FIRST_VALID_MANAGER_NAME = "admin";
+  private static final String FIRST_VALID_MANAGER_EMAIL = "admin@mail.ca";
+
+  private static final String VALID_PASSWORD = "#BrazilGp2022";
 
   @BeforeEach
   public void setup() {
@@ -131,6 +130,7 @@ public class ArtworkIntegrationTests {
    */
   @Test
   public void testCreateArtworkOnLoanNoRoom() {
+
     // Params
     String name = "The Scream";
     String artist = "Edvard Munch";
@@ -141,10 +141,11 @@ public class ArtworkIntegrationTests {
     Boolean isOnLoan = true;
     Long roomId = null;
 
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
     // Test controller POST RESTful API
-    ResponseEntity<ArtworkDto> response = client.postForEntity("/api/artwork?name=" + name
-        + "&artist=" + artist + "&isAvailableForLoan=" + isAvailableForLoan + "&loanFee=" + loanFee
-        + "&image=" + image + "&isOnLoan=" + isOnLoan, null, ArtworkDto.class);
+    ResponseEntity<ArtworkDto> response = client.exchange("/api/artwork?name=" + name + "&artist="
+        + artist + "&isAvailableForLoan=" + isAvailableForLoan + "&loanFee=" + loanFee + "&image="
+        + image + "&isOnLoan=" + isOnLoan, HttpMethod.POST, entity, ArtworkDto.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -172,6 +173,7 @@ public class ArtworkIntegrationTests {
     // Get room id
     Long roomId = roomService.getAllRooms().get(0).getRoomId();
 
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
     // Params
     String name = "The Scream";
     String artist = "Edvard Munch";
@@ -183,9 +185,9 @@ public class ArtworkIntegrationTests {
 
     // Test controller POST RESTful API
     ResponseEntity<ArtworkDto> response =
-        client.postForEntity("/api/artwork?name=" + name + "&artist=" + artist
-            + "&isAvailableForLoan=" + isAvailableForLoan + "&loanFee=" + loanFee + "&image="
-            + image + "&isOnLoan=" + isOnLoan + "&roomId=" + roomId, null, ArtworkDto.class);
+        client.exchange("/api/artwork?name=" + name + "&artist=" + artist + "&isAvailableForLoan="
+            + isAvailableForLoan + "&loanFee=" + loanFee + "&image=" + image + "&isOnLoan="
+            + isOnLoan + "&roomId=" + roomId, HttpMethod.POST, entity, ArtworkDto.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -213,6 +215,7 @@ public class ArtworkIntegrationTests {
   public void testCreateArtworkOnLoanInRoom() {
     // Get room id
     Long roomId = roomService.getAllRooms().get(0).getRoomId();
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
 
     // Params
     String name = "The Scream";
@@ -224,9 +227,10 @@ public class ArtworkIntegrationTests {
     Boolean isOnLoan = true;
 
     // Test controller POST RESTful API
-    ResponseEntity<String> response = client.postForEntity("/api/artwork?name=" + name + "&artist="
-        + artist + "&isAvailableForLoan=" + isAvailableForLoan + "&loanFee=" + loanFee + "&image="
-        + image + "&isOnLoan=" + isOnLoan + "&roomId=" + roomId, null, String.class);
+    ResponseEntity<String> response =
+        client.exchange("/api/artwork?name=" + name + "&artist=" + artist + "&isAvailableForLoan="
+            + isAvailableForLoan + "&loanFee=" + loanFee + "&image=" + image + "&isOnLoan="
+            + isOnLoan + "&roomId=" + roomId, HttpMethod.POST, entity, String.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -250,11 +254,12 @@ public class ArtworkIntegrationTests {
     String image =
         "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/The_Scream.jpg/1200px-The_Scream.jpg";
     Boolean isOnLoan = false;
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
 
     // Test controller POST RESTful API
-    ResponseEntity<String> response = client.postForEntity("/api/artwork?name=" + name + "&artist="
+    ResponseEntity<String> response = client.exchange("/api/artwork?name=" + name + "&artist="
         + artist + "&isAvailableForLoan=" + isAvailableForLoan + "&loanFee=" + loanFee + "&image="
-        + image + "&isOnLoan=" + isOnLoan, null, String.class);
+        + image + "&isOnLoan=" + isOnLoan, HttpMethod.POST, entity, String.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -272,6 +277,7 @@ public class ArtworkIntegrationTests {
   public void testCreateArtworkNoName() {
     // Get room id
     Long roomId = roomService.getAllRooms().get(0).getRoomId();
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
 
     // Params
     String name = "";
@@ -283,9 +289,10 @@ public class ArtworkIntegrationTests {
     Boolean isOnLoan = false;
 
     // Test controller POST RESTful API
-    ResponseEntity<String> response = client.postForEntity("/api/artwork?name=" + name + "&artist="
-        + artist + "&isAvailableForLoan=" + isAvailableForLoan + "&loanFee=" + loanFee + "&image="
-        + image + "&isOnLoan=" + isOnLoan + "&roomId=" + roomId, null, String.class);
+    ResponseEntity<String> response =
+        client.exchange("/api/artwork?name=" + name + "&artist=" + artist + "&isAvailableForLoan="
+            + isAvailableForLoan + "&loanFee=" + loanFee + "&image=" + image + "&isOnLoan="
+            + isOnLoan + "&roomId=" + roomId, HttpMethod.POST, entity, String.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -465,6 +472,7 @@ public class ArtworkIntegrationTests {
   public void testEditArtworkInfo() {
     // Get artwork id
     Artwork artwork = artworkService.getAllArtworks().get(0);
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
 
     // Params
     String name = "The Scream";
@@ -473,9 +481,10 @@ public class ArtworkIntegrationTests {
         "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/The_Scream.jpg/1200px-The_Scream.jpg";
 
     // Test controller PUT RESTful API
+
     ResponseEntity<ArtworkDto> response =
         client.exchange("/api/artwork/info/" + artwork.getArtworkId() + "?name=" + name + "&artist="
-            + artist + "&image=" + image, HttpMethod.PUT, null, ArtworkDto.class);
+            + artist + "&image=" + image, HttpMethod.PUT, entity, ArtworkDto.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -497,10 +506,11 @@ public class ArtworkIntegrationTests {
   public void testEditArtworkInfoNoParams() {
     // Get artwork id
     Artwork artwork = artworkService.getAllArtworks().get(0);
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
 
     // Test controller PUT RESTful API
     ResponseEntity<String> response = client.exchange("/api/artwork/info/" + artwork.getArtworkId(),
-        HttpMethod.PUT, null, String.class);
+        HttpMethod.PUT, entity, String.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -522,10 +532,12 @@ public class ArtworkIntegrationTests {
     String image =
         "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/The_Scream.jpg/1200px-The_Scream.jpg";
 
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
+
     // Test controller PUT RESTful API
     ResponseEntity<String> response = client.exchange(
         "/api/artwork/info/-1?name=" + name + "&artist=" + artist + "&image=" + image,
-        HttpMethod.PUT, null, String.class);
+        HttpMethod.PUT, entity, String.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -547,13 +559,14 @@ public class ArtworkIntegrationTests {
     // Params
     boolean isAvailableForLoan = true;
     double loanFee = 99.0;
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
 
     // Test controller PUT RESTful API
     ResponseEntity<ArtworkDto> response =
         client.exchange(
             "/api/artwork/loanInfo/" + artwork.getArtworkId() + "?isAvailableForLoan="
                 + isAvailableForLoan + "&loanFee=" + loanFee,
-            HttpMethod.PUT, null, ArtworkDto.class);
+            HttpMethod.PUT, entity, ArtworkDto.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -576,11 +589,12 @@ public class ArtworkIntegrationTests {
     // Params
     boolean isAvailableForLoan = true;
     double loanFee = 99.0;
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
 
     // Test controller PUT RESTful API
     ResponseEntity<String> response = client.exchange(
         "/api/artwork/loanInfo/-1?isAvailableForLoan=" + isAvailableForLoan + "&loanFee=" + loanFee,
-        HttpMethod.PUT, null, String.class);
+        HttpMethod.PUT, entity, String.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -601,11 +615,12 @@ public class ArtworkIntegrationTests {
 
     // Params
     boolean isAvailableForLoan = true;
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
 
     // Test controller PUT RESTful API
     ResponseEntity<String> response =
         client.exchange("/api/artwork/loanInfo/" + artwork.getArtworkId() + "?isAvailableForLoan="
-            + isAvailableForLoan, HttpMethod.PUT, null, String.class);
+            + isAvailableForLoan, HttpMethod.PUT, entity, String.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -624,6 +639,7 @@ public class ArtworkIntegrationTests {
   public void testEditArtworkLoanInfoNotAvailableAndNonNullLoanFee() {
     // Get artwork id
     Artwork artwork = artworkService.getAllArtworks().get(0);
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
 
     // Params
     boolean isAvailableForLoan = false;
@@ -632,7 +648,7 @@ public class ArtworkIntegrationTests {
     // Test controller PUT RESTful API
     ResponseEntity<String> response =
         client.exchange("/api/artwork/loanInfo/" + artwork.getArtworkId() + "?isAvailableForLoan="
-            + isAvailableForLoan + "&loanFee=" + loanFee, HttpMethod.PUT, null, String.class);
+            + isAvailableForLoan + "&loanFee=" + loanFee, HttpMethod.PUT, entity, String.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -650,10 +666,11 @@ public class ArtworkIntegrationTests {
   public void testDeleteArtwork() {
     // Get artwork id
     Artwork artwork = artworkService.getAllArtworks().get(0);
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
 
     // Test controller DELETE RESTful API
     ResponseEntity<ArtworkDto> response = client.exchange("/api/artwork/" + artwork.getArtworkId(),
-        HttpMethod.DELETE, null, ArtworkDto.class);
+        HttpMethod.DELETE, entity, ArtworkDto.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -685,8 +702,9 @@ public class ArtworkIntegrationTests {
   @Test
   public void testDeleteArtworkInvalidArtworkId() {
     // Test controller DELETE RESTful API
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
     ResponseEntity<String> response =
-        client.exchange("/api/artwork/-1", HttpMethod.DELETE, null, String.class);
+        client.exchange("/api/artwork/-1", HttpMethod.DELETE, entity, String.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -761,10 +779,12 @@ public class ArtworkIntegrationTests {
     Long artworkId2 = artworkList.get(1).getArtworkId();
     Long roomIdNew = artworkList.get(2).getRoom().getRoomId();
 
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
+
     // We do a post request to see if our controller method works - Test for artwork1
-    ResponseEntity<ArtworkDto> response = client.postForEntity(
-        "/api/artwork/moveArtworkToRoom/" + artworkId1.toString() + "/" + roomIdNew, null,
-        ArtworkDto.class);
+    ResponseEntity<ArtworkDto> response =
+        client.exchange("/api/artwork/moveArtworkToRoom/" + artworkId1.toString() + "/" + roomIdNew,
+            HttpMethod.POST, entity, ArtworkDto.class);
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertNotNull(response.getBody(), "Response has body");
@@ -773,9 +793,9 @@ public class ArtworkIntegrationTests {
         "Response correctly showed that the artworks new room id is correct and that it has been moved");
 
     // We do a get request to see if our controller method works
-    ResponseEntity<ArtworkDto> response2 = client.postForEntity(
-        "/api/artwork/moveArtworkToRoom/" + artworkId2.toString() + "/" + roomIdNew, null,
-        ArtworkDto.class);
+    ResponseEntity<ArtworkDto> response2 =
+        client.exchange("/api/artwork/moveArtworkToRoom/" + artworkId2.toString() + "/" + roomIdNew,
+            HttpMethod.POST, entity, ArtworkDto.class);
     assertNotNull(response2);
     assertEquals(HttpStatus.OK, response2.getStatusCode());
     assertNotNull(response2.getBody(), "Response has body");
@@ -831,14 +851,15 @@ public class ArtworkIntegrationTests {
    */
   @Test
   public void testMoveArtworkToRoom_ArtworkNonExisting() {
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
 
     // We created an artwork in the DB
     List<Artwork> artworks = createArtworks();
     Long roomId = artworks.get(0).getRoom().getRoomId();
 
     // Make sure there are 2 artworks in the room before the move
-    ResponseEntity<Integer> responseTester =
-        client.getForEntity("/api/artwork/getNumberOfArtworksInRoom/" + roomId, Integer.class);
+    ResponseEntity<Integer> responseTester = client.exchange(
+        "/api/artwork/getNumberOfArtworksInRoom/" + roomId, HttpMethod.GET, entity, Integer.class);
     assertEquals(2, responseTester.getBody(),
         "Response correctly said that there are two artworks in room");
 
@@ -846,10 +867,10 @@ public class ArtworkIntegrationTests {
     String artworkIdBad = "123214";
 
     // We do a get request to see if our controller handles bad request well
-    ResponseEntity<String> response = client.postForEntity(
-        "/api/artwork/moveArtworkToRoom/" + artworkIdBad + "/" + roomId, null, String.class);
+    ResponseEntity<String> response =
+        client.exchange("/api/artwork/moveArtworkToRoom/" + artworkIdBad + "/" + roomId,
+            HttpMethod.POST, entity, String.class);
     assertNotNull(response);
-    System.out.println(response.getBody());
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     assertNotNull(response.getBody(), "Response has body");
     assertEquals("Artwork does not exist", response.getBody(),
@@ -871,6 +892,7 @@ public class ArtworkIntegrationTests {
    */
   @Test
   public void testMoveArtworkToRoom_RoomNonExisting() {
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
 
     List<Artwork> artworkList = createArtworks();
     Long artworkId = artworkList.get(0).getArtworkId();
@@ -878,8 +900,9 @@ public class ArtworkIntegrationTests {
     String roomIdBad = "123214";
 
     // We do a get request to see if our controller handles bad request well
-    ResponseEntity<String> response = client.postForEntity(
-        "/api/artwork/moveArtworkToRoom/" + artworkId + "/" + roomIdBad, null, String.class);
+    ResponseEntity<String> response =
+        client.exchange("/api/artwork/moveArtworkToRoom/" + artworkId + "/" + roomIdBad,
+            HttpMethod.POST, entity, String.class);
     assertNotNull(response);
     System.out.println(response.getBody());
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -901,6 +924,7 @@ public class ArtworkIntegrationTests {
    */
   @Test
   public void testMoveArtworkToRoom_FullCapacity() {
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
 
     List<Artwork> artworkList = createArtworks();
     Long artworkId = artworkList.get(0).getArtworkId();
@@ -910,8 +934,9 @@ public class ArtworkIntegrationTests {
     int roomCount2 = roomRepository.findRoomByRoomId(roomIdFull).getCurrentNumberOfArtwork();
 
     // We do a get request to see if our controller handles bad request well
-    ResponseEntity<String> response = client.postForEntity(
-        "/api/artwork/moveArtworkToRoom/" + artworkId + "/" + roomIdFull, null, String.class);
+    ResponseEntity<String> response =
+        client.exchange("/api/artwork/moveArtworkToRoom/" + artworkId + "/" + roomIdFull,
+            HttpMethod.POST, entity, String.class);
     assertNotNull(response);
     System.out.println(response.getBody());
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -1053,6 +1078,44 @@ public class ArtworkIntegrationTests {
     artworks.add(artwork4);
 
     return artworks;
+  }
+
+
+  /**
+   * Create a manager and login
+   *
+   * @param newManager - the manager to login
+   * @return managerDto - the logged in manager
+   * @author Kevin
+   */
+
+  public ManagerDto createManagerAndLogin(Manager newManager) {
+    managerRepository.save(newManager);
+    ManagerDto manager = UserUtilities.createManagerDto(newManager);
+    ResponseEntity<String> response =
+        client.postForEntity("/api/auth/login", manager, String.class);
+    List<String> session = response.getHeaders().get("Set-Cookie");
+
+    String sessionId = session.get(0);
+    manager.setSessionId(sessionId);
+
+    return manager;
+  }
+
+  /**
+   * Create a museum and login
+   *
+   * @param newMuseum - the museum to login
+   * @return museumDto - the logged in museum
+   * @author Kevin
+   */
+  public HttpHeaders loginSetupManager() {
+    ManagerDto manager = createManagerAndLogin(UserUtilities.createManager(FIRST_VALID_MANAGER_NAME,
+        FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", manager.getSessionId());
+    return headers;
   }
 
 }

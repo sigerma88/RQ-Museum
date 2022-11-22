@@ -66,7 +66,7 @@ public class LoanRestController {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
-      } else if (!AuthenticationUtility.isStaffMember(session)) {
+      } else if (!AuthenticationUtility.isMuseumUser(session)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body("You need to be a staff member to access this");
       }
@@ -92,9 +92,9 @@ public class LoanRestController {
     try {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
-      } else if (!AuthenticationUtility.isStaffMember(session)) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You are not logged in");
+      } else if (!AuthenticationUtility.isMuseumUser(session)) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body("You need to be a staff member to access this");
       }
 
