@@ -5,7 +5,6 @@ import ca.mcgill.ecse321.museum.dto.RoomDto;
 import ca.mcgill.ecse321.museum.dto.RoomDtoNoIdRequest;
 import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Room;
-import ca.mcgill.ecse321.museum.model.RoomType;
 import ca.mcgill.ecse321.museum.service.MuseumService;
 import ca.mcgill.ecse321.museum.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
