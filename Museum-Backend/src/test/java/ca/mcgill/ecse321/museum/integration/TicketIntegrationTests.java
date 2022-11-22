@@ -14,7 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -51,18 +53,6 @@ public class TicketIntegrationTests {
     // clear all repositories
     ticketRepository.deleteAll();
     visitorRepository.deleteAll();
-
-    // create tickets
-    Ticket ticket1 = new Ticket();
-    ticket1.setVisitor(visitorRepository.findVisitorByName(VISITOR_NAME_1));
-    ticket1.setVisitDate(Date.valueOf(VISIT_DATE_1));
-    ticketRepository.save(ticket1);
-
-    Ticket ticket2 = new Ticket();
-    ticket2.setVisitDate(Date.valueOf(VISIT_DATE_2));
-    ticket2.setVisitor(visitorRepository.findVisitorByName(VISITOR_NAME_2));
-    ticketRepository.save(ticket2);
-
   }
 
   @AfterEach
@@ -78,11 +68,16 @@ public class TicketIntegrationTests {
    */
   @Test
   public void testGetTicketByInvalidVisitor() {
+    Visitor visitor =
+        UserUtilities.createVisitor(VISITOR_EMAIL_1, VISITOR_NAME_1, VISITOR_PASSWORD_1);
+    visitorRepository.save(visitor);
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupVisitor(visitor));
     ResponseEntity<String> response =
-        client.getForEntity("/api/ticket/visitor/" + -1 + "/", String.class);
+        client.exchange("/api/ticket/visitor/" + -1 + "/", HttpMethod.GET, entity, String.class);
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    assertEquals("Visitor doesn't exist", response.getBody(), "Correct response body message");
+    assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    assertEquals("You are not authorized to view this page", response.getBody(),
+        "Correct response body message");
   }
 
   /**
@@ -92,15 +87,26 @@ public class TicketIntegrationTests {
    */
   @Test
   public void testGetTicketsByVisitor() {
+    Visitor visitor =
+        UserUtilities.createVisitor(VISITOR_EMAIL_1, VISITOR_NAME_1, VISITOR_PASSWORD_1);
+    long visitorId = visitorRepository.save(visitor).getMuseumUserId();
+    visitorRepository.save(visitor);
 
-    long visitorId = visitorRepository.findVisitorByName(VISITOR_NAME_1).getMuseumUserId();
-    ResponseEntity<TicketDto[]> response =
-        client.getForEntity("/api/ticket/visitor/" + visitorId + "/", TicketDto[].class);
+    createTicket(VISIT_DATE_1, visitor);
+    createTicket(VISIT_DATE_2, visitor);
+
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupVisitor(visitor));
+
+    ResponseEntity<TicketDto[]> response = client.exchange("/api/ticket/visitor/" + visitorId + "/",
+        HttpMethod.GET, entity, TicketDto[].class);
     assertNotNull(response.getBody(), "Response has body");
     assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertEquals(1, response.getBody().length);
+    assertEquals(2, response.getBody().length);
     assertEquals(visitorId, response.getBody()[0].getVisitor().getMuseumUserId());
     assertTrue(VISIT_DATE_1.equals(response.getBody()[0].getVisitDate()));
+    assertTrue(VISIT_DATE_2.equals(response.getBody()[1].getVisitDate()));
+
+
 
   }
 
@@ -112,11 +118,15 @@ public class TicketIntegrationTests {
   @Test
   public void testCreateTickets() {
     int numOfTickets = 2;
-    Visitor visitor = visitorRepository.findVisitorByName(VISITOR_NAME_2);
+    Visitor visitor =
+        UserUtilities.createVisitor(VISITOR_EMAIL_1, VISITOR_NAME_1, VISITOR_PASSWORD_1);
+    visitorRepository.save(visitor);
     TicketDto ticketDto = new TicketDto(VISIT_DATE_1, DtoUtility.convertToDto(visitor));
 
-    ResponseEntity<TicketDto[]> response = client
-        .postForEntity("/api/ticket/purchase?number=" + numOfTickets, ticketDto, TicketDto[].class);
+    HttpEntity<?> entity = new HttpEntity<>(ticketDto, loginSetupVisitor(visitor));
+    ResponseEntity<TicketDto[]> response = client.exchange(
+        "/api/ticket/purchase?number=" + numOfTickets, HttpMethod.POST, entity, TicketDto[].class);
+
     assertNotNull(response.getBody(), "Response has body");
     assertEquals(HttpStatus.CREATED, response.getStatusCode());
     assertNotNull(response.getBody(), "Response has body");
@@ -133,15 +143,28 @@ public class TicketIntegrationTests {
   @Test
   public void testCreateTicketsWithInvalidNumber() {
     int numOfTickets = 0;
-    TicketDto ticketDto = new TicketDto(VISIT_DATE_1,
-        DtoUtility.convertToDto(visitorRepository.findVisitorByName(VISITOR_NAME_1)));
+    Visitor visitor =
+        UserUtilities.createVisitor(VISITOR_EMAIL_1, VISITOR_NAME_1, VISITOR_PASSWORD_1);
+    visitorRepository.save(visitor);
+    TicketDto ticketDto = new TicketDto(VISIT_DATE_1, DtoUtility.convertToDto(visitor));
 
-    ResponseEntity<String> response = client
-        .postForEntity("/api/ticket/purchase?number=" + numOfTickets, ticketDto, String.class);
+    HttpEntity<?> entity = new HttpEntity<>(ticketDto, loginSetupVisitor(visitor));
+    ResponseEntity<String> response = client.exchange("/api/ticket/purchase?number=" + numOfTickets,
+        HttpMethod.POST, entity, String.class);
+
     assertNotNull(response, "Response has body");
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     assertEquals("Number of tickets must be at least 1", response.getBody());
 
+  }
+
+  // Create ticket
+  public Ticket createTicket(String visitDate, Visitor visitor) {
+    Ticket ticket = new Ticket();
+    ticket.setVisitDate(Date.valueOf(visitDate));
+    ticket.setVisitor(visitorRepository.findVisitorByMuseumUserId(visitor.getMuseumUserId()));
+    ticketRepository.save(ticket);
+    return ticket;
   }
 
   /**
@@ -179,5 +202,4 @@ public class TicketIntegrationTests {
     headers.set("Cookie", visitor.getSessionId());
     return headers;
   }
-
 }
