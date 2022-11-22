@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Typography from "@mui/material/Typography";
 import "./Home.css";
+import { LoginContext } from "../Contexts/LoginContext";
+import { Navigation } from "../layouts/Navigation";
 
 function Home() {
   return (
@@ -19,7 +21,7 @@ function Home() {
             src="https://source.unsplash.com/Tjio9DgtIls"
             alt="feature"
           />
-          <div class="centered">
+          <div className="centered">
             <Typography
               variant="h4"
               noWrap

@@ -39,7 +39,7 @@ public class AuthenticationController {
 
   @PostMapping("/login")
   public ResponseEntity<?> login(HttpServletRequest request,
-                                 @RequestBody MuseumUserDto museumUser) {
+      @RequestBody MuseumUserDto museumUser) {
     try {
       if (AuthenticationUtility.isLoggedIn(request.getSession())) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot login while logged in");
@@ -48,25 +48,28 @@ public class AuthenticationController {
       MuseumUser userAuthentication =
           authenticationService.authenticateUser(museumUser.getEmail(), museumUser.getPassword());
       HttpSession session = request.getSession(true);
-
+      String role = "";
       if (userAuthentication.getClass().equals(Visitor.class)) {
         session.setAttribute("user_id", userAuthentication.getMuseumUserId());
         session.setAttribute("role", "visitor");
+        role = "visitor";
         session.setMaxInactiveInterval(60 * 60 * 24);
       } else if (userAuthentication.getClass().equals(Manager.class)) {
         session.setAttribute("user_id", userAuthentication.getMuseumUserId());
         session.setAttribute("role", "manager");
+        role = "manager";
         session.setMaxInactiveInterval(60 * 60 * 24);
       } else if (userAuthentication.getClass().equals(Employee.class)) {
         session.setAttribute("user_id", userAuthentication.getMuseumUserId());
         session.setAttribute("role", "employee");
         session.setMaxInactiveInterval(60 * 60 * 24);
+        role = "employee";
       }
 
-      return ResponseEntity.ok("logged in");
+      return ResponseEntity.ok(role);
     } catch (
 
-        Exception e) {
+    Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
   }

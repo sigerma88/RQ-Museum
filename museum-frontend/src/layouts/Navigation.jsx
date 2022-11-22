@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -6,24 +6,42 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import axios from "axios";
-
-const pages = ["Visit", "Exhibitions", "Collections"];
+import { LoginContext } from "../Contexts/LoginContext";
+import { useNavigate } from "react-router-dom";
+const visitorPage = ["Visit", "Exhibitions", "Collections", "Ticket"];
+const managerPage = ["Room", "Artwork", "Employee", "Schedule"];
+const employeePage = ["Room", "Artwork", "Schedule"];
+const generalPage = ["Visit", "Exhibitions", "Collections"];
 
 export function Navigation() {
-  const [status, setStatus] = useState(localStorage.getItem("status"));
+  const { loggedIn, setLoggedIn } = useContext(LoginContext);
+  const { userRole } = useContext(LoginContext);
+  const navigate = useNavigate();
+
+  let page = [];
+  if (userRole === "visitor") {
+    page = visitorPage;
+  } else if (userRole === "employee") {
+    page = employeePage;
+  } else if (userRole === "manager") {
+    page = managerPage;
+  } else {
+    page = generalPage;
+  }
 
   const handleLogout = () => {
-    setStatus("loggedOut");
-    localStorage.setItem("status", "loggedOut");
     axios
       .post("/api/auth/logout")
       .then(function (response) {
         console.log(response);
         if (response.status === 200) {
-          window.location.href = "/";
+          setLoggedIn(false);
+          localStorage.clear();
+          navigate("/");
         }
       })
       .catch(function (error) {
+        setLoggedIn(true);
         console.log(error.response.data);
       });
   };
@@ -59,8 +77,6 @@ export function Navigation() {
     );
   };
 
-  console.log(localStorage.getItem("status"));
-
   return (
     <AppBar position="static" style={{ background: "#fff" }}>
       <Container maxWidth="xl">
@@ -84,7 +100,7 @@ export function Navigation() {
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
+            {page.map((page) => (
               <Button
                 key={page}
                 href={`/${page.toLowerCase()}`}
@@ -94,7 +110,7 @@ export function Navigation() {
               </Button>
             ))}
           </Box>
-          {status === "loggedIn" ? signedInButton() : notSignedInButton()}
+          {loggedIn ? signedInButton() : notSignedInButton()}
         </Toolbar>
       </Container>
     </AppBar>

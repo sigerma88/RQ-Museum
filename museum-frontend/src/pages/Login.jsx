@@ -1,17 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import { Typography, TextField, Button, Box } from "@mui/material";
 import "./Login.css";
+import { LoginContext } from "../Contexts/LoginContext";
+import { useNavigate } from "react-router-dom";
 
 export function Login() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isFormInvalid, setIsFormInvalid] = useState(false);
+  const { setLoggedIn, userRole, setUserRole } = useContext(LoginContext);
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     axios
       .post("/api/auth/login", {
         email: email,
@@ -20,13 +24,18 @@ export function Login() {
       .then(function (response) {
         console.log(response);
         if (response.status === 200) {
-          localStorage.setItem("status", "loggedIn");
-          window.location.href = "/";
+          setLoggedIn(true);
+          setUserRole(response.data);
+          localStorage.setItem("userRole", response.data);
+          localStorage.setItem("loggedIn", true);
+          console.log(userRole);
+          navigate("/");
         }
       })
       .catch(function (error) {
         setErrorMessage(error.response.data);
         setIsFormInvalid(true);
+        setLoggedIn(false);
         console.log(error.response.data);
       });
   };

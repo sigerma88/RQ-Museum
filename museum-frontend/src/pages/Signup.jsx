@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Typography, TextField, Button, Box } from "@mui/material";
 import axios from "axios";
 import "./Login.css";
+import { LoginContext } from "../Contexts/LoginContext";
+import { useNavigate } from "react-router-dom";
 
 export function Signup() {
   const [name, setName] = useState("");
@@ -9,6 +11,9 @@ export function Signup() {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isFormInvalid, setIsFormInvalid] = useState(false);
+  const { setLoggedIn, setUserRole } = React.useContext(LoginContext);
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -22,13 +27,17 @@ export function Signup() {
       .then(function (response) {
         console.log(response.data);
         if (response.status === 200) {
-          localStorage.setItem("status", "loggedIn");
-          window.location.href = "/";
+          setLoggedIn(true);
+          setUserRole(response.data.role);
+          localStorage.setItem("userRole", response.data);
+          localStorage.setItem("loggedIn", true);
+          navigate("/");
         }
       })
       .catch(function (error) {
         setErrorMessage(error.response.data);
         setIsFormInvalid(true);
+        setLoggedIn(false);
         console.log(error.response.data);
       });
   };
