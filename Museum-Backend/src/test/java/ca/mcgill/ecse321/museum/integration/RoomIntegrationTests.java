@@ -5,6 +5,7 @@ import ca.mcgill.ecse321.museum.dao.MuseumRepository;
 import ca.mcgill.ecse321.museum.dao.RoomRepository;
 import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
 import ca.mcgill.ecse321.museum.dto.RoomDto;
+import ca.mcgill.ecse321.museum.dto.RoomDtoNoIdRequest;
 import ca.mcgill.ecse321.museum.model.*;
 import ca.mcgill.ecse321.museum.service.MuseumService;
 import ca.mcgill.ecse321.museum.service.RoomService;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -93,24 +95,26 @@ public class RoomIntegrationTests {
    */
   @Test
   public void testCreateRoom() {
+    RoomDtoNoIdRequest roomDtoNoIdRequest = new RoomDtoNoIdRequest();
+
     // Get museum id
-    Long museumId = museumService.getAllMuseums().get(0).getMuseumId();
+    roomDtoNoIdRequest.setMuseumId(museumService.getAllMuseums().get(0).getMuseumId());
 
     // Params
-    String roomName = "Room 2";
-    RoomType roomType = RoomType.Large;
+    roomDtoNoIdRequest.setRoomName("Room 2");
+    roomDtoNoIdRequest.setRoomType(RoomType.Large);
 
     // Test controller POST RESTful API
-    ResponseEntity<RoomDto> response = client.postForEntity(
-        "/api/room" + "?roomName=" + roomName + "&roomType=" + roomType + "&museumId=" + museumId, null, RoomDto.class);
+    ResponseEntity<RoomDto> response = client.postForEntity("/api/room", roomDtoNoIdRequest, RoomDto.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has a body");
-    assertEquals(roomName, response.getBody().getRoomName(), "Room name is correct");
-    assertEquals(roomType, response.getBody().getRoomType(), "Room type is correct");
-    assertEquals(museumId, response.getBody().getMuseum().getMuseumId(), "Museum id is correct");
+    assertEquals(roomDtoNoIdRequest.getRoomName(), response.getBody().getRoomName(), "Room name is correct");
+    assertEquals(roomDtoNoIdRequest.getRoomType(), response.getBody().getRoomType(), "Room type is correct");
+    assertEquals(roomDtoNoIdRequest.getMuseumId(), response.getBody().getMuseum().getMuseumId(),
+        "Museum id is correct");
     assertTrue(response.getBody().getRoomId() > 0, "Room id is correct");
   }
 
@@ -121,16 +125,17 @@ public class RoomIntegrationTests {
    */
   @Test
   public void testCreateRoomNoRoomName() {
+    RoomDtoNoIdRequest roomDtoNoIdRequest = new RoomDtoNoIdRequest();
+
     // Get museum id
-    Long museumId = museumService.getAllMuseums().get(0).getMuseumId();
+    roomDtoNoIdRequest.setMuseumId(museumService.getAllMuseums().get(0).getMuseumId());
 
     // Params
-    String roomName = "";
-    RoomType roomType = RoomType.Large;
+    roomDtoNoIdRequest.setRoomName("");
+    roomDtoNoIdRequest.setRoomType(RoomType.Large);
 
     // Test controller POST RESTful API
-    ResponseEntity<String> response = client.postForEntity(
-        "/api/room" + "?roomName=" + roomName + "&roomType=" + roomType + "&museumId=" + museumId, null, String.class);
+    ResponseEntity<String> response = client.postForEntity("/api/room", roomDtoNoIdRequest, String.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -242,6 +247,8 @@ public class RoomIntegrationTests {
    */
   @Test
   public void testUpdateRoom() {
+    RoomDtoNoIdRequest roomDtoNoIdRequest = new RoomDtoNoIdRequest();
+
     // Get room and its id
     Room room = roomService.getAllRooms().get(0);
 
@@ -256,22 +263,23 @@ public class RoomIntegrationTests {
     museumRepository.save(museum);
 
     // Params
-    String roomName = "New room name";
-    RoomType roomType = RoomType.Storage;
+    roomDtoNoIdRequest.setRoomName("New room name");
+    roomDtoNoIdRequest.setRoomType(RoomType.Storage);
+    roomDtoNoIdRequest.setMuseumId(museum.getMuseumId());
+
+    HttpEntity<RoomDtoNoIdRequest> request = new HttpEntity<>(roomDtoNoIdRequest);
 
     // Test controller PUT RESTful API
     ResponseEntity<RoomDto> response = client.exchange(
-        "/api/room/" + room.getRoomId() + "?roomName=" + roomName + "&roomType=" + roomType + "&museumId="
-            + museum.getMuseumId(),
-        HttpMethod.PUT, null, RoomDto.class);
+        "/api/room/" + room.getRoomId(), HttpMethod.PUT, request, RoomDto.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has a body");
     assertEquals(room.getRoomId(), response.getBody().getRoomId(), "Room id is correct");
-    assertEquals(roomName, response.getBody().getRoomName(), "Room name is correct");
-    assertEquals(roomType, response.getBody().getRoomType(), "Room type is correct");
+    assertEquals(roomDtoNoIdRequest.getRoomName(), response.getBody().getRoomName(), "Room name is correct");
+    assertEquals(roomDtoNoIdRequest.getRoomType(), response.getBody().getRoomType(), "Room type is correct");
     assertEquals(museum.getMuseumId(), response.getBody().getMuseum().getMuseumId(), "Museum id is correct");
   }
 
@@ -282,13 +290,16 @@ public class RoomIntegrationTests {
    */
   @Test
   public void testUpdateRoomWithInvalidRoomId() {
+    RoomDtoNoIdRequest roomDtoNoIdRequest = new RoomDtoNoIdRequest();
+
     // Params
-    String roomName = "New room name";
-    RoomType roomType = RoomType.Storage;
+    roomDtoNoIdRequest.setRoomName("New room name");
+    roomDtoNoIdRequest.setRoomType(RoomType.Storage);
+
+    HttpEntity<RoomDtoNoIdRequest> request = new HttpEntity<>(roomDtoNoIdRequest);
 
     // Test controller PUT RESTful API
-    ResponseEntity<String> response = client.exchange(
-        "/api/room/-1" + "?roomName=" + roomName + "&roomType=" + roomType, HttpMethod.PUT, null, String.class);
+    ResponseEntity<String> response = client.exchange("/api/room/-1", HttpMethod.PUT, request, String.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -304,18 +315,21 @@ public class RoomIntegrationTests {
    */
   @Test
   public void testUpdateRoomWithInvalidMuseumId() {
+    RoomDtoNoIdRequest roomDtoNoIdRequest = new RoomDtoNoIdRequest();
+
     // Get room and its id
     Room room = roomService.getAllRooms().get(0);
 
     // Params
-    String roomName = "New room name";
-    RoomType roomType = RoomType.Storage;
+    roomDtoNoIdRequest.setRoomName("New room name");
+    roomDtoNoIdRequest.setRoomType(RoomType.Storage);
+    roomDtoNoIdRequest.setMuseumId(-1L);
+
+    HttpEntity<RoomDtoNoIdRequest> request = new HttpEntity<>(roomDtoNoIdRequest);
 
     // Test controller PUT RESTful API
-    ResponseEntity<String> response = client.exchange(
-        "/api/room/" + room.getRoomId() + "?roomName=" + roomName + "&roomType=" + roomType + "&museumId=-1",
-        HttpMethod.PUT,
-        null, String.class);
+    ResponseEntity<String> response = client.exchange("/api/room/" + room.getRoomId(), HttpMethod.PUT, request,
+        String.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -331,11 +345,16 @@ public class RoomIntegrationTests {
    */
   @Test
   public void testEditRoomWithNoParams() {
+    RoomDtoNoIdRequest roomDtoNoIdRequest = new RoomDtoNoIdRequest();
+
     // Get room and its id
     Room room = roomService.getAllRooms().get(0);
 
+    HttpEntity<RoomDtoNoIdRequest> request = new HttpEntity<>(roomDtoNoIdRequest);
+
     // Test controller PUT RESTful API
-    ResponseEntity<String> response = client.exchange("/api/room/" + room.getRoomId(), HttpMethod.PUT, null, String.class);
+    ResponseEntity<String> response = client.exchange("/api/room/" + room.getRoomId(), HttpMethod.PUT, request,
+        String.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -425,7 +444,8 @@ public class RoomIntegrationTests {
   }
 
   /**
-   * Integration test method for getting the room capacity by using TEST REST TEMPLATE
+   * Integration test method for getting the room capacity by using TEST REST
+   * TEMPLATE
    *
    * @author kieyanmamiche
    */
@@ -457,12 +477,14 @@ public class RoomIntegrationTests {
     assertNotNull(response3);
     assertEquals(HttpStatus.OK, response3.getStatusCode());
     assertNotNull(response3.getBody(), "Response has body");
-    // There is one artwork in a storage room so the capacity should be -1 (infinite)
+    // There is one artwork in a storage room so the capacity should be -1
+    // (infinite)
     assertEquals(-1, response3.getBody(), "Response correctly said that the capacity is infinite");
   }
 
   /**
-   * Integration test method for getting the room capacity by using TEST REST TEMPLATE
+   * Integration test method for getting the room capacity by using TEST REST
+   * TEMPLATE
    * - When room doesn't exist
    *
    * @author kieyanmamiche
@@ -481,7 +503,8 @@ public class RoomIntegrationTests {
   }
 
   /**
-   * An initialization method which helps populate the database so that the integration tests work properly
+   * An initialization method which helps populate the database so that the
+   * integration tests work properly
    *
    * @author kieyanmamiche
    */
