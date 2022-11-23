@@ -54,6 +54,43 @@ function computeArtworkStatus(artworkStatus) {
   return status;
 }
 
+// Visitor artwork loan section
+function VisitorArtworkLoan({ artwork }) {
+  if (artwork.isAvailableForLoan) {
+    return (
+      <>
+        <Divider variant="middle" />
+        <Typography variant="h5" margin={2}>
+          Loan information
+        </Typography>
+        <List>
+          <ListItem>
+            <ListItemText primary="Loan fee" secondary={artwork.loanFee} />
+          </ListItem>
+          <Divider variant="middle" />
+          <ListItem>
+            <ListItemText
+              primary="Loan status"
+              secondary={artwork.isOnLoan ? "Currently on loan" : "Not on loan"}
+            />
+          </ListItem>
+        </List>
+        <Divider variant="middle" />
+        {/* TODO: Add loan button action */}
+        <Button
+          variant="contained"
+          disabled={artwork.isOnLoan}
+          style={{ margin: 10 }}
+        >
+          Loan this
+        </Button>
+      </>
+    );
+  } else {
+    return null;
+  }
+}
+
 // VisitorArtworkBrowsing component
 function VisitorArtworkDetails({ artwork }) {
   const imageHeight = window.innerHeight * 0.89;
@@ -77,6 +114,9 @@ function VisitorArtworkDetails({ artwork }) {
         alt="artwork"
         style={{ marginTop: 30, height: imageHeight }}
       />
+      <Typography variant="h5" margin={2}>
+        Artwork information
+      </Typography>
       <List>
         <ListItem>
           <ListItemText primary="Name" secondary={artwork.name} />
@@ -100,6 +140,7 @@ function VisitorArtworkDetails({ artwork }) {
           />
         </ListItem>
       </List>
+      <VisitorArtworkLoan artwork={artwork} />
     </>
   );
 }
