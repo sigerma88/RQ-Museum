@@ -482,7 +482,6 @@ public class ArtworkIntegrationTests {
 
     // Get artwork id
     Artwork artwork = artworkService.getAllArtworks().get(0);
-    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
 
     // Params
     artworkDtoInfoRequest.setName("The Scream");
