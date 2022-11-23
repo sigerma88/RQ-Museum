@@ -3,9 +3,12 @@ package ca.mcgill.ecse321.museum.integration;
 import ca.mcgill.ecse321.museum.controller.utilities.DtoUtility;
 import ca.mcgill.ecse321.museum.dao.*;
 import ca.mcgill.ecse321.museum.dto.EmployeeDto;
+import ca.mcgill.ecse321.museum.dto.ManagerDto;
 import ca.mcgill.ecse321.museum.dto.MuseumDto;
 import ca.mcgill.ecse321.museum.dto.ScheduleDto;
 import ca.mcgill.ecse321.museum.dto.TimePeriodDto;
+import ca.mcgill.ecse321.museum.dto.VisitorDto;
+import ca.mcgill.ecse321.museum.integration.utilities.UserUtilities;
 import ca.mcgill.ecse321.museum.model.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,13 +20,18 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import java.sql.Timestamp;
-
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.http.*;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class SchedulingIntegrationTests {
+
+  private static final String FIRST_VALID_MANAGER_NAME = "admin";
+  private static final String FIRST_VALID_MANAGER_EMAIL = "admin@mail.ca";
+
+  private static final String VALID_PASSWORD = "#BrazilGp2022";
 
   @Autowired
   private TestRestTemplate client;
@@ -43,6 +51,12 @@ public class SchedulingIntegrationTests {
   @Autowired
   private TimePeriodRepository timePeriodRepository;
 
+  @Autowired
+  private VisitorRepository visitorRepository;
+
+  @Autowired
+  private ManagerRepository managerRepository;
+
   @BeforeEach
   @AfterEach
   public void clearDatabase() {
@@ -51,6 +65,8 @@ public class SchedulingIntegrationTests {
     employeeRepository.deleteAll();
     museumRepository.deleteAll();
     scheduleRepository.deleteAll();
+    visitorRepository.deleteAll();
+    managerRepository.deleteAll();
   }
 
   /**
@@ -60,15 +76,21 @@ public class SchedulingIntegrationTests {
    */
   @Test
   public void testGetScheduleByEmployee() {
-    EmployeeDto employeeDto = createEmployeeDto(createEmployeeWithShifts());
+    Employee employeeShifts = createEmployeeWithShifts();
+    EmployeeDto employeeDto = DtoUtility.convertToDto(employeeShifts);
+
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupEmployee(employeeShifts));
+
     Long id = employeeDto.getMuseumUserId();
     ScheduleDto scheduleDto = employeeDto.getSchedule();
     Long scheduleId = scheduleDto.getScheduleId();
-    ResponseEntity<ScheduleDto> response = client.getForEntity("/api/scheduling/employee/schedule/" + id, ScheduleDto.class);
+    ResponseEntity<ScheduleDto> response = client.exchange(
+        "/api/scheduling/employee/schedule/" + id, HttpMethod.GET, entity, ScheduleDto.class);
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
-    assertEquals(scheduleId, response.getBody().getScheduleId(), "Response has correct schedule ID");
+    assertEquals(scheduleId, response.getBody().getScheduleId(),
+        "Response has correct schedule ID");
 
   }
 
@@ -79,11 +101,17 @@ public class SchedulingIntegrationTests {
    */
   @Test
   public void testGetScheduleByEmployeeInvalidId() {
-    ResponseEntity<String> response = client.getForEntity("/api/scheduling/employee/schedule/" + -1, String.class);
+    Employee employeeShifts = createEmployeeWithShifts();
+
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupEmployee(employeeShifts));
+
+    ResponseEntity<String> response = client.exchange("/api/scheduling/employee/schedule/" + -1,
+        HttpMethod.GET, entity, String.class);
     assertNotNull(response);
-    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(), "The response has the correct status");
+    assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode(),
+        "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
-    assertTrue(response.getBody().contains("There is no such employee"));
+    assertTrue(response.getBody().contains("You are not authorized to view this schedule"));
   }
 
   /**
@@ -95,7 +123,11 @@ public class SchedulingIntegrationTests {
   public void testGetAllShiftsByEmployee() {
     EmployeeDto employeeDto = createEmployeeDto(createEmployeeWithShifts());
     Long id = employeeDto.getMuseumUserId();
-    ResponseEntity<TimePeriodDto[]> response = client.getForEntity("/api/scheduling/employee/shifts/" + id, TimePeriodDto[].class);
+
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
+
+    ResponseEntity<TimePeriodDto[]> response = client.exchange(
+        "/api/scheduling/employee/shifts/" + id, HttpMethod.GET, entity, TimePeriodDto[].class);
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
@@ -109,11 +141,19 @@ public class SchedulingIntegrationTests {
    */
   @Test
   public void testGetAllShiftsByEmployeeInvalidId() {
-    ResponseEntity<String> response = client.getForEntity("/api/scheduling/employee/shifts/" + -1, String.class);
+
+    Employee employeeShifts = createEmployeeWithShifts();
+    EmployeeDto employeeDto = DtoUtility.convertToDto(employeeShifts);
+
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupEmployee(employeeShifts));
+
+    ResponseEntity<String> response = client.exchange("/api/scheduling/employee/shifts/" + -1,
+        HttpMethod.GET, entity, String.class);
     assertNotNull(response);
-    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(), "The response has the correct status");
+    assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode(),
+        "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
-    assertTrue(response.getBody().contains("There is no such employee"));
+    assertTrue(response.getBody().contains("You are not authorized to view this schedule"));
   }
 
   /**
@@ -125,9 +165,14 @@ public class SchedulingIntegrationTests {
   public void testGetAllShiftsByEmployeeNoShift() {
     EmployeeDto employeeDto = createEmployeeDto(createEmployeeWithoutShifts());
     Long id = employeeDto.getMuseumUserId();
-    ResponseEntity<String> response = client.getForEntity("/api/scheduling/employee/shifts/" + id, String.class);
+
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
+
+    ResponseEntity<String> response = client.exchange("/api/scheduling/employee/shifts/" + id,
+        HttpMethod.GET, entity, String.class);
     assertNotNull(response);
-    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(), "The response has the correct status");
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(),
+        "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
 
   }
@@ -143,11 +188,13 @@ public class SchedulingIntegrationTests {
     Long id = museumDto.getMuseumId();
     ScheduleDto scheduleDto = museumDto.getSchedule();
     Long scheduleId = scheduleDto.getScheduleId();
-    ResponseEntity<ScheduleDto> response = client.getForEntity("/api/scheduling/museum/schedule/" + id, ScheduleDto.class);
+    ResponseEntity<ScheduleDto> response =
+        client.getForEntity("/api/scheduling/museum/schedule/" + id, ScheduleDto.class);
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
-    assertEquals(scheduleId, response.getBody().getScheduleId(), "Response has correct schedule ID");
+    assertEquals(scheduleId, response.getBody().getScheduleId(),
+        "Response has correct schedule ID");
   }
 
   /**
@@ -157,9 +204,11 @@ public class SchedulingIntegrationTests {
    */
   @Test
   public void testGetScheduleByMuseumInvalidId() {
-    ResponseEntity<String> response = client.getForEntity("/api/scheduling/museum/schedule/" + -1, String.class);
+    ResponseEntity<String> response =
+        client.getForEntity("/api/scheduling/museum/schedule/" + -1, String.class);
     assertNotNull(response);
-    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(), "The response has the correct status");
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(),
+        "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertTrue(response.getBody().contains("Museum doesn't exist"));
   }
@@ -173,7 +222,16 @@ public class SchedulingIntegrationTests {
   public void testGetAllShiftsByMuseum() {
     MuseumDto museumDto = createMuseumDto(createMuseumWithShifts());
     Long id = museumDto.getMuseumId();
-    ResponseEntity<TimePeriodDto[]> response = client.getForEntity("/api/scheduling/museum/shifts/" + id, TimePeriodDto[].class);
+
+    ManagerDto manager = createManagerAndLogin(UserUtilities.createManager(FIRST_VALID_MANAGER_NAME,
+        FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", manager.getSessionId());
+    HttpEntity<?> entity = new HttpEntity<>(headers);
+
+    ResponseEntity<TimePeriodDto[]> response = client.exchange(
+        "/api/scheduling/museum/shifts/" + id, HttpMethod.GET, entity, TimePeriodDto[].class);
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
@@ -187,9 +245,15 @@ public class SchedulingIntegrationTests {
    */
   @Test
   public void testGetAllShiftsByMuseumInvalidId() {
-    ResponseEntity<String> response = client.getForEntity("/api/scheduling/museum/shifts/" + -1, String.class);
+
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
+
+    ResponseEntity<String> response = client.exchange("/api/scheduling/museum/shifts/" + -1,
+        HttpMethod.GET, entity, String.class);
+
     assertNotNull(response);
-    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(), "The response has the correct status");
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(),
+        "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertTrue(response.getBody().contains("Museum doesn't exist!"));
   }
@@ -202,10 +266,15 @@ public class SchedulingIntegrationTests {
   @Test
   public void testGetAllShiftsByMuseumNoShift() {
     MuseumDto museumDto = createMuseumDto(createMuseumWithoutShifts());
-    Long id = museumDto.getMuseumId();
-    ResponseEntity<String> response = client.getForEntity("/api/scheduling/museum/shifts/" + id, String.class);
+
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
+
+    ResponseEntity<String> response = client.exchange("/api/scheduling/museum/shifts/" + -1,
+        HttpMethod.GET, entity, String.class);
+
     assertNotNull(response);
-    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(), "The response has the correct status");
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(),
+        "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
   }
 
@@ -216,10 +285,12 @@ public class SchedulingIntegrationTests {
    */
   @Test
   public void testCreateGetAndEditTimePeriod() {
-    Long id = testCreateTimePeriod();
-    testGetTimePeriod(id);
-    testEditTimePeriod(id);
-    testDeleteTimePeriod(id);
+    HttpHeaders headers = loginSetupManager();
+
+    Long id = testCreateTimePeriod(headers);
+    testGetTimePeriod(headers, id);
+    testEditTimePeriod(headers, id);
+    testDeleteTimePeriod(headers, id);
   }
 
   /**
@@ -227,9 +298,11 @@ public class SchedulingIntegrationTests {
    *
    * @return
    */
-  public Long testCreateTimePeriod() {
-    ResponseEntity<TimePeriodDto> response = client.postForEntity("/api/scheduling/shift/create",
-        new TimePeriodDto("2022-11-17 08:30:00", "2022-11-17 17:35:00"), TimePeriodDto.class);
+  public Long testCreateTimePeriod(HttpHeaders headers) {
+    HttpEntity<?> entity =
+        new HttpEntity<>(new TimePeriodDto("2022-11-17 08:30:00", "2022-11-17 17:35:00"), headers);
+    ResponseEntity<TimePeriodDto> response = client.exchange("/api/scheduling/shift/create",
+        HttpMethod.POST, entity, TimePeriodDto.class);
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
@@ -246,8 +319,10 @@ public class SchedulingIntegrationTests {
    * @param id
    */
 
-  public void testGetTimePeriod(Long id) {
-    ResponseEntity<TimePeriodDto> response = client.getForEntity("/api/scheduling/shift/" + id, TimePeriodDto.class);
+  public void testGetTimePeriod(HttpHeaders headers, Long id) {
+    HttpEntity<?> entity = new HttpEntity<>(headers);
+    ResponseEntity<TimePeriodDto> response =
+        client.exchange("/api/scheduling/shift/" + id, HttpMethod.GET, entity, TimePeriodDto.class);
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
@@ -262,9 +337,11 @@ public class SchedulingIntegrationTests {
    *
    * @param id
    */
-  public void testEditTimePeriod(Long id) {
-    ResponseEntity<TimePeriodDto> response = client.postForEntity("/api/scheduling/shift/edit/" + id,
-        new TimePeriodDto(id, "2023-12-12 08:30:00", "2023-12-12 17:35:00"), TimePeriodDto.class);
+  public void testEditTimePeriod(HttpHeaders headers, Long id) {
+    HttpEntity<?> entity =
+        new HttpEntity<>(new TimePeriodDto("2023-12-12 08:30:00", "2023-12-12 17:35:00"), headers);
+    ResponseEntity<TimePeriodDto> response = client.exchange("/api/scheduling/shift/edit/" + id,
+        HttpMethod.POST, entity, TimePeriodDto.class);
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
@@ -280,13 +357,18 @@ public class SchedulingIntegrationTests {
    *
    * @param id
    */
-  public void testDeleteTimePeriod(Long id) {
-    //once we delete the timeperiod, we try to get it, but it doesn't exist anymore so
-    //we should get a 404 not found reponse.
-    client.delete(("/api/scheduling/shift/delete/" + id), TimePeriodDto.class);
-    ResponseEntity<String> response = client.getForEntity("/api/scheduling/shift/" + id, String.class);
+  public void testDeleteTimePeriod(HttpHeaders headers, Long id) {
+    // once we delete the timeperiod, we try to get it, but it doesn't exist anymore so
+    // we should get a 404 not found reponse.
+
+    HttpEntity<?> entity = new HttpEntity<>(headers);
+    client.exchange(("/api/scheduling/shift/delete/" + id), HttpMethod.DELETE, entity,
+        TimePeriodDto.class);
+    ResponseEntity<String> response =
+        client.exchange("/api/scheduling/shift/" + id, HttpMethod.GET, entity, String.class);
     assertNotNull(response);
-    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(), "The response has the correct status");
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(),
+        "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertTrue(response.getBody().contains("Time period does not exist"));
   }
@@ -299,10 +381,14 @@ public class SchedulingIntegrationTests {
 
   @Test
   public void testCreateInvalidTimePeriod() {
-    ResponseEntity<String> response = client.postForEntity("/api/scheduling/shift/create",
-        new TimePeriodDto("2022-11-17 08:30:00", "2022-11-17 07:35:00"), String.class);
+    HttpHeaders headers = loginSetupManager();
+    HttpEntity<?> entity =
+        new HttpEntity<>(new TimePeriodDto("2022-11-17 08:30:00", "2022-11-17 07:35:00"), headers);
+    ResponseEntity<String> response =
+        client.exchange("/api/scheduling/shift/create", HttpMethod.POST, entity, String.class);
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "The response has the correct status");
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
+        "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertTrue(response.getBody().contains("Start date cannot be after end date"));
   }
@@ -314,9 +400,14 @@ public class SchedulingIntegrationTests {
    */
   @Test
   public void testGetInvalidTimePeriod() {
-    ResponseEntity<String> response = client.getForEntity("/api/scheduling/shift/" + -1, String.class);
+    HttpHeaders headers = loginSetupManager();
+    HttpEntity<?> entity =
+        new HttpEntity<>(new TimePeriodDto("2022-11-17 08:30:00", "2022-11-17 07:35:00"), headers);
+    ResponseEntity<String> response =
+        client.exchange("/api/scheduling/shift/" + -1, HttpMethod.GET, entity, String.class);
     assertNotNull(response);
-    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(), "The response has the correct status");
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(),
+        "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertTrue(response.getBody().contains("Time period does not exist"));
   }
@@ -328,10 +419,14 @@ public class SchedulingIntegrationTests {
    */
   @Test
   public void testEditInvalidTimePeriod() {
-    ResponseEntity<String> response = client.postForEntity("/api/scheduling/shift/edit/" + 1,
-        new TimePeriodDto(1L, "2023-12-12 08:30:00", "2023-12-12 17:35:00"), String.class);
+    HttpHeaders headers = loginSetupManager();
+    HttpEntity<?> entity = new HttpEntity<>(
+        new TimePeriodDto(1L, "2023-12-12 08:30:00", "2023-12-12 17:35:00"), headers);
+    ResponseEntity<String> response =
+        client.exchange("/api/scheduling/shift/edit/" + 1, HttpMethod.POST, entity, String.class);
     assertNotNull(response);
-    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(), "The response has the correct status");
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(),
+        "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertTrue(response.getBody().contains("Time period does not exist"));
   }
@@ -343,9 +438,14 @@ public class SchedulingIntegrationTests {
    */
   @Test
   public void testDeleteInvalidTimePeriod() {
-    ResponseEntity<String> response = client.exchange("/api/scheduling/shift/delete/" + -1, HttpMethod.DELETE, null, String.class);
+    HttpHeaders headers = loginSetupManager();
+    HttpEntity<?> entity = new HttpEntity<>(headers);
+
+    ResponseEntity<String> response = client.exchange("/api/scheduling/shift/delete/" + -1,
+        HttpMethod.DELETE, entity, String.class);
     assertNotNull(response);
-    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(), "The response has the correct status");
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(),
+        "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertTrue(response.getBody().contains("Time period does not exist"));
   }
@@ -359,14 +459,20 @@ public class SchedulingIntegrationTests {
   public void testAddTimePeriodToEmployeeSchedule() {
     EmployeeDto employeeDto = createEmployeeDto(createEmployeeWithShifts());
     Long employeeId = employeeDto.getMuseumUserId();
-    Long timePeriodId = testCreateTimePeriod();
-    ResponseEntity<EmployeeDto> response = client.postForEntity("/api/scheduling/employee/" + employeeId + "/add/shift/" + timePeriodId, null,
-        EmployeeDto.class);
+
+    HttpHeaders headers = loginSetupManager();
+    HttpEntity<?> entity = new HttpEntity<>(headers);
+
+    Long timePeriodId = testCreateTimePeriod(headers);
+    ResponseEntity<EmployeeDto> response =
+        client.exchange("/api/scheduling/employee/" + employeeId + "/add/shift/" + timePeriodId,
+            HttpMethod.POST, entity, EmployeeDto.class);
 
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
-    assertEquals(employeeId, response.getBody().getMuseumUserId(), "Response has correct employee ID");
+    assertEquals(employeeId, response.getBody().getMuseumUserId(),
+        "Response has correct employee ID");
   }
 
   /**
@@ -379,11 +485,15 @@ public class SchedulingIntegrationTests {
     EmployeeDto employeeDto = createEmployeeDto(createEmployeeWithShifts());
     Long employeeId = employeeDto.getMuseumUserId();
     Long timePeriodId = 1L;
-    ResponseEntity<String> response = client.postForEntity("/api/scheduling/employee/" + employeeId + "/add/shift/" + timePeriodId, null,
-        String.class);
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
+
+    ResponseEntity<String> response =
+        client.exchange("/api/scheduling/employee/" + employeeId + "/add/shift/" + timePeriodId,
+            HttpMethod.POST, entity, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(), "The response has the correct status");
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(),
+        "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertTrue(response.getBody().contains("There is no such time period"));
   }
@@ -397,15 +507,20 @@ public class SchedulingIntegrationTests {
   public void testDeleteTimePeriodFromEmployeeSchedule() {
     EmployeeDto employeeDto = createEmployeeDto(createEmployeeWithShifts());
     Long employeeId = employeeDto.getMuseumUserId();
-    Long timePeriodId = testCreateTimePeriod();
-    ResponseEntity<EmployeeDto> response = client.postForEntity("/api/scheduling/employee/" + employeeId + "/add/shift/" + timePeriodId, null,
-        EmployeeDto.class);
+    HttpHeaders headers = loginSetupManager();
+    HttpEntity<?> entity = new HttpEntity<>(headers);
+    Long timePeriodId = testCreateTimePeriod(headers);
+    ResponseEntity<EmployeeDto> response =
+        client.exchange("/api/scheduling/employee/" + employeeId + "/add/shift/" + timePeriodId,
+            HttpMethod.POST, entity, EmployeeDto.class);
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
-    assertEquals(employeeId, response.getBody().getMuseumUserId(), "Response has correct employee ID");
-    ResponseEntity<String> response2 = client.exchange("/api/scheduling/employee/" + employeeId + "/remove/shift/" + timePeriodId,
-        HttpMethod.DELETE, null, String.class);
+    assertEquals(employeeId, response.getBody().getMuseumUserId(),
+        "Response has correct employee ID");
+    ResponseEntity<String> response2 =
+        client.exchange("/api/scheduling/employee/" + employeeId + "/remove/shift/" + timePeriodId,
+            HttpMethod.DELETE, entity, String.class);
     assertNotNull(response2);
     assertEquals(HttpStatus.OK, response2.getStatusCode(), "The response has the correct status");
     assertNotNull(response2.getBody(), "Response has body");
@@ -422,10 +537,15 @@ public class SchedulingIntegrationTests {
     EmployeeDto employeeDto = createEmployeeDto(createEmployeeWithShifts());
     Long employeeId = employeeDto.getMuseumUserId();
     Long timePeriodId = -1L;
-    ResponseEntity<String> response = client.exchange("/api/scheduling/employee/" + employeeId + "/remove/shift/" + timePeriodId,
-        HttpMethod.DELETE, null, String.class);
+    HttpHeaders headers = loginSetupManager();
+    HttpEntity<?> entity = new HttpEntity<>(headers);
+
+    ResponseEntity<String> response =
+        client.exchange("/api/scheduling/employee/" + employeeId + "/remove/shift/" + timePeriodId,
+            HttpMethod.DELETE, entity, String.class);
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "The response has the correct status");
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
+        "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertTrue(response.getBody().contains("There is no such time period"));
   }
@@ -439,9 +559,12 @@ public class SchedulingIntegrationTests {
   public void testAddTimePeriodToMuseumSchedule() {
     MuseumDto museumDto = createMuseumDto(createMuseumWithShifts());
     Long museumId = museumDto.getMuseumId();
-    Long timePeriodId = testCreateTimePeriod();
-    ResponseEntity<MuseumDto> response = client.postForEntity("/api/scheduling/museum/" + museumId + "/add/shift/" + timePeriodId, null,
-        MuseumDto.class);
+    HttpHeaders headers = loginSetupManager();
+    Long timePeriodId = testCreateTimePeriod(headers);
+    HttpEntity<?> entity = new HttpEntity<>(headers);
+    ResponseEntity<MuseumDto> response =
+        client.exchange("/api/scheduling/museum/" + museumId + "/add/shift/" + timePeriodId,
+            HttpMethod.POST, entity, MuseumDto.class);
 
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "The response has the correct status");
@@ -459,11 +582,14 @@ public class SchedulingIntegrationTests {
     MuseumDto museumDto = createMuseumDto(createMuseumWithShifts());
     Long museumId = museumDto.getMuseumId();
     Long timePeriodId = 1L;
-    ResponseEntity<String> response = client.postForEntity("/api/scheduling/museum/" + museumId + "/add/shift/" + timePeriodId, null,
-        String.class);
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
+    ResponseEntity<String> response =
+        client.exchange("/api/scheduling/museum/" + museumId + "/add/shift/" + timePeriodId,
+            HttpMethod.POST, entity, String.class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "The response has the correct status");
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
+        "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertTrue(response.getBody().contains("Time period doesn't exist!"));
   }
@@ -477,15 +603,20 @@ public class SchedulingIntegrationTests {
   public void testRemoveTimePeriodFromMuseumSchedule() {
     MuseumDto museumDto = createMuseumDto(createMuseumWithShifts());
     Long museumId = museumDto.getMuseumId();
-    Long timePeriodId = testCreateTimePeriod();
-    ResponseEntity<MuseumDto> response = client.postForEntity("/api/scheduling/museum/" + museumId + "/add/shift/" + timePeriodId, null,
-        MuseumDto.class);
+    HttpHeaders headers = loginSetupManager();
+    HttpEntity<?> entity = new HttpEntity<>(headers);
+
+    Long timePeriodId = testCreateTimePeriod(headers);
+    ResponseEntity<MuseumDto> response =
+        client.exchange("/api/scheduling/museum/" + museumId + "/add/shift/" + timePeriodId,
+            HttpMethod.POST, entity, MuseumDto.class);
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertEquals(museumId, response.getBody().getMuseumId(), "Response has correct museum ID");
-    ResponseEntity<String> response2 = client.exchange("/api/scheduling/museum/" + museumId + "/remove/shift/" + timePeriodId,
-        HttpMethod.DELETE, null, String.class);
+    ResponseEntity<String> response2 =
+        client.exchange("/api/scheduling/museum/" + museumId + "/remove/shift/" + timePeriodId,
+            HttpMethod.DELETE, entity, String.class);
     assertNotNull(response2);
     assertEquals(HttpStatus.OK, response2.getStatusCode(), "The response has the correct status");
     assertNotNull(response2.getBody(), "Response has body");
@@ -502,10 +633,13 @@ public class SchedulingIntegrationTests {
     MuseumDto museumDto = createMuseumDto(createMuseumWithShifts());
     Long museumId = museumDto.getMuseumId();
     Long timePeriodId = -1L;
-    ResponseEntity<String> response = client.exchange("/api/scheduling/museum/" + museumId + "/remove/shift/" + timePeriodId,
-        HttpMethod.DELETE, null, String.class);
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
+    ResponseEntity<String> response =
+        client.exchange("/api/scheduling/museum/" + museumId + "/remove/shift/" + timePeriodId,
+            HttpMethod.DELETE, entity, String.class);
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "The response has the correct status");
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
+        "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertTrue(response.getBody().contains("Time period doesn't exist!"));
   }
@@ -675,5 +809,114 @@ public class SchedulingIntegrationTests {
 
     return museum;
   }
+
+  /**
+   * Create a visitor and login
+   *
+   * @param newVisitor - the visitor to login
+   * @return the logged in visitor
+   * @author Kevin
+   */
+
+  public VisitorDto createVisitorAndLogin(Visitor newVisitor) {
+    visitorRepository.save(newVisitor);
+    VisitorDto visitor = UserUtilities.createVisitorDto(newVisitor);
+    ResponseEntity<String> response =
+        client.postForEntity("/api/auth/login", visitor, String.class);
+    List<String> session = response.getHeaders().get("Set-Cookie");
+
+    String sessionId = session.get(0);
+    visitor.setSessionId(sessionId);
+
+    return visitor;
+  }
+
+  /**
+   * Create employee and login
+   *
+   * @param newEmployee - employee to login
+   * @return EmployeeDto - the logged in employee
+   * @author Kevin
+   */
+
+  public EmployeeDto createEmployeeAndLogin(Employee newEmployee) {
+    employeeRepository.save(newEmployee);
+    EmployeeDto employee = UserUtilities.createEmployeeDto(newEmployee);
+    ResponseEntity<String> response =
+        client.postForEntity("/api/auth/login", employee, String.class);
+    List<String> session = response.getHeaders().get("Set-Cookie");
+
+    String sessionId = session.get(0);
+    employee.setSessionId(sessionId);
+
+    return employee;
+  }
+
+  /**
+   * Create a manager and login
+   *
+   * @param newManager - the manager to login
+   * @return managerDto - the logged in manager
+   * @author Kevin
+   */
+
+  public ManagerDto createManagerAndLogin(Manager newManager) {
+    managerRepository.save(newManager);
+    ManagerDto manager = UserUtilities.createManagerDto(newManager);
+    ResponseEntity<String> response =
+        client.postForEntity("/api/auth/login", manager, String.class);
+    List<String> session = response.getHeaders().get("Set-Cookie");
+
+    String sessionId = session.get(0);
+    manager.setSessionId(sessionId);
+
+    return manager;
+  }
+
+  public ManagerDto loginManager(Manager manager) {
+    ManagerDto managerDto = UserUtilities.createManagerDto(manager);
+    ResponseEntity<String> response =
+        client.postForEntity("/api/auth/login", managerDto, String.class);
+    List<String> session = response.getHeaders().get("Set-Cookie");
+
+    String sessionId = session.get(0);
+    managerDto.setSessionId(sessionId);
+
+    return managerDto;
+  }
+
+  /**
+   * Create a museum and login
+   *
+   * @param newMuseum - the museum to login
+   * @return museumDto - the logged in museum
+   * @author Kevin
+   */
+  public HttpHeaders loginSetupManager() {
+    ManagerDto manager = createManagerAndLogin(UserUtilities.createManager(FIRST_VALID_MANAGER_NAME,
+        FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", manager.getSessionId());
+    return headers;
+  }
+
+  // public HttpHeaders loginSetupManager(ManagerDto manager) {
+  // ResponseEntity<String> response =
+  // client.postForEntity("/api/auth/login", manager, String.class);
+
+  // HttpHeaders headers = new HttpHeaders();
+  // headers.set("Cookie", manager.getSessionId());
+  // return headers;
+  // }
+
+  public HttpHeaders loginSetupEmployee(Employee employee) {
+    EmployeeDto employeeLogin = createEmployeeAndLogin(employee);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", employeeLogin.getSessionId());
+    return headers;
+  }
+
 
 }

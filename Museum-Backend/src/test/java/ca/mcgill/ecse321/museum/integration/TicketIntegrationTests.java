@@ -4,6 +4,8 @@ import ca.mcgill.ecse321.museum.controller.utilities.DtoUtility;
 import ca.mcgill.ecse321.museum.dao.TicketRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
 import ca.mcgill.ecse321.museum.dto.TicketDto;
+import ca.mcgill.ecse321.museum.dto.VisitorDto;
+import ca.mcgill.ecse321.museum.integration.utilities.UserUtilities;
 import ca.mcgill.ecse321.museum.model.Ticket;
 import ca.mcgill.ecse321.museum.model.Visitor;
 import org.junit.jupiter.api.AfterEach;
@@ -12,11 +14,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.sql.Date;
-
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -31,12 +36,12 @@ public class TicketIntegrationTests {
   @Autowired
   private VisitorRepository visitorRepository;
 
-  //visitor 1 attributes
+  // visitor 1 attributes
   private static final String VISITOR_EMAIL_1 = "bob@mail.com";
   private static final String VISITOR_NAME_1 = "Bob Barbier";
   private static final String VISITOR_PASSWORD_1 = "MyPassword";
 
-  //visitor 2 attributes
+  // visitor 2 attributes
   private static final String VISITOR_EMAIL_2 = "marie@mail.com";
   private static final String VISITOR_NAME_2 = "Marie B";
   private static final String VISITOR_PASSWORD_2 = "password";
@@ -45,34 +50,9 @@ public class TicketIntegrationTests {
 
   @BeforeEach
   public void setUp() {
-    //clear all repositories
+    // clear all repositories
     ticketRepository.deleteAll();
     visitorRepository.deleteAll();
-
-    //create visitors
-    Visitor visitor1 = new Visitor();
-    visitor1.setName(VISITOR_NAME_1);
-    visitor1.setPassword(VISITOR_PASSWORD_1);
-    visitor1.setEmail(VISITOR_EMAIL_1);
-    visitorRepository.save(visitor1);
-
-    Visitor visitor2 = new Visitor();
-    visitor2.setEmail(VISITOR_EMAIL_2);
-    visitor2.setName(VISITOR_NAME_2);
-    visitor2.setPassword(VISITOR_PASSWORD_2);
-    visitorRepository.save(visitor2);
-
-    //create tickets
-    Ticket ticket1 = new Ticket();
-    ticket1.setVisitor(visitorRepository.findVisitorByName(VISITOR_NAME_1));
-    ticket1.setVisitDate(Date.valueOf(VISIT_DATE_1));
-    ticketRepository.save(ticket1);
-
-    Ticket ticket2 = new Ticket();
-    ticket2.setVisitDate(Date.valueOf(VISIT_DATE_2));
-    ticket2.setVisitor(visitorRepository.findVisitorByName(VISITOR_NAME_2));
-    ticketRepository.save(ticket2);
-
   }
 
   @AfterEach
@@ -82,16 +62,22 @@ public class TicketIntegrationTests {
   }
 
   /**
-   * Test to get all tickets possessed by an  invalid visitor
+   * Test to get all tickets possessed by an invalid visitor
    *
    * @author Zahra
    */
   @Test
   public void testGetTicketByInvalidVisitor() {
-    ResponseEntity<String> response = client.getForEntity("/api/ticket/visitor/" + -1 + "/", String.class);
+    Visitor visitor =
+        UserUtilities.createVisitor(VISITOR_EMAIL_1, VISITOR_NAME_1, VISITOR_PASSWORD_1);
+    visitorRepository.save(visitor);
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupVisitor(visitor));
+    ResponseEntity<String> response =
+        client.exchange("/api/ticket/visitor/" + -1 + "/", HttpMethod.GET, entity, String.class);
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    assertEquals("Visitor doesn't exist", response.getBody(), "Correct response body message");
+    assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    assertEquals("You are not authorized to view this page", response.getBody(),
+        "Correct response body message");
   }
 
   /**
@@ -101,15 +87,26 @@ public class TicketIntegrationTests {
    */
   @Test
   public void testGetTicketsByVisitor() {
+    Visitor visitor =
+        UserUtilities.createVisitor(VISITOR_EMAIL_1, VISITOR_NAME_1, VISITOR_PASSWORD_1);
+    long visitorId = visitorRepository.save(visitor).getMuseumUserId();
+    visitorRepository.save(visitor);
 
-    long visitorId = visitorRepository.findVisitorByName(VISITOR_NAME_1).getMuseumUserId();
-    ResponseEntity<TicketDto[]> response =
-        client.getForEntity("/api/ticket/visitor/" + visitorId + "/", TicketDto[].class);
+    createTicket(VISIT_DATE_1, visitor);
+    createTicket(VISIT_DATE_2, visitor);
+
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupVisitor(visitor));
+
+    ResponseEntity<TicketDto[]> response = client.exchange("/api/ticket/visitor/" + visitorId + "/",
+        HttpMethod.GET, entity, TicketDto[].class);
     assertNotNull(response.getBody(), "Response has body");
     assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertEquals(1, response.getBody().length);
+    assertEquals(2, response.getBody().length);
     assertEquals(visitorId, response.getBody()[0].getVisitor().getMuseumUserId());
     assertTrue(VISIT_DATE_1.equals(response.getBody()[0].getVisitDate()));
+    assertTrue(VISIT_DATE_2.equals(response.getBody()[1].getVisitDate()));
+
+
 
   }
 
@@ -121,11 +118,15 @@ public class TicketIntegrationTests {
   @Test
   public void testCreateTickets() {
     int numOfTickets = 2;
-    Visitor visitor = visitorRepository.findVisitorByName(VISITOR_NAME_2);
+    Visitor visitor =
+        UserUtilities.createVisitor(VISITOR_EMAIL_1, VISITOR_NAME_1, VISITOR_PASSWORD_1);
+    visitorRepository.save(visitor);
     TicketDto ticketDto = new TicketDto(VISIT_DATE_1, DtoUtility.convertToDto(visitor));
 
-    ResponseEntity<TicketDto[]> response = client
-        .postForEntity("/api/ticket/purchase?number=" + numOfTickets, ticketDto, TicketDto[].class);
+    HttpEntity<?> entity = new HttpEntity<>(ticketDto, loginSetupVisitor(visitor));
+    ResponseEntity<TicketDto[]> response = client.exchange(
+        "/api/ticket/purchase?number=" + numOfTickets, HttpMethod.POST, entity, TicketDto[].class);
+
     assertNotNull(response.getBody(), "Response has body");
     assertEquals(HttpStatus.CREATED, response.getStatusCode());
     assertNotNull(response.getBody(), "Response has body");
@@ -142,14 +143,63 @@ public class TicketIntegrationTests {
   @Test
   public void testCreateTicketsWithInvalidNumber() {
     int numOfTickets = 0;
-    TicketDto ticketDto = new TicketDto(VISIT_DATE_1, DtoUtility.convertToDto(visitorRepository.findVisitorByName(VISITOR_NAME_1)));
+    Visitor visitor =
+        UserUtilities.createVisitor(VISITOR_EMAIL_1, VISITOR_NAME_1, VISITOR_PASSWORD_1);
+    visitorRepository.save(visitor);
+    TicketDto ticketDto = new TicketDto(VISIT_DATE_1, DtoUtility.convertToDto(visitor));
 
-    ResponseEntity<String> response =
-        client.postForEntity("/api/ticket/purchase?number=" + numOfTickets, ticketDto, String.class);
+    HttpEntity<?> entity = new HttpEntity<>(ticketDto, loginSetupVisitor(visitor));
+    ResponseEntity<String> response = client.exchange("/api/ticket/purchase?number=" + numOfTickets,
+        HttpMethod.POST, entity, String.class);
+
     assertNotNull(response, "Response has body");
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     assertEquals("Number of tickets must be at least 1", response.getBody());
 
   }
 
+  // Create ticket
+  public Ticket createTicket(String visitDate, Visitor visitor) {
+    Ticket ticket = new Ticket();
+    ticket.setVisitDate(Date.valueOf(visitDate));
+    ticket.setVisitor(visitorRepository.findVisitorByMuseumUserId(visitor.getMuseumUserId()));
+    ticketRepository.save(ticket);
+    return ticket;
+  }
+
+  /**
+   * Create a visitor and login
+   *
+   * @param newVisitor - the visitor to login
+   * @return the logged in visitor
+   * @author Kevin
+   */
+
+  public VisitorDto createVisitorAndLogin(Visitor newVisitor) {
+    visitorRepository.save(newVisitor);
+    VisitorDto visitor = UserUtilities.createVisitorDto(newVisitor);
+    ResponseEntity<String> response =
+        client.postForEntity("/api/auth/login", visitor, String.class);
+    List<String> session = response.getHeaders().get("Set-Cookie");
+
+    String sessionId = session.get(0);
+    visitor.setSessionId(sessionId);
+
+    return visitor;
+  }
+
+  /**
+   * Create a museum and login
+   *
+   * @param newMuseum - the museum to login
+   * @return museumDto - the logged in museum
+   * @author Kevin
+   */
+  public HttpHeaders loginSetupVisitor(Visitor newVisitor) {
+    VisitorDto visitor = createVisitorAndLogin(newVisitor);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", visitor.getSessionId());
+    return headers;
+  }
 }
