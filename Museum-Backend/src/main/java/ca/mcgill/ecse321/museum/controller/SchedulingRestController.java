@@ -48,7 +48,7 @@ public class SchedulingRestController {
    * @return the schedule of the employee
    * @author VZ
    */
-  @GetMapping(value = {"/employee/schedule/{id}", "/employee/schedule/{id}/"})
+  @GetMapping(value = { "/employee/schedule/{id}", "/employee/schedule/{id}/" })
   public ResponseEntity<?> getScheduleByEmployee(HttpServletRequest request,
       @PathVariable("id") long id) {
     try {
@@ -76,7 +76,7 @@ public class SchedulingRestController {
    * @return all shifts of the employee
    * @author VZ
    */
-  @GetMapping(value = {"/employee/shifts/{id}", "/employee/shifts/{id}/"})
+  @GetMapping(value = { "/employee/shifts/{id}", "/employee/shifts/{id}/" })
   public ResponseEntity<?> getAllShiftsByEmployee(HttpServletRequest request,
       @PathVariable("id") long id) {
 
@@ -111,7 +111,7 @@ public class SchedulingRestController {
    * @return the schedule of the museum
    * @author VZ
    */
-  @GetMapping(value = {"/museum/schedule/{id}", "/museum/schedule/{id}/"})
+  @GetMapping(value = { "/museum/schedule/{id}", "/museum/schedule/{id}/" })
   public ResponseEntity<?> getScheduleByMuseum(@PathVariable("id") long id) {
     try {
       return new ResponseEntity<>(DtoUtility.convertToDto(museumService.getMuseumSchedule(id)),
@@ -129,7 +129,7 @@ public class SchedulingRestController {
    * @return all shifts of the museum
    * @author VZ
    */
-  @GetMapping(value = {"/museum/shifts/{id}", "/museum/shifts/{id}/"})
+  @GetMapping(value = { "/museum/shifts/{id}", "/museum/shifts/{id}/" })
   public ResponseEntity<?> getAllShiftsByMuseum(HttpServletRequest request,
       @PathVariable("id") long id) {
     try {
@@ -159,7 +159,7 @@ public class SchedulingRestController {
    * @author VZ
    */
 
-  @PostMapping(value = {"/shift/create", "/shift/create/"})
+  @PostMapping(value = { "/shift/create", "/shift/create/" })
   public ResponseEntity<?> createTimePeriod(HttpServletRequest request,
       @RequestBody TimePeriodDto timePeriodDto) {
     try {
@@ -188,7 +188,7 @@ public class SchedulingRestController {
    * @author VZ
    */
 
-  @GetMapping(value = {"/shift/{id}", "/shift/{id}/"})
+  @GetMapping(value = { "/shift/{id}", "/shift/{id}/" })
   public ResponseEntity<?> getTimePeriod(HttpServletRequest request, @PathVariable("id") long id) {
     try {
       HttpSession session = request.getSession();
@@ -212,7 +212,7 @@ public class SchedulingRestController {
    * @return the time period dto
    * @author VZ
    */
-  @DeleteMapping(value = {"/shift/delete/{id}", "/shift/delete/{id}/"})
+  @DeleteMapping(value = { "/shift/delete/{id}", "/shift/delete/{id}/" })
   public ResponseEntity<?> deleteTimePeriod(HttpServletRequest request,
       @PathVariable("id") long id) {
     try {
@@ -238,7 +238,7 @@ public class SchedulingRestController {
    * @return the edited timeperiod dto
    * @author VZ
    */
-  @PostMapping(value = {"/shift/edit/{id}", "/shift/edit/{id}/"})
+  @PostMapping(value = { "/shift/edit/{id}", "/shift/edit/{id}/" })
   public ResponseEntity<?> editTimePeriod(HttpServletRequest request, @PathVariable("id") long id,
       @RequestBody TimePeriodDto timePeriodDto) {
     try {
@@ -265,8 +265,8 @@ public class SchedulingRestController {
    * @return the employeedto with an added timeperiod
    * @author VZ
    */
-  @PostMapping(value = {"/employee/{employeeId}/add/shift/{tpId}",
-      "/employee/{employeeId}/add/shift/{tpId}/"})
+  @PostMapping(value = { "/employee/{employeeId}/add/shift/{tpId}",
+      "/employee/{employeeId}/add/shift/{tpId}/" })
   public ResponseEntity<?> addTimePeriodToEmployeeSchedule(HttpServletRequest request,
       @PathVariable("employeeId") long employeeId, @PathVariable("tpId") long tpId) {
     try {
@@ -292,8 +292,8 @@ public class SchedulingRestController {
    * @author VZ
    */
 
-  @DeleteMapping(value = {"/employee/{employeeId}/remove/shift/{tpId}",
-      "/employee/{employeeId}/remove/shift/{tpId}/"})
+  @DeleteMapping(value = { "/employee/{employeeId}/remove/shift/{tpId}",
+      "/employee/{employeeId}/remove/shift/{tpId}/" })
   public ResponseEntity<?> deleteTimePeriodFromEmployeeSchedule(HttpServletRequest request,
       @PathVariable("employeeId") long employeeId, @PathVariable("tpId") long tpId) {
     try {
@@ -320,7 +320,7 @@ public class SchedulingRestController {
    * @author VZ
    */
   @PostMapping(
-      value = {"/museum/{museumId}/add/shift/{tpId}", "/museum/{museumId}/add/shift/{tpId}/"})
+      value = { "/museum/{museumId}/add/shift/{tpId}", "/museum/{museumId}/add/shift/{tpId}/" })
   public ResponseEntity<?> addTimePeriodToMuseumSchedule(HttpServletRequest request,
       @PathVariable("museumId") long museumId, @PathVariable("tpId") long tpId) {
     try {
@@ -346,7 +346,7 @@ public class SchedulingRestController {
    * @author VZ
    */
   @DeleteMapping(
-      value = {"/museum/{museumId}/remove/shift/{tpId}", "/museum/{museumId}/remove/shift/{tpId}/"})
+      value = { "/museum/{museumId}/remove/shift/{tpId}", "/museum/{museumId}/remove/shift/{tpId}/" })
   public ResponseEntity<?> removeTimePeriodFromMuseumSchedule(HttpServletRequest request,
       @PathVariable("museumId") long museumId, @PathVariable("tpId") long tpId) {
     try {
@@ -363,4 +363,3 @@ public class SchedulingRestController {
     }
   }
 }
-

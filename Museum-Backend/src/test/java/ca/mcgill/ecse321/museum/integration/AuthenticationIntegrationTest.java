@@ -71,7 +71,7 @@ public class AuthenticationIntegrationTest {
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
-    assertEquals("logged in", response.getBody(), "Response has correct name");
+    assertEquals("visitor", response.getBody(), "Response has correct name");
   }
 
   /**

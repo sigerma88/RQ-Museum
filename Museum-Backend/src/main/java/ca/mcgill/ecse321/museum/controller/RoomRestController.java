@@ -3,9 +3,9 @@ package ca.mcgill.ecse321.museum.controller;
 import ca.mcgill.ecse321.museum.controller.utilities.AuthenticationUtility;
 import ca.mcgill.ecse321.museum.controller.utilities.DtoUtility;
 import ca.mcgill.ecse321.museum.dto.RoomDto;
+import ca.mcgill.ecse321.museum.dto.RoomDtoNoIdRequest;
 import ca.mcgill.ecse321.museum.model.Museum;
 import ca.mcgill.ecse321.museum.model.Room;
-import ca.mcgill.ecse321.museum.model.RoomType;
 import ca.mcgill.ecse321.museum.service.MuseumService;
 import ca.mcgill.ecse321.museum.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,11 +46,9 @@ public class RoomRestController {
    * @author Siger
    */
 
-  @PostMapping(value = {"/", ""}, produces = "application/json")
+  @PostMapping(value = { "/", "" }, produces = "application/json")
   public ResponseEntity<?> createRoom(HttpServletRequest request,
-      @RequestParam(name = "roomName") String roomName,
-      @RequestParam(name = "roomType") RoomType roomType,
-      @RequestParam(name = "museumId") Long museumId) {
+      @RequestBody RoomDtoNoIdRequest roomDtoNoIdRequest) {
     try {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
@@ -59,13 +57,14 @@ public class RoomRestController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Your are not a staff member");
       }
       // Get museum
-      Museum museum = museumService.getMuseum(museumId);
+      Museum museum = museumService.getMuseum(roomDtoNoIdRequest.getMuseumId());
       if (museum == null) {
-        return ResponseEntity.badRequest().body("Museum with id " + museumId + " does not exist");
+        return ResponseEntity.badRequest()
+            .body("Museum with id " + roomDtoNoIdRequest.getMuseumId() + " does not exist");
       }
 
       // Create room
-      Room result = roomService.createRoom(roomName, roomType, museum);
+      Room result = roomService.createRoom(roomDtoNoIdRequest.getRoomName(), roomDtoNoIdRequest.getRoomType(), museum);
       return ResponseEntity.ok(DtoUtility.convertToDto(result));
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
@@ -79,7 +78,7 @@ public class RoomRestController {
    * @author Siger
    */
 
-  @GetMapping(value = {"/", ""})
+  @GetMapping(value = { "/", "" })
   public ResponseEntity<?> getAllRooms() {
     try {
       List<RoomDto> roomDtos = new ArrayList<>();
@@ -100,7 +99,7 @@ public class RoomRestController {
    * @author Siger
    */
 
-  @GetMapping(value = {"/{roomId}", "/{roomId}/"})
+  @GetMapping(value = { "/{roomId}", "/{roomId}/" })
   public ResponseEntity<?> getRoomById(@PathVariable Long roomId) {
     try {
       Room room = roomService.getRoomById(roomId);
@@ -118,7 +117,7 @@ public class RoomRestController {
    * @author Siger
    */
 
-  @GetMapping(value = {"/museum/{museumId}", "/museum/{museumId}/"})
+  @GetMapping(value = { "/museum/{museumId}", "/museum/{museumId}/" })
   public ResponseEntity<?> getAllRoomsByMuseumId(@PathVariable Long museumId) {
     try {
       // Get museum
@@ -149,11 +148,9 @@ public class RoomRestController {
    * @author Siger
    */
 
-  @PutMapping(value = {"/{roomId}", "/{roomId}/"}, produces = "application/json")
+  @PutMapping(value = { "/{roomId}", "/{roomId}/" }, produces = "application/json")
   public ResponseEntity<?> editRoom(HttpServletRequest request, @PathVariable("roomId") Long roomId,
-      @RequestParam(name = "roomName", required = false) String roomName,
-      @RequestParam(name = "roomType", required = false) RoomType roomType,
-      @RequestParam(name = "museumId", required = false) Long museumId) {
+      @RequestBody RoomDtoNoIdRequest roomDtoNoIdRequest) {
     try {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
@@ -164,15 +161,17 @@ public class RoomRestController {
 
       // Get museum
       Museum museum = null;
-      if (museumId != null) {
-        museum = museumService.getMuseum(museumId);
+      if (roomDtoNoIdRequest.getMuseumId() != null) {
+        museum = museumService.getMuseum(roomDtoNoIdRequest.getMuseumId());
         if (museum == null) {
-          return ResponseEntity.badRequest().body("Museum with id " + museumId + " does not exist");
+          return ResponseEntity.badRequest()
+              .body("Museum with id " + roomDtoNoIdRequest.getMuseumId() + " does not exist");
         }
       }
 
       // Update room
-      Room result = roomService.editRoom(roomId, roomName, roomType, museum);
+      Room result = roomService.editRoom(roomId, roomDtoNoIdRequest.getRoomName(), roomDtoNoIdRequest.getRoomType(),
+          museum);
       return ResponseEntity.ok(DtoUtility.convertToDto(result));
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
@@ -187,7 +186,7 @@ public class RoomRestController {
    * @author Siger
    */
 
-  @DeleteMapping(value = {"/{roomId}", "/{roomId}/"})
+  @DeleteMapping(value = { "/{roomId}", "/{roomId}/" })
   public ResponseEntity<?> deleteRoom(HttpServletRequest request,
       @PathVariable("roomId") Long roomId) {
     try {
@@ -213,7 +212,7 @@ public class RoomRestController {
    * @author Siger
    */
 
-  @GetMapping(value = {"/maxArtworks/{roomId}", "/maxArtworks/{roomId}/"})
+  @GetMapping(value = { "/maxArtworks/{roomId}", "/maxArtworks/{roomId}/" })
   public ResponseEntity<?> getMaxArtworks(@PathVariable("roomId") Long roomId) {
     try {
       Room room = roomService.getRoomById(roomId);
@@ -235,7 +234,7 @@ public class RoomRestController {
    * @return The capacity of the room
    * @author kieyanmamiche
    */
-  @GetMapping(value = {"/getRoomCapacity/{roomId}", "/getRoomCapacity/{roomId}/"})
+  @GetMapping(value = { "/getRoomCapacity/{roomId}", "/getRoomCapacity/{roomId}/" })
   public ResponseEntity<?> getRoomCapacity(@PathVariable("roomId") long roomId) {
     try {
       int capacity = roomService.getRoomCapacity(roomId);
