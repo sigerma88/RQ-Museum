@@ -1,6 +1,16 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Grid,
+  Typography,
+} from "@mui/material";
+import { Container } from "@mui/system";
 import { LoginContext } from "../../Contexts/LoginContext";
 import { Navigation } from "../../layouts/Navigation";
 import Home from "../Home";
@@ -36,7 +46,53 @@ function getRoom(roomId) {
 
 // VisitorArtworkBrowsing component
 function VisitorArtworkBrowsing({ artworks, room }) {
-  return <p>Visitor browsing room {room.roomName}</p>;
+  return (
+    <>
+      <Typography variant="h4" component="h1" marginTop={5}>
+        {room.roomName}
+      </Typography>
+      <Container sx={{ py: 5 }}>
+        <Grid container spacing={4}>
+          {artworks.map((card) => (
+            <Grid item key={card} xs={12} md={6}>
+              <Card
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <CardMedia
+                  component="img"
+                  image={card.image}
+                  alt="Artwork image"
+                  sx={{ height: 500 }}
+                />
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Typography gutterBottom variant="h5" component="h2">
+                    {card.name}
+                  </Typography>
+                  <Typography variant="h6">{"by " + card.artist}</Typography>
+                  <Typography color={"gray"}>
+                    {`${card.isAvailableForLoan ? "Available for loan" : ""}` +
+                      `${card.isOnLoan ? " but is currently on loan" : ""}`}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  {/* TODO: Add link to artwork page */}
+                  <Button size="small">View</Button>
+                  {/* TODO: Add link to loan page */}
+                  <Button size="small" disabled={!card.isAvailableForLoan}>
+                    Loan
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+    </>
+  );
 }
 
 function ManagerArtworkBrowsing() {
@@ -58,7 +114,7 @@ function ArtworkBrowsing() {
     getArtworks(roomId).then((artworks) => {
       setArtworks(artworks);
     });
-  }, []);
+  });
 
   // Get the room from the server
   const [room, setRoom] = useState({});
@@ -66,7 +122,7 @@ function ArtworkBrowsing() {
     getRoom(roomId).then((room) => {
       setRoom(room);
     });
-  }, []);
+  });
 
   const { loggedIn, userRole } = useContext(LoginContext);
   if (userRole === "visitor" && loggedIn) {
