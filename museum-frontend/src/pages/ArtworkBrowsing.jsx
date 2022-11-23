@@ -13,7 +13,6 @@ import {
 import { Container } from "@mui/system";
 import { LoginContext } from "../Contexts/LoginContext";
 import { Navigation } from "../layouts/Navigation";
-import Home from "./Home";
 
 // Function to get the artworks from the server
 function getArtworks(roomId) {
@@ -53,7 +52,7 @@ function VisitorArtworkBrowsing({ artworks, room }) {
       <Container sx={{ py: 5 }}>
         <Grid container spacing={4}>
           {artworks.map((card) => (
-            <Grid item key={card} xs={12} sm={6} md={2}>
+            <Grid item key={card.artworkId} xs={12} sm={6} md={2}>
               <Card
                 sx={{
                   display: "flex",
@@ -84,9 +83,22 @@ function VisitorArtworkBrowsing({ artworks, room }) {
                 </CardContent>
                 <CardActions>
                   {/* TODO: Add link to artwork page */}
-                  <Button size="small">View</Button>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    onClick={() => {
+                      window.location.href =
+                        "/browse/artwork/" + card.artworkId;
+                    }}
+                  >
+                    View
+                  </Button>
                   {/* TODO: Add link to loan page */}
-                  <Button size="small" disabled={!card.isAvailableForLoan}>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    disabled={!card.isAvailableForLoan}
+                  >
                     Loan
                   </Button>
                 </CardActions>
@@ -118,7 +130,7 @@ function ArtworkBrowsing() {
     getArtworks(roomId).then((artworks) => {
       setArtworks(artworks);
     });
-  });
+  }, [roomId]);
 
   // Get the room from the server
   const [room, setRoom] = useState({});
@@ -126,7 +138,7 @@ function ArtworkBrowsing() {
     getRoom(roomId).then((room) => {
       setRoom(room);
     });
-  });
+  }, [roomId]);
 
   const { loggedIn, userRole } = useContext(LoginContext);
   if (userRole === "manager" && loggedIn) {

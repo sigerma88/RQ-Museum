@@ -55,8 +55,8 @@ function computeArtworkStatus(artworkStatus) {
 }
 
 // Visitor artwork loan section
-function VisitorArtworkLoan({ artwork }) {
-  if (artwork.isAvailableForLoan) {
+function VisitorArtworkLoan({ artwork, userRole, loggedIn }) {
+  if (artwork.isAvailableForLoan && userRole === "visitor" && loggedIn) {
     return (
       <>
         <Divider variant="middle" />
@@ -92,7 +92,7 @@ function VisitorArtworkLoan({ artwork }) {
 }
 
 // VisitorArtworkBrowsing component
-function VisitorArtworkDetails({ artwork }) {
+function VisitorArtworkDetails({ artwork, userRole, loggedIn }) {
   const imageHeight = window.innerHeight * 0.89;
 
   // Get the artwork status from the server
@@ -105,7 +105,7 @@ function VisitorArtworkDetails({ artwork }) {
     } else {
       setArtworkStatus({});
     }
-  });
+  }, [artwork.artworkId]);
 
   return (
     <>
@@ -140,7 +140,11 @@ function VisitorArtworkDetails({ artwork }) {
           />
         </ListItem>
       </List>
-      <VisitorArtworkLoan artwork={artwork} />
+      <VisitorArtworkLoan
+        artwork={artwork}
+        userRole={userRole}
+        loggedIn={loggedIn}
+      />
     </>
   );
 }
@@ -164,17 +168,21 @@ function ArtworkDetails() {
     getArtwork(artworkId).then((artwork) => {
       setArtwork(artwork);
     });
-  });
+  }, [artworkId]);
 
   const { loggedIn, userRole } = useContext(LoginContext);
-  if (userRole === "visitor" && loggedIn) {
-    return <VisitorArtworkDetails artwork={artwork} />;
-  } else if (userRole === "manager" && loggedIn) {
+  if (userRole === "manager" && loggedIn) {
     return <ManagerArtworkDetails />;
   } else if (userRole === "employee" && loggedIn) {
     return <EmployeeArtworkDetails />;
   } else {
-    return <Home />;
+    return (
+      <VisitorArtworkDetails
+        artwork={artwork}
+        userRole={userRole}
+        loggedIn={loggedIn}
+      />
+    );
   }
 }
 

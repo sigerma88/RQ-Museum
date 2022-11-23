@@ -25,7 +25,7 @@ export function Main() {
           <Route path="/" index element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/browse/:roomId" element={<ArtworkBrowsing />} />
+          <Route path="/browse/room/:roomId" element={<ArtworkBrowsing />} />
           <Route
             path="/browse/artwork/:artworkId"
             element={<ArtworkDetails />}
