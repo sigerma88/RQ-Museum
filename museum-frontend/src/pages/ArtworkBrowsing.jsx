@@ -14,7 +14,13 @@ import { Container } from "@mui/system";
 import { LoginContext } from "../Contexts/LoginContext";
 import { Navigation } from "../layouts/Navigation";
 
-// Function to get the artworks from the server
+/**
+ * Function to get the artworks from the server
+ *
+ * @param roomId - The room ID to get the artworks from
+ * @returns The fetched artworks
+ * @author Siger
+ */
 function getArtworks(roomId) {
   return axios
     .get(`/api/artwork/${roomId === "all" ? "" : `room/${roomId}`}`)
@@ -26,7 +32,12 @@ function getArtworks(roomId) {
     });
 }
 
-// Function to get the room from the server
+/**
+ * Function to get the room from the server
+ * @param roomId - The room ID to get the room from
+ * @returns The fetched room
+ * @author Siger
+ */
 function getRoom(roomId) {
   if (roomId === "all") {
     return Promise.resolve({ roomName: "All Rooms" });
@@ -42,7 +53,13 @@ function getRoom(roomId) {
   }
 }
 
-// VisitorArtworkBrowsing component
+/**
+ * VisitorArtworkBrowsing component
+ *
+ * @param artworks - The artworks to display
+ * @param room - The room to display
+ * @author Siger
+ */
 function VisitorArtworkBrowsing({ artworks, room }) {
   return (
     <>
@@ -119,7 +136,12 @@ function EmployeeArtworkBrowsing() {
   return <p>Employee</p>;
 }
 
-// Main function
+/**
+ * Main function
+ *
+ * @returns The ArtworkBrowsing component
+ * @author Siger
+ */
 function ArtworkBrowsing() {
   // Parse the roomId from the URL
   let { roomId } = useParams();

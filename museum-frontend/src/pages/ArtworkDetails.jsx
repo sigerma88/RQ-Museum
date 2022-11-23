@@ -4,18 +4,21 @@ import axios from "axios";
 import {
   Button,
   Divider,
-  Grid,
   List,
   ListItem,
   ListItemText,
   Typography,
 } from "@mui/material";
-import { Container } from "@mui/system";
 import { LoginContext } from "../Contexts/LoginContext";
 import { Navigation } from "../layouts/Navigation";
-import Home from "./Home";
 
-// Function to get the artworks from the server
+/**
+ * Function to get the artwork from the server
+ *
+ * @param artworkId - The artwork id
+ * @returns The fetched artwork
+ * @author Siger
+ */
 function getArtwork(artworkId) {
   return axios
     .get(`/api/artwork/${artworkId}`)
@@ -27,7 +30,13 @@ function getArtwork(artworkId) {
     });
 }
 
-// Function to get the artwork status from the server
+/**
+ * Function to get the artwork status from the server
+ *
+ * @param artworkId - The artwork id
+ * @returns The fetched artwork status
+ * @author Siger
+ */
 function getArtworkStatus(artworkId) {
   return axios
     .get(`/api/artwork/getArtworkStatus/${artworkId}`)
@@ -39,7 +48,13 @@ function getArtworkStatus(artworkId) {
     });
 }
 
-// Funtion to compute the artwork status
+/**
+ * Funtion to compute the artwork status
+ *
+ * @param artworkStatus - The artwork status from the object
+ * @returns string - The computed artwork status
+ * @author Siger
+ */
 function computeArtworkStatus(artworkStatus) {
   let status = "Not Available";
   if (artworkStatus.length > 0) {
@@ -54,7 +69,15 @@ function computeArtworkStatus(artworkStatus) {
   return status;
 }
 
-// Visitor artwork loan section
+/**
+ * Visitor artwork loan section
+ *
+ * @param artwork - The artwork object
+ * @param userRole - The user role
+ * @param loggedIn - The logged in status
+ * @returns The visitor artwork loan section
+ * @author Siger
+ */
 function VisitorArtworkLoan({ artwork, userRole, loggedIn }) {
   if (artwork.isAvailableForLoan && userRole === "visitor" && loggedIn) {
     return (
@@ -91,7 +114,15 @@ function VisitorArtworkLoan({ artwork, userRole, loggedIn }) {
   }
 }
 
-// VisitorArtworkBrowsing component
+/**
+ * VisitorArtworkBrowsing component
+ *
+ * @param artwork - The artwork object
+ * @param userRole - The user role
+ * @param loggedIn - The logged in status
+ * @returns The visitor artwork browsing section
+ * @author Siger
+ */
 function VisitorArtworkDetails({ artwork, userRole, loggedIn }) {
   const imageHeight = window.innerHeight * 0.89;
 
@@ -157,7 +188,12 @@ function EmployeeArtworkDetails() {
   return <p>Employee</p>;
 }
 
-// Main function
+/**
+ * Main function
+ *
+ * @returns The artwork details page
+ * @author Siger
+ */
 function ArtworkDetails() {
   // Parse the roomId from the URL
   let { artworkId } = useParams();
