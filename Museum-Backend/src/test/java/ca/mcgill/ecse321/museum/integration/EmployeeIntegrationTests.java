@@ -7,6 +7,7 @@ import ca.mcgill.ecse321.museum.dao.ManagerRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
 import ca.mcgill.ecse321.museum.dto.EmployeeDto;
 import ca.mcgill.ecse321.museum.dto.ManagerDto;
+import ca.mcgill.ecse321.museum.integration.utilities.UserUtilities;
 import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Manager;
 import ca.mcgill.ecse321.museum.model.Schedule;
@@ -81,25 +82,19 @@ public class EmployeeIntegrationTests {
 
   @Test
   public void testGetAllEmployees() {
-
-    ManagerDto manager = createManagerAndLogin(createManager(FIRST_VALID_MANAGER_NAME,
-        FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD));
-
-    Employee firstEmployee =
-        createEmployee(FIRST_EMPLOYEE_NAME, FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
-    Employee secondEmployee =
-        createEmployee(SECOND_EMPLOYEE_NAME, SECOND_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
-    Employee thirdEmployee = createEmployee(THIRD_EMPLOYEE_VALID_NAME,
+    Employee firstEmployee = UserUtilities.createEmployee(FIRST_EMPLOYEE_NAME,
+        FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
+    Employee secondEmployee = UserUtilities.createEmployee(SECOND_EMPLOYEE_NAME,
+        SECOND_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
+    Employee thirdEmployee = UserUtilities.createEmployee(THIRD_EMPLOYEE_VALID_NAME,
         THIRD_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
 
-    createEmployeeAndSave(firstEmployee);
-    createEmployeeAndSave(secondEmployee);
-    createEmployeeAndSave(thirdEmployee);
+    employeeRepository.save(firstEmployee);
+    employeeRepository.save(secondEmployee);
+    employeeRepository.save(thirdEmployee);
 
 
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Cookie", manager.getSessionId());
-    HttpEntity<Map<String, String>> entity = new HttpEntity<>(headers);
+    HttpEntity<Map<String, String>> entity = new HttpEntity<>(loginSetupManager());
 
 
     ResponseEntity<EmployeeDto[]> responseEntity =
@@ -126,22 +121,21 @@ public class EmployeeIntegrationTests {
 
   @Test
   public void testGetAllEmployeeNotLoggedIn() {
-    ManagerDto manager = createManagerDto(createManager(FIRST_VALID_MANAGER_NAME,
-        FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD));
 
-    Employee firstEmployee =
-        createEmployee(FIRST_EMPLOYEE_NAME, FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
-    Employee secondEmployee =
-        createEmployee(SECOND_EMPLOYEE_NAME, SECOND_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
-    Employee thirdEmployee = createEmployee(THIRD_EMPLOYEE_VALID_NAME,
+    Employee firstEmployee = UserUtilities.createEmployee(FIRST_EMPLOYEE_NAME,
+        FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
+    Employee secondEmployee = UserUtilities.createEmployee(SECOND_EMPLOYEE_NAME,
+        SECOND_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
+    Employee thirdEmployee = UserUtilities.createEmployee(THIRD_EMPLOYEE_VALID_NAME,
         THIRD_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
 
-    createEmployeeAndSave(firstEmployee);
-    createEmployeeAndSave(secondEmployee);
-    createEmployeeAndSave(thirdEmployee);
+    employeeRepository.save(firstEmployee);
+    employeeRepository.save(secondEmployee);
+    employeeRepository.save(thirdEmployee);
 
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Cookie", manager.getSessionId());
+
+
     HttpEntity<Map<String, String>> entity = new HttpEntity<>(headers);
 
 
@@ -161,20 +155,17 @@ public class EmployeeIntegrationTests {
 
   @Test
   public void testGetAllEmployeeNotManager() {
-    EmployeeDto employee = createEmployeeAndLogin(createEmployee(THIRD_EMPLOYEE_VALID_NAME,
-        THIRD_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD));
+    Employee firstEmployee = UserUtilities.createEmployee(FIRST_EMPLOYEE_NAME,
+        FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
+    Employee secondEmployee = UserUtilities.createEmployee(SECOND_EMPLOYEE_NAME,
+        SECOND_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
 
-    Employee firstEmployee =
-        createEmployee(FIRST_EMPLOYEE_NAME, FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
-    Employee secondEmployee =
-        createEmployee(SECOND_EMPLOYEE_NAME, SECOND_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
+    employeeRepository.save(firstEmployee);
+    employeeRepository.save(secondEmployee);
 
-    createEmployeeAndSave(firstEmployee);
-    createEmployeeAndSave(secondEmployee);
 
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Cookie", employee.getSessionId());
-    HttpEntity<?> entity = new HttpEntity<>(headers);
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupEmployee(UserUtilities
+        .createEmployee(THIRD_EMPLOYEE_VALID_NAME, THIRD_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD)));
 
 
     ResponseEntity<String> responseEntity =
@@ -193,22 +184,18 @@ public class EmployeeIntegrationTests {
 
   @Test
   public void testDeleteEmployee() {
-    ManagerDto manager = createManagerAndLogin(createManager(FIRST_VALID_MANAGER_NAME,
-        FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD));
+    Employee firstEmployee = UserUtilities.createEmployee(FIRST_EMPLOYEE_NAME,
+        FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
 
-    Employee firstEmployee =
-        createEmployee(FIRST_EMPLOYEE_NAME, FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
+    employeeRepository.save(firstEmployee);
 
-    createEmployeeAndSave(firstEmployee);
 
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Cookie", manager.getSessionId());
-    HttpEntity<?> entity = new HttpEntity<>(headers);
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
 
 
     ResponseEntity<String> responseEntity =
-        client.exchange("/api/employee/" + firstEmployee.getMuseumUserId(),
-            HttpMethod.DELETE, entity, String.class);
+        client.exchange("/api/employee/" + firstEmployee.getMuseumUserId(), HttpMethod.DELETE,
+            entity, String.class);
 
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     assertNotNull(responseEntity.getBody());
@@ -224,20 +211,15 @@ public class EmployeeIntegrationTests {
 
   @Test
   public void testDeleteInvalidEmployee() {
-    ManagerDto manager = createManagerAndLogin(createManager(FIRST_VALID_MANAGER_NAME,
-        FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD));
+    Employee firstEmployee = UserUtilities.createEmployee(FIRST_EMPLOYEE_NAME,
+        FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
 
-    Employee firstEmployee =
-        createEmployee(FIRST_EMPLOYEE_NAME, FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
+    employeeRepository.save(firstEmployee);
 
-    createEmployeeAndSave(firstEmployee);
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Cookie", manager.getSessionId());
-    HttpEntity<?> entity = new HttpEntity<>(headers);
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupManager());
     ResponseEntity<String> responseEntity =
-        client.exchange("/api/employee/" + firstEmployee.getMuseumUserId() + 1,
-            HttpMethod.DELETE, entity, String.class);
+        client.exchange("/api/employee/" + firstEmployee.getMuseumUserId() + 1, HttpMethod.DELETE,
+            entity, String.class);
 
     assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     assertNotNull(responseEntity.getBody());
@@ -253,20 +235,16 @@ public class EmployeeIntegrationTests {
 
   @Test
   public void testDeleteEmployeeNotLoggedIn() {
-    ManagerDto manager = createManagerDto(createManager(FIRST_VALID_MANAGER_NAME,
-        FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD));
+    Employee firstEmployee = UserUtilities.createEmployee(FIRST_EMPLOYEE_NAME,
+        FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
 
-    Employee firstEmployee =
-        createEmployee(FIRST_EMPLOYEE_NAME, FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
-
-    createEmployeeAndSave(firstEmployee);
+    employeeRepository.save(firstEmployee);
 
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Cookie", manager.getSessionId());
     HttpEntity<?> entity = new HttpEntity<>(headers);
     ResponseEntity<String> responseEntity =
-        client.exchange("/api/employee/" + firstEmployee.getMuseumUserId(),
-            HttpMethod.DELETE, entity, String.class);
+        client.exchange("/api/employee/" + firstEmployee.getMuseumUserId(), HttpMethod.DELETE,
+            entity, String.class);
 
     assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
     assertNotNull(responseEntity.getBody());
@@ -282,104 +260,22 @@ public class EmployeeIntegrationTests {
 
   @Test
   public void testDeleteEmployeeNotManager() {
-    EmployeeDto employee = createEmployeeAndLogin(createEmployee(THIRD_EMPLOYEE_VALID_NAME,
-        THIRD_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD));
 
-    Employee firstEmployee =
-        createEmployee(FIRST_EMPLOYEE_NAME, FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
+    Employee firstEmployee = UserUtilities.createEmployee(FIRST_EMPLOYEE_NAME,
+        FIRST_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD);
 
-    createEmployeeAndSave(firstEmployee);
+    employeeRepository.save(firstEmployee);
 
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Cookie", employee.getSessionId());
-    HttpEntity<?> entity = new HttpEntity<>(headers);
+    HttpEntity<?> entity = new HttpEntity<>(loginSetupEmployee(UserUtilities
+        .createEmployee(THIRD_EMPLOYEE_VALID_NAME, THIRD_EMPLOYEE_VALID_EMAIL, VALID_PASSWORD)));
     ResponseEntity<String> responseEntity =
-        client.exchange("/api/employee/" + firstEmployee.getMuseumUserId(),
-            HttpMethod.DELETE, entity, String.class);
+        client.exchange("/api/employee/" + firstEmployee.getMuseumUserId(), HttpMethod.DELETE,
+            entity, String.class);
 
     assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
     assertNotNull(responseEntity.getBody());
     assertEquals("You are not the manager", responseEntity.getBody(),
         "Correct response body message");
-  }
-
-  /**
-   * Create employeeDto
-   *
-   * @param employee - employee
-   * @return employeeDto - the employeeDto created
-   * @author Kevin
-   */
-
-  public EmployeeDto createEmployeeDto(Employee employee) {
-    return DtoUtility.convertToDto(employee);
-  }
-
-  public Employee createEmployee(String name, String email, String password) {
-    Employee employee = new Employee();
-    employee.setName(name);
-    employee.setEmail(email);
-    employee.setPassword(password);
-    employee.setSchedule(new Schedule());
-
-    return employee;
-  }
-
-  /**
-   * Create employee and save
-   *
-   * @param employee - employee to save
-   * @return employee - the saved employee
-   * @author Kevin
-   */
-
-  public Employee createEmployeeAndSave(Employee employee) {
-    employeeRepository.save(employee);
-    return employee;
-  }
-
-  /**
-   * Create a managerDTO
-   *
-   * @param manager - the manager to be created
-   * @return ManagerDto
-   * @author Kevin
-   */
-
-  public ManagerDto createManagerDto(Manager manager) {
-    return DtoUtility.convertToDto(manager);
-  }
-
-  /**
-   * Create a manager
-   *
-   * @param name     - name of the manager
-   * @param email    - email of the manager
-   * @param password - password of the manager
-   * @return Manager - the manager created
-   * @author Kevin
-   */
-
-  public Manager createManager(String name, String email, String password) {
-    Manager manager = new Manager();
-    manager.setName(name);
-    manager.setEmail(email);
-    manager.setPassword(password);
-
-    return manager;
-  }
-
-  /**
-   * Create a manager and save
-   *
-   * @param manager - the manager to save
-   * @return Manager - the saved manager
-   * @author Kevin
-   */
-
-  public Manager createManagerAndSave(Manager manager) {
-    managerRepository.save(manager);
-    return manager;
   }
 
   /**
@@ -391,7 +287,8 @@ public class EmployeeIntegrationTests {
    */
 
   public EmployeeDto createEmployeeAndLogin(Employee newEmployee) {
-    EmployeeDto employee = createEmployeeDto(createEmployeeAndSave(newEmployee));
+    employeeRepository.save(newEmployee);
+    EmployeeDto employee = UserUtilities.createEmployeeDto(newEmployee);
     ResponseEntity<String> response =
         client.postForEntity("/api/auth/login", employee, String.class);
     List<String> session = response.getHeaders().get("Set-Cookie");
@@ -411,7 +308,8 @@ public class EmployeeIntegrationTests {
    */
 
   public ManagerDto createManagerAndLogin(Manager newManager) {
-    ManagerDto manager = createManagerDto(createManagerAndSave(newManager));
+    managerRepository.save(newManager);
+    ManagerDto manager = UserUtilities.createManagerDto(newManager);
     ResponseEntity<String> response =
         client.postForEntity("/api/auth/login", manager, String.class);
     List<String> session = response.getHeaders().get("Set-Cookie");
@@ -421,4 +319,30 @@ public class EmployeeIntegrationTests {
 
     return manager;
   }
+
+  /**
+   * Create a museum and login
+   *
+   * @param newMuseum - the museum to login
+   * @return museumDto - the logged in museum
+   * @author Kevin
+   */
+  public HttpHeaders loginSetupManager() {
+    ManagerDto manager = createManagerAndLogin(UserUtilities.createManager(FIRST_VALID_MANAGER_NAME,
+        FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", manager.getSessionId());
+    return headers;
+  }
+
+  public HttpHeaders loginSetupEmployee(Employee employee) {
+    EmployeeDto employeeLogin = createEmployeeAndLogin(employee);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", employeeLogin.getSessionId());
+    return headers;
+  }
+
+
 }

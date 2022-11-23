@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.museum.controller;
 
+import ca.mcgill.ecse321.museum.controller.utilities.AuthenticationUtility;
 import ca.mcgill.ecse321.museum.controller.utilities.DtoUtility;
 import ca.mcgill.ecse321.museum.dto.RoomDto;
 import ca.mcgill.ecse321.museum.dto.RoomDtoNoIdRequest;
@@ -8,15 +9,17 @@ import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.service.MuseumService;
 import ca.mcgill.ecse321.museum.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
- * RoomRestController class is used as a controller where we call
- * our API for our web application
+ * RoomRestController class is used as a controller where we call our API for our web application
  *
  * @author Siger
  * @author kieyanmamiche
@@ -44,8 +47,15 @@ public class RoomRestController {
    */
 
   @PostMapping(value = { "/", "" }, produces = "application/json")
-  public ResponseEntity<?> createRoom(@RequestBody RoomDtoNoIdRequest roomDtoNoIdRequest) {
+  public ResponseEntity<?> createRoom(HttpServletRequest request,
+      @RequestBody RoomDtoNoIdRequest roomDtoNoIdRequest) {
     try {
+      HttpSession session = request.getSession();
+      if (!AuthenticationUtility.isLoggedIn(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
+      } else if (!AuthenticationUtility.isStaffMember(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Your are not a staff member");
+      }
       // Get museum
       Museum museum = museumService.getMuseum(roomDtoNoIdRequest.getMuseumId());
       if (museum == null) {
@@ -130,7 +140,7 @@ public class RoomRestController {
   /**
    * RESTful API to update a room
    *
-   * @param roomId   - id of the room
+   * @param roomId - id of the room
    * @param roomName - name of the room
    * @param roomType - type of the room
    * @param museumId - id of the museum of the room
@@ -139,9 +149,16 @@ public class RoomRestController {
    */
 
   @PutMapping(value = { "/{roomId}", "/{roomId}/" }, produces = "application/json")
-  public ResponseEntity<?> editRoom(@PathVariable("roomId") Long roomId,
+  public ResponseEntity<?> editRoom(HttpServletRequest request, @PathVariable("roomId") Long roomId,
       @RequestBody RoomDtoNoIdRequest roomDtoNoIdRequest) {
     try {
+      HttpSession session = request.getSession();
+      if (!AuthenticationUtility.isLoggedIn(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
+      } else if (!AuthenticationUtility.isStaffMember(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Your are not a staff member");
+      }
+
       // Get museum
       Museum museum = null;
       if (roomDtoNoIdRequest.getMuseumId() != null) {
@@ -170,8 +187,16 @@ public class RoomRestController {
    */
 
   @DeleteMapping(value = { "/{roomId}", "/{roomId}/" })
-  public ResponseEntity<?> deleteRoom(@PathVariable("roomId") Long roomId) {
+  public ResponseEntity<?> deleteRoom(HttpServletRequest request,
+      @PathVariable("roomId") Long roomId) {
     try {
+      HttpSession session = request.getSession();
+      if (!AuthenticationUtility.isLoggedIn(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
+      } else if (!AuthenticationUtility.isStaffMember(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Your are not a staff member");
+      }
+
       Room result = roomService.deleteRoom(roomId);
       return ResponseEntity.ok(DtoUtility.convertToDto(result));
     } catch (Exception e) {

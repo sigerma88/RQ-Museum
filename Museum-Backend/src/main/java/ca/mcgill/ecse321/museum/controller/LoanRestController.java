@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.museum.controller;
 
+import ca.mcgill.ecse321.museum.controller.utilities.AuthenticationUtility;
 import ca.mcgill.ecse321.museum.controller.utilities.DtoUtility;
 import ca.mcgill.ecse321.museum.dto.LoanDto;
 import ca.mcgill.ecse321.museum.model.Loan;
@@ -8,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.net.http.HttpRequest;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -28,8 +31,17 @@ public class LoanRestController {
    * @author Eric
    */
   @GetMapping(value = {"/{loanId}", "/{loanId}/"})
-  public ResponseEntity<?> getLoanById(@PathVariable("loanId") Long loanId) {
+  public ResponseEntity<?> getLoanById(HttpServletRequest request,
+      @PathVariable("loanId") Long loanId) {
     try {
+      HttpSession session = request.getSession();
+      if (!AuthenticationUtility.isLoggedIn(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
+      } else if (!AuthenticationUtility.isMuseumUser(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body("Your need to be a musuem user to access this");
+      }
+
       // Check if loan exists
       Loan loan = loanService.getLoanById(loanId);
       if (loan == null) {
@@ -49,8 +61,15 @@ public class LoanRestController {
    * @author Eric
    */
   @GetMapping(value = {"", "/"})
-  public ResponseEntity<?> getLoans() {
+  public ResponseEntity<?> getLoans(HttpServletRequest request) {
     try {
+      HttpSession session = request.getSession();
+      if (!AuthenticationUtility.isLoggedIn(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
+      } else if (!AuthenticationUtility.isMuseumUser(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body("You need to be a staff member to access this");
+      }
       List<LoanDto> loanDtos = new ArrayList<LoanDto>();
       for (Loan loan : loanService.getAllLoans()) {
         loanDtos.add(DtoUtility.convertToDto(loan));
@@ -69,9 +88,20 @@ public class LoanRestController {
    * @author Eric
    */
   @PutMapping(value = {"/edit", "/edit/"})
-  public ResponseEntity<?> putLoan(@RequestBody LoanDto loanDto) {
+  public ResponseEntity<?> putLoan(HttpServletRequest request, @RequestBody LoanDto loanDto) {
     try {
-      return new ResponseEntity<>(((DtoUtility.convertToDto(loanService.putLoanById(loanDto.getLoanId(), loanDto.getRequestAccepted())))), HttpStatus.OK);
+      HttpSession session = request.getSession();
+      if (!AuthenticationUtility.isLoggedIn(session)) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You are not logged in");
+      } else if (!AuthenticationUtility.isMuseumUser(session)) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body("You need to be a staff member to access this");
+      }
+
+      return new ResponseEntity<>(
+          ((DtoUtility.convertToDto(
+              loanService.putLoanById(loanDto.getLoanId(), loanDto.getRequestAccepted())))),
+          HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
@@ -86,8 +116,16 @@ public class LoanRestController {
    * @author Eric
    */
   @PostMapping(value = {"/create", "/create/"})
-  public ResponseEntity<?> postLoan(@RequestBody LoanDto loanDto) {
+  public ResponseEntity<?> postLoan(HttpServletRequest request, @RequestBody LoanDto loanDto) {
     try {
+
+      HttpSession session = request.getSession();
+      if (!AuthenticationUtility.isLoggedIn(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
+      } else if (!AuthenticationUtility.isMuseumUser(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body("Your need to be a musuem user to access this");
+      }
 
       Loan persistedLoan = loanService.createLoan(loanDto);
 
@@ -107,8 +145,20 @@ public class LoanRestController {
    * @author Eric
    */
   @DeleteMapping(value = {"/delete/{loanId}", "/delete/{loanId}/"})
-  public ResponseEntity<?> deleteLoan(@PathVariable("loanId") Long loanId) {
+  public ResponseEntity<?> deleteLoan(HttpServletRequest request,
+      @PathVariable("loanId") Long loanId) {
     try {
+      // needs to be rethinked as we want use to cancel their loans, but also restrict visitors to
+      // delete other visitors loans
+
+      HttpSession session = request.getSession();
+      if (!AuthenticationUtility.isLoggedIn(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
+      } else if (!AuthenticationUtility.isMuseumUser(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body("You need to be a museum user to access this");
+      }
+
       loanService.deleteLoanByLoanId(loanId);
 
       return new ResponseEntity<>("Loan deleted", HttpStatus.OK);
