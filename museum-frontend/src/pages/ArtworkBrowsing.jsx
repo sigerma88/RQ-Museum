@@ -99,7 +99,6 @@ function VisitorArtworkBrowsing({ artworks, room }) {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  {/* TODO: Add link to artwork page */}
                   <Button
                     variant="contained"
                     size="small"
