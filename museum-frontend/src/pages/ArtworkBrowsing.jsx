@@ -11,9 +11,9 @@ import {
   Typography,
 } from "@mui/material";
 import { Container } from "@mui/system";
-import { LoginContext } from "../../Contexts/LoginContext";
-import { Navigation } from "../../layouts/Navigation";
-import Home from "../Home";
+import { LoginContext } from "../Contexts/LoginContext";
+import { Navigation } from "../layouts/Navigation";
+import Home from "./Home";
 
 // Function to get the artworks from the server
 function getArtworks(roomId) {
