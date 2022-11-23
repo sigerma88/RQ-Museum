@@ -128,14 +128,12 @@ function ArtworkBrowsing() {
   });
 
   const { loggedIn, userRole } = useContext(LoginContext);
-  if (userRole === "visitor" && loggedIn) {
-    return <VisitorArtworkBrowsing artworks={artworks} room={room} />;
-  } else if (userRole === "manager" && loggedIn) {
+  if (userRole === "manager" && loggedIn) {
     return <ManagerArtworkBrowsing />;
   } else if (userRole === "employee" && loggedIn) {
     return <EmployeeArtworkBrowsing />;
   } else {
-    return <Home />;
+    return <VisitorArtworkBrowsing artworks={artworks} room={room} />;
   }
 }
 
