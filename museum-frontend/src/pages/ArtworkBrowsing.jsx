@@ -53,10 +53,9 @@ function VisitorArtworkBrowsing({ artworks, room }) {
       <Container sx={{ py: 5 }}>
         <Grid container spacing={4}>
           {artworks.map((card) => (
-            <Grid item key={card} xs={12} md={6}>
+            <Grid item key={card} xs={12} sm={6} md={2}>
               <Card
                 sx={{
-                  height: "100%",
                   display: "flex",
                   flexDirection: "column",
                 }}
@@ -65,14 +64,19 @@ function VisitorArtworkBrowsing({ artworks, room }) {
                   component="img"
                   image={card.image}
                   alt="Artwork image"
-                  sx={{ height: 500 }}
                 />
                 <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography gutterBottom variant="h5" component="h2">
+                  <Typography
+                    gutterBottom
+                    variant="subtitle1"
+                    style={{ fontWeight: "bold" }}
+                  >
                     {card.name}
                   </Typography>
-                  <Typography variant="h6">{"by " + card.artist}</Typography>
-                  <Typography color={"gray"}>
+                  <Typography variant="subtitle2">
+                    {"by " + card.artist}
+                  </Typography>
+                  <Typography variant="caption" color={"gray"}>
                     {`${card.isAvailableForLoan ? "Available for loan" : ""}` +
                       `${card.isOnLoan ? " but is currently on loan" : ""}`}
                   </Typography>
