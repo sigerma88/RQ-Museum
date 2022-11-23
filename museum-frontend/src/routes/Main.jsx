@@ -5,6 +5,7 @@ import { Navigation } from "../layouts/Navigation";
 import { Login } from "../pages/Login";
 import { Signup } from "../pages/Signup";
 import { LoginContext } from "../Contexts/LoginContext";
+import ArtworkDetails from "../pages/ArtworkDetails";
 
 export function Main() {
   const [loggedIn, setLoggedIn] = useState(
@@ -23,6 +24,10 @@ export function Main() {
           <Route path="/" index element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route
+            path="/browse/artwork/:artworkId"
+            element={<ArtworkDetails />}
+          />
           {/* <Route
             path="/employee"
             element={
