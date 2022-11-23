@@ -58,6 +58,7 @@ function VisitorArtworkBrowsing({ artworks, room }) {
                 sx={{
                   display: "flex",
                   flexDirection: "column",
+                  height: "100%",
                 }}
               >
                 <CardMedia
