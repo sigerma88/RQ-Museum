@@ -5,7 +5,7 @@ import { Navigation } from "../layouts/Navigation";
 import { Login } from "../pages/Login";
 import { Signup } from "../pages/Signup";
 import { LoginContext } from "../Contexts/LoginContext";
-import ArtworkBrowsing from "../pages/Visitor/ArtworkBrowsing";
+import ArtworkBrowsing from "../pages/ArtworkBrowsing";
 
 export function Main() {
   const [loggedIn, setLoggedIn] = useState(
