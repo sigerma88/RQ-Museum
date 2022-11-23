@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+/**
+ * @VZ
+ * @returns table of employees
+ */
 export default function Admin() {
   const [employees, setEmployees] = useState([]); // initial state set to empty array
 
