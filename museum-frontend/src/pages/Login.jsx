@@ -22,13 +22,11 @@ export function Login() {
         password: password,
       })
       .then(function (response) {
-        console.log(response);
         if (response.status === 200) {
           setLoggedIn(true);
           setUserRole(response.data);
-          localStorage.setItem("userRole", response.data);
-          localStorage.setItem("loggedIn", true);
-          console.log(userRole);
+          sessionStorage.setItem("userRole", response.data);
+          sessionStorage.setItem("loggedIn", true);
           navigate("/");
         }
       })
@@ -36,7 +34,6 @@ export function Login() {
         setErrorMessage(error.response.data);
         setIsFormInvalid(true);
         setLoggedIn(false);
-        console.log(error.response.data);
       });
   };
   return (

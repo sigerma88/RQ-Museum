@@ -5,44 +5,57 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Avatar from "@mui/material/Avatar";
 import axios from "axios";
 import { LoginContext } from "../Contexts/LoginContext";
 import { useNavigate } from "react-router-dom";
-const visitorPage = ["Visit", "Exhibitions", "Collections", "Ticket"];
-const managerPage = ["Room", "Artwork", "Employee", "Schedule"];
-const employeePage = ["Room", "Artwork", "Schedule"];
-const generalPage = ["Visit", "Exhibitions", "Collections"];
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+
+// const visitorPage = ["Visit", "Exhibitions", "Collections", "Ticket"];
+// const managerPage = ["Room", "Artwork", "Employee", "Schedule"];
+// const employeePage = ["Room", "Artwork", "Schedule"];
+const generalPage = ["Home", "Ticket", "Loan"];
+const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 export function Navigation() {
   const { loggedIn, setLoggedIn } = useContext(LoginContext);
   const { userRole } = useContext(LoginContext);
+  const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
   const navigate = useNavigate();
 
-  let page = [];
-  if (userRole === "visitor") {
-    page = visitorPage;
-  } else if (userRole === "employee") {
-    page = employeePage;
-  } else if (userRole === "manager") {
-    page = managerPage;
-  } else {
-    page = generalPage;
-  }
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  let page = generalPage;
+  // if (userRole === "visitor") {
+  //   page = visitorPage;
+  // } else if (userRole === "employee") {
+  //   page = employeePage;
+  // } else if (userRole === "manager") {
+  //   page = managerPage;
+  // } else {
+  //   page = generalPage;
+  // }
 
   const handleLogout = () => {
     axios
       .post("/api/auth/logout")
       .then(function (response) {
-        console.log(response);
         if (response.status === 200) {
           setLoggedIn(false);
-          localStorage.clear();
+          sessionStorage.clear();
           navigate("/");
         }
       })
       .catch(function (error) {
         setLoggedIn(true);
-        console.log(error.response.data);
       });
   };
 
@@ -65,13 +78,34 @@ export function Navigation() {
     return (
       <>
         <Box>
-          <Button
-            style={{ color: "black" }}
-            href="/logout"
-            onClick={handleLogout}
+          <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+            <Avatar alt="Remy Sharp" />
+          </IconButton>
+          <Menu
+            sx={{ mt: "45px" }}
+            id="menu-appbar"
+            anchorEl={anchorElUser}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            onClose={handleCloseUserMenu}
+            open={Boolean(anchorElUser)}
           >
-            Logout
-          </Button>
+            <MenuItem onClick={handleCloseUserMenu}>
+              <Button style={{ color: "black" }}>Edit Profile</Button>
+            </MenuItem>
+            <MenuItem onClick={handleCloseUserMenu}>
+              <Button style={{ color: "black" }} onClick={handleLogout}>
+                Logout
+              </Button>
+            </MenuItem>
+          </Menu>
         </Box>
       </>
     );
@@ -100,10 +134,10 @@ export function Navigation() {
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {page.map((page) => (
+            {generalPage.map((page) => (
               <Button
                 key={page}
-                href={`/${page.toLowerCase()}`}
+                href={page === "Home" ? "/" : `/${page.toLowerCase()}`}
                 sx={{ my: 2, color: "black", display: "block" }}
               >
                 {page}

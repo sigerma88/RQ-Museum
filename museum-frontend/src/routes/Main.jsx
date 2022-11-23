@@ -5,15 +5,13 @@ import { Navigation } from "../layouts/Navigation";
 import { Login } from "../pages/Login";
 import { Signup } from "../pages/Signup";
 import { LoginContext } from "../Contexts/LoginContext";
-import { Manager } from "../pages/Manager/Manager";
-import { Employee } from "../pages/Employee/Employee";
 
 export function Main() {
   const [loggedIn, setLoggedIn] = useState(
-    localStorage.getItem("loggedIn") ?? false
+    sessionStorage.getItem("loggedIn") ?? false
   );
   const [userRole, setUserRole] = useState(
-    localStorage.getItem("userRole") ?? ""
+    sessionStorage.getItem("userRole") ?? ""
   );
   return (
     <LoginContext.Provider
@@ -25,18 +23,18 @@ export function Main() {
           <Route path="/" index element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route
+          {/* <Route
             path="/employee"
             element={
               userRole === "employee" ? <Employee /> : <Navigate to="/login" />
             }
-          />
-          <Route
+          /> */}
+          {/* <Route
             path="/manager"
             element={
               userRole === "employee" ? <Manager /> : <Navigate to="/login" />
             }
-          />
+          /> */}
         </Routes>
       </BrowserRouter>
     </LoginContext.Provider>
