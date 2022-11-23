@@ -5,6 +5,7 @@ import { Navigation } from "../layouts/Navigation";
 import { Login } from "../pages/Login";
 import { Signup } from "../pages/Signup";
 import { LoginContext } from "../Contexts/LoginContext";
+import { Schedule } from "../pages/Schedule";
 
 export function Main() {
   const [loggedIn, setLoggedIn] = useState(
@@ -23,6 +24,7 @@ export function Main() {
           <Route path="/" index element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/schedule/:id" element={<Schedule />} />
           {/* <Route
             path="/employee"
             element={

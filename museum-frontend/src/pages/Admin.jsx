@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 /**
- * @VZ
+ * @author VZ and Kevin 
  * @returns table of employees
  */
 export default function Admin() {
@@ -45,8 +46,11 @@ export default function Admin() {
               <tr key={employee.museumUserId}>
                 <td> {employee.name} </td>
                 <td> {employee.email} </td>
+                <td> <a href = {`/schedule/${employee.museumUserId}`} >View {employee.name.charAt(employee.name.length-1) !== "s"?employee.name+"'s":employee.name +"'"} schedule</a> </td>
               </tr>
             ))}
+
+
           </tbody>
         </table>
       </div>
