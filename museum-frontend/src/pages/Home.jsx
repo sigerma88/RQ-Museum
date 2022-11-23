@@ -3,6 +3,7 @@ import Typography from "@mui/material/Typography";
 import "./Home.css";
 import { LoginContext } from "../Contexts/LoginContext";
 import { Navigation } from "../layouts/Navigation";
+import Admin from "./Admin";
 
 function LandingPage() {
   return (
@@ -44,7 +45,7 @@ function VisitorHomePage() {
 }
 
 function ManagerHomePage() {
-  return <p>Admin</p>;
+  return <Admin />;
 }
 
 function EmployeeHomePage() {
