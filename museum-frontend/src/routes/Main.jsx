@@ -7,6 +7,7 @@ import { Signup } from "../pages/Signup";
 import { LoginContext } from "../Contexts/LoginContext";
 import ArtworkBrowsing from "../pages/ArtworkBrowsing";
 import ArtworkDetails from "../pages/ArtworkDetails";
+import TicketViewing from "../pages/TicketViewing";
 
 export function Main() {
   const [loggedIn, setLoggedIn] = useState(
@@ -30,6 +31,7 @@ export function Main() {
             path="/browse/artwork/:artworkId"
             element={<ArtworkDetails />}
           />
+          <Route path="/ticket" element={<TicketViewing />} />
           {/* <Route
             path="/employee"
             element={
