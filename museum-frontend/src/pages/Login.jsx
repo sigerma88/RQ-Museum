@@ -1,9 +1,21 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
-import { Typography, TextField, Button, Box, Paper } from "@mui/material";
+import {
+  Typography,
+  TextField,
+  Button,
+  Box,
+  Paper,
+  Avatar,
+} from "@mui/material";
 import "./Login.css";
 import { LoginContext } from "../Contexts/LoginContext";
 import { useNavigate } from "react-router-dom";
+
+/**
+ * Login page
+ * @returns Login page
+ */
 
 export function Login() {
   const [password, setPassword] = useState("");
@@ -24,17 +36,15 @@ export function Login() {
       })
       .then(function (response) {
         if (response.status === 200) {
-          console.log(response.data.museumUserId);
           setUserRole(response.data.role);
           setUserName(response.data.name);
           setUserEmail(response.data.email);
           setUserId(response.data.id);
           setLoggedIn(true);
-          console.log(response.data);
           localStorage.setItem("userName", response.data.name);
+          localStorage.setItem("userEmail", response.data.email);
           localStorage.setItem("userRole", response.data.role);
           localStorage.setItem("loggedIn", true);
-          localStorage.setItem("userEmail", response.data.email);
           localStorage.setItem("userId", response.data.museumUserId);
 
           navigate("/");
@@ -54,6 +64,14 @@ export function Login() {
           elevation={3}
           style={{ width: "50%", margin: "auto", padding: "50px" }}
         >
+          <Avatar
+            sx={{
+              margin: "auto",
+              marginBottom: "20px",
+              width: "50px",
+              height: "50px",
+            }}
+          ></Avatar>
           <Typography variant="h4" component="h1">
             Log in
           </Typography>

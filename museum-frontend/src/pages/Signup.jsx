@@ -1,9 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { Typography, TextField, Button, Box, Paper } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Typography,
+  TextField,
+  Button,
+  Box,
+  Paper,
+  Avatar,
+} from "@mui/material";
 import axios from "axios";
 import "./Login.css";
 import { LoginContext } from "../Contexts/LoginContext";
 import { useNavigate } from "react-router-dom";
+import LoginIcon from "@mui/icons-material/Login";
+
+/**
+ * Sign in page
+ * @returns  Sign in page
+ */
 
 export function Signup() {
   const [name, setName] = useState("");
@@ -59,6 +72,17 @@ export function Signup() {
             align: "space-between",
           }}
         >
+          <Avatar
+            sx={{
+              margin: "auto",
+              marginBottom: "20px",
+              width: "50px",
+              height: "50px",
+              bgcolor: "black",
+            }}
+          >
+            <LoginIcon />
+          </Avatar>
           <Typography variant="h4" component="h1">
             Sign up
           </Typography>
@@ -93,10 +117,11 @@ export function Signup() {
                 onChange={(e) => setEmail(e.target.value)}
                 className="login-field"
                 helperText={
-                  isFormInvalid && errorMessage.includes("email")
-                    ? errorMessage
-                    : ""
+                  isFormInvalid &&
+                  errorMessage.includes("email") &&
+                  errorMessage
                 }
+                error={isFormInvalid && errorMessage.includes("email")}
               />
               <TextField
                 margin="normal"
@@ -110,10 +135,11 @@ export function Signup() {
                 onChange={(e) => setPassword(e.target.value)}
                 className="login-field"
                 helperText={
-                  isFormInvalid && errorMessage.includes("Password")
-                    ? errorMessage
-                    : ""
+                  isFormInvalid &&
+                  errorMessage.includes("password") &&
+                  errorMessage
                 }
+                error={isFormInvalid && errorMessage.includes("password")}
               />
             </Box>
             <Button
