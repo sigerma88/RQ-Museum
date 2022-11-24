@@ -16,6 +16,6 @@ public interface TicketRepository extends CrudRepository<Ticket, Long> {
 
   Ticket findTicketByTicketId(Long ticketId);
 
-  List<Ticket> findTicketByVisitor(Visitor visitor);
+  List<Ticket> findTicketByVisitorOrderByVisitDate(Visitor visitor);
 
 }
