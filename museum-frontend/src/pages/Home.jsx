@@ -3,7 +3,9 @@ import Typography from "@mui/material/Typography";
 import "./Home.css";
 import { LoginContext } from "../Contexts/LoginContext";
 import { Navigation } from "../layouts/Navigation";
-import Admin from "./Admin";
+import Admin from "./ViewEmployees";
+import ViewEmployees from "./ViewEmployees";
+import { Link } from "react-router-dom";
 
 function LandingPage() {
   return (
@@ -45,7 +47,7 @@ function VisitorHomePage() {
 }
 
 function ManagerHomePage() {
-  return <Admin />;
+  return <Link to="/employees">View all employees</Link>;
 }
 
 function EmployeeHomePage() {

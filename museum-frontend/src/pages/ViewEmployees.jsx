@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
 
 /**
- * @author VZ and Kevin 
+ * @author VZ and Kevin
  * @returns table of employees
  */
-export default function Admin() {
+export function ViewEmployees() {
   const [employees, setEmployees] = useState([]); // initial state set to empty array
-
 
   useEffect(() => {
     // function getAllEmployees() {
@@ -46,15 +44,21 @@ export default function Admin() {
               <tr key={employee.museumUserId}>
                 <td> {employee.name} </td>
                 <td> {employee.email} </td>
-                <td> <a href = {`/schedule/${employee.museumUserId}`} >View {employee.name.charAt(employee.name.length-1) !== "s"?employee.name+"'s":employee.name +"'"} schedule</a> </td>
+                <td>
+                  {" "}
+                  <a href={`/schedule/${employee.museumUserId}`}>
+                    View {grammarCheck(employee.name)} schedule
+                  </a>{" "}
+                </td>
               </tr>
             ))}
-
-
           </tbody>
         </table>
       </div>
     );
-
   }
+}
+
+function grammarCheck(name) {
+  return name.charAt(name.length - 1) !== "s" ? name + "'s" : name + "'";
 }

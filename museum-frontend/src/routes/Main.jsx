@@ -6,6 +6,7 @@ import { Login } from "../pages/Login";
 import { Signup } from "../pages/Signup";
 import { LoginContext } from "../Contexts/LoginContext";
 import { Schedule } from "../pages/Schedule";
+import { ViewEmployees } from "../pages/ViewEmployees";
 
 export function Main() {
   const [loggedIn, setLoggedIn] = useState(
@@ -25,6 +26,7 @@ export function Main() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/schedule/:id" element={<Schedule />} />
+          <Route path="/employees" element={<ViewEmployees />} />s
           {/* <Route
             path="/employee"
             element={
