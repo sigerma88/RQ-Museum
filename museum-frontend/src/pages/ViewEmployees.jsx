@@ -8,7 +8,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { createTheme } from "@mui/system";
+import { createTheme, padding } from "@mui/system";
 import { Typography } from "@mui/material";
 
 function createData(name, email, view_schedule) {
@@ -36,7 +36,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const header = createTheme({
   typography: {
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 18,
   },
 });
 
@@ -69,8 +69,25 @@ export function ViewEmployees() {
   } else {
     return (
       <>
-        <TableContainer component={Paper}>
-          <Table sx={{ maxWidth: 800 }} aria-label="simple table">
+        <div>
+          <h1 style={{ marginTop: 20, marginBottom: 20 }}>
+            List of all Employees
+          </h1>
+        </div>
+        <TableContainer
+          component={Paper}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            maxHeight: "500px",
+            maxWidth: "1000px",
+            boxShadow: 4,
+            borderRadius: 2,
+            my: 2,
+            mx: "auto",
+          }}
+        >
+          <Table aria-label="simple table">
             <TableHead>
               <TableRow>
                 <StyledTableCell>
@@ -91,43 +108,17 @@ export function ViewEmployees() {
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <StyledTableCell>{employee.name}</StyledTableCell>
-                  <TableCell>{employee.email}</TableCell>
-                  <TableCell align="right">
+                  <StyledTableCell>{employee.email}</StyledTableCell>
+                  <StyledTableCell align="right">
                     <a href={`/schedule/${employee.museumUserId}`}>
                       View {grammarCheck(employee.name)} schedule
                     </a>
-                  </TableCell>
+                  </StyledTableCell>
                 </StyledTableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
-        {/* <div>
-          <h1>Employees</h1>
-          <table style={{ width: "100%" }}>
-            <thead>
-              <tr>
-                <th> Name </th>
-                <th> Email </th>
-                <th> View Schedule </th>
-              </tr>
-            </thead>
-            <tbody>
-              {employees.map((employee) => (
-                <tr key={employee.museumUserId}>
-                  <td> {employee.name} </td>
-                  <td> {employee.email} </td>
-                  <td>
-                    {" "}
-                    <a href={`/schedule/${employee.museumUserId}`}>
-                      View {grammarCheck(employee.name)} schedule
-                    </a>{" "}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div> */}
       </>
     );
   }
