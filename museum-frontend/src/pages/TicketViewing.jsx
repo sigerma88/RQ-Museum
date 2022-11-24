@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
 import axios from "axios";
 import {
   Button,
@@ -7,9 +6,6 @@ import {
   CardContent,
   Divider,
   Grid,
-  List,
-  ListItem,
-  ListItemText,
   Typography,
 } from "@mui/material";
 import { Container } from "@mui/system";
@@ -46,16 +42,48 @@ function getTickets(visitorId) {
 function GenerateTicketPasses({ tickets }) {
   return (
     <Container sx={{ py: 5 }}>
-      <Grid container spacing={4}>
+      <Grid container spacing={2}>
         {tickets.map((ticket) => (
           <Grid item xs={12} key={ticket.ticketId}>
-            <Card>
-              <CardContent className="ticket-card-content">
-                <Typography variant="h6" component="h2">
-                  {"Ticket ID: " + ticket.ticketId}
+            <Card sx={{ width: "800px" }}>
+              <CardContent className="pass-card-content">
+                <Typography
+                  variant="h6"
+                  className="pass-visitor-information"
+                  sx={{ fontStyle: "italic" }}
+                >
+                  Pass issued to
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {"Date: " + ticket.visitDate}
+                <Typography
+                  variant="h5"
+                  className="pass-visitor-information"
+                  sx={{ fontWeight: "bolder" }}
+                >
+                  {ticket.visitor.name}
+                </Typography>
+                <Typography
+                  variant="h6"
+                  color="text.secondary"
+                  className="pass-visitor-information"
+                >
+                  {ticket.visitor.email}
+                </Typography>
+                <Typography
+                  variant="h6"
+                  className="pass-ticket-information"
+                  sx={{ fontStyle: "italic" }}
+                >
+                  Pass valid on
+                </Typography>
+                <Typography
+                  variant="h5"
+                  className="pass-ticket-information"
+                  sx={{ fontWeight: "bolder" }}
+                >
+                  {ticket.visitDate}
+                </Typography>
+                <Typography variant="secondary" className="pass-ticket-id">
+                  {"Ticket ID: " + ticket.ticketId}
                 </Typography>
               </CardContent>
             </Card>

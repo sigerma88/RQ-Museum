@@ -1,8 +1,32 @@
-.ticket-card-content {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  background-color: rgb(231, 231, 231);
+.pass-card-content {
+  height: 200px;
+  width: 800px;
+  background-image: url(../assets/RQ_logo.svg);
+  background-repeat: no-repeat;
+  background-position: left;
+  background-size: 40%;
+  background-color: #d6d6cd59;
+  background-position-x: 20px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 5px;
+}
+
+.pass-ticket-information {
+  position: relative;
+  top: -53px;
+  left: 300px;
+}
+
+.pass-visitor-information {
+  position: relative;
+  top: 36px;
+  left: 80px;
+}
+
+.pass-ticket-id {
+  position: relative;
+  top: 0px;
+  left: -340px;
+  font-style: italic;
 }
