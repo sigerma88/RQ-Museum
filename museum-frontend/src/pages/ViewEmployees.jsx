@@ -10,6 +10,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { createTheme, padding } from "@mui/system";
 import { Typography } from "@mui/material";
+import "./ViewEmployee.css";
 
 function createData(name, email, view_schedule) {
   return { name, email, view_schedule };
@@ -82,7 +83,7 @@ export function ViewEmployees() {
             maxHeight: "500px",
             maxWidth: "1000px",
             boxShadow: 4,
-            borderRadius: 2,
+            borderRadius: 1,
             my: 2,
             mx: "auto",
           }}
@@ -110,7 +111,10 @@ export function ViewEmployees() {
                   <StyledTableCell>{employee.name}</StyledTableCell>
                   <StyledTableCell>{employee.email}</StyledTableCell>
                   <StyledTableCell align="right">
-                    <a href={`/schedule/${employee.museumUserId}`}>
+                    <a
+                      href={`/schedule/${employee.museumUserId}`}
+                      className="hover-underline-animation"
+                    >
                       View {grammarCheck(employee.name)} schedule
                     </a>
                   </StyledTableCell>
@@ -124,6 +128,7 @@ export function ViewEmployees() {
   }
 }
 
+// Helper function to check if the name ends with an s
 function grammarCheck(name) {
   return name.charAt(name.length - 1) !== "s" ? name + "'s" : name + "'";
 }
