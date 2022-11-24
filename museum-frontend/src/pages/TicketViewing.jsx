@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import {
+  Box,
   Button,
   Card,
   CardContent,
@@ -13,6 +14,7 @@ import "./TicketViewing.css";
 import { LoginContext } from "../Contexts/LoginContext";
 import { Navigation } from "../layouts/Navigation";
 import { Login } from "./Login";
+import { TicketBuying } from "./TicketBuying";
 
 /**
  * Function to get the tickets of a visitor from the server
@@ -150,11 +152,14 @@ function GenerateTicketPasses({ validPasses, expiredPasses }) {
  * @author Siger
  */
 function VisitorTicket() {
+  // TODO: Get user ID
+  const visitorId = 1;
+
   // Get the tickets from the server
   const [validPasses, setValidPasses] = useState([]);
-  const [expiredPasses, setExpiredPasses] = useState([]); // TODO: Get user ID
+  const [expiredPasses, setExpiredPasses] = useState([]);
   useEffect(() => {
-    getTickets(1).then((tickets) => {
+    getTickets(visitorId).then((tickets) => {
       const currentDate = new Date();
       setValidPasses(
         tickets.filter(
@@ -168,17 +173,35 @@ function VisitorTicket() {
         )
       );
     });
-  }, [1]);
+  }, [visitorId]);
+
+  // Dialog state
+  const [open, setOpen] = useState(false);
+  const handleClose = () => setOpen(false);
+  const handleOpen = () => setOpen(true);
 
   return (
     <>
       <Typography variant="h4" component="h1" marginTop={5} marginBottom={5}>
         My Tickets
       </Typography>
+      <Button
+        onClick={handleOpen}
+        variant="contained"
+        size="large"
+        className="buy-ticket"
+      >
+        Buy tickets
+      </Button>
       <Divider variant="middle" />
       <GenerateTicketPasses
         validPasses={validPasses}
         expiredPasses={expiredPasses}
+      />
+      <TicketBuying
+        open={open}
+        handleClose={handleClose}
+        visitorId={visitorId}
       />
     </>
   );
