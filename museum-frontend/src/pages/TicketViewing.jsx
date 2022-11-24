@@ -39,11 +39,11 @@ function getTickets(visitorId) {
  * @returns The generated passes
  * @author Siger
  */
-function GenerateTicketPasses({ tickets }) {
+function GenerateTicketPasses({ validPasses, expiredPasses }) {
   return (
     <Container sx={{ py: 5 }}>
       <Grid container spacing={2}>
-        {tickets.map((ticket) => (
+        {validPasses.map((ticket) => (
           <Grid item xs={12} key={ticket.ticketId}>
             <Card sx={{ width: "800px" }}>
               <CardContent className="pass-card-content">
@@ -89,6 +89,55 @@ function GenerateTicketPasses({ tickets }) {
             </Card>
           </Grid>
         ))}
+        {expiredPasses.map((ticket) => (
+          <Grid item xs={12} key={ticket.ticketId}>
+            <Card sx={{ width: "800px" }}>
+              <CardContent className="pass-expired">
+                <Typography
+                  variant="h6"
+                  className="pass-visitor-information"
+                  sx={{ fontStyle: "italic" }}
+                >
+                  Pass issued to
+                </Typography>
+                <Typography
+                  variant="h5"
+                  className="pass-visitor-information"
+                  sx={{ fontWeight: "bolder" }}
+                >
+                  {ticket.visitor.name}
+                </Typography>
+                <Typography
+                  variant="h6"
+                  color="text.secondary"
+                  className="pass-visitor-information"
+                >
+                  {ticket.visitor.email}
+                </Typography>
+                <Typography
+                  variant="h6"
+                  className="pass-ticket-information"
+                  sx={{ fontStyle: "italic" }}
+                >
+                  Pass valid on
+                </Typography>
+                <Typography
+                  variant="h5"
+                  className="pass-ticket-information"
+                  sx={{ fontWeight: "bolder" }}
+                >
+                  {ticket.visitDate}
+                </Typography>
+                <Typography variant="secondary" className="pass-ticket-id">
+                  {"Ticket ID: " + ticket.ticketId}
+                </Typography>
+                <Typography variant="h2" className="expire-message">
+                  This pass has expired
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
       </Grid>
     </Container>
   );
@@ -102,14 +151,24 @@ function GenerateTicketPasses({ tickets }) {
  */
 function VisitorTicket() {
   // Get the tickets from the server
-  const [tickets, setTickets] = useState([]); // TODO: Get user ID
+  const [validPasses, setValidPasses] = useState([]);
+  const [expiredPasses, setExpiredPasses] = useState([]); // TODO: Get user ID
   useEffect(() => {
     getTickets(1).then((tickets) => {
-      setTickets(tickets);
+      const currentDate = new Date();
+      setValidPasses(
+        tickets.filter(
+          (ticket) =>
+            ticket.visitDate >= currentDate.toISOString().split("T")[0]
+        )
+      );
+      setExpiredPasses(
+        tickets.filter(
+          (ticket) => ticket.visitDate < currentDate.toISOString().split("T")[0]
+        )
+      );
     });
   }, [1]);
-
-  // TODO: Get user information to display on the tickets
 
   return (
     <>
@@ -117,7 +176,10 @@ function VisitorTicket() {
         My Tickets
       </Typography>
       <Divider variant="middle" />
-      <GenerateTicketPasses tickets={tickets} />
+      <GenerateTicketPasses
+        validPasses={validPasses}
+        expiredPasses={expiredPasses}
+      />
     </>
   );
 }

@@ -12,6 +12,20 @@
   border-radius: 5px;
 }
 
+.pass-expired {
+  height: 200px;
+  width: 800px;
+  background-image: url(../assets/RQ_logo.svg);
+  background-repeat: no-repeat;
+  background-position: left;
+  background-size: 40%;
+  background-color: #333330a9;
+  background-position-x: 20px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 5px;
+}
+
 .pass-ticket-information {
   position: relative;
   top: -53px;
@@ -28,5 +42,14 @@
   position: relative;
   top: 0px;
   left: -340px;
+  font-style: italic;
+}
+
+.expire-message {
+  position: relative;
+  top: -130px;
+  left: 0px;
+  rotate: -15deg;
+  color: red;
   font-style: italic;
 }
