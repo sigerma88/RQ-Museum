@@ -8,6 +8,8 @@ import { LoginContext } from "../Contexts/LoginContext";
 import ArtworkBrowsing from "../pages/ArtworkBrowsing";
 import ArtworkDetails from "../pages/ArtworkDetails";
 import TicketViewing from "../pages/TicketViewing";
+import { Schedule } from "../pages/Schedule";
+import { ViewEmployees } from "../pages/ViewEmployees";
 
 export function Main() {
   const [loggedIn, setLoggedIn] = useState(
@@ -32,6 +34,8 @@ export function Main() {
             element={<ArtworkDetails />}
           />
           <Route path="/ticket" element={<TicketViewing />} />
+          <Route path="/schedule/:id" element={<Schedule />} />
+          <Route path="/employees" element={<ViewEmployees />} />s
           {/* <Route
             path="/employee"
             element={
