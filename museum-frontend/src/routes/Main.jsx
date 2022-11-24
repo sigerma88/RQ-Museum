@@ -4,18 +4,41 @@ import Home from "../pages/Home";
 import { Navigation } from "../layouts/Navigation";
 import { Login } from "../pages/Login";
 import { Signup } from "../pages/Signup";
+import { Profile } from "../pages/Profile";
 import { LoginContext } from "../Contexts/LoginContext";
 
 export function Main() {
   const [loggedIn, setLoggedIn] = useState(
-    sessionStorage.getItem("loggedIn") ?? false
+    localStorage.getItem("loggedIn") ?? false
   );
   const [userRole, setUserRole] = useState(
-    sessionStorage.getItem("userRole") ?? ""
+    localStorage.getItem("userRole") ?? ""
   );
+
+  const [userName, setUserName] = useState(
+    localStorage.getItem("userName") ?? ""
+  );
+
+  const [userEmail, setUserEmail] = useState(
+    localStorage.getItem("userEmail") ?? ""
+  );
+
+  const [userId, setUserId] = useState(localStorage.getItem("userId") ?? "");
+
   return (
     <LoginContext.Provider
-      value={{ loggedIn, setLoggedIn, userRole, setUserRole }}
+      value={{
+        loggedIn,
+        setLoggedIn,
+        userRole,
+        setUserRole,
+        userName,
+        setUserName,
+        userEmail,
+        setUserEmail,
+        userId,
+        setUserId,
+      }}
     >
       <BrowserRouter>
         <Navigation />
@@ -23,6 +46,10 @@ export function Main() {
           <Route path="/" index element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route
+            path="/profile"
+            element={loggedIn ? <Profile /> : <Navigate to="/" />}
+          />
           {/* <Route
             path="/employee"
             element={

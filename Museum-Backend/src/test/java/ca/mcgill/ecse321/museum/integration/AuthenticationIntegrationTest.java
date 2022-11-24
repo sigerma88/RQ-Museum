@@ -3,7 +3,9 @@ package ca.mcgill.ecse321.museum.integration;
 import ca.mcgill.ecse321.museum.controller.utilities.DtoUtility;
 import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
+import ca.mcgill.ecse321.museum.dto.MuseumUserDto;
 import ca.mcgill.ecse321.museum.dto.VisitorDto;
+import ca.mcgill.ecse321.museum.model.MuseumUser;
 import ca.mcgill.ecse321.museum.model.Visitor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,13 +60,15 @@ public class AuthenticationIntegrationTest {
 
     Visitor visitor = createVisitorAndSave();
 
-    ResponseEntity<String> response =
-        client.postForEntity("/api/auth/login", visitor, String.class);
+    ResponseEntity<MuseumUserDto> response =
+        client.postForEntity("/api/auth/login", visitor, MuseumUserDto.class);
 
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
-    assertEquals("visitor", response.getBody(), "Response has correct name");
+    assertEquals("sebastien.vettel@gmail.com", response.getBody().getEmail(),
+        "Response body is correct");
+    assertEquals("Sebastien Vettel", response.getBody().getName());
   }
 
   /**

@@ -1,6 +1,9 @@
 package ca.mcgill.ecse321.museum.controller;
 
 import ca.mcgill.ecse321.museum.controller.utilities.AuthenticationUtility;
+import ca.mcgill.ecse321.museum.controller.utilities.DtoUtility;
+import ca.mcgill.ecse321.museum.dto.EmployeeDto;
+import ca.mcgill.ecse321.museum.dto.ManagerDto;
 import ca.mcgill.ecse321.museum.dto.MuseumUserDto;
 import ca.mcgill.ecse321.museum.model.Employee;
 import ca.mcgill.ecse321.museum.model.Manager;
@@ -49,27 +52,33 @@ public class AuthenticationController {
           authenticationService.authenticateUser(museumUser.getEmail(), museumUser.getPassword());
       HttpSession session = request.getSession(true);
       String role = "";
+
       if (userAuthentication.getClass().equals(Visitor.class)) {
         session.setAttribute("user_id", userAuthentication.getMuseumUserId());
         session.setAttribute("role", "visitor");
-        role = "visitor";
         session.setMaxInactiveInterval(60 * 60 * 24);
+        MuseumUserDto user = DtoUtility.convertToDto(userAuthentication, "visitor");
+        return ResponseEntity.ok(user);
       } else if (userAuthentication.getClass().equals(Manager.class)) {
+        ManagerDto managerDto = DtoUtility.convertToDto((Manager) userAuthentication);
         session.setAttribute("user_id", userAuthentication.getMuseumUserId());
         session.setAttribute("role", "manager");
-        role = "manager";
+        managerDto.setRole("manager");
         session.setMaxInactiveInterval(60 * 60 * 24);
+        MuseumUserDto user = DtoUtility.convertToDto(userAuthentication, "manager");
+        return ResponseEntity.ok(user);
       } else if (userAuthentication.getClass().equals(Employee.class)) {
+        EmployeeDto employeeDto = DtoUtility.convertToDto((Employee) userAuthentication);
         session.setAttribute("user_id", userAuthentication.getMuseumUserId());
         session.setAttribute("role", "employee");
         session.setMaxInactiveInterval(60 * 60 * 24);
-        role = "employee";
+        employeeDto.setRole("employee");
+        MuseumUserDto user = DtoUtility.convertToDto(userAuthentication, "manager");
+        return ResponseEntity.ok(user);
       }
 
-      return ResponseEntity.ok(role);
-    } catch (
-
-    Exception e) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid credentials");
+    } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
   }

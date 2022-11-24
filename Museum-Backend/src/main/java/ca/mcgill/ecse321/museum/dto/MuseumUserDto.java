@@ -12,9 +12,9 @@ public class MuseumUserDto {
   private String name;
   private String password;
   private String sessionId;
+  private String role;
 
-  public MuseumUserDto() {
-  }
+  public MuseumUserDto() {}
 
   public MuseumUserDto(long userId, String email, String name, String password) {
     this.userId = userId;
@@ -61,5 +61,13 @@ public class MuseumUserDto {
 
   public void setSessionId(String sessionId) {
     this.sessionId = sessionId;
+  }
+
+  public String getRole() {
+    return role;
+  }
+
+  public void setRole(String role) {
+    this.role = role;
   }
 }
