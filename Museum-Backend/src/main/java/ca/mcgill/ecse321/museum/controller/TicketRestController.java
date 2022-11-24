@@ -3,6 +3,7 @@ package ca.mcgill.ecse321.museum.controller;
 import ca.mcgill.ecse321.museum.controller.utilities.AuthenticationUtility;
 import ca.mcgill.ecse321.museum.controller.utilities.DtoUtility;
 import ca.mcgill.ecse321.museum.dto.TicketDto;
+import ca.mcgill.ecse321.museum.dto.TicketDtoNoIdRequest;
 import ca.mcgill.ecse321.museum.model.Ticket;
 import ca.mcgill.ecse321.museum.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +28,14 @@ public class TicketRestController {
   /**
    * RESTful API to purchase tickets
    *
-   * @param ticketDto a TicketDto with the attributes needed to create the tickets
+   * @param ticketDto       a TicketDto with the attributes needed to create the
+   *                        tickets
    * @param numberOfTickets number of tickets to purchase
    * @return boughtTickets list of created tickets
    */
-  @PostMapping(value = {"/purchase", "/purchase/"})
+  @PostMapping(value = { "/purchase", "/purchase/" })
   public ResponseEntity<?> createTickets(HttpServletRequest request,
-      @RequestBody TicketDto ticketDto, @RequestParam(name = "number") int numberOfTickets) {
+      @RequestBody TicketDtoNoIdRequest ticketDtoNoIdRequest, @RequestParam(name = "number") int numberOfTickets) {
     try {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
@@ -42,8 +44,8 @@ public class TicketRestController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Your are not a visitor");
       }
       List<TicketDto> boughtTickets = new ArrayList<>();
-      for (Ticket ticket : ticketService.createTickets(ticketDto.getVisitor().getMuseumUserId(),
-          Date.valueOf(ticketDto.getVisitDate()), numberOfTickets)) {
+      for (Ticket ticket : ticketService.createTickets(ticketDtoNoIdRequest.getVisitorId(),
+          Date.valueOf(ticketDtoNoIdRequest.getVisitDate()), numberOfTickets)) {
         boughtTickets.add(DtoUtility.convertToDto(ticket));
       }
       return new ResponseEntity<>(boughtTickets, HttpStatus.CREATED);
@@ -52,7 +54,6 @@ public class TicketRestController {
     }
   }
 
-
   /**
    * RESTful API to get all tickets by visitor
    *
@@ -60,7 +61,7 @@ public class TicketRestController {
    * @return allTicketsOfVisitor list of tickets possessed by visitor
    * @author Zahra
    */
-  @GetMapping(value = {"/visitor/{visitorId}", "/visitor/{visitorId}/"})
+  @GetMapping(value = { "/visitor/{visitorId}", "/visitor/{visitorId}/" })
   public ResponseEntity<?> getTicketsByVisitor(HttpServletRequest request,
       @PathVariable("visitorId") long visitorId) {
     try {
@@ -69,7 +70,7 @@ public class TicketRestController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
       } else if (!AuthenticationUtility.isVisitor(session)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Your are not a visitor");
-      } else if(!AuthenticationUtility.checkUserId(session, visitorId)) {
+      } else if (!AuthenticationUtility.checkUserId(session, visitorId)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to view this page");
       }
 
