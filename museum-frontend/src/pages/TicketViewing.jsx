@@ -41,7 +41,7 @@ function getTickets(visitorId) {
  */
 function GenerateTicketPasses({ validPasses, expiredPasses }) {
   return (
-    <Container sx={{ py: 5 }}>
+    <Container sx={{ py: 5, width: "800px" }}>
       <Grid container spacing={2}>
         {validPasses.map((ticket) => (
           <Grid item xs={12} key={ticket.ticketId}>
