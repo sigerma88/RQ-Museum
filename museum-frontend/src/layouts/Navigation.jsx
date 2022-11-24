@@ -12,6 +12,7 @@ import { LoginContext } from "../Contexts/LoginContext";
 import { useNavigate } from "react-router-dom";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import RQ_logo from "../assets/RQ_logo.svg";
 
 // const visitorPage = ["Visit", "Exhibitions", "Collections", "Ticket"];
 // const managerPage = ["Room", "Artwork", "Employee", "Schedule"];
@@ -130,7 +131,7 @@ export function Navigation() {
               textDecoration: "none",
             }}
           >
-            Museum
+            <img src={RQ_logo}></img> {/*RQ Museum logo*/}
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
