@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.museum.integration;
 
-import ca.mcgill.ecse321.museum.controller.utilities.DtoUtility;
 import ca.mcgill.ecse321.museum.dao.EmployeeRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
 import ca.mcgill.ecse321.museum.dto.MuseumUserDto;
@@ -28,6 +27,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class AuthenticationIntegrationTest {
+  private static final String FIRST_VISITOR_VALID_EMAIL = "sebastien.vettel@gmail.com";
+  private static final String FIRST_VALID_VISITOR_NAME = "Sebastien Vettel";
+  private static final String FIRST_VALID_VISITOR_PASSWORD = "#BrazilGp2022";
+
   @Autowired
   private TestRestTemplate client;
 
@@ -58,7 +61,10 @@ public class AuthenticationIntegrationTest {
   @Test
   public void testLogin() {
 
-    Visitor visitor = createVisitorAndSave();
+    Visitor visitor = UserUtilities.createVisitor(FIRST_VALID_VISITOR_NAME,
+        FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_PASSWORD);
+
+    visitorRepository.save(visitor);
 
     ResponseEntity<MuseumUserDto> response =
         client.postForEntity("/api/auth/login", visitor, MuseumUserDto.class);
@@ -79,7 +85,8 @@ public class AuthenticationIntegrationTest {
 
   @Test
   public void testLoginWrongPassword() {
-    Visitor visitor = createVisitor();
+    Visitor visitor = UserUtilities.createVisitor(FIRST_VALID_VISITOR_NAME,
+        FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_PASSWORD);
     visitor.setPassword("Speed123#$");
 
     ResponseEntity<String> response =
@@ -97,7 +104,8 @@ public class AuthenticationIntegrationTest {
 
   @Test
   public void testLoginInvalidEmail() {
-    Visitor visitor = createVisitor();
+    Visitor visitor = UserUtilities.createVisitor(FIRST_VALID_VISITOR_NAME,
+        FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_PASSWORD);
     visitorRepository.save(visitor);
     visitor.setEmail("fernando.alonso@gmail.com");
 
@@ -116,15 +124,14 @@ public class AuthenticationIntegrationTest {
 
   @Test
   public void testLoginWhenLoggedin() {
-    VisitorDto visitor = createVisitorAndLogin();
-    HttpHeaders headers = new HttpHeaders();
+    Visitor visitor = UserUtilities.createVisitor(FIRST_VALID_VISITOR_NAME,
+        FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_PASSWORD);
 
     Visitor visitorLogin = new Visitor();
     visitorLogin.setEmail(visitor.getEmail());
     visitorLogin.setPassword(visitor.getPassword());
 
-    headers.set("Cookie", visitor.getSessionId());
-    HttpEntity<Visitor> entity = new HttpEntity<Visitor>(visitorLogin, headers);
+    HttpEntity<Visitor> entity = new HttpEntity<Visitor>(visitorLogin, loginSetupVisitor(visitor));
 
     ResponseEntity<String> response =
         client.exchange("/api/auth/login", HttpMethod.POST, entity, String.class);
@@ -140,7 +147,8 @@ public class AuthenticationIntegrationTest {
 
   @Test
   public void testLogout() {
-    VisitorDto visitor = createVisitorAndLogin();
+    VisitorDto visitor = createVisitorAndLogin(UserUtilities.createVisitor(FIRST_VALID_VISITOR_NAME,
+        FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_PASSWORD));
     HttpHeaders headers = new HttpHeaders();
 
     headers.set("Cookie", visitor.getSessionId());
@@ -162,7 +170,8 @@ public class AuthenticationIntegrationTest {
 
   @Test
   public void testLogoutWhenNotLoggedin() {
-    VisitorDto visitor = createVisitorAndLogin();
+    VisitorDto visitor = createVisitorAndLogin(UserUtilities.createVisitor(FIRST_VALID_VISITOR_NAME,
+        FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_PASSWORD));
 
     ResponseEntity<String> response =
         client.postForEntity("/api/auth/logout", visitor, String.class);
@@ -174,55 +183,16 @@ public class AuthenticationIntegrationTest {
   }
 
   /**
-   * Create a visitor Dto
-   *
-   * @param visitor - Visitor
-   * @return visitorDto
-   * @author Kevin
-   */
-
-  public VisitorDto createVisitorDto(Visitor visitor) {
-    return DtoUtility.convertToDto(visitor);
-  }
-
-  /**
-   * Create a visitor
-   *
-   * @return visitor
-   * @author Kevin
-   */
-
-  public Visitor createVisitor() {
-    Visitor visitor = new Visitor();
-    visitor.setEmail("sebastien.vettel@gmail.com");
-    visitor.setPassword("#BrazilGp2022");
-    visitor.setName("Sebastien Vettel");
-
-    return visitor;
-  }
-
-  /**
-   * Create a visitor and save it
-   *
-   * @return visitor
-   * @author Kevin
-   */
-
-  public Visitor createVisitorAndSave() {
-    Visitor visitor = createVisitor();
-    visitorRepository.save(visitor);
-    return visitor;
-  }
-
-  /**
    * Create a visitor and login
    *
-   * @return visitorDto
+   * @param newVisitor - the visitor to login
+   * @return the logged in visitor
    * @author Kevin
    */
 
-  public VisitorDto createVisitorAndLogin() {
-    VisitorDto visitor = createVisitorDto(createVisitorAndSave());
+  public VisitorDto createVisitorAndLogin(Visitor newVisitor) {
+    visitorRepository.save(newVisitor);
+    VisitorDto visitor = UserUtilities.createVisitorDto(newVisitor);
     ResponseEntity<String> response =
         client.postForEntity("/api/auth/login", visitor, String.class);
     List<String> session = response.getHeaders().get("Set-Cookie");
@@ -232,4 +202,22 @@ public class AuthenticationIntegrationTest {
 
     return visitor;
   }
+
+  /**
+   * Create a museum and login
+   *
+   * @param newMuseum - the museum to login
+   * @return museumDto - the logged in museum
+   * @author Kevin
+   */
+  public HttpHeaders loginSetupVisitor(Visitor newVisitor) {
+    VisitorDto visitor = createVisitorAndLogin(newVisitor);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", visitor.getSessionId());
+    return headers;
+  }
+
+
+
 }

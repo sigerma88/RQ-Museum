@@ -6,6 +6,8 @@ import { Login } from "../pages/Login";
 import { Signup } from "../pages/Signup";
 import { Profile } from "../pages/Profile";
 import { LoginContext } from "../Contexts/LoginContext";
+import ArtworkBrowsing from "../pages/ArtworkBrowsing";
+import ArtworkDetails from "../pages/ArtworkDetails";
 
 export function Main() {
   const [loggedIn, setLoggedIn] = useState(
@@ -49,6 +51,11 @@ export function Main() {
           <Route
             path="/profile"
             element={loggedIn ? <Profile /> : <Navigate to="/" />}
+          />
+          <Route path="/browse/room/:roomId" element={<ArtworkBrowsing />} />
+          <Route
+            path="/browse/artwork/:artworkId"
+            element={<ArtworkDetails />}
           />
           {/* <Route
             path="/employee"

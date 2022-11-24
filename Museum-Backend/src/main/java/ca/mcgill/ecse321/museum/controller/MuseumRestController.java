@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.museum.controller;
 
+import ca.mcgill.ecse321.museum.controller.utilities.AuthenticationUtility;
 import ca.mcgill.ecse321.museum.controller.utilities.DtoUtility;
 import ca.mcgill.ecse321.museum.dto.MuseumDto;
 import ca.mcgill.ecse321.museum.model.Museum;
@@ -13,10 +14,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
- * MuseumRestController class is used as a controller where we call
- * our API for our web application
+ * MuseumRestController class is used as a controller where we call our API for our web application
  *
  * @author Siger
  * @author Victor
@@ -43,7 +45,8 @@ public class MuseumRestController {
   @GetMapping(value = {"/{id}", "/{id}/"})
   public ResponseEntity<?> getMuseum(@PathVariable("id") long id) {
     try {
-      return new ResponseEntity<>(DtoUtility.convertToDto(museumService.getMuseum(id)), HttpStatus.OK);
+      return new ResponseEntity<>(DtoUtility.convertToDto(museumService.getMuseum(id)),
+          HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
@@ -52,19 +55,26 @@ public class MuseumRestController {
   /**
    * API to create a museum
    *
-   * @param name     the name of the museum
+   * @param name the name of the museum
    * @param visitFee the visit fee of the museum
    * @return the created museum
    * @author VZ
    */
   @PostMapping(value = {"/app", "/app/"})
-  public ResponseEntity<?> createMuseum(
-      @RequestParam(name = "name") String name,
-      @RequestParam(name = "visitFee") Double visitFee) {
+  public ResponseEntity<?> createMuseum(HttpServletRequest request,
+      @RequestParam(name = "name") String name, @RequestParam(name = "visitFee") Double visitFee) {
 
     try {
+      HttpSession session = request.getSession();
+      if (!AuthenticationUtility.isLoggedIn(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
+      } else if (!AuthenticationUtility.isManager(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body("Your need to be a manager to access this");
+      }
       Schedule schedule = scheduleService.createSchedule();
-      return new ResponseEntity<>(DtoUtility.convertToDto(museumService.createMuseum(name, visitFee, schedule)),
+      return new ResponseEntity<>(
+          DtoUtility.convertToDto(museumService.createMuseum(name, visitFee, schedule)),
           HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -74,20 +84,28 @@ public class MuseumRestController {
   /**
    * API to edit the museum's name or visit fee
    *
-   * @param id       the id of the museum
-   * @param name     the new name of the museum
+   * @param id the id of the museum
+   * @param name the new name of the museum
    * @param visitFee the new visit fee of the museum
    * @return the edited museum
    * @author VZ
    */
   @PostMapping(value = {"/app/edit/{id}/", "/app/edit/{id}"})
-  public ResponseEntity<?> editMuseum(
-      @PathVariable("id") long id,
+  public ResponseEntity<?> editMuseum(HttpServletRequest request, @PathVariable("id") long id,
       @RequestParam(name = "name", required = false) String name,
       @RequestParam(name = "visitFee", required = false) Double visitFee) {
     try {
+      HttpSession session = request.getSession();
+      if (!AuthenticationUtility.isLoggedIn(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
+      } else if (!AuthenticationUtility.isManager(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body("Your need to be a manager to access this");
+      }
+
       Schedule schedule = museumService.getMuseum(id).getSchedule();
-      return new ResponseEntity<>(DtoUtility.convertToDto(museumService.editMuseum(id, name, visitFee, schedule)),
+      return new ResponseEntity<>(
+          DtoUtility.convertToDto(museumService.editMuseum(id, name, visitFee, schedule)),
           HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

@@ -37,7 +37,7 @@ export function Login() {
           localStorage.setItem("userEmail", response.data.email);
           localStorage.setItem("userId", response.data.museumUserId);
 
-          navigate("/profile");
+          navigate("/");
         }
       })
       .catch(function (error) {

@@ -53,7 +53,7 @@ export function Signup() {
         <Paper
           elevation={3}
           style={{
-            width: "80%",
+            width: "50%",
             margin: "auto",
             padding: "50px",
             align: "space-between",

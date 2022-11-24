@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import {
   Typography,
@@ -24,7 +24,24 @@ export function EditVisitor() {
   const { userName, userEmail, userId, setUserName, setUserEmail } =
     useContext(LoginContext);
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (password != null && password.trim().length === 0) {
+      setPassword(null);
+    }
+
+    if (oldPassword != null && oldPassword.trim().length === 0) {
+      setOldPassword(null);
+    }
+
+    if (email != null && email.trim().length === 0) {
+      setEmail(null);
+    }
+
+    if (name != null && name.trim().length === 0) {
+      setName(null);
+    }
+  }, [password, oldPassword, email, name]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -47,7 +64,7 @@ export function EditVisitor() {
             localStorage.setItem("userEmail", email);
           }
 
-          navigate("/profile");
+          window.location.reload();
         }
       })
       .catch(function (error) {
@@ -196,6 +213,16 @@ function StaffMember() {
   const [isFormInvalid, setIsFormInvalid] = useState(false);
   const { userName, userEmail, userId, userRole } = useContext(LoginContext);
 
+  useEffect(() => {
+    if (password != null && password.trim().length === 0) {
+      setPassword(null);
+    }
+
+    if (oldPassword != null && oldPassword.trim().length === 0) {
+      setOldPassword(null);
+    }
+  }, [password, oldPassword]);
+
   const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -210,7 +237,7 @@ function StaffMember() {
           if (response.status === 200) {
             setPassword(null);
             setOldPassword(null);
-            setErrorMessage("");
+            window.location.reload();
           }
         })
         .catch(function (error) {
