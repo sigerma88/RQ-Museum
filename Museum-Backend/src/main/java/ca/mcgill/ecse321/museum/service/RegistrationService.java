@@ -238,6 +238,10 @@ public class RegistrationService {
     }
 
     String currentPassword = employee.getPassword();
+    if (oldPassword == null || newPassword == null) {
+      throw new Exception("Old password and new password must be filled");
+    }
+
     if (!currentPassword.equals(oldPassword)) {
       throw new Exception("Old password incorrect");
     }

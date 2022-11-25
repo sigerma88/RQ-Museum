@@ -79,7 +79,6 @@ export function EditVisitor() {
         }
       })
       .catch(function (error) {
-        console.log(error.response.data);
         setErrorMessage(error.response.data);
         setEmail(null);
         setName(null);
@@ -253,6 +252,7 @@ function StaffMember() {
           if (response.status === 200) {
             setPassword(null);
             setOldPassword(null);
+            setErrorMessage("");
             window.location.reload();
           }
         })
@@ -263,9 +263,7 @@ function StaffMember() {
           setPassword(null);
           setOldPassword(null);
         });
-    }
-
-    if (userRole === "manager") {
+    } else if (userRole === "manager") {
       axios
         .put(`/api/profile/manager/edit/${userId}`, {
           oldPassword: oldPassword,

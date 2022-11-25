@@ -73,7 +73,7 @@ public class AuthenticationController {
         session.setAttribute("role", "employee");
         session.setMaxInactiveInterval(60 * 60 * 24);
         employeeDto.setRole("employee");
-        MuseumUserDto user = DtoUtility.convertToDto(userAuthentication, "manager");
+        MuseumUserDto user = DtoUtility.convertToDto(userAuthentication, "employee");
         return ResponseEntity.ok(user);
       }
 
