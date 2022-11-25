@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState } from "react";
 import axios from "axios";
 import {
   Button,
@@ -10,7 +9,6 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
-import { Navigation } from "../layouts/Navigation";
 
 /**
  * Dialog component for visitors to specify what tickets they want to buy
@@ -24,11 +22,11 @@ export function TicketBuying({ open, handleClose, visitorId }) {
     new Date().toISOString().split("T")[0]
   );
 
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isFormInvalid, setIsFormInvalid] = useState(false);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(visitorId);
-    console.log(numTickets);
-    console.log(ticketDate);
     axios
       .post("/api/ticket/purchase?number=" + numTickets, {
         visitDate: ticketDate,
@@ -36,9 +34,11 @@ export function TicketBuying({ open, handleClose, visitorId }) {
       })
       .then((response) => {
         handleClose();
+        // TODO: go to payment page
       })
       .catch((error) => {
-        console.log(error);
+        setErrorMessage(error.response.data);
+        setIsFormInvalid(true);
       });
   };
 
@@ -62,6 +62,14 @@ export function TicketBuying({ open, handleClose, visitorId }) {
             InputLabelProps={{ shrink: true }} // This is to prevent the label from overlapping the text field
             defaultValue={numTickets}
             onChange={(event) => setNumTickets(event.target.value)}
+            helperText={
+              isFormInvalid &&
+              errorMessage.toLowerCase().includes("number") &&
+              errorMessage
+            }
+            error={
+              isFormInvalid && errorMessage.toLowerCase().includes("number")
+            }
           />
           <TextField
             autoFocus
@@ -75,6 +83,12 @@ export function TicketBuying({ open, handleClose, visitorId }) {
             InputLabelProps={{ shrink: true }} // This is needed to make the label shrink
             defaultValue={ticketDate}
             onChange={(event) => setTicketDate(event.target.value)}
+            helperText={
+              isFormInvalid &&
+              errorMessage.toLowerCase().includes("date") &&
+              errorMessage
+            }
+            error={isFormInvalid && errorMessage.toLowerCase().includes("date")}
           />
         </DialogContent>
         <DialogActions>
