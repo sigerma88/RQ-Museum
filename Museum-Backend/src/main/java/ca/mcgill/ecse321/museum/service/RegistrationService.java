@@ -37,9 +37,9 @@ public class RegistrationService {
   /**
    * Register a new visitor
    *
-   * @param email    - email of visitor
+   * @param email - email of visitor
    * @param password - password of visitor
-   * @param name     - name of visitor
+   * @param name - name of visitor
    * @return Visitor - the visitor that was created
    * @author Kevin
    */
@@ -114,23 +114,24 @@ public class RegistrationService {
   /**
    * Update visitor personal information
    *
-   * @param visitorId   - id of visitor
-   * @param email       - new email of visitor
+   * @param visitorId - id of visitor
+   * @param email - new email of visitor
    * @param oldPassword - old password of visitor
    * @param newPassword - new password of visitor
-   * @param name        - new name of visitor
+   * @param name - new name of visitor
    * @return Visitor - the visitor that was updated
    * @author Kevin
    */
 
   @Transactional
   public Visitor editVisitorInformation(long visitorId, String email, String oldPassword,
-                                        String newPassword, String name) throws Exception {
+      String newPassword, String name) throws Exception {
     Visitor visitor = visitorRepository.findVisitorByMuseumUserId(visitorId);
 
     if (visitor == null) {
       throw new Exception("Account was not found in the system. ");
     }
+
 
     String visitorCurrentPassword = visitor.getPassword();
 
@@ -159,7 +160,11 @@ public class RegistrationService {
     }
 
     if (name != null) {
-      visitor.setName(name);
+      if (!nameChecker(name)) {
+        throw new Exception("Invalid name. ");
+      } else {
+        visitor.setName(name);
+      }
     }
 
     visitorRepository.save(visitor);
@@ -233,6 +238,10 @@ public class RegistrationService {
     }
 
     String currentPassword = employee.getPassword();
+    if (oldPassword == null || newPassword == null) {
+      throw new Exception("Old password and new password must be filled");
+    }
+
     if (!currentPassword.equals(oldPassword)) {
       throw new Exception("Old password incorrect");
     }
@@ -285,7 +294,7 @@ public class RegistrationService {
   /**
    * Edit manager information
    *
-   * @param id          - id of manager
+   * @param id - id of manager
    * @param oldPassword - old password of manager
    * @param newPassword - new password of manager
    * @return Manager - the manager that was updated
@@ -301,6 +310,10 @@ public class RegistrationService {
     }
 
     String currentPassword = manager.getPassword();
+    if (oldPassword == null || newPassword == null) {
+      throw new Exception("Old password and new password must be filled");
+    }
+
     if (!currentPassword.equals(oldPassword)) {
       throw new Exception("Old password incorrect");
     }
@@ -397,4 +410,5 @@ public class RegistrationService {
 
     return visitor != null || employee != null || manager != null;
   }
+
 }
