@@ -80,10 +80,6 @@ export function EditVisitor() {
       })
       .catch(function (error) {
         setErrorMessage(error.response.data);
-        setEmail(null);
-        setName(null);
-        setPassword(null);
-        setOldPassword(null);
         setIsFormInvalid(true);
       });
   };
@@ -257,11 +253,8 @@ function StaffMember() {
           }
         })
         .catch(function (error) {
-          console.log(error.response.data);
           setErrorMessage(error.response.data);
           setIsFormInvalid(true);
-          setPassword(null);
-          setOldPassword(null);
         });
     } else if (userRole === "manager") {
       axios
@@ -280,8 +273,6 @@ function StaffMember() {
         .catch(function (error) {
           setErrorMessage(error.response.data);
           setIsFormInvalid(true);
-          setPassword(null);
-          setOldPassword(null);
         });
     }
   };
