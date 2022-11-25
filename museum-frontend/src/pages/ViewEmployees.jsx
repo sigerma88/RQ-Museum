@@ -88,7 +88,7 @@ export function ViewEmployees() {
             mx: "auto",
           }}
         >
-          <Table aria-label="simple table">
+          <Table stickyHeader aria-label="simple table">
             <TableHead>
               <TableRow>
                 <StyledTableCell>
