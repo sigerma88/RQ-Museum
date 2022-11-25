@@ -43,7 +43,7 @@ public class RegistrationRestController {
 
   @PostMapping(value = "/visitor/register", produces = "application/json")
   public ResponseEntity<?> registerVisitor(HttpServletRequest request,
-                                           @RequestBody VisitorDto visitor) {
+      @RequestBody VisitorDto visitor) {
     try {
       HttpSession session = request.getSession();
       if (AuthenticationUtility.isLoggedIn(session)) {
@@ -76,7 +76,7 @@ public class RegistrationRestController {
 
   @GetMapping(value = "/visitor/{id}", produces = "application/json")
   public ResponseEntity<?> viewVisitorInformation(HttpServletRequest request,
-                                                  @PathVariable long id) {
+      @PathVariable long id) {
     try {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
@@ -100,7 +100,7 @@ public class RegistrationRestController {
   /**
    * PUT method to update visitor information
    *
-   * @param id                - long (visitor id)
+   * @param id - long (visitor id)
    * @param updatedCredential - map containing oldPassword, newPassword, email and name
    * @return visitorDto
    * @author Kevin
@@ -108,7 +108,7 @@ public class RegistrationRestController {
 
   @PutMapping(value = "/visitor/edit/{id}", produces = "application/json")
   public ResponseEntity<?> editVisitorInformation(HttpServletRequest request, @PathVariable long id,
-                                                  @RequestBody Map<String, String> updatedCredential) {
+      @RequestBody Map<String, String> updatedCredential) {
     try {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
@@ -192,15 +192,15 @@ public class RegistrationRestController {
   /**
    * PUT method to update employee information
    *
-   * @param id                        - long (employee id)
+   * @param id - long (employee id)
    * @param updatedEmployeeCredential - map containing oldPassword, newPassword
    * @return employeeDto
    * @author Kevin
    */
 
-  @PostMapping(value = "employee/edit/{id}", produces = "application/json")
+  @PutMapping(value = "/employee/edit/{id}", produces = "application/json")
   public ResponseEntity<?> editEmployeeInformation(HttpServletRequest request,
-                                                   @PathVariable long id, @RequestBody Map<String, String> updatedEmployeeCredential) {
+      @PathVariable long id, @RequestBody Map<String, String> updatedEmployeeCredential) {
     try {
       HttpSession session = request.getSession();
 
@@ -228,15 +228,15 @@ public class RegistrationRestController {
   /**
    * PUT method to update manager information
    *
-   * @param id                       - long (manager id)
+   * @param id - long (manager id)
    * @param updatedManagerCredential - map containing oldPassword, newPassword, managerId
    * @return managerDto
    * @author Kevin
    */
 
-  @PutMapping(value = "manager/edit/{id}", produces = "application/json")
+  @PutMapping(value = "/manager/edit/{id}", produces = "application/json")
   public ResponseEntity<?> editManagerInformation(HttpServletRequest request, @PathVariable long id,
-                                                  @RequestBody Map<String, String> updatedManagerCredential) {
+      @RequestBody Map<String, String> updatedManagerCredential) {
     try {
       HttpSession session = request.getSession();
 
@@ -254,7 +254,7 @@ public class RegistrationRestController {
       return ResponseEntity.ok(manager);
     } catch (
 
-        Exception e) {
+    Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
