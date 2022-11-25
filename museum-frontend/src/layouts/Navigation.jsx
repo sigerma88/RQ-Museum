@@ -5,14 +5,9 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import Avatar from "@mui/material/Avatar";
 import axios from "axios";
 import { LoginContext } from "../Contexts/LoginContext";
 import { useNavigate } from "react-router-dom";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-
 const visitorPage = ["Visit", "Exhibitions", "Collections", "Ticket"];
 const managerPage = ["Room", "Artwork", "Employee", "Schedule"];
 const employeePage = ["Room", "Artwork", "Schedule"];
@@ -70,33 +65,12 @@ export function Navigation() {
     return (
       <>
         <Box>
-          {/* <Menu
-            sx={{ mt: "45px" }}
-            id="menu-appbar"
-            anchorEl={anchorElUser}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            onClose={handleCloseUserMenu}
-            open={Boolean(anchorElUser)}
-          > */}
-          {/* <MenuItem onClick={handleCloseUserMenu}> */}
           <Button href="/profile" style={{ color: "black" }}>
             Profile
           </Button>
-          {/* </MenuItem> */}
-          {/* <MenuItem onClick={handleCloseUserMenu}> */}
           <Button style={{ color: "black" }} onClick={handleLogout}>
             Logout
           </Button>
-          {/* </MenuItem>
-          </Menu> */}
         </Box>
       </>
     );
