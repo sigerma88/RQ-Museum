@@ -163,12 +163,19 @@ function VisitorTicket() {
       setValidPasses(
         tickets.filter(
           (ticket) =>
-            ticket.visitDate >= currentDate.toISOString().split("T")[0]
+            ticket.visitDate >=
+            currentDate.toLocaleDateString("en-CA", {
+              timeZone: "America/Montreal",
+            })
         )
       );
       setExpiredPasses(
         tickets.filter(
-          (ticket) => ticket.visitDate < currentDate.toISOString().split("T")[0]
+          (ticket) =>
+            ticket.visitDate <
+            currentDate.toLocaleDateString("en-CA", {
+              timeZone: "America/Montreal",
+            })
         )
       );
     });

@@ -19,13 +19,14 @@ import {
 export function TicketBuying({ open, handleClose, visitorId }) {
   const [numTickets, setNumTickets] = useState(1);
   const [ticketDate, setTicketDate] = useState(
-    new Date().toISOString().split("T")[0]
+    new Date().toLocaleDateString("en-CA", { timeZone: "America/Montreal" })
   );
 
   const [errorMessage, setErrorMessage] = useState("");
   const [isFormInvalid, setIsFormInvalid] = useState(false);
 
   const handleSubmit = async (event) => {
+    // TODO: go to payment page handled by external service
     event.preventDefault();
     axios
       .post("/api/ticket/purchase?number=" + numTickets, {
@@ -33,8 +34,16 @@ export function TicketBuying({ open, handleClose, visitorId }) {
         visitorId: visitorId,
       })
       .then((response) => {
-        handleClose();
-        // TODO: go to payment page
+        if (response.status === 200) {
+          handleClose();
+        } else {
+          setErrorMessage("Something went wrong");
+          setIsFormInvalid(true);
+        }
+      })
+      .then(() => {
+        // Reload the page to show the new tickets
+        window.location.reload();
       })
       .catch((error) => {
         setErrorMessage(error.response.data);
