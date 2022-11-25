@@ -87,3 +87,27 @@ Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/De
 
 
 ### Deliverable 3
+
+Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/Deliverable-3) to view the project report for Deliverable 3.
+
+
+**Roles**
+|         Name         | Roles                                              |
+| :------------------: | -------------------------------------------------- |
+|       Siger Ma       |         |
+|     Victor Zhao      |         |
+|     Zahra Landou     |          |
+|      Eric Joung      |          |
+| Kieyan Mamiche Afara |          |
+|      Kevin Luo       |         |
+
+**Contributions**
+
+|         Name         | Contributions                                            | Effort (hours) |
+| :------------------: | -------------------------------------------------------- | :------------: |
+|       Siger Ma       |   |             |
+|     Victor Zhao      |   |             |
+|     Zahra Landou     |   |             |
+|      Eric Joung      |   |             |
+| Kieyan Mamiche Afara |   |             |
+|      Kevin Luo       |   |             |
