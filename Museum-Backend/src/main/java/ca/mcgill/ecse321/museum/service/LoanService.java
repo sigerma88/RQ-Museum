@@ -87,8 +87,6 @@ public class LoanService {
     if (loanDto.getRequestAccepted() != null) {
       throw new IllegalArgumentException("Loan getRequestAccepted must be null because only an employee can define");
     }
-    // TODO: find out how findBySingleColumn works to determine if this implementation would work
-    // loanRepository.findLoanByArtworkAndVisitor does not seem to work but this does
     if (loanRepository.findLoanByArtworkAndVisitor(artwork, visitor) != null) {
       throw new IllegalArgumentException("Cannot create a duplicate loan request");
     }

@@ -151,8 +151,9 @@ function GenerateTicketPasses({ validPasses, expiredPasses }) {
  * @author Siger
  */
 function VisitorTicket() {
-  // TODO: Get user ID
-  const visitorId = 1;
+  // Get the visitor ID from the context
+  const { userId } = useContext(LoginContext);
+  const visitorId = userId;
 
   // Get the tickets from the server
   const [validPasses, setValidPasses] = useState([]);
