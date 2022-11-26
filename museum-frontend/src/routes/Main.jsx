@@ -11,7 +11,12 @@ import ArtworkDetails from "../pages/ArtworkDetails";
 import EmployeeCreation from "../pages/EmployeeCreation";
 import { Typography } from "@mui/material";
 
+/**
+ * Function that routes the user to the correct page depending on the url
+ * @author Kevin
+ */
 export function Main() {
+  //Setting necessary information to be used in other components
   const [loggedIn, setLoggedIn] = useState(
     localStorage.getItem("loggedIn") ?? false
   );

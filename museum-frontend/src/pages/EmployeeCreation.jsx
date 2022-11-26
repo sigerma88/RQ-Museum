@@ -16,6 +16,12 @@ import "./Login.css";
 import Avatar from "@mui/material/Avatar";
 import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
 
+/**
+ * Page where manager creates employees
+ * @returns Employee creation page
+ * @author Kevin
+ */
+
 export default function EmployeeCreation() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -121,7 +127,6 @@ export default function EmployeeCreation() {
                 width: "30%",
                 margin: "auto",
                 padding: "auto",
-                display: "flex",
               }}
             >
               <AlertTitle>Account successfully created</AlertTitle>

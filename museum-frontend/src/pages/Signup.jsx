@@ -16,9 +16,11 @@ import LoginIcon from "@mui/icons-material/Login";
 /**
  * Sign in page
  * @returns  Sign in page
+ * @author Kevin
  */
 
 export function Signup() {
+  // State variables for the form
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,6 +30,11 @@ export function Signup() {
     React.useContext(LoginContext);
 
   const navigate = useNavigate();
+
+  /**
+   * Registers a new user when the form is submitted
+   * @author Kevin
+   */
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -40,12 +47,12 @@ export function Signup() {
       })
       .then(function (response) {
         if (response.status === 200) {
+          // Setting information about the user once logged in to be used in the app
           setUserRole(response.data.role);
           setUserName(response.data.name);
           setUserEmail(response.data.email);
           setUserId(response.data.museumUserId);
           setLoggedIn(true);
-          console.log(response.data.userRole);
           localStorage.setItem("userName", response.data.name);
           localStorage.setItem("userRole", response.data.role);
           localStorage.setItem("loggedIn", "true");

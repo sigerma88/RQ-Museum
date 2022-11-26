@@ -15,11 +15,13 @@ import Avatar from "@mui/material/Avatar";
 import { deepOrange } from "@mui/material/colors";
 
 /**
- *  Edit profile page for visitors
- * @returns Edit profile page for visitors
+ * Edit visitor profile
+ * @returns  Edit visitor page
+ * @author Kevin
  */
 
 export function EditVisitor() {
+  // State variables for the form
   const [password, setPassword] = useState(null);
   const [oldPassword, setOldPassword] = useState(null);
   const [email, setEmail] = useState(null);
@@ -29,6 +31,10 @@ export function EditVisitor() {
   const { userName, userEmail, userId, userRole, setUserName, setUserEmail } =
     useContext(LoginContext);
 
+  /**
+   * Check for empty fields and states in the form
+   * @author Kevin
+   */
   useEffect(() => {
     if (password != null && password.trim().length === 0) {
       setPassword(null);
@@ -52,6 +58,11 @@ export function EditVisitor() {
       setName(null);
     }
   }, [password, oldPassword, email, name]);
+
+  /**
+   * Updates the logged in visitor profile when the form is submitted
+   * @author Kevin
+   **/
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -213,17 +224,23 @@ export function EditVisitor() {
 }
 
 /**
- *  Edit profile page for staff members
- * @returns Edit profile page for staff members
+ * Edit staff member profile
+ * @returns  Edit staff member page
+ * @author Kevin
  */
 
 function StaffMember() {
+  // State variables for the form
   const [password, setPassword] = useState(null);
   const [oldPassword, setOldPassword] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [isFormInvalid, setIsFormInvalid] = useState(false);
   const { userName, userEmail, userId, userRole } = useContext(LoginContext);
 
+  /**
+   * Check for empty fields and states in the form
+   * @author Kevin
+   **/
   useEffect(() => {
     if (password != null && password.trim().length === 0) {
       setPassword(null);
@@ -234,7 +251,10 @@ function StaffMember() {
     }
   }, [password, oldPassword]);
 
-  const navigate = useNavigate();
+  /**
+   * Updates the logged in staff member profile when the form is submitted
+   * @author Kevin
+   **/
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -377,6 +397,12 @@ function StaffMember() {
     </>
   );
 }
+
+/**
+ * Edit profile page depending on the user role
+ * @returns  Edit profile page
+ * @author Kevin
+ **/
 
 export function Profile() {
   const { userRole } = useContext(LoginContext);
