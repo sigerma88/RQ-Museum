@@ -1,51 +1,190 @@
-import React, {useState, useEffect}from 'react';
-import axios from 'axios';
-import {useParams} from 'react-router-dom';
-
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import { styled } from "@mui/material/styles";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { createTheme, padding } from "@mui/system";
+import { Typography } from "@mui/material";
 /**
- * 
+ *
  * @author VZ and Kevin
  * @returns table that contains the shifts of an employee by id
  */
 export function Schedule() {
-  // const 
+  // const
   const [timePeriods, setTimePeriods] = useState([]); // initial state set to empty array
   const [employee, setEmployee] = useState({}); // initial state set to empty array
-  const {id} = useParams(); //get the employee id from the url
-
+  const { id } = useParams(); //get the employee id from the url
   useEffect(() => {
-    axios 
-    .get(`/api/scheduling/employee/shifts/${id}`)
-    .then(function (response) {
-      // if the request is successful
-      console.log(response.data);
-      setTimePeriods(response.data); // set the state to the data returned from the API
-    })
-    .catch(function (error) {
-      console.log(error.response.data)
-
-    })
-    },  []);
+    axios
+      .get(`/api/scheduling/employee/shifts/${id}`)
+      .then(function (response) {
+        // if the request is successful
+        console.log(response.data);
+        setTimePeriods(response.data); // set the state to the data returned from the API
+      })
+      .catch(function (error) {
+        console.log(error.response.data);
+      });
+  }, []);
 
   if (timePeriods.length === 0) {
     return <p>This employee has no shifts.</p>;
   }
-  
+
+  function getDayOfWeek(date) {
+    const dayOfWeek = new Date(date).getDay();
+    return isNaN(dayOfWeek)
+      ? null
+      : [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ][dayOfWeek];
+  }
+  function getYear(date) {
+    const year = new Date(date).getFullYear();
+    return isNaN(year) ? null : year;
+  }
+  function getMonth(date) {
+    const month = new Date(date).getMonth();
+    return isNaN(month)
+      ? null
+      : [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ][month];
+  }
+  function getDay(date) {
+    const day = new Date(date).getDate();
+    return isNaN(day) ? null : day;
+  }
+
+  const numOfTimePeriods = timePeriods.length;
+
+  // Date formatted as YYYY, MONTH DAY
+  //We only need the start date, because we are assuming that a shift spans one day at most
+  // if the manager wants to schedule a shift that spans multiple days,
+  //they can schedule multiple shifts
+  const dates = timePeriods.map((timePeriod) => (
+    <tr key={timePeriod.timePeriodId}>
+      <td>
+        {getDay(timePeriod.startDate.split(" ")[0])}{" "}
+        {getMonth(timePeriod.startDate.split(" ")[0])}{" "}
+        {getYear(timePeriod.startDate.split(" ")[0])}
+      </td>
+    </tr>
+  ));
+  // day of the week
+  const dayOfStartDates = timePeriods.map((timePeriod) => (
+    <tr key={timePeriod.timePeriodId}>
+      <td> {getDayOfWeek(timePeriod.startDate.split(" ")[0])}</td>
+    </tr>
+  ));
+
+  //start times of shifts for each day, formatted to display HH:mm
+  const startTimes = timePeriods.map((timePeriod) => (
+    <tr key={timePeriod.timePeriodId}>
+      <td>
+        {" "}
+        {timePeriod.startDate
+          .split(" ")[1]
+          .substring(0, timePeriod.startDate.split(" ")[1].length - 3)}
+      </td>
+    </tr>
+  ));
+
+  const endTimes = timePeriods.map((timePeriod) => (
+    <tr key={timePeriod.timePeriodId}>
+      <td>
+        {" "}
+        {timePeriod.endDate
+          .split(" ")[1]
+          .substring(0, timePeriod.startDate.split(" ")[1].length - 3)}
+      </td>
+    </tr>
+  ));
+
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: "#ababab",
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+    },
+  }));
+
+  const header = createTheme({
+    typography: {
+      fontWeight: "bold",
+      fontSize: 18,
+    },
+  });
+
   return (
-    <div>
-    <h1>Employee Schedule</h1>
-    <table>
-    <tbody>
-    {timePeriods.map((timePeriod) => (
-      <tr key={timePeriod.timePeriodId}>
-        <td> {timePeriod.timePeriodId} </td>
-        <td> {timePeriod.startDate} </td>
-        <td> {timePeriod.endDate} </td>
-      </tr>
-      
-    ))}
-    </tbody>
-    </table>
-    </div>
-  )
+    <>
+      <div>
+        <h1 style={{ marginTop: 20, marginBottom: 20 }}>Employee's Schedule</h1>
+      </div>
+      <TableContainer
+        component={Paper}
+        sx={{
+          maxWidth: 1000,
+          display: "flex",
+          justifyContent: "center",
+          maxHeight: "500px",
+          maxWidth: "1000px",
+          boxShadow: 4,
+          borderRadius: 1,
+          my: 2,
+          mx: "auto",
+        }}
+      >
+        <Table stickyHeader aria-label="dense table">
+          <TableHead>
+            <StyledTableCell>
+              <Typography sx={header}>Date</Typography>
+            </StyledTableCell>
+            <StyledTableCell>
+              <Typography sx={header}>Day of the Week</Typography>
+            </StyledTableCell>
+            <StyledTableCell>
+              <Typography sx={header}>Start Time</Typography>
+            </StyledTableCell>
+            <StyledTableCell>
+              <Typography sx={header}>End Time</Typography>
+            </StyledTableCell>
+          </TableHead>
+          <TableBody>
+            <TableRow>
+              <StyledTableCell>{dates}</StyledTableCell>
+              <StyledTableCell>{dayOfStartDates}</StyledTableCell>
+              <StyledTableCell>{startTimes}</StyledTableCell>
+              <StyledTableCell>{endTimes}</StyledTableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
+  );
 }
