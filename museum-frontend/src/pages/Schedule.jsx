@@ -21,6 +21,7 @@ export function Schedule() {
   const [timePeriods, setTimePeriods] = useState([]); // initial state set to empty array
   const [employee, setEmployee] = useState({}); // initial state set to empty array
   const { id } = useParams(); //get the employee id from the url
+
   useEffect(() => {
     axios
       .get(`/api/scheduling/employee/shifts/${id}`)
@@ -33,10 +34,6 @@ export function Schedule() {
         console.log(error.response.data);
       });
   }, []);
-
-  if (timePeriods.length === 0) {
-    return <p>This employee has no shifts.</p>;
-  }
 
   function getDayOfWeek(date) {
     const dayOfWeek = new Date(date).getDay();
@@ -141,6 +138,59 @@ export function Schedule() {
     },
   });
 
+  if (timePeriods.length === 0) {
+    return (
+      <>
+        <div>
+          <h1 style={{ marginTop: 20, marginBottom: 20 }}>
+            Employee's Schedule
+          </h1>
+        </div>
+        <TableContainer
+          component={Paper}
+          sx={{
+            maxWidth: 1000,
+            display: "flex",
+            justifyContent: "center",
+            maxHeight: "500px",
+            maxWidth: "1000px",
+            boxShadow: 4,
+            borderRadius: 1,
+            my: 2,
+            mx: "auto",
+          }}
+        >
+          <Table stickyHeader aria-label="dense table">
+            <TableHead>
+              <StyledTableCell>
+                <Typography sx={header}>Date</Typography>
+              </StyledTableCell>
+              <StyledTableCell>
+                <Typography sx={header}>Day of the Week</Typography>
+              </StyledTableCell>
+              <StyledTableCell>
+                <Typography sx={header}>Start Time</Typography>
+              </StyledTableCell>
+              <StyledTableCell>
+                <Typography sx={header}>End Time</Typography>
+              </StyledTableCell>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <StyledTableCell
+                  sx={{
+                    display: "flex",
+                  }}
+                >
+                  This employee currently has no shifts.
+                </StyledTableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </>
+    );
+  }
   return (
     <>
       <div>

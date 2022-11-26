@@ -66,7 +66,50 @@ export function ViewEmployees() {
   }, []);
 
   if (employees.length === 0) {
-    return <p>There is no employee.</p>;
+    return (
+      <>
+        <div>
+          <h1 style={{ marginTop: 20, marginBottom: 20 }}>
+            List of all Employees
+          </h1>
+        </div>
+        <TableContainer
+          component={Paper}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            maxHeight: "500px",
+            maxWidth: "1000px",
+            boxShadow: 4,
+            borderRadius: 1,
+            my: 2,
+            mx: "auto",
+          }}
+        >
+          <Table stickyHeader aria-label="dense table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>
+                  <Typography sx={header}>Name</Typography>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <Typography sx={header}>Email</Typography>
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  <Typography sx={header}>View&nbsp;Schedule</Typography>
+                </StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {" "}
+              <StyledTableCell>
+                There are currently no employees
+              </StyledTableCell>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </>
+    );
   } else {
     return (
       <>
