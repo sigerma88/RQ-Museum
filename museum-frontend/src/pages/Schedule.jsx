@@ -11,6 +11,13 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { createTheme, padding } from "@mui/system";
 import { Typography } from "@mui/material";
+import TextField from "@mui/material/TextField";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import Stack from "@mui/material/Stack";
+
 /**
  *
  * @author VZ and Kevin
@@ -21,6 +28,7 @@ export function Schedule() {
   const [timePeriods, setTimePeriods] = useState([]); // initial state set to empty array
   const [employee, setEmployee] = useState({}); // initial state set to empty array
   const { id } = useParams(); //get the employee id from the url
+  const [value, setValue] = useState(null);
 
   useEffect(() => {
     axios
@@ -34,6 +42,22 @@ export function Schedule() {
         console.log(error.response.data);
       });
   }, []);
+
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    axios
+      .post(`/api/shift/create`, {
+        startDate: "2021-10-01",
+        endDate: "2021-10-01",
+      })
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error.response.data);
+      });
+  }
 
   function getDayOfWeek(date) {
     const dayOfWeek = new Date(date).getDay();
@@ -188,6 +212,37 @@ export function Schedule() {
             </TableBody>
           </Table>
         </TableContainer>
+        <h2 style={{ marginTop: 30 }}>Add Shift</h2>
+        <div style={{ marginTop: 30 }}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <Stack justifyContent="center" direction="row" spacing={3}>
+              <DatePicker
+                label="Select Date"
+                value={value}
+                onChange={(newValue) => {
+                  setValue(newValue);
+                }}
+                renderInput={(params) => <TextField {...params} />}
+              />
+              <TimePicker
+                label="Select Start Time"
+                value={value}
+                onChange={(newValue) => {
+                  setValue(newValue);
+                }}
+                renderInput={(params) => <TextField {...params} />}
+              />
+              <TimePicker
+                label="Select End Time"
+                value={value}
+                onChange={(newValue) => {
+                  setValue(newValue);
+                }}
+                renderInput={(params) => <TextField {...params} />}
+              />
+            </Stack>
+          </LocalizationProvider>
+        </div>
       </>
     );
   }
@@ -235,6 +290,37 @@ export function Schedule() {
           </TableBody>
         </Table>
       </TableContainer>
+      <h2 style={{ marginTop: 30 }}>Add Shift</h2>
+      <div style={{ marginTop: 30 }}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <Stack justifyContent="center" direction="row" spacing={3}>
+            <DatePicker
+              label="Select Date"
+              value={value}
+              onChange={(newValue) => {
+                setValue(newValue);
+              }}
+              renderInput={(params) => <TextField {...params} />}
+            />
+            <TimePicker
+              label="Select Start Time"
+              value={value}
+              onChange={(newValue) => {
+                setValue(newValue);
+              }}
+              renderInput={(params) => <TextField {...params} />}
+            />
+            <TimePicker
+              label="Select End Time"
+              value={value}
+              onChange={(newValue) => {
+                setValue(newValue);
+              }}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </Stack>
+        </LocalizationProvider>
+      </div>
     </>
   );
 }
