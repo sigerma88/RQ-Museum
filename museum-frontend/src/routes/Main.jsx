@@ -8,6 +8,8 @@ import { Profile } from "../pages/Profile";
 import { LoginContext } from "../Contexts/LoginContext";
 import ArtworkBrowsing from "../pages/ArtworkBrowsing";
 import ArtworkDetails from "../pages/ArtworkDetails";
+import EmployeeCreation from "../pages/EmployeeCreation";
+import { Typography } from "@mui/material";
 
 export function Main() {
   const [loggedIn, setLoggedIn] = useState(
@@ -50,25 +52,28 @@ export function Main() {
           <Route path="/signup" element={<Signup />} />
           <Route
             path="/profile"
-            element={loggedIn ? <Profile /> : <Navigate to="/" />}
+            element={loggedIn ? <Profile /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/employee/create"
+            element={
+              loggedIn && userRole == "manager" ? (
+                <EmployeeCreation />
+              ) : (
+                <Typography
+                  variant="h3"
+                  style={{ margin: "auto", padding: "auto" }}
+                >
+                  You are not authorized to view this page
+                </Typography>
+              )
+            }
           />
           <Route path="/browse/room/:roomId" element={<ArtworkBrowsing />} />
           <Route
             path="/browse/artwork/:artworkId"
             element={<ArtworkDetails />}
           />
-          {/* <Route
-            path="/employee"
-            element={
-              userRole === "employee" ? <Employee /> : <Navigate to="/login" />
-            }
-          /> */}
-          {/* <Route
-            path="/manager"
-            element={
-              userRole === "employee" ? <Manager /> : <Navigate to="/login" />
-            }
-          /> */}
         </Routes>
       </BrowserRouter>
     </LoginContext.Provider>

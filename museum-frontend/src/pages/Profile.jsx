@@ -130,7 +130,7 @@ export function EditVisitor() {
               >
                 <TextField
                   margin="normal"
-                  id="email"
+                  id="name"
                   label="Name"
                   name="name"
                   autoComplete="name"

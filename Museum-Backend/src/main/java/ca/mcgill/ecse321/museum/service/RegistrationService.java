@@ -186,7 +186,8 @@ public class RegistrationService {
       throw new Exception("Name must be filled");
     }
 
-    String[] fullName = name.split(" ");
+    String employeeName = name.trim();
+    String[] fullName = name.trim().split(" ");
 
     if (fullName.length < 2) {
       throw new Exception("Name must be in the format of Firstname Lastname");
@@ -205,14 +206,19 @@ public class RegistrationService {
           isEmailSet = true;
         }
       }
-
     }
+
+    if (!nameChecker(employeeName)) {
+      throw new Exception("Invalid name. ");
+    }
+
+
 
     String password = passwordGenerator();
     Employee employee = new Employee();
     employee.setEmail(email);
     employee.setPassword(password);
-    employee.setName(name);
+    employee.setName(employeeName);
     employee.setSchedule(new Schedule());
 
     employeeRepository.save(employee);

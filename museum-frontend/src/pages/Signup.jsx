@@ -43,13 +43,14 @@ export function Signup() {
           setUserRole(response.data.role);
           setUserName(response.data.name);
           setUserEmail(response.data.email);
-          setUserId(response.data.id);
+          setUserId(response.data.museumUserId);
           setLoggedIn(true);
+          console.log(response.data.userRole);
           localStorage.setItem("userName", response.data.name);
           localStorage.setItem("userRole", response.data.role);
-          localStorage.setItem("loggedIn", true);
+          localStorage.setItem("loggedIn", "true");
           localStorage.setItem("userEmail", response.data.email);
-          localStorage.setItem("userId", response.data.id);
+          localStorage.setItem("userId", response.data.museumUserId);
           navigate("/");
         }
       })
@@ -136,10 +137,10 @@ export function Signup() {
                 className="login-field"
                 helperText={
                   isFormInvalid &&
-                  errorMessage.includes("password") &&
+                  errorMessage.includes("Password") &&
                   errorMessage
                 }
-                error={isFormInvalid && errorMessage.includes("password")}
+                error={isFormInvalid && errorMessage.includes("Password")}
               />
             </Box>
             <Button
