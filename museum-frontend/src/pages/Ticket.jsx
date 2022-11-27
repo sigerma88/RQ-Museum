@@ -132,6 +132,13 @@ function ValidTicket({ ticket }) {
           </Typography>
           <Typography
             variant="h6"
+            color="text.secondary"
+            className="pass-visitor-information"
+          >
+            Visitor ID: {ticket.visitor.museumUserId}
+          </Typography>
+          <Typography
+            variant="h6"
             className="pass-ticket-information"
             sx={{ fontStyle: "italic" }}
           >
@@ -185,6 +192,13 @@ function ExpiredTicket({ ticket }) {
             className="pass-visitor-information"
           >
             {ticket.visitor.email}
+          </Typography>
+          <Typography
+            variant="h6"
+            color="text.secondary"
+            className="pass-visitor-information"
+          >
+            Visitor ID: {ticket.visitor.museumUserId}
           </Typography>
           <Typography
             variant="h6"
