@@ -60,7 +60,10 @@ export function Main() {
             path="/browse/artwork/:artworkId"
             element={<ArtworkDetails />}
           />
-          <Route path="/ticket" element={<TicketViewing />} />
+          <Route
+            path="/ticket"
+            element={loggedIn ? <TicketViewing /> : <Navigate to="/login" />}
+          />
           <Route path="/schedule/:id" element={<Schedule />} />
           <Route path="/employees" element={<ViewEmployees />} />s
           {/* <Route
