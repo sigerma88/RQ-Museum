@@ -353,9 +353,9 @@ public class RegistrationService {
 
     ArrayList<Character> password = new ArrayList<Character>();
     password.add(lowercase[getRandomNumber(0, lowercase.length)]);
-    password.add(lowercase[getRandomNumber(0, uppercase.length)]);
-    password.add(lowercase[getRandomNumber(0, numbers.length)]);
-    password.add(lowercase[getRandomNumber(0, symbols.length)]);
+    password.add(uppercase[getRandomNumber(0, uppercase.length)]);
+    password.add(numbers[getRandomNumber(0, numbers.length)]);
+    password.add(symbols[getRandomNumber(0, symbols.length)]);
 
     for (int i = 0; i < 4; i++) {
       password.add(allAllowed[getRandomNumber(0, allAllowed.length)]);
