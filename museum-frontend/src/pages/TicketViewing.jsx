@@ -1,5 +1,12 @@
 import React, { useState, useContext } from "react";
-import { Button, Divider, Typography } from "@mui/material";
+import {
+  Button,
+  Divider,
+  IconButton,
+  TextField,
+  Typography,
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import { LoginContext } from "../Contexts/LoginContext";
 import { Login } from "./Login";
 import { GenerateTicketPasses } from "./Ticket";
@@ -23,14 +30,14 @@ function VisitorTicket() {
 
   return (
     <>
-      <Typography variant="h4" component="h1" marginTop={5} marginBottom={5}>
+      <Typography variant="h4" component="h1" marginTop={5} marginBottom={2}>
         My Tickets
       </Typography>
       <Button
         onClick={handleOpen}
         variant="contained"
         size="large"
-        sx={{ position: "relative", top: "-80px", right: "-40%" }}
+        sx={{ position: "relative", top: "-58px", right: "-40%" }}
       >
         Buy tickets
       </Button>
@@ -45,12 +52,46 @@ function VisitorTicket() {
   );
 }
 
-function ManagerTicket() {
-  return <p>Admin</p>;
-}
+function StaffTicket() {
+  const [search, setSearch] = useState("");
+  const [visitorId, setVisitorId] = useState("");
 
-function EmployeeTicket() {
-  return <p>Employee</p>;
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
+  };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    setVisitorId(search);
+  };
+
+  return (
+    <>
+      <Typography variant="h4" component="h1" marginTop={5} marginBottom={2}>
+        Search for tickets
+      </Typography>
+      <form onSubmit={handleSearchSubmit}>
+        <TextField
+          id="search"
+          label="Search for visitor by ID"
+          variant="outlined"
+          size="small"
+          sx={{ mt: 1, mb: 1 }}
+          value={search}
+          onChange={handleSearch}
+        />
+        <IconButton aria-label="search" type="submit">
+          <SearchIcon
+            color="secondary"
+            fontSize="large"
+            sx={{ ml: 1, mb: 1 }}
+          />
+        </IconButton>
+      </form>
+      <Divider variant="middle" />
+      {visitorId !== "" && <GenerateTicketPasses visitorId={visitorId} />}
+    </>
+  );
 }
 
 /**
@@ -63,10 +104,8 @@ function TicketViewing() {
   const { loggedIn, userRole } = useContext(LoginContext);
   if (userRole === "visitor" && loggedIn) {
     return <VisitorTicket />;
-  } else if (userRole === "manager" && loggedIn) {
-    return <ManagerTicket />;
-  } else if (userRole === "employee" && loggedIn) {
-    return <EmployeeTicket />;
+  } else if (loggedIn && (userRole === "manager" || userRole === "employee")) {
+    return <StaffTicket />;
   } else {
     return <Login />;
   }
