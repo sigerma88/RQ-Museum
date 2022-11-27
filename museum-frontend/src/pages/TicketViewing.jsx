@@ -1,148 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
-import {
-  Button,
-  Card,
-  CardContent,
-  Divider,
-  Grid,
-  Typography,
-} from "@mui/material";
-import { Container } from "@mui/system";
-import "./TicketViewing.css";
+import React, { useState, useContext } from "react";
+import { Button, Divider, Typography } from "@mui/material";
 import { LoginContext } from "../Contexts/LoginContext";
 import { Navigation } from "../layouts/Navigation";
 import { Login } from "./Login";
+import { GenerateTicketPasses } from "./Ticket";
 import { TicketBuying } from "./TicketBuying";
-
-/**
- * Function to get the tickets of a visitor from the server
- *
- * @param visitorId - The visitor ID to get the tickets from
- * @returns The fetched tickets
- * @author Siger
- */
-function getTickets(visitorId) {
-  return axios
-    .get(`/api/ticket/visitor/${visitorId}`)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-}
-
-/**
- * Function to generate the ticket passes
- *
- * @param tickets - The tickets to generate the passes for
- * @returns The generated passes
- * @author Siger
- */
-function GenerateTicketPasses({ validPasses, expiredPasses }) {
-  return (
-    <Container sx={{ py: 5, width: "800px" }}>
-      <Grid container spacing={2}>
-        {validPasses.map((ticket) => (
-          <Grid item xs={12} key={ticket.ticketId}>
-            <Card sx={{ width: "800px" }}>
-              <CardContent className="pass-card-content">
-                <Typography
-                  variant="h6"
-                  className="pass-visitor-information"
-                  sx={{ fontStyle: "italic" }}
-                >
-                  Pass issued to
-                </Typography>
-                <Typography
-                  variant="h5"
-                  className="pass-visitor-information"
-                  sx={{ fontWeight: "bolder" }}
-                >
-                  {ticket.visitor.name}
-                </Typography>
-                <Typography
-                  variant="h6"
-                  color="text.secondary"
-                  className="pass-visitor-information"
-                >
-                  {ticket.visitor.email}
-                </Typography>
-                <Typography
-                  variant="h6"
-                  className="pass-ticket-information"
-                  sx={{ fontStyle: "italic" }}
-                >
-                  Pass valid on
-                </Typography>
-                <Typography
-                  variant="h5"
-                  className="pass-ticket-information"
-                  sx={{ fontWeight: "bolder" }}
-                >
-                  {ticket.visitDate}
-                </Typography>
-                <Typography variant="secondary" className="pass-ticket-id">
-                  {"Ticket ID: " + ticket.ticketId}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-        {expiredPasses.map((ticket) => (
-          <Grid item xs={12} key={ticket.ticketId}>
-            <Card sx={{ width: "800px" }}>
-              <CardContent className="pass-expired">
-                <Typography
-                  variant="h6"
-                  className="pass-visitor-information"
-                  sx={{ fontStyle: "italic" }}
-                >
-                  Pass issued to
-                </Typography>
-                <Typography
-                  variant="h5"
-                  className="pass-visitor-information"
-                  sx={{ fontWeight: "bolder" }}
-                >
-                  {ticket.visitor.name}
-                </Typography>
-                <Typography
-                  variant="h6"
-                  color="text.secondary"
-                  className="pass-visitor-information"
-                >
-                  {ticket.visitor.email}
-                </Typography>
-                <Typography
-                  variant="h6"
-                  className="pass-ticket-information"
-                  sx={{ fontStyle: "italic" }}
-                >
-                  Pass valid on
-                </Typography>
-                <Typography
-                  variant="h5"
-                  className="pass-ticket-information"
-                  sx={{ fontWeight: "bolder" }}
-                >
-                  {ticket.visitDate}
-                </Typography>
-                <Typography variant="secondary" className="pass-ticket-id">
-                  {"Ticket ID: " + ticket.ticketId}
-                </Typography>
-                <Typography variant="h2" className="expire-message">
-                  This pass has expired
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-    </Container>
-  );
-}
 
 /**
  * Visitor ticket viewing component
@@ -154,33 +16,6 @@ function VisitorTicket() {
   // Get the visitor ID from the context
   const { userId } = useContext(LoginContext);
   const visitorId = userId;
-
-  // Get the tickets from the server
-  const [validPasses, setValidPasses] = useState([]);
-  const [expiredPasses, setExpiredPasses] = useState([]);
-  useEffect(() => {
-    getTickets(visitorId).then((tickets) => {
-      const currentDate = new Date();
-      setValidPasses(
-        tickets.filter(
-          (ticket) =>
-            ticket.visitDate >=
-            currentDate.toLocaleDateString("en-CA", {
-              timeZone: "America/Montreal",
-            })
-        )
-      );
-      setExpiredPasses(
-        tickets.filter(
-          (ticket) =>
-            ticket.visitDate <
-            currentDate.toLocaleDateString("en-CA", {
-              timeZone: "America/Montreal",
-            })
-        )
-      );
-    });
-  }, [visitorId]);
 
   // Dialog state
   const [open, setOpen] = useState(false);
@@ -196,15 +31,12 @@ function VisitorTicket() {
         onClick={handleOpen}
         variant="contained"
         size="large"
-        className="buy-ticket"
+        sx={{ position: "relative", top: "-80px", right: "-40%" }}
       >
         Buy tickets
       </Button>
       <Divider variant="middle" />
-      <GenerateTicketPasses
-        validPasses={validPasses}
-        expiredPasses={expiredPasses}
-      />
+      <GenerateTicketPasses visitorId={visitorId} />
       <TicketBuying
         open={open}
         handleClose={handleClose}
