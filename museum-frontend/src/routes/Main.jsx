@@ -65,7 +65,7 @@ export function Main() {
           <Route
             path="/employee/create"
             element={
-              loggedIn && userRole == "manager" ? (
+              loggedIn && userRole === "manager" ? (
                 <EmployeeCreation />
               ) : (
                 <Typography

@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import { Button, Divider, Typography } from "@mui/material";
 import { LoginContext } from "../Contexts/LoginContext";
-import { Navigation } from "../layouts/Navigation";
 import { Login } from "./Login";
 import { GenerateTicketPasses } from "./Ticket";
 import { TicketBuying } from "./TicketBuying";

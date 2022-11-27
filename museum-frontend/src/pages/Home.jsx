@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useContext } from "react";
 import Typography from "@mui/material/Typography";
 import "./Home.css";
 import { LoginContext } from "../Contexts/LoginContext";

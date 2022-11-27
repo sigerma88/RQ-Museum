@@ -117,7 +117,7 @@ export function Navigation() {
               textDecoration: "none",
             }}
           >
-            <img src={RQ_logo}></img> {/*RQ Museum logo*/}
+            <img src={RQ_logo} alt="RQ logo"></img> {/*RQ Museum logo*/}
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>

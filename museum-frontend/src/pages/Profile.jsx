@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import "./Login.css";
 import { LoginContext } from "../Contexts/LoginContext";
-import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import { deepOrange } from "@mui/material/colors";
 
@@ -28,7 +27,7 @@ export function EditVisitor() {
   const [name, setName] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [isFormInvalid, setIsFormInvalid] = useState(false);
-  const { userName, userEmail, userId, userRole, setUserName, setUserEmail } =
+  const { userName, userEmail, userId, setUserName, setUserEmail } =
     useContext(LoginContext);
 
   /**

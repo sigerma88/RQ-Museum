@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import { Container } from "@mui/system";
 import { LoginContext } from "../Contexts/LoginContext";
-import { Navigation } from "../layouts/Navigation";
 
 /**
  * Function to get the artworks from the server
