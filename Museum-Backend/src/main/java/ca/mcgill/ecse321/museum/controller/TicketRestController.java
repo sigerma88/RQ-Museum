@@ -68,11 +68,13 @@ public class TicketRestController {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
-      } else if (!AuthenticationUtility.isVisitor(session)) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Your are not a visitor");
-      } else if (!AuthenticationUtility.checkUserId(session, visitorId)) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to view this page");
-      }
+      } else if (!AuthenticationUtility.isStaffMember(session)) {
+        if (!AuthenticationUtility.isVisitor(session)) {
+          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Your are not a visitor");
+        } else if (!AuthenticationUtility.checkUserId(session, visitorId)) {
+          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to view this page");
+        }
+      } 
 
       List<TicketDto> allTicketsOfVisitor = new ArrayList<>();
       for (Ticket ticket : ticketService.getTicketsByVisitor(visitorId)) {
