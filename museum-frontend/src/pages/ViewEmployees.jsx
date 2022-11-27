@@ -34,13 +34,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const header = createTheme({
-  typography: {
-    fontWeight: "bold",
-    fontSize: 18,
-  },
-});
-
 /**
  * @author VZ and Kevin
  * @returns table of employees
@@ -70,10 +63,11 @@ export function ViewEmployees() {
       <>
         <div>
           <h1 style={{ marginTop: 20, marginBottom: 20 }}>
-            List of all Employees
+            List&nbsp;of&nbsp;all&nbsp;Employees
           </h1>
         </div>
-        <TableContainer
+        <Typography>There are no employees at the moment.</Typography>
+        {/* <TableContainer
           component={Paper}
           sx={{
             display: "flex",
@@ -86,28 +80,28 @@ export function ViewEmployees() {
             mx: "auto",
           }}
         >
-          <Table stickyHeader aria-label="dense table">
+          <Table stickyHeader aria-label="simple table">
             <TableHead>
               <TableRow>
-                <StyledTableCell>
-                  <Typography sx={header}>Name</Typography>
-                </StyledTableCell>
-                <StyledTableCell>
-                  <Typography sx={header}>Email</Typography>
-                </StyledTableCell>
-                <StyledTableCell align="right">
-                  <Typography sx={header}>View&nbsp;Schedule</Typography>
-                </StyledTableCell>
+                <TableCell>
+                  <Typography>Name</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>Email</Typography>
+                </TableCell>
+                <TableCell align="right">
+                  <Typography>View&nbsp;Schedule</Typography>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {" "}
-              <StyledTableCell>
-                There are currently no employees
-              </StyledTableCell>
+              <TableCell>
+                There&nbsp;are&nbsp;currently&nbsp;no&nbsp;employees
+              </TableCell>
             </TableBody>
           </Table>
-        </TableContainer>
+        </TableContainer> */}
       </>
     );
   } else {
@@ -115,7 +109,7 @@ export function ViewEmployees() {
       <>
         <div>
           <h1 style={{ marginTop: 20, marginBottom: 20 }}>
-            List of all Employees
+            List&nbsp;of&nbsp;all&nbsp;Employees
           </h1>
         </div>
         <TableContainer
@@ -135,13 +129,24 @@ export function ViewEmployees() {
             <TableHead>
               <TableRow>
                 <StyledTableCell>
-                  <Typography sx={header}>Name</Typography>
+                  <Typography
+                    sx={{
+                      fontWeight: "bold",
+                      fontSize: 18,
+                    }}
+                  >
+                    Name
+                  </Typography>
                 </StyledTableCell>
                 <StyledTableCell>
-                  <Typography sx={header}>Email</Typography>
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18 }}>
+                    Email
+                  </Typography>
                 </StyledTableCell>
                 <StyledTableCell align="right">
-                  <Typography sx={header}>View&nbsp;Schedule</Typography>
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18 }}>
+                    View&nbsp;Schedule
+                  </Typography>
                 </StyledTableCell>
               </TableRow>
             </TableHead>
@@ -158,7 +163,7 @@ export function ViewEmployees() {
                       href={`/schedule/${employee.museumUserId}`}
                       className="hover-underline-animation"
                     >
-                      View {grammarCheck(employee.name)} schedule
+                      View&nbsp;{grammarCheck(employee.name)}&nbsp;schedule
                     </a>
                   </StyledTableCell>
                 </StyledTableRow>

@@ -4,19 +4,23 @@ import { useParams } from "react-router-dom";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import { styled } from "@mui/material/styles";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import { createTheme, padding } from "@mui/system";
-import { Typography } from "@mui/material";
-import TextField from "@mui/material/TextField";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import Stack from "@mui/material/Stack";
+import {
+  Button,
+  TableCell,
+  tableCellClasses,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+  TextField,
+} from "@mui/material";
+import dayjs from "dayjs";
 
 /**
  *
@@ -28,13 +32,19 @@ export function Schedule() {
   const [timePeriods, setTimePeriods] = useState([]); // initial state set to empty array
   const [employee, setEmployee] = useState({}); // initial state set to empty array
   const { id } = useParams(); //get the employee id from the url
-  const [value, setValue] = useState(null);
+  const [date, setDate] = useState(null);
+  //console.log({ date: getDate(date) });
+  const [startTime, setStartTime] = useState(null);
+  //console.log({ startTime: startTime && dayjs(startTime).format("HH:mm:ss") });
+  const [endTime, setEndTime] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isFormInvalid, setIsFormInvalid] = useState(false);
 
   useEffect(() => {
     axios
       .get(`/api/scheduling/employee/shifts/${id}`)
       .then(function (response) {
-        // if the request is successful
+        // if the requepst is successful
         console.log(response.data);
         setTimePeriods(response.data); // set the state to the data returned from the API
       })
@@ -43,16 +53,57 @@ export function Schedule() {
       });
   }, []);
 
+  function handleRemove(event, tpId) {
+    event.preventDefault();
+
+    axios
+      .delete(`/api/scheduling/employee/${id}/remove/shift/${tpId}`)
+      .then(function (response) {
+        // if the request is successful
+        console.log(response.data);
+        // for (let timePeriod of timePeriods) {
+        //   if (timePeriod.timePeriodId === tpId) {
+        setTimePeriods(
+          timePeriods.filter((timePeriod) => timePeriod.timePeriodId !== tpId)
+        );
+        console.log(timePeriods);
+        //   }
+        // }
+      })
+      .catch(function (error) {
+        console.log(error.response.data);
+      });
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
 
     axios
-      .post(`/api/shift/create`, {
-        startDate: "2021-10-01",
-        endDate: "2021-10-01",
+      .post(`/api/scheduling/shift/create`, {
+        startDate: getDate(date) + " " + dayjs(startTime).format("HH:mm:ss"),
+        endDate: getDate(date) + " " + dayjs(endTime).format("HH:mm:ss"),
       })
       .then(function (response) {
-        console.log(response.data);
+        //CREATE THE SHIFT
+        if (response.status === 200) {
+          console.log(response.data);
+          const tp = response.data;
+          //ADD THE SHIFT TO THE EMPLOYEE'S SCHEDULE
+          axios
+            .post(
+              `/api/scheduling/employee/${id}/add/shift/${response.data.timePeriodId}`
+            )
+            .then(function (response) {
+              // if the request is successful
+              console.log(response.data);
+              setTimePeriods([...timePeriods, tp]); // set the state to the data returned from the API
+            })
+            .catch(function (error) {
+              console.log(error.response.data);
+              setErrorMessage(error.response.data);
+              setIsFormInvalid(true);
+            });
+        }
       })
       .catch(function (error) {
         console.log(error.response.data);
@@ -60,7 +111,7 @@ export function Schedule() {
   }
 
   function getDayOfWeek(date) {
-    const dayOfWeek = new Date(date).getDay();
+    const dayOfWeek = new Date(date).getUTCDay();
     return isNaN(dayOfWeek)
       ? null
       : [
@@ -74,11 +125,11 @@ export function Schedule() {
         ][dayOfWeek];
   }
   function getYear(date) {
-    const year = new Date(date).getFullYear();
+    const year = new Date(date).getUTCFullYear();
     return isNaN(year) ? null : year;
   }
   function getMonth(date) {
-    const month = new Date(date).getMonth();
+    const month = new Date(date).getUTCMonth();
     return isNaN(month)
       ? null
       : [
@@ -96,31 +147,72 @@ export function Schedule() {
           "December",
         ][month];
   }
+
+  function getMonthNum(date) {
+    const month = new Date(date).getMonth();
+    return isNaN(month)
+      ? null
+      : ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"][month];
+  }
   function getDay(date) {
-    const day = new Date(date).getDate();
+    let day = new Date(date).getUTCDate();
     return isNaN(day) ? null : day;
   }
 
-  const numOfTimePeriods = timePeriods.length;
+  function getDate(date) {
+    return getYear(date) + "-" + getMonthNum(date) + "-" + getDay(date);
+  }
+
+  // const numOfTimePeriods = timePeriods.length;
 
   // Date formatted as YYYY, MONTH DAY
   //We only need the start date, because we are assuming that a shift spans one day at most
   // if the manager wants to schedule a shift that spans multiple days,
   //they can schedule multiple shifts
-  const dates = timePeriods.map((timePeriod) => (
-    <tr key={timePeriod.timePeriodId}>
-      <td>
+
+  const row = timePeriods.map((timePeriod) => (
+    <TableRow key={timePeriod.timePeriodId}>
+      <TableCell>
         {getDay(timePeriod.startDate.split(" ")[0])}{" "}
         {getMonth(timePeriod.startDate.split(" ")[0])}{" "}
         {getYear(timePeriod.startDate.split(" ")[0])}
-      </td>
-    </tr>
+      </TableCell>
+      <TableCell>{getDayOfWeek(timePeriod.startDate.split(" ")[0])}</TableCell>
+
+      <TableCell>
+        {timePeriod.startDate
+          .split(" ")[1]
+          .substring(0, timePeriod.startDate.split(" ")[1].length - 3)}
+      </TableCell>
+      <TableCell>
+        {timePeriod.endDate
+          .split(" ")[1]
+          .substring(0, timePeriod.startDate.split(" ")[1].length - 3)}
+      </TableCell>
+      <TableCell>
+        <Button
+          onClick={(event) => handleRemove(event, timePeriod.timePeriodId)}
+        >
+          Remove Shift
+        </Button>
+      </TableCell>
+    </TableRow>
+  ));
+
+  const dates = timePeriods.map((timePeriod) => (
+    <TableRow key={timePeriod.timePeriodId}>
+      <TableCell>
+        {getDay(timePeriod.startDate.split(" ")[0])}{" "}
+        {getMonth(timePeriod.startDate.split(" ")[0])}{" "}
+        {getYear(timePeriod.startDate.split(" ")[0])}
+      </TableCell>
+    </TableRow>
   ));
   // day of the week
   const dayOfStartDates = timePeriods.map((timePeriod) => (
-    <tr key={timePeriod.timePeriodId}>
+    <TableRow key={timePeriod.timePeriodId}>
       <td> {getDayOfWeek(timePeriod.startDate.split(" ")[0])}</td>
-    </tr>
+    </TableRow>
   ));
 
   //start times of shifts for each day, formatted to display HH:mm
@@ -155,13 +247,6 @@ export function Schedule() {
     },
   }));
 
-  const header = createTheme({
-    typography: {
-      fontWeight: "bold",
-      fontSize: 18,
-    },
-  });
-
   if (timePeriods.length === 0) {
     return (
       <>
@@ -170,6 +255,7 @@ export function Schedule() {
             Employee's Schedule
           </h1>
         </div>
+
         <TableContainer
           component={Paper}
           sx={{
@@ -186,18 +272,28 @@ export function Schedule() {
         >
           <Table stickyHeader aria-label="dense table">
             <TableHead>
-              <StyledTableCell>
-                <Typography sx={header}>Date</Typography>
-              </StyledTableCell>
-              <StyledTableCell>
-                <Typography sx={header}>Day of the Week</Typography>
-              </StyledTableCell>
-              <StyledTableCell>
-                <Typography sx={header}>Start Time</Typography>
-              </StyledTableCell>
-              <StyledTableCell>
-                <Typography sx={header}>End Time</Typography>
-              </StyledTableCell>
+              <TableRow>
+                <StyledTableCell>
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18 }}>
+                    Date
+                  </Typography>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18 }}>
+                    Day of the Week
+                  </Typography>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18 }}>
+                    Start Time
+                  </Typography>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18 }}>
+                    End Time
+                  </Typography>
+                </StyledTableCell>
+              </TableRow>
             </TableHead>
             <TableBody>
               <TableRow>
@@ -206,43 +302,71 @@ export function Schedule() {
                     display: "flex",
                   }}
                 >
-                  This employee currently has no shifts.
+                  This employee has no shift at the moment.
                 </StyledTableCell>
               </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
+
         <h2 style={{ marginTop: 30 }}>Add Shift</h2>
         <div style={{ marginTop: 30 }}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Stack justifyContent="center" direction="row" spacing={3}>
               <DatePicker
                 label="Select Date"
-                value={value}
+                value={date}
                 onChange={(newValue) => {
-                  setValue(newValue);
+                  setDate(newValue);
                 }}
-                renderInput={(params) => <TextField {...params} />}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    helperText={isFormInvalid && errorMessage}
+                    error={isFormInvalid && errorMessage}
+                  />
+                )}
               />
               <TimePicker
                 label="Select Start Time"
-                value={value}
+                value={startTime}
                 onChange={(newValue) => {
-                  setValue(newValue);
+                  setStartTime(newValue);
                 }}
-                renderInput={(params) => <TextField {...params} />}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    helperText={isFormInvalid && errorMessage}
+                    error={isFormInvalid && errorMessage}
+                  />
+                )}
               />
               <TimePicker
                 label="Select End Time"
-                value={value}
+                value={endTime}
                 onChange={(newValue) => {
-                  setValue(newValue);
+                  setEndTime(newValue);
                 }}
-                renderInput={(params) => <TextField {...params} />}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    helperText={isFormInvalid && errorMessage}
+                    error={isFormInvalid && errorMessage}
+                  />
+                )}
               />
             </Stack>
           </LocalizationProvider>
         </div>
+        <form onSubmit={handleSubmit}>
+          <Button
+            variant="contained"
+            type="submit"
+            style={{ width: 120, marginTop: 30, padding: 10 }}
+          >
+            Add Shift
+          </Button>
+        </form>
       </>
     );
   }
@@ -267,60 +391,92 @@ export function Schedule() {
       >
         <Table stickyHeader aria-label="dense table">
           <TableHead>
-            <StyledTableCell>
-              <Typography sx={header}>Date</Typography>
-            </StyledTableCell>
-            <StyledTableCell>
-              <Typography sx={header}>Day of the Week</Typography>
-            </StyledTableCell>
-            <StyledTableCell>
-              <Typography sx={header}>Start Time</Typography>
-            </StyledTableCell>
-            <StyledTableCell>
-              <Typography sx={header}>End Time</Typography>
-            </StyledTableCell>
-          </TableHead>
-          <TableBody>
             <TableRow>
-              <StyledTableCell>{dates}</StyledTableCell>
-              <StyledTableCell>{dayOfStartDates}</StyledTableCell>
-              <StyledTableCell>{startTimes}</StyledTableCell>
-              <StyledTableCell>{endTimes}</StyledTableCell>
+              <StyledTableCell>
+                <Typography sx={{ fontWeight: "bold", fontSize: 18 }}>
+                  Date
+                </Typography>
+              </StyledTableCell>
+              <StyledTableCell>
+                <Typography sx={{ fontWeight: "bold", fontSize: 18 }}>
+                  Day of the Week
+                </Typography>
+              </StyledTableCell>
+              <StyledTableCell>
+                <Typography sx={{ fontWeight: "bold", fontSize: 18 }}>
+                  Start Time
+                </Typography>
+              </StyledTableCell>
+              <StyledTableCell>
+                <Typography sx={{ fontWeight: "bold", fontSize: 18 }}>
+                  End Time
+                </Typography>
+              </StyledTableCell>
+              <StyledTableCell> </StyledTableCell>
             </TableRow>
-          </TableBody>
+          </TableHead>
+          <TableBody>{row}</TableBody>
         </Table>
       </TableContainer>
+
       <h2 style={{ marginTop: 30 }}>Add Shift</h2>
       <div style={{ marginTop: 30 }}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Stack justifyContent="center" direction="row" spacing={3}>
             <DatePicker
               label="Select Date"
-              value={value}
+              value={date}
               onChange={(newValue) => {
-                setValue(newValue);
+                setDate(newValue);
               }}
-              renderInput={(params) => <TextField {...params} />}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  helperText={isFormInvalid && errorMessage}
+                  error={isFormInvalid && errorMessage}
+                />
+              )}
             />
             <TimePicker
               label="Select Start Time"
-              value={value}
+              value={startTime}
               onChange={(newValue) => {
-                setValue(newValue);
+                setStartTime(newValue);
               }}
-              renderInput={(params) => <TextField {...params} />}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  helperText={isFormInvalid && errorMessage}
+                  error={isFormInvalid && errorMessage}
+                />
+              )}
             />
             <TimePicker
               label="Select End Time"
-              value={value}
+              value={endTime}
               onChange={(newValue) => {
-                setValue(newValue);
+                setEndTime(newValue);
               }}
-              renderInput={(params) => <TextField {...params} />}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  helperText={isFormInvalid && errorMessage}
+                  error={isFormInvalid && errorMessage}
+                />
+              )}
             />
           </Stack>
         </LocalizationProvider>
       </div>
+      <form onSubmit={handleSubmit}>
+        <Button
+          variant="contained"
+          type="submit"
+          style={{ width: 120, marginTop: 30, padding: 10 }}
+        >
+          Add Shift
+        </Button>
+      </form>
     </>
   );
 }
