@@ -1,7 +1,10 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useContext } from "react";
 import Typography from "@mui/material/Typography";
 import "./Home.css";
 import { LoginContext } from "../Contexts/LoginContext";
+import Admin from "./ViewEmployees";
+import ViewEmployees from "./ViewEmployees";
+import { Link } from "react-router-dom";
 
 /**
  * General page when user goes to the website
@@ -61,7 +64,7 @@ function VisitorHomePage() {
  */
 
 function ManagerHomePage() {
-  return <p>Admin</p>;
+  return <Link to="/employees">View all employees</Link>;
 }
 
 /**

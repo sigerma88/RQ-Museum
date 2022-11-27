@@ -10,7 +10,6 @@ import {
   Typography,
 } from "@mui/material";
 import { LoginContext } from "../Contexts/LoginContext";
-import { Navigation } from "../layouts/Navigation";
 
 /**
  * Function to get the artwork from the server

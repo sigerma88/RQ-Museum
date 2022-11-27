@@ -8,6 +8,8 @@ import Button from "@mui/material/Button";
 import axios from "axios";
 import { LoginContext } from "../Contexts/LoginContext";
 import { useNavigate } from "react-router-dom";
+import RQ_logo from "../assets/RQ_logo.svg";
+
 const visitorPage = ["Visit", "Exhibitions", "Collections", "Ticket"];
 const managerPage = ["Room", "Artwork", "Employee", "Schedule"];
 const employeePage = ["Room", "Artwork", "Schedule"];
@@ -115,7 +117,7 @@ export function Navigation() {
               textDecoration: "none",
             }}
           >
-            Museum
+            <img src={RQ_logo} alt="RQ logo"></img> {/*RQ Museum logo*/}
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>

@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Typography } from "@mui/material";
+import { LoginContext } from "../Contexts/LoginContext";
 import Home from "../pages/Home";
 import { Navigation } from "../layouts/Navigation";
 import { Login } from "../pages/Login";
 import { Signup } from "../pages/Signup";
 import { Profile } from "../pages/Profile";
-import { LoginContext } from "../Contexts/LoginContext";
 import ArtworkBrowsing from "../pages/ArtworkBrowsing";
 import ArtworkDetails from "../pages/ArtworkDetails";
 import EmployeeCreation from "../pages/EmployeeCreation";
-import { Typography } from "@mui/material";
+import TicketViewing from "../pages/TicketViewing";
+import { Schedule } from "../pages/Schedule";
+import { ViewEmployees } from "../pages/ViewEmployees";
 
 /**
  * Function that routes the user to the correct page depending on the url
@@ -62,7 +65,7 @@ export function Main() {
           <Route
             path="/employee/create"
             element={
-              loggedIn && userRole == "manager" ? (
+              loggedIn && userRole === "manager" ? (
                 <EmployeeCreation />
               ) : (
                 <Typography
@@ -79,6 +82,12 @@ export function Main() {
             path="/browse/artwork/:artworkId"
             element={<ArtworkDetails />}
           />
+          <Route
+            path="/ticket"
+            element={loggedIn ? <TicketViewing /> : <Navigate to="/login" />}
+          />
+          <Route path="/schedule/:id" element={<Schedule />} />
+          <Route path="/employees" element={<ViewEmployees />} />s
         </Routes>
       </BrowserRouter>
     </LoginContext.Provider>

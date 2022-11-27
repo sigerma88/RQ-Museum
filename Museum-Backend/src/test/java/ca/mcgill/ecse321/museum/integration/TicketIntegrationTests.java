@@ -4,6 +4,7 @@ import ca.mcgill.ecse321.museum.controller.utilities.DtoUtility;
 import ca.mcgill.ecse321.museum.dao.TicketRepository;
 import ca.mcgill.ecse321.museum.dao.VisitorRepository;
 import ca.mcgill.ecse321.museum.dto.TicketDto;
+import ca.mcgill.ecse321.museum.dto.TicketDtoNoIdRequest;
 import ca.mcgill.ecse321.museum.dto.VisitorDto;
 import ca.mcgill.ecse321.museum.integration.utilities.UserUtilities;
 import ca.mcgill.ecse321.museum.model.Ticket;
@@ -68,12 +69,11 @@ public class TicketIntegrationTests {
    */
   @Test
   public void testGetTicketByInvalidVisitor() {
-    Visitor visitor =
-        UserUtilities.createVisitor(VISITOR_EMAIL_1, VISITOR_NAME_1, VISITOR_PASSWORD_1);
+    Visitor visitor = UserUtilities.createVisitor(VISITOR_EMAIL_1, VISITOR_NAME_1, VISITOR_PASSWORD_1);
     visitorRepository.save(visitor);
     HttpEntity<?> entity = new HttpEntity<>(loginSetupVisitor(visitor));
-    ResponseEntity<String> response =
-        client.exchange("/api/ticket/visitor/" + -1 + "/", HttpMethod.GET, entity, String.class);
+    ResponseEntity<String> response = client.exchange("/api/ticket/visitor/" + -1 + "/", HttpMethod.GET, entity,
+        String.class);
     assertNotNull(response);
     assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     assertEquals("You are not authorized to view this page", response.getBody(),
@@ -87,8 +87,7 @@ public class TicketIntegrationTests {
    */
   @Test
   public void testGetTicketsByVisitor() {
-    Visitor visitor =
-        UserUtilities.createVisitor(VISITOR_EMAIL_1, VISITOR_NAME_1, VISITOR_PASSWORD_1);
+    Visitor visitor = UserUtilities.createVisitor(VISITOR_EMAIL_1, VISITOR_NAME_1, VISITOR_PASSWORD_1);
     long visitorId = visitorRepository.save(visitor).getMuseumUserId();
     visitorRepository.save(visitor);
 
@@ -103,10 +102,8 @@ public class TicketIntegrationTests {
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertEquals(2, response.getBody().length);
     assertEquals(visitorId, response.getBody()[0].getVisitor().getMuseumUserId());
-    assertTrue(VISIT_DATE_1.equals(response.getBody()[0].getVisitDate()));
-    assertTrue(VISIT_DATE_2.equals(response.getBody()[1].getVisitDate()));
-
-
+    assertTrue(VISIT_DATE_1.equals(response.getBody()[1].getVisitDate()));
+    assertTrue(VISIT_DATE_2.equals(response.getBody()[0].getVisitDate()));
 
   }
 
@@ -118,12 +115,12 @@ public class TicketIntegrationTests {
   @Test
   public void testCreateTickets() {
     int numOfTickets = 2;
-    Visitor visitor =
-        UserUtilities.createVisitor(VISITOR_EMAIL_1, VISITOR_NAME_1, VISITOR_PASSWORD_1);
+    Visitor visitor = UserUtilities.createVisitor(VISITOR_EMAIL_1, VISITOR_NAME_1, VISITOR_PASSWORD_1);
     visitorRepository.save(visitor);
-    TicketDto ticketDto = new TicketDto(VISIT_DATE_1, DtoUtility.convertToDto(visitor));
+    TicketDtoNoIdRequest ticketDtoNoIdRequest = new TicketDtoNoIdRequest(VISIT_DATE_1, visitor.getMuseumUserId());
 
-    HttpEntity<?> entity = new HttpEntity<>(ticketDto, loginSetupVisitor(visitor));
+    HttpEntity<?> entity = new HttpEntity<>(ticketDtoNoIdRequest, loginSetupVisitor(visitor));
+
     ResponseEntity<TicketDto[]> response = client.exchange(
         "/api/ticket/purchase?number=" + numOfTickets, HttpMethod.POST, entity, TicketDto[].class);
 
@@ -143,12 +140,12 @@ public class TicketIntegrationTests {
   @Test
   public void testCreateTicketsWithInvalidNumber() {
     int numOfTickets = 0;
-    Visitor visitor =
-        UserUtilities.createVisitor(VISITOR_EMAIL_1, VISITOR_NAME_1, VISITOR_PASSWORD_1);
+    Visitor visitor = UserUtilities.createVisitor(VISITOR_EMAIL_1, VISITOR_NAME_1, VISITOR_PASSWORD_1);
     visitorRepository.save(visitor);
-    TicketDto ticketDto = new TicketDto(VISIT_DATE_1, DtoUtility.convertToDto(visitor));
+    TicketDtoNoIdRequest ticketDtoNoIdRequest = new TicketDtoNoIdRequest(VISIT_DATE_1, visitor.getMuseumUserId());
 
-    HttpEntity<?> entity = new HttpEntity<>(ticketDto, loginSetupVisitor(visitor));
+    HttpEntity<?> entity = new HttpEntity<>(ticketDtoNoIdRequest, loginSetupVisitor(visitor));
+
     ResponseEntity<String> response = client.exchange("/api/ticket/purchase?number=" + numOfTickets,
         HttpMethod.POST, entity, String.class);
 
@@ -178,8 +175,7 @@ public class TicketIntegrationTests {
   public VisitorDto createVisitorAndLogin(Visitor newVisitor) {
     visitorRepository.save(newVisitor);
     VisitorDto visitor = UserUtilities.createVisitorDto(newVisitor);
-    ResponseEntity<String> response =
-        client.postForEntity("/api/auth/login", visitor, String.class);
+    ResponseEntity<String> response = client.postForEntity("/api/auth/login", visitor, String.class);
     List<String> session = response.getHeaders().get("Set-Cookie");
 
     String sessionId = session.get(0);

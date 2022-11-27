@@ -95,7 +95,13 @@ public class SchedulingRestController {
       }
 
       List<TimePeriodDto> timePeriodDtos = new ArrayList<TimePeriodDto>();
-      for (TimePeriod tp : employeeService.getEmployeeTimePeriods(id)) {
+
+      List<TimePeriod> employeeTimePeriods = employeeService.getEmployeeTimePeriods(id);
+      if (employeeTimePeriods == null) {
+        return new ResponseEntity<>(timePeriodDtos, HttpStatus.OK);
+      }
+
+      for (TimePeriod tp : employeeTimePeriods) {
         timePeriodDtos.add(DtoUtility.convertToDto(tp));
       }
       return new ResponseEntity<>(timePeriodDtos, HttpStatus.OK);
