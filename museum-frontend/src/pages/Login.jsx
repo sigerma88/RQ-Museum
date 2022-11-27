@@ -15,9 +15,11 @@ import { useNavigate } from "react-router-dom";
 /**
  * Login page
  * @returns Login page
+ * @author Kevin
  */
 
 export function Login() {
+  // State variables for the form
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -26,6 +28,11 @@ export function Login() {
     useContext(LoginContext);
 
   const navigate = useNavigate();
+
+  /**
+   * Logs in a user when the form is submitted
+   * @author Kevin
+   **/
 
   const handleSubmit = async (event) => {
     event.preventDefault();

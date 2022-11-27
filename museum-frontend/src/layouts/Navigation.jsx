@@ -14,7 +14,12 @@ const visitorPage = ["Visit", "Exhibitions", "Collections", "Ticket"];
 const managerPage = ["Room", "Artwork", "Employee", "Schedule"];
 const employeePage = ["Room", "Artwork", "Schedule"];
 const generalPage = ["Home", "Ticket", "Loan"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+
+/**
+ * Navigation bar
+ * @returns Navigation bar
+ * @author Kevin
+ */
 
 export function Navigation() {
   const { loggedIn, setLoggedIn } = useContext(LoginContext);
@@ -33,6 +38,11 @@ export function Navigation() {
     page = generalPage;
   }
 
+  /**
+   * Logs user out and redirects to home page
+   * @author Kevin
+   */
+
   const handleLogout = () => {
     axios
       .post("/api/auth/logout")
@@ -48,6 +58,11 @@ export function Navigation() {
       });
   };
 
+  /**
+   * Navigation bar when user is not logged in
+   * @author Kevin
+   */
+
   const notSignedInButton = () => {
     return (
       <>
@@ -62,6 +77,11 @@ export function Navigation() {
       </>
     );
   };
+
+  /**
+   * Navigation bar when user is  logged in
+   * @author Kevin
+   */
 
   const signedInButton = () => {
     return (

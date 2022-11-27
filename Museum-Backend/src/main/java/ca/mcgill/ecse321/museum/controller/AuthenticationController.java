@@ -51,7 +51,6 @@ public class AuthenticationController {
       MuseumUser userAuthentication =
           authenticationService.authenticateUser(museumUser.getEmail(), museumUser.getPassword());
       HttpSession session = request.getSession(true);
-      String role = "";
 
       if (userAuthentication.getClass().equals(Visitor.class)) {
         session.setAttribute("user_id", userAuthentication.getMuseumUserId());
