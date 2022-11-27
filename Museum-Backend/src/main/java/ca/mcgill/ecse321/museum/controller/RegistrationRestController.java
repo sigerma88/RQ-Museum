@@ -57,6 +57,7 @@ public class RegistrationRestController {
       if (visitorDto != null) {
         session.setAttribute("user_id", visitorDto.getMuseumUserId());
         session.setAttribute("role", "visitor");
+        visitorDto.setRole("visitor");
       }
 
       return ResponseEntity.ok(visitorDto);
@@ -168,7 +169,8 @@ public class RegistrationRestController {
    */
 
   @PostMapping(value = "employee/register", produces = "application/json")
-  public ResponseEntity<?> register(HttpServletRequest request, @RequestBody String employeeName) {
+  public ResponseEntity<?> register(HttpServletRequest request,
+      @RequestBody Map<String, String> employee) {
     try {
       HttpSession session = request.getSession();
 
@@ -181,7 +183,7 @@ public class RegistrationRestController {
       }
 
       EmployeeDto employeeDto =
-          DtoUtility.convertToDto(registrationService.createEmployee(employeeName));
+          DtoUtility.convertToDto(registrationService.createEmployee(employee.get("name")));
 
       return ResponseEntity.ok(employeeDto);
     } catch (Exception e) {
