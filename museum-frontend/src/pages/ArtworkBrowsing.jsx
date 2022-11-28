@@ -68,39 +68,59 @@ function VisitorArtworkBrowsing({ artworks, room }) {
       <Container sx={{ py: 5 }}>
         <Grid container spacing={4}>
           {artworks.map((card) => (
-            <Grid item key={card.artworkId} xs={12} sm={6} md={2}>
+            <Grid item key={card.artworkId} xs={12} sm={6} md={3}>
               <Card
                 sx={{
                   display: "flex",
                   flexDirection: "column",
-                  height: "100%",
+                  height: "400px",
+                  width: "100%",
                 }}
               >
-                <CardMedia
-                  component="img"
-                  image={card.image}
-                  alt="Artwork image"
-                />
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography
-                    gutterBottom
-                    variant="subtitle1"
-                    style={{ fontWeight: "bold" }}
+                <a
+                  style={{
+                    fontStyle: "none",
+                    textDecoration: "none",
+                    color: "black",
+                  }}
+                  href={`/browse/artwork/${card.artworkId}`}
+                >
+                  <CardMedia
+                    component="img"
+                    style={{
+                      objectFit: "cover",
+                      height: "200px",
+                    }}
+                    image={card.image}
+                    alt="Artwork image"
+                  />
+                  <CardContent
+                    sx={{
+                      flexGrow: 1,
+                    }}
                   >
-                    {card.name}
-                  </Typography>
-                  <Typography variant="subtitle2">
-                    {"by " + card.artist}
-                  </Typography>
-                  <Typography variant="caption" color={"gray"}>
-                    {`${card.isAvailableForLoan ? "Available for loan" : ""}` +
-                      `${card.isOnLoan ? " but is currently on loan" : ""}`}
-                  </Typography>
-                </CardContent>
-                <CardActions>
+                    <Typography
+                      gutterBottom
+                      variant="subtitle1"
+                      style={{ fontWeight: "bold" }}
+                    >
+                      {card.name}
+                    </Typography>
+                    <Typography variant="subtitle2">
+                      {"by " + card.artist}
+                    </Typography>
+                    <Typography variant="caption" color={"gray"}>
+                      {`${
+                        card.isAvailableForLoan ? "Available for loan" : ""
+                      }` +
+                        `${card.isOnLoan ? " but is currently on loan" : ""}`}
+                    </Typography>
+                  </CardContent>
+                </a>
+                {/* <CardActions style={{ margin: "auto" }}>
                   <Button
                     variant="contained"
-                    size="small"
+                    size="medium"
                     onClick={() => {
                       window.location.href =
                         "/browse/artwork/" + card.artworkId;
@@ -108,15 +128,14 @@ function VisitorArtworkBrowsing({ artworks, room }) {
                   >
                     View
                   </Button>
-                  {/* TODO: Add link to loan page */}
                   <Button
                     variant="contained"
-                    size="small"
+                    size="medium"
                     disabled={!card.isAvailableForLoan}
                   >
                     Loan
                   </Button>
-                </CardActions>
+                </CardActions> */}
               </Card>
             </Grid>
           ))}

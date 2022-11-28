@@ -8,8 +8,13 @@ import {
   ListItem,
   ListItemText,
   Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material";
 import { LoginContext } from "../Contexts/LoginContext";
+import { padding } from "@mui/system";
 
 /**
  * Function to get the artwork from the server
@@ -68,6 +73,27 @@ function computeArtworkStatus(artworkStatus) {
   return status;
 }
 
+function LoanConfirmation({ open, close }) {
+  function handleLoan() {
+    axios.post("/api/artwork//create", {});
+  }
+  return (
+    <Dialog open={open} onClose={close}>
+      <DialogTitle>Loan confirmation</DialogTitle>
+      <DialogContent>
+        <Typography>
+          Are you sure you want to loan this artwork? You will be charged once
+          the request is accepted.
+        </Typography>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={close}>Cancel</Button>
+        <Button onClick={handleLoan}>Confirm</Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
 /**
  * Visitor artwork loan section
  *
@@ -78,35 +104,60 @@ function computeArtworkStatus(artworkStatus) {
  * @author Siger
  */
 function VisitorArtworkLoan({ artwork, userRole, loggedIn }) {
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   if (artwork.isAvailableForLoan && userRole === "visitor" && loggedIn) {
     return (
-      <>
-        <Divider variant="middle" />
+      <div>
         <Typography variant="h5" margin={2}>
           Loan information
         </Typography>
-        <List>
-          <ListItem>
-            <ListItemText primary="Loan fee" secondary={artwork.loanFee} />
-          </ListItem>
-          <Divider variant="middle" />
-          <ListItem>
-            <ListItemText
-              primary="Loan status"
-              secondary={artwork.isOnLoan ? "Currently on loan" : "Not on loan"}
-            />
-          </ListItem>
+        <List
+          style={{
+            width: "70%",
+            padding: "auto",
+            margin: "auto",
+            display: "flex",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <div style={{ width: "80%" }}>
+            <ListItem>
+              <ListItemText primary="Loan fee" secondary={artwork.loanFee} />
+            </ListItem>
+            <Divider variant="middle" />
+          </div>
+          <div style={{ width: "80%" }}>
+            <ListItem>
+              <ListItemText
+                primary="Loan status"
+                secondary={
+                  artwork.isOnLoan ? "Currently on loan" : "Not on loan"
+                }
+              />
+            </ListItem>
+            <Divider variant="middle" />
+          </div>
         </List>
-        <Divider variant="middle" />
         {/* TODO: Add loan button action */}
         <Button
           variant="contained"
           disabled={artwork.isOnLoan}
-          style={{ margin: 10 }}
+          style={{ margin: 50 }}
+          onClick={handleClickOpen}
         >
           Loan this
         </Button>
-      </>
+        <LoanConfirmation open={open} close={handleClose} />
+      </div>
     );
   } else {
     return null;
@@ -139,37 +190,56 @@ function VisitorArtworkDetails({ artwork, userRole, loggedIn }) {
 
   return (
     <>
+      <Typography variant="h4" margin={5}>
+        {artwork.name}
+      </Typography>
       <img
         src={artwork.image}
         alt="artwork"
-        style={{ marginTop: 30, height: imageHeight }}
+        style={{ height: imageHeight, borderRadius: 10 }}
       />
-      <Typography variant="h5" margin={2}>
-        Artwork information
-      </Typography>
-      <List>
-        <ListItem>
-          <ListItemText primary="Name" secondary={artwork.name} />
-        </ListItem>
-        <Divider variant="middle" />
-        <ListItem>
-          <ListItemText primary="Artist" secondary={artwork.artist} />
-        </ListItem>
-        <Divider variant="middle" />
-        <ListItem>
-          <ListItemText
-            primary="Room"
-            secondary={artwork.room ? artwork.room.roomName : "None"}
-          />
-        </ListItem>
-        <Divider variant="middle" />
-        <ListItem>
-          <ListItemText
-            primary="Artwork status"
-            secondary={computeArtworkStatus(artworkStatus.toString())}
-          />
-        </ListItem>
-      </List>
+      <div style={{ margin: "50px auto" }}>
+        <Typography variant="h5" margin={2}>
+          Artwork information
+        </Typography>
+        <List
+          style={{
+            display: "flex",
+            margin: "auto",
+            justifyContent: "space-evenly",
+            padding: "auto",
+            width: "70%",
+          }}
+        >
+          <div style={{ width: "80%" }}>
+            <ListItem className="artwork-info">
+              <ListItemText primary="Name" secondary={artwork.name} />
+            </ListItem>
+            <Divider variant="middle" />
+            <ListItem>
+              <ListItemText primary="Artist" secondary={artwork.artist} />
+            </ListItem>
+            <Divider variant="middle" />
+          </div>
+          <div style={{ width: "80%" }}>
+            <ListItem>
+              <ListItemText
+                primary="Room"
+                secondary={artwork.room ? artwork.room.roomName : "None"}
+              />
+            </ListItem>
+            <Divider variant="middle" />
+            <ListItem>
+              <ListItemText
+                primary="Artwork status"
+                secondary={computeArtworkStatus(artworkStatus.toString())}
+              />
+            </ListItem>
+            <Divider variant="middle" />
+          </div>
+        </List>
+      </div>
+
       <VisitorArtworkLoan
         artwork={artwork}
         userRole={userRole}
