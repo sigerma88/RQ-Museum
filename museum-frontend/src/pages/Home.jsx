@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import Typography from "@mui/material/Typography";
+import Stack from '@mui/material/Stack';
 import "./Home.css";
 import { LoginContext } from "../Contexts/LoginContext";
 import Admin from "./ViewEmployees";
@@ -60,12 +61,16 @@ function VisitorHomePage() {
 /**
  * Manager home page when logged in as a manager
  * @returns Manager Home page
- * @author Kevin
+ * @author Kevin, kieyanmamiche
  */
 
 function ManagerHomePage() {
-  return <Link to="/employees">View all employees</Link>;
+    return <Stack>
+        <Link to="/editRoom">Edit a room</Link>
+        <Link to="/employees">View all employees</Link>
+    </Stack>
 }
+
 
 /**
  * Employee home page when logged in as a employee

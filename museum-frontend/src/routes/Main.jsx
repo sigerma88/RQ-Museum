@@ -13,6 +13,7 @@ import EmployeeCreation from "../pages/EmployeeCreation";
 import TicketViewing from "../pages/TicketViewing";
 import { Schedule } from "../pages/Schedule";
 import { ViewEmployees } from "../pages/ViewEmployees";
+import { EditRoom } from "../pages/EditRoom";
 
 /**
  * Function that routes the user to the correct page depending on the url
@@ -87,7 +88,8 @@ export function Main() {
             element={loggedIn ? <TicketViewing /> : <Navigate to="/login" />}
           />
           <Route path="/schedule/:id" element={<Schedule />} />
-          <Route path="/employees" element={<ViewEmployees />} />s
+          <Route path="/employees" element={<ViewEmployees />} />
+          <Route path="/editRoom" element={<EditRoom />} />
         </Routes>
       </BrowserRouter>
     </LoginContext.Provider>
