@@ -12,13 +12,13 @@ import {
 } from "@mui/material";
 import { Container } from "@mui/system";
 import { LoginContext } from "../Contexts/LoginContext";
+import "./Artwork.css";
 
 /**
  * Function to get the artworks from the server
  *
  * @param roomId - The room ID to get the artworks from
  * @returns The fetched artworks
- * @author Siger
  */
 function getArtworks(roomId) {
   return axios
@@ -52,19 +52,45 @@ function getRoom(roomId) {
   }
 }
 
+export function LoanStatus({ isAvailableForLoan, isOnLoan }) {
+  if (!isAvailableForLoan) {
+    return (
+      <Typography variant="caption" color={"gray"}>
+        <span className="red-dot"></span> Unavailable for loan
+      </Typography>
+    );
+  } else if (isAvailableForLoan && !isOnLoan) {
+    return (
+      <Typography variant="caption" color={"gray"}>
+        <span className="green-dot"></span> Available for loan
+      </Typography>
+    );
+  } else if (isOnLoan) {
+    return (
+      <Typography variant="caption" color={"gray"}>
+        <span className="orange-dot"></span> Currently on loan
+      </Typography>
+    );
+  }
+}
+
 /**
  * VisitorArtworkBrowsing component
  *
  * @param artworks - The artworks to display
  * @param room - The room to display
- * @author Siger
+ * @author Siger, Kevin(redesign)
  */
 function VisitorArtworkBrowsing({ artworks, room }) {
   return (
     <>
-      <Typography variant="h4" component="h1" marginTop={5}>
-        {room.roomName}
-      </Typography>
+      <div style={{ lineHeight: "14px" }}>
+        <Typography variant="h4" component="h1" marginTop={5}>
+          {room.roomName}
+        </Typography>
+        <Typography>{artworks.length} artworks</Typography>
+      </div>
+
       <Container sx={{ py: 5 }}>
         <Grid container spacing={4}>
           {artworks.map((card) => (
@@ -75,7 +101,9 @@ function VisitorArtworkBrowsing({ artworks, room }) {
                   flexDirection: "column",
                   height: "400px",
                   width: "100%",
+                  position: "relative",
                 }}
+                className="card"
               >
                 <a
                   style={{
@@ -109,33 +137,28 @@ function VisitorArtworkBrowsing({ artworks, room }) {
                     <Typography variant="subtitle2">
                       {"by " + card.artist}
                     </Typography>
-                    <Typography variant="caption" color={"gray"}>
-                      {`${
-                        card.isAvailableForLoan ? "Available for loan" : ""
-                      }` +
-                        `${card.isOnLoan ? " but is currently on loan" : ""}`}
-                    </Typography>
+                    <div
+                      style={
+                        !card.isAvailableForLoan
+                          ? {
+                              position: "absolute",
+                              bottom: "65px",
+                              margin: "auto 50px",
+                            }
+                          : {
+                              position: "absolute",
+                              bottom: "65px",
+                              margin: "auto 60px",
+                            }
+                      }
+                    >
+                      <LoanStatus
+                        isAvailableForLoan={card.isAvailableForLoan}
+                        isOnLoan={card.isOnLoan}
+                      />
+                    </div>
                   </CardContent>
                 </a>
-                {/* <CardActions style={{ margin: "auto" }}>
-                  <Button
-                    variant="contained"
-                    size="medium"
-                    onClick={() => {
-                      window.location.href =
-                        "/browse/artwork/" + card.artworkId;
-                    }}
-                  >
-                    View
-                  </Button>
-                  <Button
-                    variant="contained"
-                    size="medium"
-                    disabled={!card.isAvailableForLoan}
-                  >
-                    Loan
-                  </Button>
-                </CardActions> */}
               </Card>
             </Grid>
           ))}

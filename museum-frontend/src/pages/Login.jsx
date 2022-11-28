@@ -127,6 +127,9 @@ export function Login() {
                 className="login-field"
               />
             </Box>
+            <a style={{ margin: "10px" }} href="/signup">
+              Need an account? Click here
+            </a>
             <p style={{ color: "red" }}>{errorMessage}</p>
             <Button
               type="submit"

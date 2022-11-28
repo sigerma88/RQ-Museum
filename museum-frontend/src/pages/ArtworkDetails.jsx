@@ -12,9 +12,12 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Avatar,
 } from "@mui/material";
 import { LoginContext } from "../Contexts/LoginContext";
-import { padding } from "@mui/system";
+import "./Artwork.css";
+import { LoanStatus } from "./ArtworkBrowsing";
+import LockIcon from "@mui/icons-material/Lock";
 
 /**
  * Function to get the artwork from the server
@@ -75,7 +78,7 @@ function computeArtworkStatus(artworkStatus) {
 
 function LoanConfirmation({ open, close }) {
   function handleLoan() {
-    axios.post("/api/artwork//create", {});
+    axios.post("/api/artwork/create", {});
   }
   return (
     <Dialog open={open} onClose={close}>
@@ -114,7 +117,7 @@ function VisitorArtworkLoan({ artwork, userRole, loggedIn }) {
     setOpen(false);
   };
 
-  if (artwork.isAvailableForLoan && userRole === "visitor" && loggedIn) {
+  if (artwork.isAvailableForLoan) {
     return (
       <div>
         <Typography variant="h5" margin={2}>
@@ -148,15 +151,37 @@ function VisitorArtworkLoan({ artwork, userRole, loggedIn }) {
           </div>
         </List>
         {/* TODO: Add loan button action */}
-        <Button
-          variant="contained"
-          disabled={artwork.isOnLoan}
-          style={{ margin: 50 }}
-          onClick={handleClickOpen}
-        >
-          Loan this
-        </Button>
-        <LoanConfirmation open={open} close={handleClose} />
+        {artwork.isAvailableForLoan && loggedIn ? (
+          <div>
+            <Button
+              variant="contained"
+              disabled={artwork.isOnLoan}
+              style={{ margin: 50 }}
+              onClick={handleClickOpen}
+            >
+              Loan this
+            </Button>
+            <LoanConfirmation open={open} close={handleClose} />
+          </div>
+        ) : (
+          <div style={{ margin: 50 }}>
+            <Avatar
+              sx={{
+                margin: "auto",
+                marginBottom: "20px",
+                width: "50px",
+                height: "50px",
+                bgcolor: "black",
+              }}
+            >
+              <LockIcon />
+            </Avatar>{" "}
+            <Typography variant="h4">Login to request a loan</Typography>
+            <a href="/login">
+              <Typography>Click here to login</Typography>
+            </a>
+          </div>
+        )}
       </div>
     );
   } else {
@@ -232,7 +257,12 @@ function VisitorArtworkDetails({ artwork, userRole, loggedIn }) {
             <ListItem>
               <ListItemText
                 primary="Artwork status"
-                secondary={computeArtworkStatus(artworkStatus.toString())}
+                secondary={
+                  <LoanStatus
+                    isAvailableForLoan={artwork.isAvailableForLoan}
+                    isOnLoan={artwork.isOnLoan}
+                  />
+                }
               />
             </ListItem>
             <Divider variant="middle" />

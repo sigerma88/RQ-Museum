@@ -1,23 +1,28 @@
 .green-dot {
-  height: 25px;
-  width: 25px;
+  height: 10px;
+  width: 10px;
   background-color: green;
   border-radius: 50%;
   display: inline-block;
 }
 
 .orange-dot {
-  height: 25px;
-  width: 25px;
+  height: 10px;
+  width: 10px;
   background-color: orange;
   border-radius: 50%;
   display: inline-block;
 }
 
 .red-dot {
-  height: 25px;
-  width: 25px;
-  background-color: red;
+  height: 10px;
+  width: 10px;
+  background-color: #d2042d;
   border-radius: 50%;
   display: inline-block;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  transition: all 0.3s ease-in-out;
 }
