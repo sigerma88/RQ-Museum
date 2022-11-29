@@ -28,26 +28,26 @@
 
 .pass-ticket-information {
   position: relative;
-  top: -53px;
+  top: -75px;
   left: 300px;
 }
 
 .pass-visitor-information {
   position: relative;
-  top: 36px;
+  top: 20px;
   left: 80px;
 }
 
 .pass-ticket-id {
   position: relative;
-  top: 0px;
-  left: -340px;
+  top: -32px;
+  left: -280px;
   font-style: italic;
 }
 
 .expire-message {
   position: relative;
-  top: -130px;
+  top: -160px;
   left: 0px;
   rotate: -15deg;
   color: red;
