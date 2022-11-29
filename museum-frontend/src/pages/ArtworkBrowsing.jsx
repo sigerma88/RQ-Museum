@@ -149,7 +149,7 @@ function VisitorArtworkBrowsing({ artworks, room }) {
                           : {
                               position: "absolute",
                               bottom: "65px",
-                              width: "90%",
+                              width: "88%",
                               margin: "auto 0px",
                             }
                       }
