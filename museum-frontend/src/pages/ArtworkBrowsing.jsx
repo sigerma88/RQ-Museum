@@ -44,6 +44,14 @@ function getRoom(roomId) {
   }
 }
 
+/**
+ * Loan Status message
+ * @param isAvailableForLoan - If artwork is loanable
+ * @param isOnLoan - If artwork is on loan
+ * @returns The loan status message
+ * @author Kevin
+ * */
+
 export function LoanStatus({ isAvailableForLoan, isOnLoan }) {
   if (!isAvailableForLoan) {
     return (

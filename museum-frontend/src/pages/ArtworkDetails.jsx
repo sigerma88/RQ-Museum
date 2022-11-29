@@ -76,6 +76,16 @@ function computeArtworkStatus(artworkStatus) {
   return status;
 }
 
+/**
+ * Component for the loan dialog
+ * @param open - The open status of the dialog
+ * @param handleClose - The function to close the dialog
+ * @param artwork - The artwork object
+ * @param userId - The user id
+ * @returns The loan dialog component
+ * @author Kevin
+ * */
+
 function LoanConfirmation({ open, close, userId, artwork }) {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
@@ -122,7 +132,7 @@ function LoanConfirmation({ open, close, userId, artwork }) {
  * @param userRole - The user role
  * @param loggedIn - The logged in status
  * @returns The visitor artwork loan section
- * @author Siger
+ * @author Siger, Kevin (redesign)
  */
 function VisitorArtworkLoan({ artwork, userRole, loggedIn, userId }) {
   const [open, setOpen] = useState(false);
