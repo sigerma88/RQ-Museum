@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import { styled } from "@mui/material/styles";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import { createTheme, padding } from "@mui/system";
-import { Typography } from "@mui/material";
-import "./ViewEmployee.css";
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableContainer,
+  Paper,
+  Typography,
+  TableCell,
+  tableCellClasses,
+  styled,
+} from "@mui/material/";
+import "./ViewEmployees.css";
 
-function createData(name, email, view_schedule) {
-  return { name, email, view_schedule };
-}
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const StyledTableCell = styled(TableCell)(({}) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#ababab",
   },
@@ -35,8 +34,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 /**
+ * Main function for the ViewEmployees page that displays all employees in the database
  * @author VZ and Kevin
- * @returns table of employees
+ * @returns table of employees with name, email and schedule
  */
 export function ViewEmployees() {
   const [employees, setEmployees] = useState([]); // initial state set to empty array
@@ -54,8 +54,6 @@ export function ViewEmployees() {
         // if the request fails
         console.log(error.response.data);
       });
-    // }
-    // getAllEmployees()
   }, []);
 
   if (employees.length === 0) {
@@ -67,41 +65,6 @@ export function ViewEmployees() {
           </h1>
         </div>
         <Typography>There are no employees at the moment.</Typography>
-        {/* <TableContainer
-          component={Paper}
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            maxHeight: "500px",
-            maxWidth: "1000px",
-            boxShadow: 4,
-            borderRadius: 1,
-            my: 2,
-            mx: "auto",
-          }}
-        >
-          <Table stickyHeader aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <Typography>Name</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography>Email</Typography>
-                </TableCell>
-                <TableCell align="right">
-                  <Typography>View&nbsp;Schedule</Typography>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {" "}
-              <TableCell>
-                There&nbsp;are&nbsp;currently&nbsp;no&nbsp;employees
-              </TableCell>
-            </TableBody>
-          </Table>
-        </TableContainer> */}
       </>
     );
   } else {
@@ -176,7 +139,7 @@ export function ViewEmployees() {
   }
 }
 
-// Helper function to check if the name ends with an s
+// Helper function to check if the name ends with an s and add an apostrophe depending on the case
 function grammarCheck(name) {
   return name.charAt(name.length - 1) !== "s" ? name + "'s" : name + "'";
 }

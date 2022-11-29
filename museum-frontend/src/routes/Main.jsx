@@ -7,15 +7,12 @@ import { Navigation } from "../layouts/Navigation";
 import { Login } from "../pages/Login";
 import { Signup } from "../pages/Signup";
 import { Profile } from "../pages/Profile";
-import { LoginContext } from "../Contexts/LoginContext";
 import { Schedule } from "../pages/Schedule";
 import { ViewEmployees } from "../pages/ViewEmployees";
 import ArtworkBrowsing from "../pages/ArtworkBrowsing";
 import ArtworkDetails from "../pages/ArtworkDetails";
 import EmployeeCreation from "../pages/EmployeeCreation";
 import TicketViewing from "../pages/TicketViewing";
-import { Schedule } from "../pages/Schedule";
-import { ViewEmployees } from "../pages/ViewEmployees";
 import ViewSchedule from "../pages/ViewSchedule";
 
 /**
@@ -93,8 +90,6 @@ export function Main() {
             path="/ticket"
             element={loggedIn ? <TicketViewing /> : <Navigate to="/login" />}
           />
-          <Route path="/schedule/:id" element={<Schedule />} />
-          <Route path="/employees" element={<ViewEmployees />} />s
         </Routes>
       </BrowserRouter>
     </LoginContext.Provider>

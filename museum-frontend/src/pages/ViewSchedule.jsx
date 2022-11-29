@@ -24,19 +24,10 @@ import {
 } from "@mui/material";
 import dayjs from "dayjs";
 
-export default function ViewSchedule() {
+function ViewSchedule() {
   const { userId } = useContext(LoginContext);
-  const employeeId = userId;
+
   const [timePeriods, setTimePeriods] = useState([]); // initial state set to empty array
-  const [employee, setEmployee] = useState({}); // initial state set to empty array
-  const { id } = useParams(); //get the employee id from the url
-  const [date, setDate] = useState(null);
-  //console.log({ date: getDate(date) });
-  const [startTime, setStartTime] = useState(null);
-  //console.log({ startTime: startTime && dayjs(startTime).format("HH:mm:ss") });
-  const [endTime, setEndTime] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [isFormInvalid, setIsFormInvalid] = useState(false);
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -69,65 +60,13 @@ export default function ViewSchedule() {
     </TableRow>
   ));
 
-  function getDayOfWeek(date) {
-    const dayOfWeek = new Date(date).getUTCDay();
-    return isNaN(dayOfWeek)
-      ? null
-      : [
-          "Sunday",
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday",
-        ][dayOfWeek];
-  }
-  function getYear(date) {
-    const year = new Date(date).getUTCFullYear();
-    return isNaN(year) ? null : year;
-  }
-  function getMonth(date) {
-    const month = new Date(date).getUTCMonth();
-    return isNaN(month)
-      ? null
-      : [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December",
-        ][month];
-  }
-
-  function getMonthNum(date) {
-    const month = new Date(date).getMonth();
-    return isNaN(month)
-      ? null
-      : ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"][month];
-  }
-  function getDay(date) {
-    let day = new Date(date).getUTCDate();
-    return isNaN(day) ? null : day;
-  }
-
-  function getDate(date) {
-    return getYear(date) + "-" + getMonthNum(date) + "-" + getDay(date);
-  }
-
   useEffect(() => {
     axios
-      .get(`/api/scheduling/employee/shifts/${employeeId}`)
+      .get(`/api/scheduling/employee/shifts/${userId}`)
       .then(function (response) {
         // if the request is successful
         console.log(response.data);
+        //indow.location.reload();
         setTimePeriods(response.data); // set the state to the data returned from the API
       })
       .catch(function (error) {
@@ -186,3 +125,58 @@ export default function ViewSchedule() {
     </>
   );
 }
+
+function getDayOfWeek(date) {
+  const dayOfWeek = new Date(date).getUTCDay();
+  return isNaN(dayOfWeek)
+    ? null
+    : [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ][dayOfWeek];
+}
+function getYear(date) {
+  const year = new Date(date).getUTCFullYear();
+  return isNaN(year) ? null : year;
+}
+function getMonth(date) {
+  const month = new Date(date).getUTCMonth();
+  return isNaN(month)
+    ? null
+    : [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ][month];
+}
+
+function getMonthNum(date) {
+  const month = new Date(date).getMonth();
+  return isNaN(month)
+    ? null
+    : ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"][month];
+}
+function getDay(date) {
+  let day = new Date(date).getUTCDate();
+  return isNaN(day) ? null : day;
+}
+
+function getDate(date) {
+  return getYear(date) + "-" + getMonthNum(date) + "-" + getDay(date);
+}
+
+export default ViewSchedule;
