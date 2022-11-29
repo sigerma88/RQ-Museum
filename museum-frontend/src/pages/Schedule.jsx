@@ -33,11 +33,6 @@ export function Schedule() {
   // const
   const [timePeriods, setTimePeriods] = useState([]); // initial state set to empty array
   const { id } = useParams(); //get the employee id from the url
-  const [date, setDate] = useState(null);
-  const [startTime, setStartTime] = useState(null);
-  const [endTime, setEndTime] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [isFormInvalid, setIsFormInvalid] = useState(false);
 
   //GET request to get the employee's schedule by id
   useEffect(() => {
@@ -69,46 +64,6 @@ export function Schedule() {
       })
       .catch(function (error) {
         console.log(error.response.data);
-      });
-  };
-
-  //POST request to add a shift to the employee's schedulem
-  //which entails first creating a time period and
-  //then adding it to the employee's schedule
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    axios
-      .post(`/api/scheduling/shift/create`, {
-        startDate: getDate(date) + " " + dayjs(startTime).format("HH:mm:ss"),
-        endDate: getDate(date) + " " + dayjs(endTime).format("HH:mm:ss"),
-      })
-      .then(function (response) {
-        //CREATE THE SHIFT
-        if (response.status === 200) {
-          console.log(response.data);
-          const tp = response.data;
-          setErrorMessage("");
-          setIsFormInvalid(false);
-          //ADD THE SHIFT TO THE EMPLOYEE'S SCHEDULE
-          axios
-            .post(
-              `/api/scheduling/employee/${id}/add/shift/${response.data.timePeriodId}`
-            )
-            .then(function (response) {
-              // if the request is successful
-              console.log(response.data);
-              setTimePeriods([...timePeriods, tp]); // set the state to the data returned from the API
-            })
-            .catch(function (error) {
-              console.log(error.response.data);
-            });
-        }
-      })
-      .catch(function (error) {
-        console.log(error.response.data);
-        setErrorMessage(error.response.data);
-        setIsFormInvalid(true);
       });
   };
 
@@ -144,7 +99,7 @@ export function Schedule() {
     </TableRow>
   ));
 
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  const StyledTableCell = styled(TableCell)(() => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: "#ababab",
     },
@@ -213,65 +168,11 @@ export function Schedule() {
             </TableBody>
           </Table>
         </TableContainer>
-
-        <h2 style={{ marginTop: 30 }}>Add Shift</h2>
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginTop: 30 }}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <Stack justifyContent="center" direction="row" spacing={3}>
-                <DatePicker
-                  label="Select Date"
-                  value={date}
-                  onChange={(newValue) => {
-                    setDate(newValue);
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      helperText={isFormInvalid && errorMessage}
-                      error={isFormInvalid && errorMessage}
-                    />
-                  )}
-                />
-                <TimePicker
-                  label="Select Start Time"
-                  value={startTime}
-                  onChange={(newValue) => {
-                    setStartTime(newValue);
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      helperText={isFormInvalid && errorMessage}
-                      error={isFormInvalid && errorMessage}
-                    />
-                  )}
-                />
-                <TimePicker
-                  label="Select End Time"
-                  value={endTime}
-                  onChange={(newValue) => {
-                    setEndTime(newValue);
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      helperText={isFormInvalid && errorMessage}
-                      error={isFormInvalid && errorMessage}
-                    />
-                  )}
-                />
-              </Stack>
-            </LocalizationProvider>
-          </div>
-          <Button
-            variant="contained"
-            type="submit"
-            style={{ width: 120, marginTop: 30, padding: 10 }}
-          >
-            Add Shift
-          </Button>
-        </form>
+        <AddShift
+          id={id}
+          timePeriods={timePeriods}
+          setTimePeriods={setTimePeriods}
+        />
       </>
     );
   }
@@ -322,57 +223,122 @@ export function Schedule() {
           <TableBody>{row}</TableBody>
         </Table>
       </TableContainer>
+      <AddShift
+        id={id}
+        timePeriods={timePeriods}
+        setTimePeriods={setTimePeriods}
+      />
+    </>
+  );
+}
 
+/**
+ *
+ * @author VZ
+ * @param {id} - id of the employee
+ * @param {timePeriods} - array of time periods
+ * @param {setTimePeriods} - function to set the time periods
+ * @returns a form to add a shift
+ */
+function AddShift({ id, timePeriods, setTimePeriods }) {
+  const [date, setDate] = useState(null);
+  const [startTime, setStartTime] = useState(null);
+  const [endTime, setEndTime] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isFormInvalid, setIsFormInvalid] = useState(false);
+
+  //POST request to add a shift to the employee's schedulem
+  //which entails first creating a time period and
+  //then adding it to the employee's schedule
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    axios
+      .post(`/api/scheduling/shift/create`, {
+        startDate: getDate(date) + " " + dayjs(startTime).format("HH:mm:ss"),
+        endDate: getDate(date) + " " + dayjs(endTime).format("HH:mm:ss"),
+      })
+      .then(function (response) {
+        //CREATE THE SHIFT
+        if (response.status === 200) {
+          console.log(response.data);
+          const tp = response.data;
+          setErrorMessage("");
+          setIsFormInvalid(false);
+          //ADD THE SHIFT TO THE EMPLOYEE'S SCHEDULE
+          axios
+            .post(
+              `/api/scheduling/employee/${id}/add/shift/${response.data.timePeriodId}`
+            )
+            .then(function (response) {
+              // if the request is successful
+              console.log(response.data);
+              setTimePeriods([...timePeriods, tp]); // set the state to the data returned from the API
+            })
+            .catch(function (error) {
+              console.log(error.response.data);
+            });
+        }
+      })
+      .catch(function (error) {
+        console.log(error.response.data);
+        setErrorMessage(error.response.data);
+        setIsFormInvalid(true);
+      });
+  };
+
+  return (
+    <>
       <h2 style={{ marginTop: 30 }}>Add Shift</h2>
-      <div style={{ marginTop: 30 }}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <Stack justifyContent="center" direction="row" spacing={3}>
-            <DatePicker
-              label="Select Date"
-              value={date}
-              onChange={(newValue) => {
-                setDate(newValue);
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  helperText={isFormInvalid && errorMessage}
-                  error={isFormInvalid && errorMessage}
-                />
-              )}
-            />
-            <TimePicker
-              label="Select Start Time"
-              value={startTime}
-              onChange={(newValue) => {
-                setStartTime(newValue);
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  helperText={isFormInvalid && errorMessage}
-                  error={isFormInvalid && errorMessage}
-                />
-              )}
-            />
-            <TimePicker
-              label="Select End Time"
-              value={endTime}
-              onChange={(newValue) => {
-                setEndTime(newValue);
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  helperText={isFormInvalid && errorMessage}
-                  error={isFormInvalid && errorMessage}
-                />
-              )}
-            />
-          </Stack>
-        </LocalizationProvider>
-      </div>
       <form onSubmit={handleSubmit}>
+        <div style={{ marginTop: 30 }}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <Stack justifyContent="center" direction="row" spacing={3}>
+              <DatePicker
+                label="Select Date"
+                value={date}
+                onChange={(newValue) => {
+                  setDate(newValue);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    helperText={isFormInvalid && errorMessage}
+                    error={isFormInvalid && errorMessage}
+                  />
+                )}
+              />
+              <TimePicker
+                label="Select Start Time"
+                value={startTime}
+                onChange={(newValue) => {
+                  setStartTime(newValue);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    helperText={isFormInvalid && errorMessage}
+                    error={isFormInvalid && errorMessage}
+                  />
+                )}
+              />
+              <TimePicker
+                label="Select End Time"
+                value={endTime}
+                onChange={(newValue) => {
+                  setEndTime(newValue);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    helperText={isFormInvalid && errorMessage}
+                    error={isFormInvalid && errorMessage}
+                  />
+                )}
+              />
+            </Stack>
+          </LocalizationProvider>
+        </div>
         <Button
           variant="contained"
           type="submit"
