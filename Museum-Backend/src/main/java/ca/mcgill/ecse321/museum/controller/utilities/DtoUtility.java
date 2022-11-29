@@ -23,7 +23,8 @@ public class DtoUtility {
 
     // Convert schedule to DTO
     ScheduleDto scheduleDto = convertToDto(employee.getSchedule());
-    return new EmployeeDto(employee.getMuseumUserId(), employee.getEmail(), employee.getName(), employee.getPassword(), scheduleDto);
+    return new EmployeeDto(employee.getMuseumUserId(), employee.getEmail(), employee.getName(),
+        employee.getPassword(), scheduleDto);
   }
 
   /**
@@ -87,8 +88,7 @@ public class DtoUtility {
   }
 
   /**
-   * Method to convert a time period to a DTO.
-   * It converts the start and end date to a String.
+   * Method to convert a time period to a DTO. It converts the start and end date to a String.
    *
    * @param timePeriod
    * @return
@@ -99,8 +99,10 @@ public class DtoUtility {
     if (timePeriod == null) {
       throw new IllegalArgumentException("There is no such time period");
     }
-    String startDateString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timePeriod.getStartDate());
-    String endDateString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timePeriod.getEndDate());
+    String startDateString =
+        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timePeriod.getStartDate());
+    String endDateString =
+        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timePeriod.getEndDate());
     return new TimePeriodDto(timePeriod.getTimePeriodId(), startDateString, endDateString);
   }
 
@@ -117,7 +119,8 @@ public class DtoUtility {
     }
     VisitorDto visitorDto = convertToDto(loan.getVisitor());
     ArtworkDto artworkDto = convertToDto(loan.getArtwork());
-    LoanDto loanDto = new LoanDto(loan.getLoanId(), loan.getRequestAccepted(), visitorDto, artworkDto);
+    LoanDto loanDto =
+        new LoanDto(loan.getLoanId(), loan.getRequestAccepted(), visitorDto, artworkDto);
     return loanDto;
   }
 
@@ -144,7 +147,8 @@ public class DtoUtility {
 
     // Convert artwork to DTO
     return new ArtworkDto(artwork.getArtworkId(), artwork.getName(), artwork.getArtist(),
-        artwork.getIsAvailableForLoan(), artwork.getLoanFee(), artwork.getImage(), artwork.getIsOnLoan(), roomDto);
+        artwork.getIsAvailableForLoan(), artwork.getLoanFee(), artwork.getImage(),
+        artwork.getIsOnLoan(), roomDto);
   }
 
   /**
@@ -165,8 +169,8 @@ public class DtoUtility {
     MuseumDto museumDto = convertToDto(room.getMuseum());
 
     // Convert room to DTO
-    return new RoomDto(room.getRoomId(), room.getRoomName(), room.getRoomType(), room.getCurrentNumberOfArtwork(),
-        museumDto);
+    return new RoomDto(room.getRoomId(), room.getRoomName(), room.getRoomType(),
+        room.getCurrentNumberOfArtwork(), museumDto);
   }
 
   /**
@@ -209,5 +213,28 @@ public class DtoUtility {
     VisitorDto visitorDto = convertToDto(ticket.getVisitor());
 
     return new TicketDto(ticket.getTicketId(), ticket.getVisitDate().toString(), visitorDto);
+  }
+
+  /**
+   * Convert to Dto
+   *
+   * @param museumUser - MuseumUser
+   * @return Convert Museum User to Museum User Dto
+   * @author Kevin
+   */
+
+  public static MuseumUserDto convertToDto(MuseumUser museumUser, String userRole) {
+    if (museumUser == null) {
+      throw new IllegalArgumentException("There is no such museum user");
+    }
+
+    MuseumUserDto museumUserDto = new MuseumUserDto();
+    museumUserDto.setEmail(museumUser.getEmail());
+    museumUserDto.setName(museumUser.getName());
+    museumUserDto.setPassword(museumUser.getPassword());
+    museumUserDto.setMuseumUserId(museumUser.getMuseumUserId());
+    museumUserDto.setRole(userRole);
+
+    return museumUserDto;
   }
 }

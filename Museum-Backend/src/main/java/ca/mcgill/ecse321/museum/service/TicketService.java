@@ -90,7 +90,7 @@ public class TicketService {
     if (visitor == null) {
       throw new IllegalArgumentException("Visitor doesn't exist");
     }
-    return ticketRepository.findTicketByVisitor(visitor);
+    return ticketRepository.findTicketByVisitorOrderByVisitDate(visitor);
   }
 
   /**

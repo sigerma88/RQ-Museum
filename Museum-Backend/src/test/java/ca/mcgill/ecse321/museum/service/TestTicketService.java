@@ -22,7 +22,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.lenient;
 
-
 /**
  * Test class for TicketService class
  *
@@ -58,7 +57,6 @@ public class TestTicketService {
   private static final long TICKET_ID_1 = 555;
   private static final long TICKET_ID_3 = 444;
 
-
   /**
    * Method to set up mock objects (tickets and visitors)
    */
@@ -89,29 +87,30 @@ public class TestTicketService {
 
     });
 
-    lenient().when(ticketRepository.findTicketByVisitor(any())).thenAnswer((InvocationOnMock invocation) -> {
-      Visitor visitor = invocation.getArgument(0);
+    lenient().when(ticketRepository.findTicketByVisitorOrderByVisitDate(any()))
+        .thenAnswer((InvocationOnMock invocation) -> {
+          Visitor visitor = invocation.getArgument(0);
 
-      List<Ticket> allTickets = new ArrayList<>();
-      Ticket ticket1 = new Ticket();
-      ticket1.setTicketId(TICKET_ID_1);
-      ticket1.setVisitor(visitorRepository.findVisitorByMuseumUserId(visitor.getMuseumUserId()));
-      ticket1.setVisitDate(Date.valueOf(VISIT_DATE_1));
-      allTickets.add(ticket1);
+          List<Ticket> allTickets = new ArrayList<>();
+          Ticket ticket1 = new Ticket();
+          ticket1.setTicketId(TICKET_ID_1);
+          ticket1.setVisitor(visitorRepository.findVisitorByMuseumUserId(visitor.getMuseumUserId()));
+          ticket1.setVisitDate(Date.valueOf(VISIT_DATE_1));
+          allTickets.add(ticket1);
 
-      Ticket ticket2 = new Ticket();
-      ticket2.setTicketId(TICKET_ID_2);
-      ticket2.setVisitDate(Date.valueOf(VISIT_DATE_2));
-      ticket2.setVisitor(visitorRepository.findVisitorByMuseumUserId(visitor.getMuseumUserId()));
-      allTickets.add(ticket2);
+          Ticket ticket2 = new Ticket();
+          ticket2.setTicketId(TICKET_ID_2);
+          ticket2.setVisitDate(Date.valueOf(VISIT_DATE_2));
+          ticket2.setVisitor(visitorRepository.findVisitorByMuseumUserId(visitor.getMuseumUserId()));
+          allTickets.add(ticket2);
 
-      Ticket ticket3 = new Ticket();
-      ticket3.setTicketId(TICKET_ID_3);
-      ticket3.setVisitor(visitorRepository.findVisitorByMuseumUserId(visitor.getMuseumUserId()));
-      ticket3.setVisitDate(Date.valueOf(VISIT_DATE_2));
-      allTickets.add(ticket3);
-      return allTickets;
-    });
+          Ticket ticket3 = new Ticket();
+          ticket3.setTicketId(TICKET_ID_3);
+          ticket3.setVisitor(visitorRepository.findVisitorByMuseumUserId(visitor.getMuseumUserId()));
+          ticket3.setVisitDate(Date.valueOf(VISIT_DATE_2));
+          allTickets.add(ticket3);
+          return allTickets;
+        });
 
     lenient().when(ticketRepository.save(any(Ticket.class))).thenAnswer(returnParameterAsAnswer);
   }
@@ -182,7 +181,6 @@ public class TestTicketService {
     assertNull(ticket);
     assertEquals("Cannot pick a date in the past.", error);
   }
-
 
   /**
    * Test that a ticket cannot be created with an invalid visitor ID
