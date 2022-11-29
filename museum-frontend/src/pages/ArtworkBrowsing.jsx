@@ -4,7 +4,7 @@ import axios from "axios";
 import { Card, CardContent, CardMedia, Grid, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 import { LoginContext } from "../Contexts/LoginContext";
-import "./Artwork.css";
+import "./LoanStatus.css";
 
 /**
  * Function to get the artworks from the server
@@ -50,7 +50,7 @@ function getRoom(roomId) {
  * @param isOnLoan - If artwork is on loan
  * @returns The loan status message
  * @author Kevin
- * */
+ */
 
 export function LoanStatus({ isAvailableForLoan, isOnLoan }) {
   if (!isAvailableForLoan) {

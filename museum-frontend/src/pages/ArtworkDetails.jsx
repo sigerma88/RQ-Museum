@@ -15,7 +15,7 @@ import {
   Avatar,
 } from "@mui/material";
 import { LoginContext } from "../Contexts/LoginContext";
-import "./Artwork.css";
+import "./LoanStatus.css";
 import { LoanStatus } from "./ArtworkBrowsing";
 import LockIcon from "@mui/icons-material/Lock";
 
