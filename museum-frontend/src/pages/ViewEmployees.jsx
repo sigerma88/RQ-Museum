@@ -14,7 +14,7 @@ import {
 } from "@mui/material/";
 import "./ViewEmployees.css";
 
-const StyledTableCell = styled(TableCell)(({}) => ({
+const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#ababab",
   },
