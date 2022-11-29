@@ -13,7 +13,6 @@ import EmployeeCreation from "../pages/EmployeeCreation";
 import TicketViewing from "../pages/TicketViewing";
 import { Schedule } from "../pages/Schedule";
 import { ViewEmployees } from "../pages/ViewEmployees";
-import { Rooms } from "../pages/Rooms";
 
 /**
  * Function that routes the user to the correct page depending on the url
@@ -79,7 +78,6 @@ export function Main() {
             }
           />
           <Route path="/browse/room/:roomId" element={<ArtworkBrowsing />} />
-          <Route path="/rooms" element={<Rooms />} />
           <Route
             path="/loan"
             element={loggedIn ? <Home /> : <Navigate to="/login" />}

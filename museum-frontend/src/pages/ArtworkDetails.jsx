@@ -104,8 +104,8 @@ function LoanConfirmation({ open, close, userId, artwork }) {
         <Typography>
           Are you sure you want to loan this artwork? You will be charged once
           the request is accepted.
-          <p style={{ color: "red" }}>{errorMessage}</p>
         </Typography>
+        <p style={{ color: "red" }}>{errorMessage}</p>
       </DialogContent>
       <DialogActions>
         <Button onClick={close}>Cancel</Button>
@@ -161,14 +161,16 @@ function VisitorArtworkLoan({ artwork, userRole, loggedIn, userId }) {
               <ListItemText
                 primary="Loan status"
                 secondary={
-                  artwork.isOnLoan ? "Currently on loan" : "Not on loan"
+                  <LoanStatus
+                    isAvailableForLoan={artwork.isAvailableForLoan}
+                    isOnLoan={artwork.isOnLoan}
+                  />
                 }
-              />
+              ></ListItemText>
             </ListItem>
             <Divider variant="middle" />
           </div>
         </List>
-        {/* TODO: Add loan button action */}
         {artwork.isAvailableForLoan && loggedIn ? (
           <div>
             <Button
@@ -280,12 +282,7 @@ function VisitorArtworkDetails({ artwork, userRole, loggedIn, userId }) {
             <ListItem>
               <ListItemText
                 primary="Artwork status"
-                secondary={
-                  <LoanStatus
-                    isAvailableForLoan={artwork.isAvailableForLoan}
-                    isOnLoan={artwork.isOnLoan}
-                  />
-                }
+                secondary={computeArtworkStatus(artworkStatus)}
               />
             </ListItem>
             <Divider variant="middle" />

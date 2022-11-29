@@ -16,9 +16,6 @@ import { LoginContext } from "../Contexts/LoginContext";
 import { useNavigate } from "react-router-dom";
 import RQ_logo from "../assets/RQ_logo.svg";
 
-const visitorPage = ["Visit", "Exhibitions", "Collections", "Ticket"];
-const managerPage = ["Room", "Artwork", "Employee", "Schedule"];
-const employeePage = ["Room", "Artwork", "Schedule"];
 const generalPage = ["Ticket", "Loan"];
 
 /**
@@ -29,7 +26,6 @@ const generalPage = ["Ticket", "Loan"];
 
 export function Navigation() {
   const { loggedIn, setLoggedIn } = useContext(LoginContext);
-  const { userRole } = useContext(LoginContext);
   const [rooms, setRooms] = useState([]);
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -61,17 +57,6 @@ export function Navigation() {
   }, []);
 
   const navigate = useNavigate();
-
-  let page = generalPage;
-  if (userRole === "visitor") {
-    page = visitorPage;
-  } else if (userRole === "employee") {
-    page = employeePage;
-  } else if (userRole === "manager") {
-    page = managerPage;
-  } else {
-    page = generalPage;
-  }
 
   /**
    * Logs user out and redirects to home page
