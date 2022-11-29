@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Button,
   AppBar,
@@ -30,9 +30,9 @@ const generalPage = ["Ticket", "Loan"];
 export function Navigation() {
   const { loggedIn, setLoggedIn } = useContext(LoginContext);
   const { userRole } = useContext(LoginContext);
-  const [rooms, setRooms] = React.useState([]);
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [rooms, setRooms] = useState([]);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -182,6 +182,7 @@ export function Navigation() {
                 <Link
                   style={{ color: "black", textDecoration: "none" }}
                   href={`/browse/room/${room.roomId}`}
+                  key={room.roomId}
                 >
                   <MenuItem key={room.roomId}>{room.roomName}</MenuItem>
                 </Link>

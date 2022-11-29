@@ -59,7 +59,6 @@ export function Login() {
       })
       .catch(function (error) {
         setErrorMessage(error.response.data);
-        console.log(error.response.data);
         setIsFormInvalid(true);
         setLoggedIn(false);
       });

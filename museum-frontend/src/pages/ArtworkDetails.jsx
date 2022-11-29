@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import {
   Button,
@@ -76,9 +76,26 @@ function computeArtworkStatus(artworkStatus) {
   return status;
 }
 
-function LoanConfirmation({ open, close }) {
+function LoanConfirmation({ open, close, userId, artwork }) {
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
+
   function handleLoan() {
-    axios.post("/api/artwork/create", {});
+    axios
+      .post("/api/loan/create", {
+        visitorDto: {
+          museumUserId: userId,
+        },
+        artworkDto: artwork,
+      })
+      .then((response) => {
+        console.log(response);
+        navigate("/loan");
+        // setErrorMessage("Loan request sent");
+      })
+      .catch((error) => {
+        setErrorMessage(error.response.data);
+      });
   }
   return (
     <Dialog open={open} onClose={close}>
@@ -87,6 +104,7 @@ function LoanConfirmation({ open, close }) {
         <Typography>
           Are you sure you want to loan this artwork? You will be charged once
           the request is accepted.
+          <p style={{ color: "red" }}>{errorMessage}</p>
         </Typography>
       </DialogContent>
       <DialogActions>
@@ -106,7 +124,7 @@ function LoanConfirmation({ open, close }) {
  * @returns The visitor artwork loan section
  * @author Siger
  */
-function VisitorArtworkLoan({ artwork, userRole, loggedIn }) {
+function VisitorArtworkLoan({ artwork, userRole, loggedIn, userId }) {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -161,7 +179,12 @@ function VisitorArtworkLoan({ artwork, userRole, loggedIn }) {
             >
               Loan this
             </Button>
-            <LoanConfirmation open={open} close={handleClose} />
+            <LoanConfirmation
+              open={open}
+              close={handleClose}
+              userId={userId}
+              artwork={artwork}
+            />
           </div>
         ) : (
           <div style={{ margin: 50 }}>
@@ -198,7 +221,7 @@ function VisitorArtworkLoan({ artwork, userRole, loggedIn }) {
  * @returns The visitor artwork browsing section
  * @author Siger
  */
-function VisitorArtworkDetails({ artwork, userRole, loggedIn }) {
+function VisitorArtworkDetails({ artwork, userRole, loggedIn, userId }) {
   const imageHeight = window.innerHeight * 0.89;
 
   // Get the artwork status from the server
@@ -274,6 +297,7 @@ function VisitorArtworkDetails({ artwork, userRole, loggedIn }) {
         artwork={artwork}
         userRole={userRole}
         loggedIn={loggedIn}
+        userId={userId}
       />
     </>
   );
@@ -305,7 +329,7 @@ function ArtworkDetails() {
     });
   }, [artworkId]);
 
-  const { loggedIn, userRole } = useContext(LoginContext);
+  const { loggedIn, userRole, userId } = useContext(LoginContext);
   if (userRole === "manager" && loggedIn) {
     return <ManagerArtworkDetails />;
   } else if (userRole === "employee" && loggedIn) {
@@ -316,9 +340,15 @@ function ArtworkDetails() {
         artwork={artwork}
         userRole={userRole}
         loggedIn={loggedIn}
+        userId={userId}
       />
     );
   }
 }
 
 export default ArtworkDetails;
+
+// private Long loanId;
+// private Boolean requestAccepted;
+// private VisitorDto visitorDto;
+// private ArtworkDto artworkDto;
