@@ -9,6 +9,7 @@ import { Schedule } from "../pages/Schedule";
 import { ViewEmployees } from "../pages/ViewEmployees";
 import ArtworkBrowsing from "../pages/ArtworkBrowsing";
 import ArtworkDetails from "../pages/ArtworkDetails";
+import ViewSchedule from "../pages/ViewSchedule";
 
 export function Main() {
   const [loggedIn, setLoggedIn] = useState(
@@ -28,6 +29,7 @@ export function Main() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/schedule/:id" element={<Schedule />} />
+          <Route path="/employee/schedule/" element={<ViewSchedule />} />
           <Route path="/employees" element={<ViewEmployees />} />s
           <Route path="/browse/room/:roomId" element={<ArtworkBrowsing />} />
           <Route

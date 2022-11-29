@@ -51,7 +51,7 @@ function ManagerHomePage() {
 }
 
 function EmployeeHomePage() {
-  return <p>Employee</p>;
+  return <Link to="/employee/schedule/">View your schedule</Link>;
 }
 
 function Home() {
