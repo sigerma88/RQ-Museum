@@ -30,7 +30,7 @@ public class LoanRestController {
    * @return loanDto with loanId
    * @author Eric
    */
-  @GetMapping(value = {"/{loanId}", "/{loanId}/"})
+  @GetMapping(value = { "/{loanId}", "/{loanId}/" })
   public ResponseEntity<?> getLoanById(HttpServletRequest request,
       @PathVariable("loanId") Long loanId) {
     try {
@@ -55,12 +55,38 @@ public class LoanRestController {
   }
 
   /**
+   * RESTful API to get all loans by userId
+   *
+   * @return List of all loans
+   * @author Eric
+   */
+  @GetMapping(value = { "/view/{userId}", "/view/{userId}/" })
+  public ResponseEntity<?> getLoansByUserId(HttpServletRequest request, @PathVariable("userId") Long userId) {
+    try {
+      HttpSession session = request.getSession();
+      if (!AuthenticationUtility.isLoggedIn(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
+      } else if (!AuthenticationUtility.isMuseumUser(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body("You need to be a staff member to access this");
+      }
+      List<LoanDto> loanDtos = new ArrayList<LoanDto>();
+      for (Loan loan : loanService.getAllLoansByUserId(userId)) {
+        loanDtos.add(DtoUtility.convertToDto(loan));
+      }
+      return new ResponseEntity<>(loanDtos, HttpStatus.FOUND);
+    } catch (Exception e) {
+      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
    * RESTful API to get all loans
    *
    * @return List of all loans
    * @author Eric
    */
-  @GetMapping(value = {"", "/"})
+  @GetMapping(value = { "", "/" })
   public ResponseEntity<?> getLoans(HttpServletRequest request) {
     try {
       HttpSession session = request.getSession();
@@ -74,7 +100,7 @@ public class LoanRestController {
       for (Loan loan : loanService.getAllLoans()) {
         loanDtos.add(DtoUtility.convertToDto(loan));
       }
-      return new ResponseEntity<>(loanDtos, HttpStatus.FOUND);
+      return new ResponseEntity<>(loanDtos, HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
@@ -87,7 +113,7 @@ public class LoanRestController {
    * @return loanDto of patched loan if successful
    * @author Eric
    */
-  @PutMapping(value = {"/edit", "/edit/"})
+  @PutMapping(value = { "/edit", "/edit/" })
   public ResponseEntity<?> putLoan(HttpServletRequest request, @RequestBody LoanDto loanDto) {
     try {
       HttpSession session = request.getSession();
@@ -107,7 +133,6 @@ public class LoanRestController {
     }
   }
 
-
   /**
    * RESTful API to create a loan
    *
@@ -115,7 +140,7 @@ public class LoanRestController {
    * @return List of all
    * @author Eric
    */
-  @PostMapping(value = {"/create", "/create/"})
+  @PostMapping(value = { "/create", "/create/" })
   public ResponseEntity<?> postLoan(HttpServletRequest request, @RequestBody LoanDto loanDto) {
     try {
 
@@ -144,11 +169,12 @@ public class LoanRestController {
    * @return String "Loan deleted" if successful
    * @author Eric
    */
-  @DeleteMapping(value = {"/delete/{loanId}", "/delete/{loanId}/"})
+  @DeleteMapping(value = { "/delete/{loanId}", "/delete/{loanId}/" })
   public ResponseEntity<?> deleteLoan(HttpServletRequest request,
       @PathVariable("loanId") Long loanId) {
     try {
-      // needs to be rethinked as we want use to cancel their loans, but also restrict visitors to
+      // needs to be rethinked as we want use to cancel their loans, but also restrict
+      // visitors to
       // delete other visitors loans
 
       HttpSession session = request.getSession();

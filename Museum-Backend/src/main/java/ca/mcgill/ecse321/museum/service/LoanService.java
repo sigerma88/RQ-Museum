@@ -54,6 +54,19 @@ public class LoanService {
   }
 
   /**
+   * Method to get all loans from the database by the userId
+   *
+   * @return list<Loan> of all loans from the database
+   * @author Eric
+   */
+  @Transactional
+  public List<Loan> getAllLoansByUserId(Long userId) {
+    Visitor visitor = visitorRepository.findVisitorByMuseumUserId(userId);
+    return toList(loanRepository.findLoanByVisitor(visitor));
+  }
+
+
+  /**
    * Method to create loan
    *
    * @param loanDto - loanDto
