@@ -50,7 +50,6 @@ export function Navigation() {
       .get("/api/room")
       .then((response) => {
         let allRooms = response.data;
-        //If room Name is storage put to the end of list
         allRooms.sort((a, b) => {
           if (a.roomName === "Storage") {
             return 1;
