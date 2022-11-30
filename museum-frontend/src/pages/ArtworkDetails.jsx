@@ -216,7 +216,7 @@ function VisitorArtworkLoan({ artwork, userRole, loggedIn, userId }) {
               <LockIcon />
             </Avatar>
             <Typography variant="h4">Login to request a loan</Typography>
-            <a href="/login">
+            <a href="/login" style={{ textDecoration: "underline" }}>
               <Typography>Click here to login</Typography>
             </a>
           </div>
