@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import { styled } from "@mui/material/styles";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import { createTheme } from "@mui/system";
-import { Typography } from "@mui/material";
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableContainer,
+  Paper,
+  Typography,
+  TableCell,
+  tableCellClasses,
+  styled,
+} from "@mui/material/";
+import "./ViewEmployees.css";
 
-function createData(name, email, view_schedule) {
-  return { name, email, view_schedule };
-}
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#ababab",
   },
@@ -33,16 +33,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const header = createTheme({
-  typography: {
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-});
-
 /**
+ * Main function for the ViewEmployees page that displays all employees in the database
  * @author VZ and Kevin
- * @returns table of employees
+ * @returns table of employees with name, email and schedule
  */
 export function ViewEmployees() {
   const [employees, setEmployees] = useState([]); // initial state set to empty array
@@ -60,27 +54,62 @@ export function ViewEmployees() {
         // if the request fails
         console.log(error.response.data);
       });
-    // }
-    // getAllEmployees()
   }, []);
 
   if (employees.length === 0) {
-    return <p>There is no employee.</p>;
+    return (
+      <>
+        <div>
+          <h1 style={{ marginTop: 20, marginBottom: 20 }}>
+            List&nbsp;of&nbsp;all&nbsp;Employees
+          </h1>
+        </div>
+        <Typography>There are no employees at the moment.</Typography>
+      </>
+    );
   } else {
     return (
       <>
-        <TableContainer component={Paper}>
-          <Table sx={{ maxWidth: 800 }} aria-label="simple table">
+        <div>
+          <h1 style={{ marginTop: 20, marginBottom: 20 }}>
+            List&nbsp;of&nbsp;all&nbsp;Employees
+          </h1>
+        </div>
+        <TableContainer
+          component={Paper}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            maxHeight: "500px",
+            maxWidth: "1000px",
+            boxShadow: 4,
+            borderRadius: 1,
+            my: 2,
+            mx: "auto",
+          }}
+        >
+          <Table stickyHeader aria-label="simple table">
             <TableHead>
               <TableRow>
                 <StyledTableCell>
-                  <Typography sx={header}>Name</Typography>
+                  <Typography
+                    sx={{
+                      fontWeight: "bold",
+                      fontSize: 18,
+                    }}
+                  >
+                    Name
+                  </Typography>
                 </StyledTableCell>
                 <StyledTableCell>
-                  <Typography sx={header}>Email</Typography>
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18 }}>
+                    Email
+                  </Typography>
                 </StyledTableCell>
                 <StyledTableCell align="right">
-                  <Typography sx={header}>View&nbsp;Schedule</Typography>
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18 }}>
+                    View&nbsp;Schedule
+                  </Typography>
                 </StyledTableCell>
               </TableRow>
             </TableHead>
@@ -91,48 +120,26 @@ export function ViewEmployees() {
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <StyledTableCell>{employee.name}</StyledTableCell>
-                  <TableCell>{employee.email}</TableCell>
-                  <TableCell align="right">
-                    <a href={`/schedule/${employee.museumUserId}`}>
-                      View {grammarCheck(employee.name)} schedule
+                  <StyledTableCell>{employee.email}</StyledTableCell>
+                  <StyledTableCell align="right">
+                    <a
+                      href={`/employee/schedule/${employee.museumUserId}`}
+                      className="hover-underline-animation"
+                    >
+                      View&nbsp;{grammarCheck(employee.name)}&nbsp;schedule
                     </a>
-                  </TableCell>
+                  </StyledTableCell>
                 </StyledTableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
-        {/* <div>
-          <h1>Employees</h1>
-          <table style={{ width: "100%" }}>
-            <thead>
-              <tr>
-                <th> Name </th>
-                <th> Email </th>
-                <th> View Schedule </th>
-              </tr>
-            </thead>
-            <tbody>
-              {employees.map((employee) => (
-                <tr key={employee.museumUserId}>
-                  <td> {employee.name} </td>
-                  <td> {employee.email} </td>
-                  <td>
-                    {" "}
-                    <a href={`/schedule/${employee.museumUserId}`}>
-                      View {grammarCheck(employee.name)} schedule
-                    </a>{" "}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div> */}
       </>
     );
   }
 }
 
+// Helper function to check if the name ends with an s and add an apostrophe depending on the case
 function grammarCheck(name) {
   return name.charAt(name.length - 1) !== "s" ? name + "'s" : name + "'";
 }

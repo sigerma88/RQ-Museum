@@ -2,8 +2,6 @@ import React, { useContext } from "react";
 import Typography from "@mui/material/Typography";
 import "./Home.css";
 import { LoginContext } from "../Contexts/LoginContext";
-import Admin from "./ViewEmployees";
-import ViewEmployees from "./ViewEmployees";
 import { Link } from "react-router-dom";
 
 /**
@@ -64,7 +62,7 @@ function VisitorHomePage() {
  */
 
 function ManagerHomePage() {
-  return <Link to="/employees">View all employees</Link>;
+  return <Link to="/employee">View all employees</Link>;
 }
 
 /**
@@ -74,7 +72,7 @@ function ManagerHomePage() {
  */
 
 function EmployeeHomePage() {
-  return <p>Employee</p>;
+  return <Link to="/employee/schedule/">View your schedule</Link>;
 }
 
 /**

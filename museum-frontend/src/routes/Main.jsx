@@ -7,12 +7,12 @@ import { Navigation } from "../layouts/Navigation";
 import { Login } from "../pages/Login";
 import { Signup } from "../pages/Signup";
 import { Profile } from "../pages/Profile";
+import { ViewEmployees } from "../pages/ViewEmployees";
 import ArtworkBrowsing from "../pages/ArtworkBrowsing";
 import ArtworkDetails from "../pages/ArtworkDetails";
 import EmployeeCreation from "../pages/EmployeeCreation";
 import TicketViewing from "../pages/TicketViewing";
-import { Schedule } from "../pages/Schedule";
-import { ViewEmployees } from "../pages/ViewEmployees";
+import ViewSchedule from "../pages/ViewSchedule";
 
 /**
  * Function that routes the user to the correct page depending on the url
@@ -58,6 +58,41 @@ export function Main() {
           <Route path="/" index element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/employee/schedule">
+            <Route
+              path=":id"
+              element={
+                loggedIn &&
+                (userRole === "employee" || userRole === "manager") ? (
+                  <ViewSchedule />
+                ) : (
+                  <Typography
+                    variant="h3"
+                    style={{ margin: "auto", padding: "auto" }}
+                  >
+                    You are not authorized to view this page
+                  </Typography>
+                )
+              }
+            />
+            <Route
+              path=""
+              element={
+                loggedIn &&
+                (userRole === "employee" || userRole === "manager") ? (
+                  <ViewSchedule />
+                ) : (
+                  <Typography
+                    variant="h3"
+                    style={{ margin: "auto", padding: "auto" }}
+                  >
+                    You are not authorized to view this page
+                  </Typography>
+                )
+              }
+            />
+          </Route>
+          <Route path="/employee" element={<ViewEmployees />} />s
           <Route
             path="/profile"
             element={loggedIn ? <Profile /> : <Navigate to="/login" />}
@@ -86,8 +121,6 @@ export function Main() {
             path="/ticket"
             element={loggedIn ? <TicketViewing /> : <Navigate to="/login" />}
           />
-          <Route path="/schedule/:id" element={<Schedule />} />
-          <Route path="/employees" element={<ViewEmployees />} />s
         </Routes>
       </BrowserRouter>
     </LoginContext.Provider>
