@@ -58,22 +58,40 @@ export function Main() {
           <Route path="/" index element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route
-            path="/employee/schedule/:id"
-            element={
-              loggedIn &&
-              (userRole === "employee" || userRole === "manager") ? (
-                <ViewSchedule />
-              ) : (
-                <Typography
-                  variant="h3"
-                  style={{ margin: "auto", padding: "auto" }}
-                >
-                  You are not authorized to view this page
-                </Typography>
-              )
-            }
-          />
+          <Route path="/employee/schedule">
+            <Route
+              path=":id"
+              element={
+                loggedIn &&
+                (userRole === "employee" || userRole === "manager") ? (
+                  <ViewSchedule />
+                ) : (
+                  <Typography
+                    variant="h3"
+                    style={{ margin: "auto", padding: "auto" }}
+                  >
+                    You are not authorized to view this page
+                  </Typography>
+                )
+              }
+            />
+            <Route
+              path=""
+              element={
+                loggedIn &&
+                (userRole === "employee" || userRole === "manager") ? (
+                  <ViewSchedule />
+                ) : (
+                  <Typography
+                    variant="h3"
+                    style={{ margin: "auto", padding: "auto" }}
+                  >
+                    You are not authorized to view this page
+                  </Typography>
+                )
+              }
+            />
+          </Route>
           <Route path="/employee" element={<ViewEmployees />} />s
           <Route
             path="/profile"
