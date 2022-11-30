@@ -15,9 +15,9 @@ import {
   Avatar,
 } from "@mui/material";
 import { LoginContext } from "../Contexts/LoginContext";
-import "./LoanStatus.css";
 import { LoanStatus } from "./ArtworkBrowsing";
 import LockIcon from "@mui/icons-material/Lock";
+import "./LoanStatus.css";
 
 /**
  * Function to get the artwork from the server
@@ -99,14 +99,18 @@ function LoanConfirmation({ open, close, userId, artwork }) {
         artworkDto: artwork,
       })
       .then((response) => {
-        console.log(response);
         navigate("/loan");
-        // setErrorMessage("Loan request sent");
       })
       .catch((error) => {
         setErrorMessage(error.response.data);
       });
   }
+
+  const handleClose = () => {
+    close();
+    setErrorMessage("");
+  };
+
   return (
     <Dialog open={open} onClose={close}>
       <DialogTitle>Loan confirmation</DialogTitle>
@@ -118,7 +122,7 @@ function LoanConfirmation({ open, close, userId, artwork }) {
         <p style={{ color: "red" }}>{errorMessage}</p>
       </DialogContent>
       <DialogActions>
-        <Button onClick={close}>Cancel</Button>
+        <Button onClick={handleClose}>Cancel</Button>
         <Button onClick={handleLoan}>Confirm</Button>
       </DialogActions>
     </Dialog>
@@ -181,7 +185,7 @@ function VisitorArtworkLoan({ artwork, userRole, loggedIn, userId }) {
             <Divider variant="middle" />
           </div>
         </List>
-        {artwork.isAvailableForLoan && loggedIn ? (
+        {artwork.isAvailableForLoan && loggedIn && userRole === "visitor" ? (
           <div>
             <Button
               variant="contained"
@@ -210,13 +214,14 @@ function VisitorArtworkLoan({ artwork, userRole, loggedIn, userId }) {
               }}
             >
               <LockIcon />
-            </Avatar>{" "}
+            </Avatar>
             <Typography variant="h4">Login to request a loan</Typography>
             <a href="/login">
               <Typography>Click here to login</Typography>
             </a>
           </div>
         )}
+        {/* TODO: Add form for manager or employee to edit artwork  */}
       </div>
     );
   } else {
@@ -231,7 +236,7 @@ function VisitorArtworkLoan({ artwork, userRole, loggedIn, userId }) {
  * @param userRole - The user role
  * @param loggedIn - The logged in status
  * @returns The visitor artwork browsing section
- * @author Siger
+ * @author Siger, Kevin
  */
 function VisitorArtworkDetails({ artwork, userRole, loggedIn, userId }) {
   const imageHeight = window.innerHeight * 0.89;
@@ -354,8 +359,3 @@ function ArtworkDetails() {
 }
 
 export default ArtworkDetails;
-
-// private Long loanId;
-// private Boolean requestAccepted;
-// private VisitorDto visitorDto;
-// private ArtworkDto artworkDto;

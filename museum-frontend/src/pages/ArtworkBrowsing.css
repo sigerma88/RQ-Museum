@@ -1,0 +1,12 @@
+.card {
+  display: "flex";
+  flex-direction: "column";
+  height: "400px";
+  width: "100%";
+  position: "relative";
+}
+
+.card:hover {
+  transform: scale(1.05);
+  transition: all 0.3s ease-in-out;
+}

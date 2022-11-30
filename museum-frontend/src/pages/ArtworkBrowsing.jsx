@@ -5,12 +5,14 @@ import { Card, CardContent, CardMedia, Grid, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 import { LoginContext } from "../Contexts/LoginContext";
 import "./LoanStatus.css";
+import "./ArtworkBrowsing.css";
 
 /**
  * Function to get the artworks from the server
  *
  * @param roomId - The room ID to get the artworks from
  * @returns The fetched artworks
+ * @author Siger
  */
 function getArtworks(roomId) {
   return axios
