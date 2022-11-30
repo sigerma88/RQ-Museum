@@ -74,7 +74,7 @@ public class LoanRestController {
       for (Loan loan : loanService.getAllLoansByUserId(userId)) {
         loanDtos.add(DtoUtility.convertToDto(loan));
       }
-      return new ResponseEntity<>(loanDtos, HttpStatus.FOUND);
+      return new ResponseEntity<>(loanDtos, HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
