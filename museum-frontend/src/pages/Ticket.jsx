@@ -70,6 +70,14 @@ export function GenerateTicketPasses({ visitorId }) {
     });
   }, [visitorId]);
 
+  if (validPasses.length === 0 && expiredPasses.length === 0) {
+    return (
+      <Alert severity="info" style={{ width: "50%", margin: "50px auto" }}>
+        Visitor has no tickets.
+      </Alert>
+    );
+  }
+
   if (errorMessage !== "") {
     return (
       <Box
