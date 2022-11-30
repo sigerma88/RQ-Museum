@@ -23,6 +23,7 @@ function LandingPage() {
             marginTop: "20px",
             borderRadius: "15px",
             filter: "brightness(0.6)",
+            objectFit: "cover",
           }}
           className="feature-image"
           src={MuseumPhotoBackground}
