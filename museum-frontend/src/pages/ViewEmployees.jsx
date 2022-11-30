@@ -123,7 +123,7 @@ export function ViewEmployees() {
                   <StyledTableCell>{employee.email}</StyledTableCell>
                   <StyledTableCell align="right">
                     <a
-                      href={`/schedule/${employee.museumUserId}`}
+                      href={`/employee/schedule/${employee.museumUserId}`}
                       className="hover-underline-animation"
                     >
                       View&nbsp;{grammarCheck(employee.name)}&nbsp;schedule
