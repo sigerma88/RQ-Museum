@@ -92,7 +92,22 @@ export function Main() {
               }
             />
           </Route>
-          <Route path="/employee" element={<ViewEmployees />} />s
+          <Route
+            path="/employee"
+            element={
+              loggedIn && userRole === "manager" ? (
+                <ViewEmployees />
+              ) : (
+                <Typography
+                  variant="h3"
+                  style={{ margin: "auto", padding: "auto" }}
+                >
+                  You are not authorized to view this page
+                </Typography>
+              )
+            }
+          />
+          s
           <Route
             path="/profile"
             element={loggedIn ? <Profile /> : <Navigate to="/login" />}
