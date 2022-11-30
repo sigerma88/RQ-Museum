@@ -11,6 +11,7 @@ import {
   TableCell,
   tableCellClasses,
   styled,
+  Button,
 } from "@mui/material/";
 import "./ViewEmployees.css";
 
@@ -63,6 +64,15 @@ export function ViewEmployees() {
           <h1 style={{ marginTop: 20, marginBottom: 20 }}>
             List&nbsp;of&nbsp;all&nbsp;Employees
           </h1>
+          <Button
+            variant="contained"
+            sx={{ position: "relative", right: -300, top: -55 }}
+            onClick={() => {
+              window.location.href = "/employee/create";
+            }}
+          >
+            Add Employee
+          </Button>
         </div>
         <Typography>There are no employees at the moment.</Typography>
       </>
@@ -74,6 +84,15 @@ export function ViewEmployees() {
           <h1 style={{ marginTop: 20, marginBottom: 20 }}>
             List&nbsp;of&nbsp;all&nbsp;Employees
           </h1>
+          <Button
+            variant="contained"
+            sx={{ position: "relative", right: -300, top: -55 }}
+            onClick={() => {
+              window.location.href = "/employee/create";
+            }}
+          >
+            Add Employee
+          </Button>
         </div>
         <TableContainer
           component={Paper}
