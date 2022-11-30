@@ -14,6 +14,7 @@ import TicketViewing from "../pages/TicketViewing";
 import { Schedule } from "../pages/Schedule";
 import { ViewEmployees } from "../pages/ViewEmployees";
 import { Loan } from "../pages/Loan";
+import { OnLoan } from "../pages/OnLoan";
 
 /**
  * Function that routes the user to the correct page depending on the url
@@ -88,8 +89,27 @@ export function Main() {
             element={loggedIn ? <TicketViewing /> : <Navigate to="/login" />}
           />
           <Route path="/schedule/:id" element={<Schedule />} />
-          <Route path="/employees" element={<ViewEmployees />} />   
-          <Route path="/loan" element={loggedIn ? <Loan /> : <Navigate to="/login" /> } />   
+          <Route path="/employees" element={<ViewEmployees />} />
+          <Route
+            path="/loan"
+            element={loggedIn ? <Loan /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/onloan"
+            element={
+              loggedIn &&
+              (userRole === "manager" || userRole === "employee") ? (
+                <OnLoan />
+              ) : (
+                <Typography
+                  variant="h3"
+                  style={{ margin: "auto", padding: "auto" }}
+                >
+                  You are not authorized to view this page
+                </Typography>
+              )
+            }
+          />
         </Routes>
       </BrowserRouter>
     </LoginContext.Provider>
