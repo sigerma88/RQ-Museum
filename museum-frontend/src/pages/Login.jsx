@@ -132,7 +132,11 @@ export function Login() {
             >
               Need an account? Click here
             </a>
-            <p style={{ color: "red" }}>{errorMessage}</p>
+            <p style={{ color: "red" }}>
+              {errorMessage && errorMessage.includes("login")
+                ? errorMessage
+                : null}
+            </p>
             <Button
               type="submit"
               variant="contained"

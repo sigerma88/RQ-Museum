@@ -49,7 +49,18 @@ export function Navigation() {
     axios
       .get("/api/room")
       .then((response) => {
-        setRooms(response.data);
+        let allRooms = response.data;
+        //If room Name is storage put to the end of list
+        allRooms.sort((a, b) => {
+          if (a.roomName === "Storage") {
+            return 1;
+          } else if (b.roomName === "Storage") {
+            return -1;
+          } else {
+            return 0;
+          }
+        });
+        setRooms(allRooms);
       })
       .catch((error) => {
         console.log(error);
