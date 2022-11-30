@@ -114,6 +114,10 @@ export function Main() {
           />
           <Route path="/browse/room/:roomId" element={<ArtworkBrowsing />} />
           <Route
+            path="/loan"
+            element={loggedIn ? <Home /> : <Navigate to="/login" />}
+          />
+          <Route
             path="/browse/artwork/:artworkId"
             element={<ArtworkDetails />}
           />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import {
   Button,
@@ -8,8 +8,16 @@ import {
   ListItem,
   ListItemText,
   Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Avatar,
 } from "@mui/material";
 import { LoginContext } from "../Contexts/LoginContext";
+import { LoanStatus } from "./ArtworkBrowsing";
+import LockIcon from "@mui/icons-material/Lock";
+import "./LoanStatus.css";
 
 /**
  * Function to get the artwork from the server
@@ -69,44 +77,152 @@ function computeArtworkStatus(artworkStatus) {
 }
 
 /**
+ * Component for the loan dialog
+ * @param open - The open status of the dialog
+ * @param handleClose - The function to close the dialog
+ * @param artwork - The artwork object
+ * @param userId - The user id
+ * @returns The loan dialog component
+ * @author Kevin
+ * */
+
+function LoanConfirmation({ open, close, userId, artwork }) {
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
+
+  function handleLoan() {
+    axios
+      .post("/api/loan/create", {
+        visitorDto: {
+          museumUserId: userId,
+        },
+        artworkDto: artwork,
+      })
+      .then((response) => {
+        navigate("/loan");
+      })
+      .catch((error) => {
+        setErrorMessage(error.response.data);
+      });
+  }
+
+  const handleClose = () => {
+    close();
+    setErrorMessage("");
+  };
+
+  return (
+    <Dialog open={open} onClose={close}>
+      <DialogTitle>Loan confirmation</DialogTitle>
+      <DialogContent>
+        <Typography>
+          Are you sure you want to loan this artwork? You will be charged once
+          the request is accepted.
+        </Typography>
+        <p style={{ color: "red" }}>{errorMessage}</p>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleLoan}>Confirm</Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
+/**
  * Visitor artwork loan section
  *
  * @param artwork - The artwork object
  * @param userRole - The user role
  * @param loggedIn - The logged in status
  * @returns The visitor artwork loan section
- * @author Siger
+ * @author Siger, Kevin (redesign)
  */
-function VisitorArtworkLoan({ artwork, userRole, loggedIn }) {
-  if (artwork.isAvailableForLoan && userRole === "visitor" && loggedIn) {
+function VisitorArtworkLoan({ artwork, userRole, loggedIn, userId }) {
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  if (artwork.isAvailableForLoan) {
     return (
-      <>
-        <Divider variant="middle" />
+      <div>
         <Typography variant="h5" margin={2}>
           Loan information
         </Typography>
-        <List>
-          <ListItem>
-            <ListItemText primary="Loan fee" secondary={artwork.loanFee} />
-          </ListItem>
-          <Divider variant="middle" />
-          <ListItem>
-            <ListItemText
-              primary="Loan status"
-              secondary={artwork.isOnLoan ? "Currently on loan" : "Not on loan"}
-            />
-          </ListItem>
-        </List>
-        <Divider variant="middle" />
-        {/* TODO: Add loan button action */}
-        <Button
-          variant="contained"
-          disabled={artwork.isOnLoan}
-          style={{ margin: 10 }}
+        <List
+          style={{
+            width: "70%",
+            padding: "auto",
+            margin: "auto",
+            display: "flex",
+            justifyContent: "space-evenly",
+          }}
         >
-          Loan this
-        </Button>
-      </>
+          <div style={{ width: "80%" }}>
+            <ListItem>
+              <ListItemText primary="Loan fee" secondary={artwork.loanFee} />
+            </ListItem>
+            <Divider variant="middle" />
+          </div>
+          <div style={{ width: "80%" }}>
+            <ListItem>
+              <ListItemText
+                primary="Loan status"
+                secondary={
+                  <LoanStatus
+                    isAvailableForLoan={artwork.isAvailableForLoan}
+                    isOnLoan={artwork.isOnLoan}
+                  />
+                }
+              ></ListItemText>
+            </ListItem>
+            <Divider variant="middle" />
+          </div>
+        </List>
+        {artwork.isAvailableForLoan && loggedIn && userRole === "visitor" ? (
+          <div>
+            <Button
+              variant="contained"
+              disabled={artwork.isOnLoan}
+              style={{ margin: 50 }}
+              onClick={handleClickOpen}
+            >
+              Loan this
+            </Button>
+            <LoanConfirmation
+              open={open}
+              close={handleClose}
+              userId={userId}
+              artwork={artwork}
+            />
+          </div>
+        ) : (
+          <div style={{ margin: 50 }}>
+            <Avatar
+              sx={{
+                margin: "auto",
+                marginBottom: "20px",
+                width: "50px",
+                height: "50px",
+                bgcolor: "black",
+              }}
+            >
+              <LockIcon />
+            </Avatar>
+            <Typography variant="h4">Login to request a loan</Typography>
+            <a href="/login">
+              <Typography>Click here to login</Typography>
+            </a>
+          </div>
+        )}
+        {/* TODO: Add form for manager or employee to edit artwork  */}
+      </div>
     );
   } else {
     return null;
@@ -120,9 +236,9 @@ function VisitorArtworkLoan({ artwork, userRole, loggedIn }) {
  * @param userRole - The user role
  * @param loggedIn - The logged in status
  * @returns The visitor artwork browsing section
- * @author Siger
+ * @author Siger, Kevin
  */
-function VisitorArtworkDetails({ artwork, userRole, loggedIn }) {
+function VisitorArtworkDetails({ artwork, userRole, loggedIn, userId }) {
   const imageHeight = window.innerHeight * 0.89;
 
   // Get the artwork status from the server
@@ -139,41 +255,61 @@ function VisitorArtworkDetails({ artwork, userRole, loggedIn }) {
 
   return (
     <>
+      <Typography variant="h4" margin={5}>
+        {artwork.name}
+      </Typography>
       <img
         src={artwork.image}
         alt="artwork"
-        style={{ marginTop: 30, height: imageHeight }}
+        style={{ height: imageHeight, borderRadius: 10 }}
       />
-      <Typography variant="h5" margin={2}>
-        Artwork information
-      </Typography>
-      <List>
-        <ListItem>
-          <ListItemText primary="Name" secondary={artwork.name} />
-        </ListItem>
-        <Divider variant="middle" />
-        <ListItem>
-          <ListItemText primary="Artist" secondary={artwork.artist} />
-        </ListItem>
-        <Divider variant="middle" />
-        <ListItem>
-          <ListItemText
-            primary="Room"
-            secondary={artwork.room ? artwork.room.roomName : "None"}
-          />
-        </ListItem>
-        <Divider variant="middle" />
-        <ListItem>
-          <ListItemText
-            primary="Artwork status"
-            secondary={computeArtworkStatus(artworkStatus.toString())}
-          />
-        </ListItem>
-      </List>
+      <div style={{ margin: "50px auto" }}>
+        <Typography variant="h5" margin={2}>
+          Artwork information
+        </Typography>
+        <List
+          style={{
+            display: "flex",
+            margin: "auto",
+            justifyContent: "space-evenly",
+            padding: "auto",
+            width: "70%",
+          }}
+        >
+          <div style={{ width: "80%" }}>
+            <ListItem className="artwork-info">
+              <ListItemText primary="Name" secondary={artwork.name} />
+            </ListItem>
+            <Divider variant="middle" />
+            <ListItem>
+              <ListItemText primary="Artist" secondary={artwork.artist} />
+            </ListItem>
+            <Divider variant="middle" />
+          </div>
+          <div style={{ width: "80%" }}>
+            <ListItem>
+              <ListItemText
+                primary="Room"
+                secondary={artwork.room ? artwork.room.roomName : "None"}
+              />
+            </ListItem>
+            <Divider variant="middle" />
+            <ListItem>
+              <ListItemText
+                primary="Artwork status"
+                secondary={computeArtworkStatus(artworkStatus)}
+              />
+            </ListItem>
+            <Divider variant="middle" />
+          </div>
+        </List>
+      </div>
+
       <VisitorArtworkLoan
         artwork={artwork}
         userRole={userRole}
         loggedIn={loggedIn}
+        userId={userId}
       />
     </>
   );
@@ -205,7 +341,7 @@ function ArtworkDetails() {
     });
   }, [artworkId]);
 
-  const { loggedIn, userRole } = useContext(LoginContext);
+  const { loggedIn, userRole, userId } = useContext(LoginContext);
   if (userRole === "manager" && loggedIn) {
     return <ManagerArtworkDetails />;
   } else if (userRole === "employee" && loggedIn) {
@@ -216,6 +352,7 @@ function ArtworkDetails() {
         artwork={artwork}
         userRole={userRole}
         loggedIn={loggedIn}
+        userId={userId}
       />
     );
   }

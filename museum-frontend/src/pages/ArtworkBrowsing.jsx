@@ -1,17 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Card, CardContent, CardMedia, Grid, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 import { LoginContext } from "../Contexts/LoginContext";
+import "./LoanStatus.css";
+import "./ArtworkBrowsing.css";
 
 /**
  * Function to get the artworks from the server
@@ -53,70 +47,122 @@ function getRoom(roomId) {
 }
 
 /**
+ * Loan Status message
+ * @param isAvailableForLoan - If artwork is loanable
+ * @param isOnLoan - If artwork is on loan
+ * @returns The loan status message
+ * @author Kevin
+ */
+
+export function LoanStatus({ isAvailableForLoan, isOnLoan }) {
+  if (!isAvailableForLoan) {
+    return (
+      <Typography variant="caption" color={"gray"}>
+        <span className="red-dot"></span> Unavailable for loan
+      </Typography>
+    );
+  } else if (isAvailableForLoan && !isOnLoan) {
+    return (
+      <Typography variant="caption" color={"gray"}>
+        <span className="green-dot"></span> Available for loan
+      </Typography>
+    );
+  } else if (isOnLoan) {
+    return (
+      <Typography variant="caption" color={"gray"}>
+        <span className="orange-dot"></span> Currently on loan
+      </Typography>
+    );
+  }
+}
+
+/**
  * VisitorArtworkBrowsing component
  *
  * @param artworks - The artworks to display
  * @param room - The room to display
- * @author Siger
+ * @author Siger, Kevin(redesign)
  */
 function VisitorArtworkBrowsing({ artworks, room }) {
   return (
     <>
-      <Typography variant="h4" component="h1" marginTop={5}>
-        {room.roomName}
-      </Typography>
+      <div style={{ lineHeight: "14px" }}>
+        <Typography variant="h4" component="h1" marginTop={5}>
+          {room.roomName}
+        </Typography>
+        <Typography>{artworks.length} artworks</Typography>
+      </div>
+
       <Container sx={{ py: 5 }}>
         <Grid container spacing={4}>
           {artworks.map((card) => (
-            <Grid item key={card.artworkId} xs={12} sm={6} md={2}>
+            <Grid item key={card.artworkId} xs={12} sm={6} md={3}>
               <Card
                 sx={{
                   display: "flex",
                   flexDirection: "column",
-                  height: "100%",
+                  height: "400px",
+                  width: "100%",
+                  position: "relative",
                 }}
+                className="card"
               >
-                <CardMedia
-                  component="img"
-                  image={card.image}
-                  alt="Artwork image"
-                />
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography
-                    gutterBottom
-                    variant="subtitle1"
-                    style={{ fontWeight: "bold" }}
-                  >
-                    {card.name}
-                  </Typography>
-                  <Typography variant="subtitle2">
-                    {"by " + card.artist}
-                  </Typography>
-                  <Typography variant="caption" color={"gray"}>
-                    {`${card.isAvailableForLoan ? "Available for loan" : ""}` +
-                      `${card.isOnLoan ? " but is currently on loan" : ""}`}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    onClick={() => {
-                      window.location.href =
-                        "/browse/artwork/" + card.artworkId;
+                <a
+                  style={{
+                    fontStyle: "none",
+                    textDecoration: "none",
+                    color: "black",
+                  }}
+                  href={`/browse/artwork/${card.artworkId}`}
+                >
+                  <CardMedia
+                    component="img"
+                    style={{
+                      objectFit: "cover",
+                      height: "200px",
+                    }}
+                    image={card.image}
+                    alt="Artwork image"
+                  />
+                  <CardContent
+                    sx={{
+                      flexGrow: 1,
                     }}
                   >
-                    View
-                  </Button>
-                  {/* TODO: Add link to loan page */}
-                  <Button
-                    variant="contained"
-                    size="small"
-                    disabled={!card.isAvailableForLoan}
-                  >
-                    Loan
-                  </Button>
-                </CardActions>
+                    <Typography
+                      gutterBottom
+                      variant="subtitle1"
+                      style={{ fontWeight: "bold" }}
+                    >
+                      {card.name}
+                    </Typography>
+                    <Typography variant="subtitle2">
+                      {"by " + card.artist}
+                    </Typography>
+                    <div
+                      style={
+                        !card.isAvailableForLoan
+                          ? {
+                              position: "absolute",
+                              bottom: "65px",
+                              width: "90%",
+                              margin: "auto 0px",
+                            }
+                          : {
+                              position: "absolute",
+                              bottom: "65px",
+                              width: "88%",
+                              margin: "auto 0px",
+                            }
+                      }
+                    >
+                      <LoanStatus
+                        isAvailableForLoan={card.isAvailableForLoan}
+                        isOnLoan={card.isOnLoan}
+                      />
+                    </div>
+                  </CardContent>
+                </a>
               </Card>
             </Grid>
           ))}
