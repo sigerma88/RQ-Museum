@@ -7,7 +7,6 @@ import { Navigation } from "../layouts/Navigation";
 import { Login } from "../pages/Login";
 import { Signup } from "../pages/Signup";
 import { Profile } from "../pages/Profile";
-import { Schedule } from "../pages/Schedule";
 import { ViewEmployees } from "../pages/ViewEmployees";
 import ArtworkBrowsing from "../pages/ArtworkBrowsing";
 import ArtworkDetails from "../pages/ArtworkDetails";
@@ -59,9 +58,23 @@ export function Main() {
           <Route path="/" index element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/schedule/:id" element={<Schedule />} />
-          <Route path="/employee/schedule/" element={<ViewSchedule />} />
-          <Route path="/employees" element={<ViewEmployees />} />s
+          <Route
+            path="/employee/schedule/:id"
+            element={
+              loggedIn &&
+              (userRole === "employee" || userRole === "manager") ? (
+                <ViewSchedule />
+              ) : (
+                <Typography
+                  variant="h3"
+                  style={{ margin: "auto", padding: "auto" }}
+                >
+                  You are not authorized to view this page
+                </Typography>
+              )
+            }
+          />
+          <Route path="/employee" element={<ViewEmployees />} />s
           <Route
             path="/profile"
             element={loggedIn ? <Profile /> : <Navigate to="/login" />}

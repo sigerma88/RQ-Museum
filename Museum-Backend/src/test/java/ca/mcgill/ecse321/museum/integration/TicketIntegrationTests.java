@@ -62,13 +62,6 @@ public class TicketIntegrationTests {
     visitorRepository.deleteAll();
   }
 
-  @AfterEach
-  public void tearDown() {
-    // clear all repositories
-    ticketRepository.deleteAll();
-    visitorRepository.deleteAll();
-  }
-
   /**
    * Test to get all tickets possessed by an invalid visitor
    *
