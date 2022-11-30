@@ -56,7 +56,7 @@ function LandingPage() {
 function VisitorHomePage() {
   return (
     <>
-      LandingPage()
+      {LandingPage()}
       <p>Visitor</p>
     </>
   );
@@ -71,7 +71,7 @@ function VisitorHomePage() {
 function ManagerHomePage() {
   return (
     <>
-      LandingPage()
+      {LandingPage()}
       <Link to="/employee">View all employees</Link>
     </>
   );
@@ -86,7 +86,7 @@ function ManagerHomePage() {
 function EmployeeHomePage() {
   return (
     <>
-      LandingPage()
+      {LandingPage()}
       <Link to="/employee/schedule/">View your schedule</Link>
     </>
   );
