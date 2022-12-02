@@ -12,6 +12,7 @@ import {
   Button,
 } from "@mui/material/";
 import CircleIcon from "@mui/icons-material/Circle";
+import { OnLoan } from "./OnLoan";
 
 function StatusOrLoanee(props) {
   if (props.userRole === "visitor") {
@@ -94,7 +95,7 @@ function DisplayRoom(props) {
   }
 }
 
-export function Loan() {
+function LoanRequests() {
   const [loans, setLoans] = useState([]); // initial state set to empty array
   const { userId, userRole } = useContext(LoginContext);
 
@@ -262,6 +263,32 @@ export function Loan() {
           </Container>
         )}
       </Box>
+    </>
+  );
+}
+
+export function Loan() {
+  const { userRole } = useContext(LoginContext);
+
+  return (
+    <>
+      <Typography variant="h4" component="h1" marginTop={5} marginBottom={2}>
+        Loan Requests
+      </Typography>
+      <LoanRequests />
+      {userRole === "manager" || userRole === "employee" ? (
+        <div>
+          <Typography
+            variant="h4"
+            component="h1"
+            marginTop={5}
+            marginBottom={2}
+          >
+            Artworks currently on loan
+          </Typography>
+          <OnLoan />
+        </div>
+      ) : null}
     </>
   );
 }

@@ -143,22 +143,6 @@ export function Main() {
             path="/loan"
             element={loggedIn ? <Loan /> : <Navigate to="/login" />}
           />
-          <Route
-            path="/onloan"
-            element={
-              loggedIn &&
-              (userRole === "manager" || userRole === "employee") ? (
-                <OnLoan />
-              ) : (
-                <Typography
-                  variant="h3"
-                  style={{ margin: "auto", padding: "auto" }}
-                >
-                  You are not authorized to view this page
-                </Typography>
-              )
-            }
-          />
         </Routes>
       </BrowserRouter>
     </LoginContext.Provider>
