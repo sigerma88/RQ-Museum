@@ -123,7 +123,7 @@ function getDate(date) {
 }
 
 /**
- * Function to add opening hours to museum
+ * Function to add opening hours to museum, only manager can
  *
  * @author VZ
  * @param {id} - id of the museum
@@ -243,7 +243,7 @@ function AddOpeningHours({ id, timePeriods, setTimePeriods }) {
 }
 
 /**
- * Main function that returns the schedule of a museum as viewed by the manager so he can edit them
+ * Main function that returns the schedule of a museum as viewed by the manager so they can edit opening hours
  *
  * @author VZ and Kevin
  * @returns table that contains the opening hours of a museum by id
@@ -258,7 +258,7 @@ export function ManagerViewMuseumSchedule() {
     axios
       .get(`/api/scheduling/museum/shifts/${id}`)
       .then(function (response) {
-        // if the requepst is successful
+        // if the request is successful
         console.log(response.data);
         setTimePeriods(response.data); // set the state to the data returned from the API
       })

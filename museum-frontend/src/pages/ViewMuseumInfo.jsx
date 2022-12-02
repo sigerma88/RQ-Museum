@@ -61,15 +61,6 @@ export function ViewMuseumInfo() {
           <h1 style={{ marginTop: 20, marginBottom: 20 }}>
             Museum Information
           </h1>
-          {/* <Button
-            variant="contained"
-            sx={{ position: "relative", right: -300, top: -55 }}
-            onClick={() => {
-              window.location.href = "/museum/create";
-            }}
-          >
-            Add Museum
-          </Button> */}
         </div>
         <Typography>
           Information on the Museum is currently unavailable
@@ -83,15 +74,6 @@ export function ViewMuseumInfo() {
           <h1 style={{ marginTop: 20, marginBottom: 20 }}>
             Museum Information
           </h1>
-          {/* <Button
-            variant="contained"
-            sx={{ position: "relative", right: -300, top: -55 }}
-            onClick={() => {
-              window.location.href = "/employee/create";
-            }}
-          >
-            Add Employee
-          </Button> */}
         </div>
         <TableContainer
           component={Paper}
