@@ -2,7 +2,9 @@ package ca.mcgill.ecse321.museum.integration;
 
 import ca.mcgill.ecse321.museum.controller.utilities.DtoUtility;
 import ca.mcgill.ecse321.museum.dao.*;
+import ca.mcgill.ecse321.museum.dto.EmployeeDto;
 import ca.mcgill.ecse321.museum.dto.LoanDto;
+import ca.mcgill.ecse321.museum.dto.ManagerDto;
 import ca.mcgill.ecse321.museum.dto.VisitorDto;
 import ca.mcgill.ecse321.museum.integration.utilities.UserUtilities;
 import ca.mcgill.ecse321.museum.model.*;
@@ -39,6 +41,8 @@ public class LoanIntegrationTest {
   private MuseumRepository museumRepository;
   @Autowired
   private RoomRepository roomRepository;
+  @Autowired
+  private ManagerRepository managerRepository;
 
   @BeforeEach
   @AfterEach
@@ -48,10 +52,12 @@ public class LoanIntegrationTest {
     visitorRepository.deleteAll();
     roomRepository.deleteAll();
     museumRepository.deleteAll();
+    managerRepository.deleteAll();
   }
 
   /**
-   * Test suite that combines successfully creating a loan and getting that same loan
+   * Test suite that combines successfully creating a loan and getting that same
+   * loan
    *
    * @author Eric
    */
@@ -82,8 +88,7 @@ public class LoanIntegrationTest {
 
     HttpEntity<?> entity = new HttpEntity<>(loanDto, headers);
 
-    ResponseEntity<LoanDto> response =
-        client.exchange("/api/loan/create/", HttpMethod.POST, entity, LoanDto.class);
+    ResponseEntity<LoanDto> response = client.exchange("/api/loan/create/", HttpMethod.POST, entity, LoanDto.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -108,8 +113,7 @@ public class LoanIntegrationTest {
    */
   private void testGetLoan(HttpHeaders header, Long LoanId) {
     HttpEntity<?> entity = new HttpEntity<>(header);
-    ResponseEntity<LoanDto> response =
-        client.exchange("/api/loan/" + LoanId, HttpMethod.GET, entity, LoanDto.class);
+    ResponseEntity<LoanDto> response = client.exchange("/api/loan/" + LoanId, HttpMethod.GET, entity, LoanDto.class);
 
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
@@ -127,8 +131,6 @@ public class LoanIntegrationTest {
     Artwork artwork = createArtwork();
     Visitor visitor = createVisitor();
 
-
-
     Loan loan = new Loan();
     loan.setRequestAccepted(null);
     loan.setArtwork(artwork);
@@ -143,8 +145,7 @@ public class LoanIntegrationTest {
 
     HttpEntity<?> entity = new HttpEntity<>(loanDto, loginSetupVisitor(visitor));
 
-    ResponseEntity<String> response =
-        client.exchange("/api/loan/create/", HttpMethod.POST, entity, String.class);
+    ResponseEntity<String> response = client.exchange("/api/loan/create/", HttpMethod.POST, entity, String.class);
 
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     assertEquals("Cannot create a duplicate loan request", response.getBody());
@@ -159,7 +160,7 @@ public class LoanIntegrationTest {
   public void testPatchLoanSuccessfullyToFalse() {
     Artwork artwork = createArtwork();
     Visitor visitor = createVisitor();
-
+    Manager manager = createManager();
 
     Loan loan = new Loan();
     loan.setRequestAccepted(false);
@@ -168,10 +169,9 @@ public class LoanIntegrationTest {
     loanRepository.save(loan);
     LoanDto loanDto = DtoUtility.convertToDto(loan);
 
-    HttpEntity<LoanDto> request = new HttpEntity<LoanDto>(loanDto, loginSetupVisitor(visitor));
+    HttpEntity<LoanDto> request = new HttpEntity<LoanDto>(loanDto, loginSetupManager(manager));
 
-    ResponseEntity<LoanDto> response =
-        client.exchange("/api/loan/edit/", HttpMethod.PUT, request, LoanDto.class);
+    ResponseEntity<LoanDto> response = client.exchange("/api/loan/edit/", HttpMethod.PUT, request, LoanDto.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -188,7 +188,8 @@ public class LoanIntegrationTest {
   }
 
   /**
-   * Test suite that combines successfully creating a loan and patching that loan requestAccepted to
+   * Test suite that combines successfully creating a loan and patching that loan
+   * requestAccepted to
    * false
    *
    * @author Eric
@@ -198,6 +199,7 @@ public class LoanIntegrationTest {
     Artwork artwork = createArtwork();
     Room room = artwork.getRoom();
     Visitor visitor = createVisitor();
+    Manager manager = createManager();
 
     Loan loan = new Loan();
     loan.setRequestAccepted(true);
@@ -206,10 +208,9 @@ public class LoanIntegrationTest {
     loanRepository.save(loan);
     LoanDto loanDto = DtoUtility.convertToDto(loan);
 
-    HttpEntity<LoanDto> request = new HttpEntity<LoanDto>(loanDto, loginSetupVisitor(visitor));
+    HttpEntity<LoanDto> request = new HttpEntity<LoanDto>(loanDto, loginSetupManager(manager));
 
-    ResponseEntity<LoanDto> response =
-        client.exchange("/api/loan/edit/", HttpMethod.PUT, request, LoanDto.class);
+    ResponseEntity<LoanDto> response = client.exchange("/api/loan/edit/", HttpMethod.PUT, request, LoanDto.class);
 
     // Check status and body of response are correct
     assertNotNull(response);
@@ -239,6 +240,7 @@ public class LoanIntegrationTest {
 
     Artwork artwork = createArtwork();
     Visitor visitor = createVisitor();
+    Manager manager = createManager();
 
     Loan loan = new Loan();
     loan.setRequestAccepted(null);
@@ -280,10 +282,9 @@ public class LoanIntegrationTest {
     loan3.setVisitor(visitor);
     loanRepository.save(loan3);
 
-    HttpEntity<?> request = new HttpEntity<>(loginSetupVisitor(visitor));
+    HttpEntity<?> request = new HttpEntity<>(loginSetupManager(manager));
 
-    ResponseEntity<LoanDto[]> response =
-        client.exchange("/api/loan/", HttpMethod.GET, request, LoanDto[].class);
+    ResponseEntity<LoanDto[]> response = client.exchange("/api/loan/", HttpMethod.GET, request, LoanDto[].class);
 
     assertNotNull(response);
     assertEquals(HttpStatus.FOUND, response.getStatusCode());
@@ -309,8 +310,8 @@ public class LoanIntegrationTest {
 
     HttpEntity<?> request = new HttpEntity<>(loginSetupVisitor(visitor));
 
-    ResponseEntity<String> response =
-        client.exchange("/api/loan/delete/" + loanId, HttpMethod.DELETE, request, String.class);
+    ResponseEntity<String> response = client.exchange("/api/loan/delete/" + loanId, HttpMethod.DELETE, request,
+        String.class);
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertEquals("Loan deleted", response.getBody());
   }
@@ -326,14 +327,15 @@ public class LoanIntegrationTest {
 
     HttpEntity<?> request = new HttpEntity<>(loginSetupVisitor(createVisitor()));
 
-    ResponseEntity<String> response =
-        client.exchange("/api/loan/delete/" + loanId, HttpMethod.DELETE, request, String.class);
+    ResponseEntity<String> response = client.exchange("/api/loan/delete/" + loanId, HttpMethod.DELETE, request,
+        String.class);
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     assertNotNull("Loan does not exist", response.getBody());
   }
 
   /**
-   * Helper method to create artwork associated to a room associated to a museum associated to a
+   * Helper method to create artwork associated to a room associated to a museum
+   * associated to a
    * schedule
    *
    * @return artwork
@@ -392,6 +394,23 @@ public class LoanIntegrationTest {
   }
 
   /**
+   * Helper method to create manager
+   *
+   * @return manager
+   * @author Eric
+   */
+  public Manager createManager() {
+    // Creating a manager
+    Manager manager = new Manager();
+    Long managerId = (long) 1;
+    manager.setMuseumUserId(managerId);
+    manager.setEmail("Please@email.com");
+    manager.setName("Please");
+    manager.setPassword("password");
+    return managerRepository.save(manager);
+  }
+
+  /**
    * Create a visitor and login
    *
    * @param newVisitor - the visitor to login
@@ -402,8 +421,7 @@ public class LoanIntegrationTest {
   public VisitorDto createVisitorAndLogin(Visitor newVisitor) {
     visitorRepository.save(newVisitor);
     VisitorDto visitor = UserUtilities.createVisitorDto(newVisitor);
-    ResponseEntity<String> response =
-        client.postForEntity("/api/auth/login", visitor, String.class);
+    ResponseEntity<String> response = client.postForEntity("/api/auth/login", visitor, String.class);
     List<String> session = response.getHeaders().get("Set-Cookie");
 
     String sessionId = session.get(0);
@@ -427,4 +445,38 @@ public class LoanIntegrationTest {
     return headers;
   }
 
+  /**
+   * Create an manager and login
+   *
+   * @param newManager - the manager to login
+   * @return the logged in manager
+   * @author Eric
+   */
+
+  public ManagerDto createManagerAndLogin(Manager newManager) {
+    managerRepository.save(newManager);
+    ManagerDto manager = UserUtilities.createManagerDto(newManager);
+    ResponseEntity<String> response = client.postForEntity("/api/auth/login", manager, String.class);
+    List<String> session = response.getHeaders().get("Set-Cookie");
+
+    String sessionId = session.get(0);
+    manager.setSessionId(sessionId);
+
+    return manager;
+  }
+
+  /**
+   * Create a museum and login
+   *
+   * @param newMuseum - the museum to login
+   * @return museumDto - the logged in museum
+   * @author Eric
+   */
+  public HttpHeaders loginSetupManager(Manager newManager) {
+    ManagerDto manager = createManagerAndLogin(newManager);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cookie", manager.getSessionId());
+    return headers;
+  }
 }
