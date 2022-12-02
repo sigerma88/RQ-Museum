@@ -312,7 +312,7 @@ export function ManagerViewMuseumSchedule() {
         <Button
           onClick={(event) => handleRemove(event, timePeriod.timePeriodId)}
         >
-          Remove Opening Hours
+          Remove
         </Button>
       </TableCell>
     </TableRow>
@@ -473,6 +473,18 @@ export function AnyoneViewMuseumSchedule() {
     },
   }));
 
+  useEffect(() => {
+    axios
+      .get(`/api/scheduling/museum/shifts/${id}`)
+      .then(function (response) {
+        console.log(response.data);
+        setTimePeriods(response.data); // set the state to the data returned from the API
+      })
+      .catch(function (error) {
+        console.log(error.response.data);
+      });
+  }, []);
+
   const row = timePeriods.map((timePeriod) => (
     <TableRow key={timePeriod.timePeriodId}>
       <TableCell>
@@ -494,17 +506,6 @@ export function AnyoneViewMuseumSchedule() {
       </TableCell>
     </TableRow>
   ));
-
-  useEffect(() => {
-    axios
-      .get(`/api/scheduling/museum/shifts/${id}`)
-      .then(function (response) {
-        setTimePeriods(response.data); // set the state to the data returned from the API
-      })
-      .catch(function (error) {
-        console.log(error.response.data);
-      });
-  }, []);
 
   return (
     <>

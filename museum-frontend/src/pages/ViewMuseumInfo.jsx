@@ -126,7 +126,7 @@ export function ViewMuseumInfo() {
                 </StyledTableCell>
                 <StyledTableCell align="right">
                   <Typography sx={{ fontWeight: "bold", fontSize: 18 }}>
-                    View Opening Hours
+                    Opening Hours
                   </Typography>
                 </StyledTableCell>
               </TableRow>

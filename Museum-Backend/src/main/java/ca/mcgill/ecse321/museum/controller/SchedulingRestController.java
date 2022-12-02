@@ -21,7 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
- * SchedulingRestController class is used as a controller where we call our API for our web
+ * SchedulingRestController class is used as a controller where we call our API
+ * for our web
  * application
  *
  * @author Victor
@@ -139,12 +140,6 @@ public class SchedulingRestController {
   public ResponseEntity<?> getAllShiftsByMuseum(HttpServletRequest request,
       @PathVariable("id") long id) {
     try {
-      HttpSession session = request.getSession();
-      if (!AuthenticationUtility.isLoggedIn(session)) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
-      } else if (!AuthenticationUtility.isManager(session)) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Your are not a manager");
-      }
       List<TimePeriodDto> timePeriodDtos = new ArrayList<TimePeriodDto>();
       for (TimePeriod tp : museumService.getMuseumTimePeriods(id)) {
         timePeriodDtos.add(DtoUtility.convertToDto(tp));
@@ -156,8 +151,10 @@ public class SchedulingRestController {
   }
 
   /**
-   * RESTful api to create a new time period in the database We pass in a Dto object, we could also
-   * pass in strings to represent start and enddates, but that requires object mapper to parse into
+   * RESTful api to create a new time period in the database We pass in a Dto
+   * object, we could also
+   * pass in strings to represent start and enddates, but that requires object
+   * mapper to parse into
    * json.
    *
    * @param timePeriodDto the time period dto
@@ -176,9 +173,8 @@ public class SchedulingRestController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Your are not a manager");
       }
 
-      TimePeriod timePeriod =
-          timePeriodService.createTimePeriod(Timestamp.valueOf(timePeriodDto.getStartDate()),
-              Timestamp.valueOf(timePeriodDto.getEndDate()));
+      TimePeriod timePeriod = timePeriodService.createTimePeriod(Timestamp.valueOf(timePeriodDto.getStartDate()),
+          Timestamp.valueOf(timePeriodDto.getEndDate()));
       return new ResponseEntity<>(DtoUtility.convertToDto(timePeriod), HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -239,7 +235,7 @@ public class SchedulingRestController {
   /**
    * RESTful api to edit a timeperiod in the database
    *
-   * @param id the id of the timeperiod
+   * @param id            the id of the timeperiod
    * @param timePeriodDto the new timeperiod Dto
    * @return the edited timeperiod dto
    * @author VZ
@@ -254,9 +250,8 @@ public class SchedulingRestController {
       } else if (!AuthenticationUtility.isManager(session)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Your are not a manager");
       }
-      TimePeriod timePeriod =
-          timePeriodService.editTimePeriod(id, Timestamp.valueOf(timePeriodDto.getStartDate()),
-              Timestamp.valueOf(timePeriodDto.getEndDate()));
+      TimePeriod timePeriod = timePeriodService.editTimePeriod(id, Timestamp.valueOf(timePeriodDto.getStartDate()),
+          Timestamp.valueOf(timePeriodDto.getEndDate()));
       return new ResponseEntity<>(DtoUtility.convertToDto(timePeriod), HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -267,7 +262,7 @@ public class SchedulingRestController {
    * RESTful api to add a time period to an employee
    *
    * @param employeeId the employee id
-   * @param tpId the time period id
+   * @param tpId       the time period id
    * @return the employeedto with an added timeperiod
    * @author VZ
    */
@@ -293,7 +288,7 @@ public class SchedulingRestController {
    * RESTful api to remove a time period to an employee's schedule
    *
    * @param employeeId the employee id
-   * @param tpId the time period id
+   * @param tpId       the time period id
    * @return the employeedto with a removed timeperiod
    * @author VZ
    */
@@ -321,12 +316,11 @@ public class SchedulingRestController {
    * RESTful api to add a time period to a museum
    *
    * @param museumId the museum id
-   * @param tpId the timeperiod id
+   * @param tpId     the timeperiod id
    * @return the museum dto with an added timeperiod
    * @author VZ
    */
-  @PostMapping(
-      value = { "/museum/{museumId}/add/shift/{tpId}", "/museum/{museumId}/add/shift/{tpId}/" })
+  @PostMapping(value = { "/museum/{museumId}/add/shift/{tpId}", "/museum/{museumId}/add/shift/{tpId}/" })
   public ResponseEntity<?> addTimePeriodToMuseumSchedule(HttpServletRequest request,
       @PathVariable("museumId") long museumId, @PathVariable("tpId") long tpId) {
     try {
@@ -347,12 +341,11 @@ public class SchedulingRestController {
    * RESTful api to remove a time period from a museum
    *
    * @param museumId the museum id
-   * @param tpId the timeperiod id
+   * @param tpId     the timeperiod id
    * @return the museum dto with a removed timeperiod
    * @author VZ
    */
-  @DeleteMapping(
-      value = { "/museum/{museumId}/remove/shift/{tpId}", "/museum/{museumId}/remove/shift/{tpId}/" })
+  @DeleteMapping(value = { "/museum/{museumId}/remove/shift/{tpId}", "/museum/{museumId}/remove/shift/{tpId}/" })
   public ResponseEntity<?> removeTimePeriodFromMuseumSchedule(HttpServletRequest request,
       @PathVariable("museumId") long museumId, @PathVariable("tpId") long tpId) {
     try {
