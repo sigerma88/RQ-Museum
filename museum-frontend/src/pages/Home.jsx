@@ -59,6 +59,8 @@ function VisitorHomePage() {
     <>
       {LandingPage()}
       <p>Visitor</p>
+      <br />
+      <Link to="/museum/info">View museum info</Link>
     </>
   );
 }
@@ -91,6 +93,8 @@ function EmployeeHomePage() {
     <>
       {LandingPage()}
       <Link to="/employee/schedule/">View your schedule</Link>
+      <br />
+      <Link to="/museum/info">View museum info</Link>
     </>
   );
 }
@@ -110,7 +114,12 @@ function Home() {
   } else if (userRole === "employee" && loggedIn) {
     return <EmployeeHomePage />;
   } else {
-    return <LandingPage />;
+    return (
+      <>
+        <LandingPage />
+        <Link to="/museum/info">View museum info</Link>
+      </>
+    );
   }
 }
 

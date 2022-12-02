@@ -113,42 +113,7 @@ export function Main() {
           <Route path="/museum/info" element={<ViewMuseumInfo />} />
 
           <Route path="/museum/schedule">
-            <Route
-              path=":id"
-              element={
-                loggedIn &&
-                (userRole === "employee" ||
-                  userRole === "manager" ||
-                  userRole === "visitor") ? (
-                  <ViewMuseumOpeningHours />
-                ) : (
-                  <Typography
-                    variant="h3"
-                    style={{ margin: "auto", padding: "auto" }}
-                  >
-                    You are not authorized to view this page
-                  </Typography>
-                )
-              }
-            />
-            <Route
-              path=""
-              element={
-                loggedIn &&
-                (userRole === "employee" ||
-                  userRole === "manager" ||
-                  userRole === "visitor") ? (
-                  <ViewMuseumOpeningHours />
-                ) : (
-                  <Typography
-                    variant="h3"
-                    style={{ margin: "auto", padding: "auto" }}
-                  >
-                    You are not authorized to view this page
-                  </Typography>
-                )
-              }
-            />
+            <Route path=":id" element={<ViewMuseumOpeningHours />} />
           </Route>
 
           <Route
