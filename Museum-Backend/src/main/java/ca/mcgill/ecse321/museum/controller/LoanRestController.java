@@ -35,7 +35,7 @@ public class LoanRestController {
     try {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Hello are not logged in");
       } else if (!AuthenticationUtility.isMuseumUser(session)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body("Your need to be a museum user to access this");

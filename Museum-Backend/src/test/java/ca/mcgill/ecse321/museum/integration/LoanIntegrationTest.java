@@ -169,7 +169,7 @@ public class LoanIntegrationTest {
     loanRepository.save(loan);
     LoanDto loanDto = DtoUtility.convertToDto(loan);
 
-    HttpEntity<LoanDto> request = new HttpEntity<LoanDto>(loanDto, loginSetupManager(manager));
+    HttpEntity<LoanDto> request = new HttpEntity<LoanDto>(loginSetupManager(manager), loanDto);
 
     ResponseEntity<LoanDto> response = client.exchange("/api/loan/edit/", HttpMethod.PUT, request, LoanDto.class);
 
