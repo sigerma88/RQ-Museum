@@ -19,6 +19,10 @@ import {
   Dialog,
   DialogTitle,
   DialogActions,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
 } from "@mui/material/";
 import "./ViewEmployees.css";
 
@@ -74,6 +78,15 @@ function ConfirmationDialog(props) {
       <DialogTitle>
         Are you sure you want to delete the selected employees?
       </DialogTitle>
+      <List>
+        {employees.map((employee) => (
+          // List the employees to be deleted
+          <ListItem key={employee.museumUserId}>
+            <ListItemAvatar>{employee.museumUserId}</ListItemAvatar>
+            <ListItemText primary={employee.name} secondary={employee.email} />
+          </ListItem>
+        ))}
+      </List>
       <DialogActions>
         <Button onClick={close}>Cancel</Button>
         <Button
