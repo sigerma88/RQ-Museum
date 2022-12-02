@@ -9,10 +9,7 @@ import {
   Box,
   Typography,
   CardMedia,
-  Paper,
   Button,
-  ButtonGroup,
-  Icon,
 } from "@mui/material/";
 import CircleIcon from "@mui/icons-material/Circle";
 
@@ -49,7 +46,7 @@ function StatusOfVisitorLoanRequest(props) {
           <CircleIcon color="success" />
         </div>
       );
-    } else if (props.loanElement.requestAccepted == false) {
+    } else if (props.loanElement.requestAccepted === false) {
       return (
         <div>
           <Typography
@@ -99,7 +96,7 @@ function DisplayRoom(props) {
 
 export function Loan() {
   const [loans, setLoans] = useState([]); // initial state set to empty array
-  const { userName, userEmail, userId, userRole } = useContext(LoginContext);
+  const { userId, userRole } = useContext(LoginContext);
 
   useEffect(() => {
     let url = "";
@@ -114,19 +111,15 @@ export function Loan() {
         // if the request is successfull
         const loan = response.data;
         if (userRole === "visitor") {
-          setLoans(response.data);
-          console.log(response.data);
+          setLoans(loan);
         } else if (userRole === "manager" || userRole === "employee") {
-          setLoans(
-            response.data.filter((aLoan) => aLoan.requestAccepted === null)
-          );
-          console.log(response.data);
+          setLoans(loan.filter((aLoan) => aLoan.requestAccepted === null));
         }
       })
       .catch(function (error) {
         console.log(error);
       });
-  }, []);
+  }, [userId, userRole]);
 
   function HandleAcceptBtnClick(loan) {
     // POST request using fetch inside useEffect React hook
@@ -147,21 +140,19 @@ export function Loan() {
 
   function HandleDeclineBtnClick(loan) {
     // POST request using fetch inside useEffect React hook
-    {
-      axios
-        .put("/api/loan/edit", {
-          loanId: loan.loanId,
-          requestAccepted: false,
-          artworkDto: loan.artworkDto,
-          visitorDto: loan.visitorDto,
-        })
-        .then(function (response) {
-          setLoans(loans.filter((aLoan) => aLoan.loanId !== loan.loanId));
-        })
-        .catch(function (error) {
-          console.log(error.response.data);
-        });
-    }
+    axios
+      .put("/api/loan/edit", {
+        loanId: loan.loanId,
+        requestAccepted: false,
+        artworkDto: loan.artworkDto,
+        visitorDto: loan.visitorDto,
+      })
+      .then(function (response) {
+        setLoans(loans.filter((aLoan) => aLoan.loanId !== loan.loanId));
+      })
+      .catch(function (error) {
+        console.log(error.response.data);
+      });
   }
 
   return (
@@ -174,7 +165,7 @@ export function Loan() {
           marginBottom: 5,
         }}
       >
-        {loans.length == 0 ? (
+        {loans.length === 0 ? (
           "There are no loan requests"
         ) : (
           <Container>

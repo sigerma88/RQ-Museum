@@ -13,7 +13,7 @@ import {
 
 export function OnLoan() {
   const [loans, setLoans] = useState([]); // initial state set to empty array
-  const { userName, userEmail, userId, userRole } = useContext(LoginContext);
+  const { userId, userRole } = useContext(LoginContext);
 
   useEffect(() => {
     let url = "";
@@ -27,14 +27,12 @@ export function OnLoan() {
       .then((response) => {
         // if the request is successfull
         const loan = response.data;
-        setLoans(
-          response.data.filter((aLoan) => aLoan.requestAccepted === true)
-        );
+        setLoans(loan.filter((aLoan) => aLoan.requestAccepted === true));
       })
       .catch(function (error) {
         console.log(error);
       });
-  }, []);
+  }, [userId, userRole]);
 
   return (
     <>
@@ -46,7 +44,7 @@ export function OnLoan() {
           marginBottom: 5,
         }}
       >
-        {loans.length == 0 ? (
+        {loans.length === 0 ? (
           "There are artworks on loan"
         ) : (
           <Container>
