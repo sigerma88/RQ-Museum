@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
+  Grid,
   Table,
   TableBody,
   TableHead,
@@ -12,6 +13,10 @@ import {
   tableCellClasses,
   styled,
   Button,
+  Tooltip,
+  Checkbox,
+  Snackbar,
+  Alert,
 } from "@mui/material/";
 import "./ViewEmployees.css";
 
@@ -36,26 +41,53 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 /**
  * Main function for the ViewEmployees page that displays all employees in the database
- * @author VZ and Kevin
+ * @author VZ
+ * @author Kevin
+ * @author Siger
  * @returns table of employees with name, email and schedule
  */
 export function ViewEmployees() {
-  const [employees, setEmployees] = useState([]); // initial state set to empty array
+  const [employees, setEmployees] = useState([]);
+  const [selectedEmployees, setSelectedEmployees] = useState([]);
+  const [alertSuccessOpen, setAlertSuccessOpen] = useState(false);
+  const [alertErrorOpen, setAlertErrorOpen] = useState(false);
 
   useEffect(() => {
-    // function getAllEmployees() {
-    axios // axios is a library that allows us to make HTTP requests
+    axios
       .get("/api/employee")
       .then(function (response) {
-        // if the request is successful
-        console.log(response.data);
-        setEmployees(response.data); // set the state to the data returned from the API
+        // set the state to the data returned from the API
+        setEmployees(response.data);
       })
       .catch(function (error) {
         // if the request fails
         console.log(error.response.data);
       });
   }, []);
+
+  const handleSelect = (employeeId) => {
+    if (selectedEmployees.includes(employeeId)) {
+      setSelectedEmployees(selectedEmployees.filter((id) => id !== employeeId));
+    } else {
+      setSelectedEmployees([...selectedEmployees, employeeId]);
+    }
+  };
+
+  const handleAlertSuccessOpen = () => {
+    setAlertSuccessOpen(true);
+  };
+
+  const handleAlertSuccessClose = () => {
+    setAlertSuccessOpen(false);
+  };
+
+  const handleAlertErrorOpen = () => {
+    setAlertErrorOpen(true);
+  };
+
+  const handleAlertErrorClose = () => {
+    setAlertErrorOpen(false);
+  };
 
   if (employees.length === 0) {
     return (
@@ -80,20 +112,65 @@ export function ViewEmployees() {
   } else {
     return (
       <>
-        <div>
-          <h1 style={{ marginTop: 20, marginBottom: 20 }}>
-            List&nbsp;of&nbsp;all&nbsp;Employees
-          </h1>
-          <Button
-            variant="contained"
-            sx={{ position: "relative", right: -300, top: -55 }}
-            onClick={() => {
-              window.location.href = "/employee/create";
-            }}
-          >
-            Add Employee
-          </Button>
-        </div>
+        <Grid container spacing={2}>
+          <Grid item xs={4}></Grid>
+          <Grid item xs={4}>
+            <h1 style={{ marginTop: 20, marginBottom: 20 }}>
+              List of all Employees
+            </h1>
+          </Grid>
+          <Grid item xs={2}>
+            <Button
+              variant="contained"
+              color="success"
+              sx={{ marginTop: 3.5 }}
+              onClick={() => {
+                window.location.href = "/employee/create";
+              }}
+            >
+              Hire Employee
+            </Button>
+          </Grid>
+          <Grid item xs={2}>
+            <Button
+              variant="contained"
+              color="error"
+              sx={{ marginTop: 3.5 }}
+              onClick={() => {
+                // TODO: Implement delete employee
+                if (selectedEmployees.length === 0) {
+                  handleAlertErrorOpen();
+                } else {
+                  handleAlertSuccessOpen();
+                }
+              }}
+            >
+              Fire Employee
+            </Button>
+            <Snackbar open={alertErrorOpen} onClose={handleAlertErrorClose}>
+              <Alert
+                onClose={handleAlertErrorClose}
+                severity="error"
+                sx={{ width: "100%" }}
+              >
+                Error: No employee selected.
+              </Alert>
+            </Snackbar>
+            <Snackbar
+              open={alertSuccessOpen}
+              autoHideDuration={6000}
+              onClose={handleAlertSuccessClose}
+            >
+              <Alert
+                onClose={handleAlertSuccessClose}
+                severity="success"
+                sx={{ width: "100%" }}
+              >
+                Success: Employee(s) fired.
+              </Alert>
+            </Snackbar>
+          </Grid>
+        </Grid>
         <TableContainer
           component={Paper}
           sx={{
@@ -110,6 +187,24 @@ export function ViewEmployees() {
           <Table stickyHeader aria-label="simple table">
             <TableHead>
               <TableRow>
+                <StyledTableCell>
+                  <Checkbox
+                    checked={selectedEmployees.length === employees.length}
+                    indeterminate={
+                      selectedEmployees.length > 0 &&
+                      selectedEmployees.length < employees.length
+                    }
+                    onChange={() => {
+                      if (selectedEmployees.length < employees.length) {
+                        setSelectedEmployees(
+                          employees.map((employee) => employee.museumUserId)
+                        );
+                      } else {
+                        setSelectedEmployees([]);
+                      }
+                    }}
+                  />
+                </StyledTableCell>
                 <StyledTableCell>
                   <Typography
                     sx={{
@@ -138,6 +233,16 @@ export function ViewEmployees() {
                   key={employee.museumUserId}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
+                  <StyledTableCell>
+                    <Checkbox
+                      checked={selectedEmployees.includes(
+                        employee.museumUserId
+                      )}
+                      onChange={() => {
+                        handleSelect(employee.museumUserId);
+                      }}
+                    />
+                  </StyledTableCell>
                   <StyledTableCell>{employee.name}</StyledTableCell>
                   <StyledTableCell>{employee.email}</StyledTableCell>
                   <StyledTableCell align="right">
