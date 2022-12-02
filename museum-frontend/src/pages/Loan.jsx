@@ -2,8 +2,6 @@ import React, { useEffect, useContext, useState } from "react";
 import { LoginContext } from "../Contexts/LoginContext";
 import axios from "axios";
 import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import {
   Grid,
   Card,
@@ -14,7 +12,9 @@ import {
   Paper,
   Button,
   ButtonGroup,
+  Icon,
 } from "@mui/material/";
+import CircleIcon from "@mui/icons-material/Circle";
 
 function StatusOrLoanee(props) {
   if (props.userRole === "visitor") {
@@ -32,6 +32,59 @@ function StatusOrLoanee(props) {
   }
 }
 
+function StatusOfVisitorLoanRequest(props) {
+  if (props.userRole === "visitor") {
+    if (props.loanElement.requestAccepted) {
+      return (
+        <div>
+          <Typography
+            variant="subtitle1"
+            component="div"
+            sx={{
+              fontSize: 15,
+            }}
+          >
+            Status of request: Accepted
+          </Typography>
+          <CircleIcon color="success" />
+        </div>
+      );
+    } else if (props.loanElement.requestAccepted == false) {
+      return (
+        <div>
+          <Typography
+            variant="subtitle1"
+            component="div"
+            sx={{
+              fontSize: 15,
+            }}
+          >
+            Status of request: refused
+          </Typography>
+          <CircleIcon color="error" />
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <Typography
+            variant="subtitle1"
+            component="div"
+            sx={{
+              fontSize: 15,
+            }}
+          >
+            Status of request: Waiting
+          </Typography>
+          <CircleIcon color="warning" />
+        </div>
+      );
+    }
+  } else {
+    return "";
+  }
+}
+
 function DisplayRoom(props) {
   if (props.userRole === "visitor") {
     return null;
@@ -43,78 +96,6 @@ function DisplayRoom(props) {
     );
   }
 }
-
-function DisplayButton(props) {
-  //state variables for the Modal State
-
-  function HandleAcceptBtnClick() {
-    // POST request using fetch inside useEffect React hook
-    axios.put("/api/loan/edit", {
-      loanId: props.loanElement.loanId,
-      requestAccepted: true,
-      artworkDto: props.loanElement.artworkDto,
-      visitorDto: props.loanElement.visitorDto,
-    });
-    alert("Loan accepted");
-  }
-
-  function HandleDeclineBtnClick() {
-    // POST request using fetch inside useEffect React hook
-    {
-      axios.put("/api/loan/edit", {
-        loanId: props.loanElement.loanId,
-        requestAccepted: false,
-        artworkDto: props.loanElement.artworkDto,
-        visitorDto: props.loanElement.visitorDto,
-      });
-    }
-  }
-
-  if (props.userRole === "visitor") {
-    return null;
-  } else if (props.userRole === "manager" || props.userRole === "employee") {
-    return (
-      <div>
-        <Box
-          sx={{
-            "& button": { m: 1 },
-          }}
-        >
-          <Button
-            variant="contained"
-            color="success"
-            onClick={(e) => HandleAcceptBtnClick(props.loanElement)}
-          >
-            Accept
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={(e) => HandleDeclineBtnClick(props.loanElement)}
-          >
-            Decline
-          </Button>
-        </Box>
-        {/* {acceptBtnState && (
-          <Container>{props.loanElement.artworkDto.name}</Container>
-        )} */}
-        {/* <PopUp
-          isAcceptBtnClicked={acceptBtnState}
-          isDeclineBtnClicked={declineBtnState}
-          //loanElement={loan}
-          sx={{
-            position: "relative",
-          }}
-        /> */}
-      </div>
-    );
-  }
-}
-// function PopUp(props) {
-//   if ((props.isAcceptBtnClicked = true)) {
-//     return <Container>Hello World</Container>;
-//   }
-// }
 
 export function Loan() {
   const [loans, setLoans] = useState([]); // initial state set to empty array
@@ -132,10 +113,15 @@ export function Loan() {
       .then((response) => {
         // if the request is successfull
         const loan = response.data;
-        setLoans(
-          response.data.filter((aLoan) => aLoan.requestAccepted === null)
-        );
-        console.log(response.data);
+        if (userRole === "visitor") {
+          setLoans(response.data);
+          console.log(response.data);
+        } else if (userRole === "manager" || userRole === "employee") {
+          setLoans(
+            response.data.filter((aLoan) => aLoan.requestAccepted === null)
+          );
+          console.log(response.data);
+        }
       })
       .catch(function (error) {
         console.log(error);
@@ -247,6 +233,10 @@ export function Loan() {
                         userName={loan.visitorDto.name}
                         artworkLoanFee={loan.artworkDto.loanFee}
                       />
+                      <StatusOfVisitorLoanRequest
+                        loanElement={loan}
+                        userRole={userRole}
+                      />
                     </CardContent>
                     {userRole === "manager" || userRole === "employee" ? (
                       <div>
@@ -270,17 +260,6 @@ export function Loan() {
                             Decline
                           </Button>
                         </Box>
-                        {/* {acceptBtnState && (
-          <Container>{props.loanElement.artworkDto.name}</Container>
-        )} */}
-                        {/* <PopUp
-          isAcceptBtnClicked={acceptBtnState}
-          isDeclineBtnClicked={declineBtnState}
-          //loanElement={loan}
-          sx={{
-            position: "relative",
-          }}
-        /> */}
                       </div>
                     ) : (
                       ""

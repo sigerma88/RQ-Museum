@@ -107,6 +107,13 @@ export function OnLoan() {
                       >
                         {"Loaned to: " + loan.visitorDto.name}
                       </Typography>
+                      <Typography
+                        variant="subtitle1"
+                        component="div"
+                        sx={{ fontSize: 15 }}
+                      >
+                        Return date: undefined
+                      </Typography>
                     </CardContent>
                   </Card>
                 </Grid>
