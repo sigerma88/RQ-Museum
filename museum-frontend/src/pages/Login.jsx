@@ -59,7 +59,6 @@ export function Login() {
       })
       .catch(function (error) {
         setErrorMessage(error.response.data);
-        console.log(error.response.data);
         setIsFormInvalid(true);
         setLoggedIn(false);
       });
@@ -127,7 +126,17 @@ export function Login() {
                 className="login-field"
               />
             </Box>
-            <p style={{ color: "red" }}>{errorMessage}</p>
+            <a
+              style={{ margin: "20px", textDecoration: "underline" }}
+              href="/signup"
+            >
+              Need an account? Click here
+            </a>
+            <p style={{ color: "red" }}>
+              {errorMessage && errorMessage.includes("login")
+                ? errorMessage
+                : null}
+            </p>
             <Button
               type="submit"
               variant="contained"

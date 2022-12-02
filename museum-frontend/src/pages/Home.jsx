@@ -2,9 +2,8 @@ import React, { useContext } from "react";
 import Typography from "@mui/material/Typography";
 import "./Home.css";
 import { LoginContext } from "../Contexts/LoginContext";
-import Admin from "./ViewEmployees";
-import ViewEmployees from "./ViewEmployees";
 import { Link } from "react-router-dom";
+import MuseumPhotoBackground from "../assets/MuseumPhotoBackground.jpg";
 
 /**
  * General page when user goes to the website
@@ -13,19 +12,21 @@ import { Link } from "react-router-dom";
  */
 
 function LandingPage() {
+  const backgroundImageHeight = window.innerHeight * 0.85;
   return (
     <div className="Home">
       <div className="lander">
         <img
           style={{
             width: "85%",
-            height: "85%",
+            height: backgroundImageHeight,
             marginTop: "20px",
             borderRadius: "15px",
             filter: "brightness(0.6)",
+            objectFit: "cover",
           }}
           className="feature-image"
-          src="https://source.unsplash.com/Tjio9DgtIls"
+          src={MuseumPhotoBackground}
           alt="feature"
         />
         <div className="centered">
@@ -54,7 +55,12 @@ function LandingPage() {
  */
 
 function VisitorHomePage() {
-  return <p>Visitor</p>;
+  return (
+    <>
+      {LandingPage()}
+      <p>Visitor</p>
+    </>
+  );
 }
 
 /**
@@ -64,7 +70,12 @@ function VisitorHomePage() {
  */
 
 function ManagerHomePage() {
-  return <Link to="/employees">View all employees</Link>;
+  return (
+    <>
+      {LandingPage()}
+      <Link to="/employee">View all employees</Link>
+    </>
+  );
 }
 
 /**
@@ -74,7 +85,12 @@ function ManagerHomePage() {
  */
 
 function EmployeeHomePage() {
-  return <p>Employee</p>;
+  return (
+    <>
+      {LandingPage()}
+      <Link to="/employee/schedule/">View your schedule</Link>
+    </>
+  );
 }
 
 /**

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.net.http.HttpRequest;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -149,7 +148,7 @@ public class LoanRestController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
       } else if (!AuthenticationUtility.isMuseumUser(session)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body("Your need to be a musuem user to access this");
+            .body("Your need to be a museum user to access this");
       }
 
       Loan persistedLoan = loanService.createLoan(loanDto);

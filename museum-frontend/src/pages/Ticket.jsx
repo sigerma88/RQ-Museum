@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Card, CardContent, Grid, Typography } from "@mui/material";
+import { Alert, Box, Card, CardContent, Grid, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 import "./Ticket.css";
 
@@ -19,6 +19,12 @@ function getTickets(visitorId) {
     })
     .catch((error) => {
       console.log(error);
+      return {
+        error: error,
+        message: error.response.data.error
+          ? error.response.data.error
+          : error.response.data,
+      };
     });
 }
 
@@ -30,41 +36,73 @@ function getTickets(visitorId) {
  * @author Siger
  */
 export function GenerateTicketPasses({ visitorId }) {
+  const [errorMessage, setErrorMessage] = useState("");
+
   // Get the tickets from the server
   const [validPasses, setValidPasses] = useState([]);
   const [expiredPasses, setExpiredPasses] = useState([]);
   useEffect(() => {
     getTickets(visitorId).then((tickets) => {
-      const currentDate = new Date();
-      setValidPasses(
-        tickets.filter(
-          (ticket) =>
-            ticket.visitDate >=
-            currentDate.toLocaleDateString("en-CA", {
-              timeZone: "America/Montreal",
-            })
-        )
-      );
-      setExpiredPasses(
-        tickets.filter(
-          (ticket) =>
-            ticket.visitDate <
-            currentDate.toLocaleDateString("en-CA", {
-              timeZone: "America/Montreal",
-            })
-        )
-      );
+      if (tickets.error) {
+        setErrorMessage(tickets.message);
+      } else {
+        setErrorMessage("");
+        const currentDate = new Date();
+        setValidPasses(
+          tickets.filter(
+            (ticket) =>
+              ticket.visitDate >=
+              currentDate.toLocaleDateString("en-CA", {
+                timeZone: "America/Montreal",
+              })
+          )
+        );
+        setExpiredPasses(
+          tickets.filter(
+            (ticket) =>
+              ticket.visitDate <
+              currentDate.toLocaleDateString("en-CA", {
+                timeZone: "America/Montreal",
+              })
+          )
+        );
+      }
     });
   }, [visitorId]);
 
-  return (
-    <Container sx={{ py: 5, width: "800px" }}>
-      <Grid container spacing={2}>
-        {validPasses.map((ticket) => ValidTicket({ ticket }))}
-        {expiredPasses.map((ticket) => ExpiredTicket({ ticket }))}
-      </Grid>
-    </Container>
-  );
+  if (validPasses.length === 0 && expiredPasses.length === 0) {
+    return (
+      <Alert severity="info" style={{ width: "50%", margin: "50px auto" }}>
+        Visitor has no tickets.
+      </Alert>
+    );
+  }
+
+  if (errorMessage !== "") {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "20px",
+        }}
+      >
+        <Alert severity="error" sx={{ width: 500 }}>
+          This is an error! — <strong>{errorMessage}</strong>
+        </Alert>
+      </Box>
+    );
+  } else {
+    return (
+      <Container sx={{ py: 5, width: "800px" }}>
+        <Grid container spacing={2}>
+          {validPasses.map((ticket) => ValidTicket({ ticket }))}
+          {expiredPasses.map((ticket) => ExpiredTicket({ ticket }))}
+        </Grid>
+      </Container>
+    );
+  }
 }
 
 /**
@@ -99,6 +137,13 @@ function ValidTicket({ ticket }) {
             className="pass-visitor-information"
           >
             {ticket.visitor.email}
+          </Typography>
+          <Typography
+            variant="h6"
+            color="text.secondary"
+            className="pass-visitor-information"
+          >
+            Visitor ID: {ticket.visitor.museumUserId}
           </Typography>
           <Typography
             variant="h6"
@@ -155,6 +200,13 @@ function ExpiredTicket({ ticket }) {
             className="pass-visitor-information"
           >
             {ticket.visitor.email}
+          </Typography>
+          <Typography
+            variant="h6"
+            color="text.secondary"
+            className="pass-visitor-information"
+          >
+            Visitor ID: {ticket.visitor.museumUserId}
           </Typography>
           <Typography
             variant="h6"

@@ -1,19 +1,22 @@
-import React, { useContext } from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  Button,
+  AppBar,
+  Box,
+  Toolbar,
+  Typography,
+  Container,
+  Menu,
+  MenuItem,
+  Link,
+} from "@mui/material";
+
 import axios from "axios";
 import { LoginContext } from "../Contexts/LoginContext";
 import { useNavigate } from "react-router-dom";
 import RQ_logo from "../assets/RQ_logo.svg";
 
-const visitorPage = ["Visit", "Exhibitions", "Collections", "Ticket"];
-const managerPage = ["Room", "Artwork", "Employee", "Schedule"];
-const employeePage = ["Room", "Artwork", "Schedule"];
-const generalPage = ["Home", "Ticket", "Loan"];
+const generalPage = ["Ticket", "Loan"];
 
 /**
  * Navigation bar
@@ -23,20 +26,47 @@ const generalPage = ["Home", "Ticket", "Loan"];
 
 export function Navigation() {
   const { loggedIn, setLoggedIn } = useContext(LoginContext);
-  const { userRole } = useContext(LoginContext);
+  const [rooms, setRooms] = useState([]);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  useEffect(() => {
+    axios
+      .get("/api/room")
+      .then((response) => {
+        let allRooms = response.data;
+        allRooms.sort((a, b) => {
+          if (a.roomName === "Storage") {
+            return 1;
+          } else if (b.roomName === "Storage") {
+            return -1;
+          } else {
+            return 0;
+          }
+        });
+        setRooms(allRooms);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   const navigate = useNavigate();
-
-  let page = generalPage;
-  if (userRole === "visitor") {
-    page = visitorPage;
-  } else if (userRole === "employee") {
-    page = employeePage;
-  } else if (userRole === "manager") {
-    page = managerPage;
-  } else {
-    page = generalPage;
-  }
 
   /**
    * Logs user out and redirects to home page
@@ -121,6 +151,44 @@ export function Navigation() {
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            <Button
+              style={{ color: "black" }}
+              onClick={handleOpenUserMenu}
+              sx={{ p: 0 }}
+            >
+              Rooms
+            </Button>
+            <Menu
+              sx={{ mt: "45px" }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              {rooms.map((room) => (
+                <Link
+                  style={{ color: "black", textDecoration: "none" }}
+                  href={`/browse/room/${room.roomId}`}
+                  key={room.roomId}
+                >
+                  <MenuItem key={room.roomId}>{room.roomName}</MenuItem>
+                </Link>
+              ))}
+              <Link
+                style={{ color: "black", textDecoration: "none" }}
+                href="/browse/room/all"
+              >
+                <MenuItem>All Rooms</MenuItem>
+              </Link>
+            </Menu>
             {generalPage.map((page) => (
               <Button
                 key={page}

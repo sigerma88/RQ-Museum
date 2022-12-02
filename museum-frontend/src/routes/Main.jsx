@@ -7,12 +7,12 @@ import { Navigation } from "../layouts/Navigation";
 import { Login } from "../pages/Login";
 import { Signup } from "../pages/Signup";
 import { Profile } from "../pages/Profile";
+import { ViewEmployees } from "../pages/ViewEmployees";
 import ArtworkBrowsing from "../pages/ArtworkBrowsing";
 import ArtworkDetails from "../pages/ArtworkDetails";
 import EmployeeCreation from "../pages/EmployeeCreation";
 import TicketViewing from "../pages/TicketViewing";
-import { Schedule } from "../pages/Schedule";
-import { ViewEmployees } from "../pages/ViewEmployees";
+import ViewSchedule from "../pages/ViewSchedule";
 import { Loan } from "../pages/Loan";
 import { OnLoan } from "../pages/OnLoan";
 
@@ -60,6 +60,56 @@ export function Main() {
           <Route path="/" index element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/employee/schedule">
+            <Route
+              path=":id"
+              element={
+                loggedIn &&
+                (userRole === "employee" || userRole === "manager") ? (
+                  <ViewSchedule />
+                ) : (
+                  <Typography
+                    variant="h3"
+                    style={{ margin: "auto", padding: "auto" }}
+                  >
+                    You are not authorized to view this page
+                  </Typography>
+                )
+              }
+            />
+            <Route
+              path=""
+              element={
+                loggedIn &&
+                (userRole === "employee" || userRole === "manager") ? (
+                  <ViewSchedule />
+                ) : (
+                  <Typography
+                    variant="h3"
+                    style={{ margin: "auto", padding: "auto" }}
+                  >
+                    You are not authorized to view this page
+                  </Typography>
+                )
+              }
+            />
+          </Route>
+          <Route
+            path="/employee"
+            element={
+              loggedIn && userRole === "manager" ? (
+                <ViewEmployees />
+              ) : (
+                <Typography
+                  variant="h3"
+                  style={{ margin: "auto", padding: "auto" }}
+                >
+                  You are not authorized to view this page
+                </Typography>
+              )
+            }
+          />
+          s
           <Route
             path="/profile"
             element={loggedIn ? <Profile /> : <Navigate to="/login" />}
@@ -80,6 +130,10 @@ export function Main() {
             }
           />
           <Route path="/browse/room/:roomId" element={<ArtworkBrowsing />} />
+          <Route
+            path="/loan"
+            element={loggedIn ? <Home /> : <Navigate to="/login" />}
+          />
           <Route
             path="/browse/artwork/:artworkId"
             element={<ArtworkDetails />}
