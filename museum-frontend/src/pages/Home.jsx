@@ -74,6 +74,8 @@ function ManagerHomePage() {
     <>
       {LandingPage()}
       <Link to="/employee">View all employees</Link>
+      <br />
+      <Link to="/museum/info">View museum info</Link>
     </>
   );
 }

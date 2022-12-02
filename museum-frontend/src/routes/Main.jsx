@@ -13,6 +13,8 @@ import ArtworkDetails from "../pages/ArtworkDetails";
 import EmployeeCreation from "../pages/EmployeeCreation";
 import TicketViewing from "../pages/TicketViewing";
 import ViewSchedule from "../pages/ViewSchedule";
+import { ViewMuseumInfo } from "../pages/ViewMuseumInfo";
+import { ViewMuseumOpeningHours } from "../pages/ViewMuseumOpeningHours";
 
 /**
  * Function that routes the user to the correct page depending on the url
@@ -107,7 +109,48 @@ export function Main() {
               )
             }
           />
-          s
+
+          <Route path="/museum/info" element={<ViewMuseumInfo />} />
+
+          <Route path="/museum/schedule">
+            <Route
+              path=":id"
+              element={
+                loggedIn &&
+                (userRole === "employee" ||
+                  userRole === "manager" ||
+                  userRole === "visitor") ? (
+                  <ViewMuseumOpeningHours />
+                ) : (
+                  <Typography
+                    variant="h3"
+                    style={{ margin: "auto", padding: "auto" }}
+                  >
+                    You are not authorized to view this page
+                  </Typography>
+                )
+              }
+            />
+            <Route
+              path=""
+              element={
+                loggedIn &&
+                (userRole === "employee" ||
+                  userRole === "manager" ||
+                  userRole === "visitor") ? (
+                  <ViewMuseumOpeningHours />
+                ) : (
+                  <Typography
+                    variant="h3"
+                    style={{ margin: "auto", padding: "auto" }}
+                  >
+                    You are not authorized to view this page
+                  </Typography>
+                )
+              }
+            />
+          </Route>
+
           <Route
             path="/profile"
             element={loggedIn ? <Profile /> : <Navigate to="/login" />}
