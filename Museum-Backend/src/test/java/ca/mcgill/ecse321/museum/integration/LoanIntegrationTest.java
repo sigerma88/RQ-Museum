@@ -28,19 +28,29 @@ import org.springframework.http.*;
 
 public class LoanIntegrationTest {
 
+  private static final String FIRST_VALID_MANAGER_NAME = "admin";
+  private static final String FIRST_VALID_MANAGER_EMAIL = "admin@mail.ca";
+
+  private static final String VALID_PASSWORD = "#BrazilGp2022";
+
   @Autowired
   private TestRestTemplate client;
 
   @Autowired
   private LoanRepository loanRepository;
+
   @Autowired
   private ArtworkRepository artworkRepository;
+
   @Autowired
   private VisitorRepository visitorRepository;
+
   @Autowired
   private MuseumRepository museumRepository;
+
   @Autowired
   private RoomRepository roomRepository;
+
   @Autowired
   private ManagerRepository managerRepository;
 
@@ -92,7 +102,7 @@ public class LoanIntegrationTest {
 
     // Check status and body of response are correct
     assertNotNull(response);
-    assertEquals(HttpStatus.CREATED, response.getStatusCode(), "Response has correct status");
+    assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
     assertNotNull(response.getBody(), "Response has body");
     assertEquals(null, response.getBody().getRequestAccepted(),
         "Response has correct requestAccepted");
@@ -160,7 +170,6 @@ public class LoanIntegrationTest {
   public void testPatchLoanSuccessfullyToFalse() {
     Artwork artwork = createArtwork();
     Visitor visitor = createVisitor();
-    Manager manager = createManager();
 
     Loan loan = new Loan();
     loan.setRequestAccepted(false);
@@ -169,7 +178,7 @@ public class LoanIntegrationTest {
     loanRepository.save(loan);
     LoanDto loanDto = DtoUtility.convertToDto(loan);
 
-    HttpEntity<LoanDto> request = new HttpEntity<LoanDto>(loanDto, loginSetupManager(manager));
+    HttpEntity<LoanDto> request = new HttpEntity<LoanDto>(loanDto, loginSetupManager());
 
     ResponseEntity<LoanDto> response = client.exchange("/api/loan/edit/", HttpMethod.PUT, request, LoanDto.class);
 
@@ -199,7 +208,6 @@ public class LoanIntegrationTest {
     Artwork artwork = createArtwork();
     Room room = artwork.getRoom();
     Visitor visitor = createVisitor();
-    Manager manager = createManager();
 
     Loan loan = new Loan();
     loan.setRequestAccepted(true);
@@ -208,7 +216,7 @@ public class LoanIntegrationTest {
     loanRepository.save(loan);
     LoanDto loanDto = DtoUtility.convertToDto(loan);
 
-    HttpEntity<LoanDto> request = new HttpEntity<LoanDto>(loanDto, loginSetupManager(manager));
+    HttpEntity<LoanDto> request = new HttpEntity<LoanDto>(loanDto, loginSetupManager());
 
     ResponseEntity<LoanDto> response = client.exchange("/api/loan/edit/", HttpMethod.PUT, request, LoanDto.class);
 
@@ -240,7 +248,6 @@ public class LoanIntegrationTest {
 
     Artwork artwork = createArtwork();
     Visitor visitor = createVisitor();
-    Manager manager = createManager();
 
     Loan loan = new Loan();
     loan.setRequestAccepted(null);
@@ -282,12 +289,12 @@ public class LoanIntegrationTest {
     loan3.setVisitor(visitor);
     loanRepository.save(loan3);
 
-    HttpEntity<?> request = new HttpEntity<>(loginSetupManager(manager));
+    HttpEntity<?> request = new HttpEntity<>(loginSetupManager());
 
     ResponseEntity<LoanDto[]> response = client.exchange("/api/loan/", HttpMethod.GET, request, LoanDto[].class);
 
     assertNotNull(response);
-    assertEquals(HttpStatus.FOUND, response.getStatusCode());
+    assertEquals(HttpStatus.OK, response.getStatusCode());
     assertEquals(3, response.getBody().length, "Request has the expected number of elements");
   }
 
@@ -394,23 +401,6 @@ public class LoanIntegrationTest {
   }
 
   /**
-   * Helper method to create manager
-   *
-   * @return manager
-   * @author Eric
-   */
-  public Manager createManager() {
-    // Creating a manager
-    Manager manager = new Manager();
-    Long managerId = (long) 1;
-    manager.setMuseumUserId(managerId);
-    manager.setEmail("Please@email.com");
-    manager.setName("Please");
-    manager.setPassword("password");
-    return managerRepository.save(manager);
-  }
-
-  /**
    * Create a visitor and login
    *
    * @param newVisitor - the visitor to login
@@ -454,6 +444,7 @@ public class LoanIntegrationTest {
    */
 
   public ManagerDto createManagerAndLogin(Manager newManager) {
+    managerRepository.save(newManager);
     ManagerDto manager = UserUtilities.createManagerDto(newManager);
     ResponseEntity<String> response = client.postForEntity("/api/auth/login", manager, String.class);
     List<String> session = response.getHeaders().get("Set-Cookie");
@@ -471,8 +462,9 @@ public class LoanIntegrationTest {
    * @return museumDto - the logged in museum
    * @author Eric
    */
-  public HttpHeaders loginSetupManager(Manager newManager) {
-    ManagerDto manager = createManagerAndLogin(newManager);
+  public HttpHeaders loginSetupManager() {
+    ManagerDto manager = createManagerAndLogin(UserUtilities.createManager(FIRST_VALID_MANAGER_NAME,
+        FIRST_VALID_MANAGER_EMAIL, VALID_PASSWORD));
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("Cookie", manager.getSessionId());
