@@ -13,10 +13,12 @@ import {
   tableCellClasses,
   styled,
   Button,
-  Tooltip,
   Checkbox,
   Snackbar,
   Alert,
+  Dialog,
+  DialogTitle,
+  DialogActions,
 } from "@mui/material/";
 import "./ViewEmployees.css";
 
@@ -40,6 +42,56 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 /**
+ * Function to delete an employee
+ *
+ * @param employeeId - The employee id
+ * @returns The api response
+ * @author Siger
+ */
+function deleteEmployee(employeeId) {
+  return axios
+    .delete(`/api/employee/${employeeId}`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+/**
+ * Function for the confirmation dialog when deleting an employee
+ *
+ * @param props - The props for the dialog
+ * @returns The confirmation dialog
+ * @author Siger
+ */
+function ConfirmationDialog(props) {
+  const { open, close, employees } = props;
+
+  return (
+    <Dialog open={open} onClose={close}>
+      <DialogTitle>
+        Are you sure you want to delete the selected employees?
+      </DialogTitle>
+      <DialogActions>
+        <Button onClick={close}>Cancel</Button>
+        <Button
+          onClick={() => {
+            employees.forEach((employee) => {
+              deleteEmployee(employee.museumUserId);
+            });
+            window.location.reload();
+          }}
+        >
+          Confirm
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
+/**
  * Main function for the ViewEmployees page that displays all employees in the database
  * @author VZ
  * @author Kevin
@@ -49,8 +101,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export function ViewEmployees() {
   const [employees, setEmployees] = useState([]);
   const [selectedEmployees, setSelectedEmployees] = useState([]);
-  const [alertSuccessOpen, setAlertSuccessOpen] = useState(false);
   const [alertErrorOpen, setAlertErrorOpen] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
   useEffect(() => {
     axios
@@ -65,28 +117,28 @@ export function ViewEmployees() {
       });
   }, []);
 
-  const handleSelect = (employeeId) => {
-    if (selectedEmployees.includes(employeeId)) {
-      setSelectedEmployees(selectedEmployees.filter((id) => id !== employeeId));
+  const handleSelect = (employee) => {
+    if (selectedEmployees.includes(employee)) {
+      setSelectedEmployees(selectedEmployees.filter((e) => e !== employee));
     } else {
-      setSelectedEmployees([...selectedEmployees, employeeId]);
+      setSelectedEmployees([...selectedEmployees, employee]);
     }
   };
 
-  const handleAlertSuccessOpen = () => {
-    setAlertSuccessOpen(true);
-  };
-
-  const handleAlertSuccessClose = () => {
-    setAlertSuccessOpen(false);
-  };
-
+  // Handle the opening of the alert for bad selection for deletion
   const handleAlertErrorOpen = () => {
     setAlertErrorOpen(true);
   };
-
   const handleAlertErrorClose = () => {
     setAlertErrorOpen(false);
+  };
+
+  // Handle the opening of the confirmation dialog for deletion
+  const handleDeleteConfirmOpen = () => {
+    setDeleteConfirmOpen(true);
+  };
+  const handleDeleteConfirmClose = () => {
+    setDeleteConfirmOpen(false);
   };
 
   if (employees.length === 0) {
@@ -137,11 +189,10 @@ export function ViewEmployees() {
               color="error"
               sx={{ marginTop: 3.5 }}
               onClick={() => {
-                // TODO: Implement delete employee
                 if (selectedEmployees.length === 0) {
                   handleAlertErrorOpen();
                 } else {
-                  handleAlertSuccessOpen();
+                  handleDeleteConfirmOpen();
                 }
               }}
             >
@@ -154,19 +205,6 @@ export function ViewEmployees() {
                 sx={{ width: "100%" }}
               >
                 Error: No employee selected.
-              </Alert>
-            </Snackbar>
-            <Snackbar
-              open={alertSuccessOpen}
-              autoHideDuration={6000}
-              onClose={handleAlertSuccessClose}
-            >
-              <Alert
-                onClose={handleAlertSuccessClose}
-                severity="success"
-                sx={{ width: "100%" }}
-              >
-                Success: Employee(s) fired.
               </Alert>
             </Snackbar>
           </Grid>
@@ -197,7 +235,7 @@ export function ViewEmployees() {
                     onChange={() => {
                       if (selectedEmployees.length < employees.length) {
                         setSelectedEmployees(
-                          employees.map((employee) => employee.museumUserId)
+                          employees.map((employee) => employee)
                         );
                       } else {
                         setSelectedEmployees([]);
@@ -235,11 +273,9 @@ export function ViewEmployees() {
                 >
                   <StyledTableCell>
                     <Checkbox
-                      checked={selectedEmployees.includes(
-                        employee.museumUserId
-                      )}
+                      checked={selectedEmployees.includes(employee)}
                       onChange={() => {
-                        handleSelect(employee.museumUserId);
+                        handleSelect(employee);
                       }}
                     />
                   </StyledTableCell>
@@ -258,6 +294,11 @@ export function ViewEmployees() {
             </TableBody>
           </Table>
         </TableContainer>
+        <ConfirmationDialog
+          open={deleteConfirmOpen}
+          close={handleDeleteConfirmClose}
+          employees={selectedEmployees}
+        />
       </>
     );
   }
