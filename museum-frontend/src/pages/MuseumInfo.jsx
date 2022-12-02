@@ -15,6 +15,10 @@ import {
   Button,
 } from "@mui/material/";
 
+// function editMuseumInfo() {
+
+// }
+
 /**
  * Main function for viewing museum information, including name, visit fee and link to schedule
  * @author VZ
