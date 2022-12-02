@@ -88,7 +88,7 @@ function DisplayRoom(props) {
   } else {
     return (
       <Typography variant="subtitle1" component="div" sx={{ fontSize: 15 }}>
-        {"Artwork in room: " + props.artworkRoom}
+        {"Artwork in room: " + props.artworkRoom.roomName}
       </Typography>
     );
   }
