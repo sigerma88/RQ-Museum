@@ -454,7 +454,6 @@ public class LoanIntegrationTest {
    */
 
   public ManagerDto createManagerAndLogin(Manager newManager) {
-    managerRepository.save(newManager);
     ManagerDto manager = UserUtilities.createManagerDto(newManager);
     ResponseEntity<String> response = client.postForEntity("/api/auth/login", manager, String.class);
     List<String> session = response.getHeaders().get("Set-Cookie");
