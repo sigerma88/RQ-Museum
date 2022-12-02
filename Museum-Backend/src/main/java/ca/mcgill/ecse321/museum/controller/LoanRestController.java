@@ -47,6 +47,15 @@ public class LoanRestController {
         return ResponseEntity.badRequest().body("Loan does not exist");
       }
       LoanDto loanDto = DtoUtility.convertToDto(loan);
+
+      // Check if loan is associated with the logged in visitor
+      if (!AuthenticationUtility.isStaffMember(session)) {
+        if (!AuthenticationUtility.checkUserId(session, loanDto.getVisitorDto().getMuseumUserId())) {
+          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to view this loan");
+        }
+      }
+
+      // Return loanDto response
       return ResponseEntity.ok(loanDto);
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
@@ -68,14 +77,19 @@ public class LoanRestController {
       } else if (!AuthenticationUtility.isMuseumUser(session)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body("You need to be a museum user to access this");
+      } else if (!AuthenticationUtility.isStaffMember(session)) {
+        if (!AuthenticationUtility.checkUserId(session, userId)) {
+          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to view this page");
+        }
       }
+
       List<LoanDto> loanDtos = new ArrayList<LoanDto>();
       for (Loan loan : loanService.getAllLoansByUserId(userId)) {
         loanDtos.add(DtoUtility.convertToDto(loan));
       }
-      return new ResponseEntity<>(loanDtos, HttpStatus.OK);
+      return ResponseEntity.ok(loanDtos);
     } catch (Exception e) {
-      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+      return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
 
@@ -95,13 +109,14 @@ public class LoanRestController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body("You need to be a staff member to access this");
       }
+
       List<LoanDto> loanDtos = new ArrayList<LoanDto>();
       for (Loan loan : loanService.getAllLoans()) {
         loanDtos.add(DtoUtility.convertToDto(loan));
       }
-      return new ResponseEntity<>(loanDtos, HttpStatus.OK);
+      return ResponseEntity.ok(loanDtos);
     } catch (Exception e) {
-      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+      return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
 
@@ -123,12 +138,10 @@ public class LoanRestController {
             .body("You need to be a staff member to access this");
       }
 
-      return new ResponseEntity<>(
-          ((DtoUtility.convertToDto(
-              loanService.putLoanById(loanDto.getLoanId(), loanDto.getRequestAccepted())))),
-          HttpStatus.OK);
+      return ResponseEntity
+          .ok(DtoUtility.convertToDto(loanService.putLoanById(loanDto.getLoanId(), loanDto.getRequestAccepted())));
     } catch (Exception e) {
-      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+      return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
 
@@ -142,7 +155,6 @@ public class LoanRestController {
   @PostMapping(value = { "/create", "/create/" })
   public ResponseEntity<?> postLoan(HttpServletRequest request, @RequestBody LoanDto loanDto) {
     try {
-
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
@@ -152,12 +164,10 @@ public class LoanRestController {
       }
 
       Loan persistedLoan = loanService.createLoan(loanDto);
-
       LoanDto persistedLoanDto = DtoUtility.convertToDto(persistedLoan);
-
-      return new ResponseEntity<>(persistedLoanDto, HttpStatus.CREATED);
+      return ResponseEntity.ok(persistedLoanDto);
     } catch (Exception e) {
-      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+      return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
 
@@ -180,11 +190,18 @@ public class LoanRestController {
             .body("You need to be a museum user to access this");
       }
 
-      loanService.deleteLoanByLoanId(loanId);
+      // Check if loan is associated with the logged in visitor
+      Loan loan = loanService.getLoanById(loanId);
+      if (!AuthenticationUtility.isStaffMember(session)) {
+        if (!AuthenticationUtility.checkUserId(session, loan.getVisitor().getMuseumUserId())) {
+          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to delete this loan");
+        }
+      }
 
-      return new ResponseEntity<>("Loan deleted", HttpStatus.OK);
+      loanService.deleteLoanByLoanId(loanId);
+      return ResponseEntity.ok("Loan deleted");
     } catch (Exception e) {
-      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+      return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
 
