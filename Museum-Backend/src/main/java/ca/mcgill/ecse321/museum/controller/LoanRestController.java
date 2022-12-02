@@ -38,7 +38,7 @@ public class LoanRestController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
       } else if (!AuthenticationUtility.isMuseumUser(session)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body("Your need to be a musuem user to access this");
+            .body("Your need to be a museum user to access this");
       }
 
       // Check if loan exists
@@ -67,7 +67,7 @@ public class LoanRestController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
       } else if (!AuthenticationUtility.isMuseumUser(session)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body("You need to be a staff member to access this");
+            .body("You need to be a museum user to access this");
       }
       List<LoanDto> loanDtos = new ArrayList<LoanDto>();
       for (Loan loan : loanService.getAllLoansByUserId(userId)) {
@@ -172,10 +172,6 @@ public class LoanRestController {
   public ResponseEntity<?> deleteLoan(HttpServletRequest request,
       @PathVariable("loanId") Long loanId) {
     try {
-      // needs to be rethinked as we want use to cancel their loans, but also restrict
-      // visitors to
-      // delete other visitors loans
-
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");

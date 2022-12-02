@@ -62,6 +62,9 @@ public class LoanService {
   @Transactional
   public List<Loan> getAllLoansByUserId(Long userId) {
     Visitor visitor = visitorRepository.findVisitorByMuseumUserId(userId);
+    if (visitor == null) {
+      throw new IllegalArgumentException("Loan does not exist");
+    }
     return toList(loanRepository.findLoanByVisitor(visitor));
   }
 

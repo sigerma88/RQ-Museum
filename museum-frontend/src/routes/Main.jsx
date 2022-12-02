@@ -142,7 +142,6 @@ export function Main() {
             path="/ticket"
             element={loggedIn ? <TicketViewing /> : <Navigate to="/login" />}
           />
-          <Route path="/schedule/:id" element={<Schedule />} />
           <Route path="/employees" element={<ViewEmployees />} />
           <Route
             path="/loan"

@@ -2,8 +2,6 @@ import React, { useEffect, useContext, useState } from "react";
 import { LoginContext } from "../Contexts/LoginContext";
 import axios from "axios";
 import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import {
   Grid,
   Card,
@@ -11,9 +9,6 @@ import {
   Box,
   Typography,
   CardMedia,
-  Paper,
-  Button,
-  ButtonGroup,
 } from "@mui/material/";
 
 export function OnLoan() {
@@ -35,7 +30,6 @@ export function OnLoan() {
         setLoans(
           response.data.filter((aLoan) => aLoan.requestAccepted === true)
         );
-        console.log(response.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -106,13 +100,6 @@ export function OnLoan() {
                         sx={{ fontSize: 15 }}
                       >
                         {"Loaned to: " + loan.visitorDto.name}
-                      </Typography>
-                      <Typography
-                        variant="subtitle1"
-                        component="div"
-                        sx={{ fontSize: 15 }}
-                      >
-                        Return date: undefined
                       </Typography>
                     </CardContent>
                   </Card>
