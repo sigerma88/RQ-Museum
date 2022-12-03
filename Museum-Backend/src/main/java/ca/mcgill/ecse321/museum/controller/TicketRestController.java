@@ -11,11 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -33,9 +33,9 @@ public class TicketRestController {
    * @param numberOfTickets number of tickets to purchase
    * @return boughtTickets list of created tickets
    */
-  @PostMapping(value = { "/purchase", "/purchase/" })
+  @PostMapping(value = {"/purchase", "/purchase/"})
   public ResponseEntity<?> createTickets(HttpServletRequest request,
-      @RequestBody TicketDtoNoIdRequest ticketDtoNoIdRequest, @RequestParam(name = "number") int numberOfTickets) {
+                                         @RequestBody TicketDtoNoIdRequest ticketDtoNoIdRequest, @RequestParam(name = "number") int numberOfTickets) {
     try {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
@@ -61,9 +61,9 @@ public class TicketRestController {
    * @return allTicketsOfVisitor list of tickets possessed by visitor
    * @author Zahra
    */
-  @GetMapping(value = { "/visitor/{visitorId}", "/visitor/{visitorId}/" })
+  @GetMapping(value = {"/visitor/{visitorId}", "/visitor/{visitorId}/"})
   public ResponseEntity<?> getTicketsByVisitor(HttpServletRequest request,
-      @PathVariable("visitorId") long visitorId) {
+                                               @PathVariable("visitorId") long visitorId) {
     try {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
@@ -74,7 +74,7 @@ public class TicketRestController {
         } else if (!AuthenticationUtility.checkUserId(session, visitorId)) {
           return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to view this page");
         }
-      } 
+      }
 
       List<TicketDto> allTicketsOfVisitor = new ArrayList<>();
       for (Ticket ticket : ticketService.getTicketsByVisitor(visitorId)) {

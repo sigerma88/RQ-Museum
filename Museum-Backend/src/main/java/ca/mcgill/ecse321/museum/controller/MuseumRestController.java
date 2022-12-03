@@ -12,10 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * MuseumRestController class is used as a controller where we call our API for our web application
@@ -55,14 +55,14 @@ public class MuseumRestController {
   /**
    * API to create a museum
    *
-   * @param name the name of the museum
+   * @param name     the name of the museum
    * @param visitFee the visit fee of the museum
    * @return the created museum
    * @author VZ
    */
   @PostMapping(value = {"/app", "/app/"})
   public ResponseEntity<?> createMuseum(HttpServletRequest request,
-      @RequestParam(name = "name") String name, @RequestParam(name = "visitFee") Double visitFee) {
+                                        @RequestParam(name = "name") String name, @RequestParam(name = "visitFee") Double visitFee) {
 
     try {
       HttpSession session = request.getSession();
@@ -84,16 +84,16 @@ public class MuseumRestController {
   /**
    * API to edit the museum's name or visit fee
    *
-   * @param id the id of the museum
-   * @param name the new name of the museum
+   * @param id       the id of the museum
+   * @param name     the new name of the museum
    * @param visitFee the new visit fee of the museum
    * @return the edited museum
    * @author VZ
    */
   @PostMapping(value = {"/app/edit/{id}/", "/app/edit/{id}"})
   public ResponseEntity<?> editMuseum(HttpServletRequest request, @PathVariable("id") long id,
-      @RequestParam(name = "name", required = false) String name,
-      @RequestParam(name = "visitFee", required = false) Double visitFee) {
+                                      @RequestParam(name = "name", required = false) String name,
+                                      @RequestParam(name = "visitFee", required = false) Double visitFee) {
     try {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {

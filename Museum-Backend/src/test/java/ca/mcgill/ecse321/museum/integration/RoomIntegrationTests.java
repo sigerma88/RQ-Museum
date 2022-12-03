@@ -1,10 +1,6 @@
 package ca.mcgill.ecse321.museum.integration;
 
-import ca.mcgill.ecse321.museum.dao.ArtworkRepository;
-import ca.mcgill.ecse321.museum.dao.ManagerRepository;
-import ca.mcgill.ecse321.museum.dao.MuseumRepository;
-import ca.mcgill.ecse321.museum.dao.RoomRepository;
-import ca.mcgill.ecse321.museum.dao.ScheduleRepository;
+import ca.mcgill.ecse321.museum.dao.*;
 import ca.mcgill.ecse321.museum.dto.ManagerDto;
 import ca.mcgill.ecse321.museum.dto.RoomDto;
 import ca.mcgill.ecse321.museum.dto.RoomDtoNoIdRequest;
@@ -19,11 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.*;
+
 import java.util.ArrayList;
 import java.util.List;
 

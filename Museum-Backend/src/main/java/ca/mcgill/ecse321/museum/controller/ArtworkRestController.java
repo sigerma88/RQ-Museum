@@ -3,9 +3,9 @@ package ca.mcgill.ecse321.museum.controller;
 import ca.mcgill.ecse321.museum.controller.utilities.AuthenticationUtility;
 import ca.mcgill.ecse321.museum.controller.utilities.DtoUtility;
 import ca.mcgill.ecse321.museum.dto.ArtworkDto;
-import ca.mcgill.ecse321.museum.dto.ArtworkDtoNoIdRequest;
 import ca.mcgill.ecse321.museum.dto.ArtworkDtoInfoRequest;
 import ca.mcgill.ecse321.museum.dto.ArtworkDtoLoanInfoRequest;
+import ca.mcgill.ecse321.museum.dto.ArtworkDtoNoIdRequest;
 import ca.mcgill.ecse321.museum.model.Artwork;
 import ca.mcgill.ecse321.museum.model.Room;
 import ca.mcgill.ecse321.museum.service.ArtworkService;
@@ -15,11 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * RESTful api for Artwork to expose the business logic in the service layer to
@@ -44,18 +43,18 @@ public class ArtworkRestController {
   /**
    * RESTful API to create an artwork
    *
-   * @param name - name of the artwork
-   * @param artist - artist of the artwork
+   * @param name               - name of the artwork
+   * @param artist             - artist of the artwork
    * @param isAvailableForLoan - availability of the artwork for loans
-   * @param loanFee - loan fee of the artwork
-   * @param image - image of the artwork
-   * @param isOnLoan - loan status of the artwork
-   * @param roomId - id of the room of the artwork
+   * @param loanFee            - loan fee of the artwork
+   * @param image              - image of the artwork
+   * @param isOnLoan           - loan status of the artwork
+   * @param roomId             - id of the room of the artwork
    * @return created artwork
    * @author Siger
    */
 
-  @PostMapping(value = { "/", "" }, produces = "application/json")
+  @PostMapping(value = {"/", ""}, produces = "application/json")
   public ResponseEntity<?> createArtwork(HttpServletRequest request, @RequestBody ArtworkDtoNoIdRequest artworkDtoNoIdRequest) {
     try {
       HttpSession session = request.getSession();
@@ -92,7 +91,7 @@ public class ArtworkRestController {
    * @author Siger
    */
 
-  @GetMapping(value = { "/{artworkId}", "/{artworkId}/" })
+  @GetMapping(value = {"/{artworkId}", "/{artworkId}/"})
   public ResponseEntity<?> getArtworkById(@PathVariable("artworkId") long artworkId) {
     try {
       Artwork artwork = artworkService.getArtwork(artworkId);
@@ -109,7 +108,7 @@ public class ArtworkRestController {
    * @author Zahra
    */
 
-  @GetMapping(value = { "/", "" })
+  @GetMapping(value = {"/", ""})
   public ResponseEntity<?> getAllArtworks() {
     try {
       List<ArtworkDto> artworkDtos = new ArrayList<ArtworkDto>();
@@ -132,7 +131,7 @@ public class ArtworkRestController {
    * @author kieyanmamiche
    */
 
-  @GetMapping(value = { "/room/{roomId}", "/room/{roomId}/" })
+  @GetMapping(value = {"/room/{roomId}", "/room/{roomId}/"})
   public ResponseEntity<?> getAllArtworksByRoom(@PathVariable("roomId") Long roomId) {
     try {
       List<ArtworkDto> artworkDtos = new ArrayList<ArtworkDto>();
@@ -150,11 +149,11 @@ public class ArtworkRestController {
    *
    * @param isAvailableForLoan - boolean
    * @return List of all artworks that are available for loan or not available for
-   *         loan depending on the given boolean value
+   * loan depending on the given boolean value
    * @author Siger
    */
 
-  @GetMapping(value = { "/availableForLoan/{isAvailableForLoan}", "/availableForLoan/{isAvailableForLoan}/" })
+  @GetMapping(value = {"/availableForLoan/{isAvailableForLoan}", "/availableForLoan/{isAvailableForLoan}/"})
   public ResponseEntity<?> getAllArtworksByAvailabilityForLoan(
       @PathVariable("isAvailableForLoan") Boolean isAvailableForLoan) {
     try {
@@ -173,16 +172,16 @@ public class ArtworkRestController {
    * RESTful API to edit an artwork's information
    *
    * @param artworkId - id of artwork to be edited
-   * @param name - new name of artwork
-   * @param artist - new artist of artwork
-   * @param image - new image of artwork
+   * @param name      - new name of artwork
+   * @param artist    - new artist of artwork
+   * @param image     - new image of artwork
    * @return edited artwork
    * @author Siger
    */
 
-  @PutMapping(value = { "/info/{artworkId}", "/info/{artworkId}/" }, produces = "application/json")
+  @PutMapping(value = {"/info/{artworkId}", "/info/{artworkId}/"}, produces = "application/json")
   public ResponseEntity<?> editArtworkInfo(HttpServletRequest request, @PathVariable("artworkId") Long artworkId,
-      @RequestBody ArtworkDtoInfoRequest artworkDtoInfoRequest) {
+                                           @RequestBody ArtworkDtoInfoRequest artworkDtoInfoRequest) {
     try {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
@@ -192,7 +191,7 @@ public class ArtworkRestController {
       }
 
       Artwork result = artworkService.editArtworkInfo(artworkId, artworkDtoInfoRequest.getName(),
-      artworkDtoInfoRequest.getArtist(), artworkDtoInfoRequest.getImage());
+          artworkDtoInfoRequest.getArtist(), artworkDtoInfoRequest.getImage());
       return ResponseEntity.ok(DtoUtility.convertToDto(result));
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
@@ -202,16 +201,16 @@ public class ArtworkRestController {
   /**
    * RESTful API to edit an artwork's loan availability and loan fee
    *
-   * @param artworkId - id of artwork to be edited
+   * @param artworkId          - id of artwork to be edited
    * @param isAvailableForLoan - new availability of artwork
-   * @param loanFee - new loan fee of artwork
+   * @param loanFee            - new loan fee of artwork
    * @return edited artwork
    * @author Siger
    */
 
-  @PutMapping(value = { "/loanInfo/{artworkId}", "/loanInfo/{artworkId}/" }, produces = "application/json")
+  @PutMapping(value = {"/loanInfo/{artworkId}", "/loanInfo/{artworkId}/"}, produces = "application/json")
   public ResponseEntity<?> editArtworkLoanInfo(HttpServletRequest request, @PathVariable("artworkId") Long artworkId,
-      @RequestBody ArtworkDtoLoanInfoRequest artworkDtoLoanInfoRequest) {
+                                               @RequestBody ArtworkDtoLoanInfoRequest artworkDtoLoanInfoRequest) {
     try {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
@@ -236,9 +235,9 @@ public class ArtworkRestController {
    * @author Siger
    */
 
-  @DeleteMapping(value = { "/{artworkId}", "/{artworkId}/" })
+  @DeleteMapping(value = {"/{artworkId}", "/{artworkId}/"})
   public ResponseEntity<?> deleteArtwork(HttpServletRequest request,
-      @PathVariable("artworkId") Long artworkId) {
+                                         @PathVariable("artworkId") Long artworkId) {
     try {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
@@ -256,10 +255,10 @@ public class ArtworkRestController {
 
   /**
    * RESTful API to get the artwork status
-   * 
+   * <p>
    * Note: Returns a status string of 4 options: loan/on display/in storage 1. "loan" -> The artwork
    * is on loan 2. "display" -> The artwork is on Display 3. "storage" -> The artwork is in storage
-   * 
+   * <p>
    * Getting artwork status - FR7
    *
    * @param artworkId - The id of the artwork we want to get the status of
@@ -267,7 +266,7 @@ public class ArtworkRestController {
    * @author kieyanmamiche
    */
 
-  @GetMapping(value = { "/getArtworkStatus/{artworkId}", "/getArtworkStatus/{artworkId}/" })
+  @GetMapping(value = {"/getArtworkStatus/{artworkId}", "/getArtworkStatus/{artworkId}/"})
   public ResponseEntity<?> getArtworkStatus(@PathVariable("artworkId") long artworkId) {
     try {
       String status = artworkService.getArtworkStatus(artworkId);
@@ -285,7 +284,7 @@ public class ArtworkRestController {
    * @author kieyanmamiche
    */
 
-  @GetMapping(value = { "/getNumberOfArtworksInRoom/{roomId}", "/getNumberOfArtworksInRoom/{roomId}/" })
+  @GetMapping(value = {"/getNumberOfArtworksInRoom/{roomId}", "/getNumberOfArtworksInRoom/{roomId}/"})
   public ResponseEntity<?> getNumberOfArtworksInRoom(@PathVariable("roomId") long roomId) {
     try {
       int numberOfArtworksInRoom = artworkService.getNumberOfArtworksInRoom(roomId);
@@ -300,15 +299,15 @@ public class ArtworkRestController {
    * RESTful API to move artwork to different room
    *
    * @param artworkId - The id of the artwork we want to move
-   * @param roomId - The id of a room we want to move the artwork to
+   * @param roomId    - The id of a room we want to move the artwork to
    * @return The artwork which has been moved
    * @author kieyanmamiche
    */
 
-  @PostMapping(value = { "/moveArtworkToRoom/{artworkId}/{roomId}",
-      "/moveArtworkToRoom/{artworkId}/{roomId}/" })
+  @PostMapping(value = {"/moveArtworkToRoom/{artworkId}/{roomId}",
+      "/moveArtworkToRoom/{artworkId}/{roomId}/"})
   public ResponseEntity<?> moveArtworkToRoom(HttpServletRequest request,
-      @PathVariable("artworkId") long artworkId, @PathVariable("roomId") long roomId) {
+                                             @PathVariable("artworkId") long artworkId, @PathVariable("roomId") long roomId) {
     try {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {

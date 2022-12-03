@@ -2,12 +2,7 @@ package ca.mcgill.ecse321.museum.integration;
 
 import ca.mcgill.ecse321.museum.controller.utilities.DtoUtility;
 import ca.mcgill.ecse321.museum.dao.*;
-import ca.mcgill.ecse321.museum.dto.EmployeeDto;
-import ca.mcgill.ecse321.museum.dto.ManagerDto;
-import ca.mcgill.ecse321.museum.dto.MuseumDto;
-import ca.mcgill.ecse321.museum.dto.ScheduleDto;
-import ca.mcgill.ecse321.museum.dto.TimePeriodDto;
-import ca.mcgill.ecse321.museum.dto.VisitorDto;
+import ca.mcgill.ecse321.museum.dto.*;
 import ca.mcgill.ecse321.museum.integration.utilities.UserUtilities;
 import ca.mcgill.ecse321.museum.model.*;
 import org.junit.jupiter.api.AfterEach;
@@ -17,13 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+
 import java.sql.Timestamp;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
-import org.springframework.http.*;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class SchedulingIntegrationTests {
