@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Button,
@@ -9,7 +9,6 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
-import { LoginContext } from "../Contexts/LoginContext";
 
 /**
  * Dialog component for visitors to specify what tickets they want to buy
@@ -22,7 +21,19 @@ export function TicketBuying({ open, handleClose, visitorId }) {
   const [ticketDate, setTicketDate] = useState(
     new Date().toLocaleDateString("en-CA", { timeZone: "America/Montreal" })
   );
-  const { museum } = useContext(LoginContext);
+  const [visitFee, setVisitFee] = useState(0);
+
+  useEffect(() => {
+    axios
+      .get("/api/museum/1")
+      .then((response) => {
+        setVisitFee(response.data.visitFee);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   const [errorMessage, setErrorMessage] = useState("");
   const [isFormInvalid, setIsFormInvalid] = useState(false);
 
@@ -61,7 +72,7 @@ export function TicketBuying({ open, handleClose, visitorId }) {
             Please specify the number of tickets you want to buy and their date.
           </DialogContentText>
           <DialogContentText style={{ fontWeight: 700 }}>
-            You'll pay C${museum.visitFee} per ticket.
+            You'll pay C${visitFee} per ticket.
           </DialogContentText>
           <TextField
             autoFocus
@@ -104,7 +115,7 @@ export function TicketBuying({ open, handleClose, visitorId }) {
             error={isFormInvalid && errorMessage.toLowerCase().includes("date")}
           />
           <DialogContentText style={{ fontWeight: 700 }}>
-            Total: C${(museum.visitFee * numTickets).toFixed(2)}
+            Total: C${(visitFee * numTickets).toFixed(2)}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
