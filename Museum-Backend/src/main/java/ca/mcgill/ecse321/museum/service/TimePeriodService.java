@@ -59,6 +59,13 @@ public class TimePeriodService {
     if (startDate.after(endDate)) {
       throw new IllegalArgumentException("Start date cannot be after end date");
     }
+    if (startDate.equals(endDate)) {
+      throw new IllegalArgumentException("Start date cannot be equal to end date");
+    }
+    if (startDate.before(new Timestamp(System.currentTimeMillis()))) {
+      throw new IllegalArgumentException("Start date cannot be in the past");
+    }
+
     // create TimePeriod
     TimePeriod timePeriod = new TimePeriod();
 
