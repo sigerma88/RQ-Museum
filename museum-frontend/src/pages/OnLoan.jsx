@@ -13,6 +13,11 @@ import {
 } from "@mui/material/";
 import DeleteIcon from "@mui/icons-material/Delete";
 
+/**
+ * Function to show cards for artworks on loan
+ * @returns A card for each artwork on loan
+ * @author Eric
+ */
 export function OnLoan() {
   const [loans, setLoans] = useState([]); // initial state set to empty array
   const { userId, userRole } = useContext(LoginContext);

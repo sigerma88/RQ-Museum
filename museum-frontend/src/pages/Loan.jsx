@@ -16,6 +16,12 @@ import CircleIcon from "@mui/icons-material/Circle";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { OnLoan } from "./OnLoan";
 
+/**
+ * Function to show loan fee if visitor or show loanee if staff
+ * @param {*} props - artworkLoanFee, userRole and userName
+ * @returns A Typography with text corresponding to view for visitor or staff
+ * @author Eric
+ */
 function StatusOrLoanee(props) {
   if (props.userRole === "visitor") {
     return (
@@ -32,6 +38,12 @@ function StatusOrLoanee(props) {
   }
 }
 
+/**
+ * Function to show the status of a visitor's loan request
+ * @param {*} props - loanElement, userRole
+ * @returns A Typography with text corresponding to status of loan request
+ * @author Eric
+ */
 function StatusOfVisitorLoanRequest(props) {
   if (props.userRole === "visitor") {
     if (props.loanElement.requestAccepted) {
@@ -85,6 +97,12 @@ function StatusOfVisitorLoanRequest(props) {
   }
 }
 
+/**
+ * Function to show the room of the artwork that is requested for loan
+ * @param {*} props - userRole, userName, loanStatus, artworkRoom
+ * @returns A Typography with text corresponding to room of artwork
+ * @author Eric
+ */
 function DisplayRoom(props) {
   if (props.userRole === "visitor") {
     return null;
@@ -97,6 +115,11 @@ function DisplayRoom(props) {
   }
 }
 
+/**
+ * Function to show cards for each loan request
+ * @returns A card for each loan request
+ * @author Eric
+ */
 function LoanRequests() {
   const [loans, setLoans] = useState([]); // initial state set to empty array
   const { userId, userRole } = useContext(LoginContext);
@@ -291,6 +314,11 @@ function LoanRequests() {
   );
 }
 
+/**
+ * Function to show onLoan page if user is staff member
+ * @returns Loan page with onLoan page if staff member
+ * @author Eric
+ */
 export function Loan() {
   const { userRole } = useContext(LoginContext);
 
