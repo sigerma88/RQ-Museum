@@ -16,7 +16,6 @@ import ViewEmployeeSchedule from "../pages/ViewEmployeeSchedule";
 import MuseumInfo from "../pages/MuseumInfo";
 import ViewMuseumOpeningHours from "../pages/ViewMuseumOpeningHours";
 import { Loan } from "../pages/Loan";
-import { OnLoan } from "../pages/OnLoan";
 import { Footer } from "../layouts/Footer";
 
 /**
