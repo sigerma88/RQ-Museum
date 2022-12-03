@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import { MuseumSchedule } from "./ViewMuseumOpeningHours";
-import { useParams } from "react-router-dom";
 
 import axios from "axios";
 import {
@@ -18,41 +16,15 @@ import {
   Button,
   TextField,
 } from "@mui/material/";
-import { Link } from "react-router-dom";
 import { LoginContext } from "../Contexts/LoginContext";
-
-// function EditMuseumInfo() {
-//   const { museum } = useContext(LoginContext);
-//   const [name, setName] = useState("");
-//   const [visitFee, setVisitFee] = useState(0);
-
-//   const handleChange = (event) => {
-//     // event.preventDefault();
-//     axios
-//       .post(
-//         `/api/museum/app/edit/${museum.museumId}/?name=` +
-//           name +
-//           "&visitFee=" +
-//           visitFee
-//       )
-//       .then(function (response) {
-//         const editedMuseum = response.data;
-//         console.log(response.data);
-//       })
-//       .catch(function (error) {
-//         console.log(error.response.data);
-//       });
-//   };
-
-//   return (
-//     <>
-//       <TextField id="outlined-basic" label="Outlined" variant="outlined" />
-//     </>
-//   );
-// }
 
 const museum = JSON.parse(localStorage.getItem("museum"));
 
+/**
+ * Main function that returns component depending on if it's the manager or not
+ * @author VZ
+ * @returns Museum information in a table
+ */
 export function MuseumInfo() {
   const { loggedIn, userRole } = useContext(LoginContext);
 
@@ -63,6 +35,11 @@ export function MuseumInfo() {
   }
 }
 
+/**
+ * Function for manager to view and edit museum information, i.e.  name and visit fee
+ * @author VZ
+ * @returns Museum information in a table
+ */
 function ManagerViewMuseumInfo() {
   const [name, setName] = useState("");
   const [visitFee, setVisitFee] = useState(0);
@@ -201,24 +178,6 @@ function ManagerViewMuseumInfo() {
             autoFocus
             onChange={(e) => setVisitFee(e.target.value)}
           />
-          {/* <TextField
-            margin="normal"
-            id="oldPassword"
-            label="Old Password"
-            type={"password"}
-            name="email"
-            autoComplete="oldPassword"
-            autoFocus
-          />
-          <TextField
-            margin="normal"
-            id="newPassword"
-            label="New Password"
-            type={"password"}
-            name="email"
-            autoComplete="newPassword"
-            autoFocus
-          /> */}
         </Box>
         <Button
           type="submit"
