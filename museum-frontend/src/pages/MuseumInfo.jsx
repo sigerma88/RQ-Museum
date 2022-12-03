@@ -98,6 +98,10 @@ function ManagerViewMuseumInfo() {
       )
       .then(function (response) {
         console.log(response.data);
+        localStorage.setItem("museum", JSON.stringify(response.data));
+      })
+      .then(function () {
+        window.location.reload();
       })
       .catch(function (error) {
         console.log(error.response.data);
