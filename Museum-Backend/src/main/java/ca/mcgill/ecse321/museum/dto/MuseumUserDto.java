@@ -14,7 +14,8 @@ public class MuseumUserDto {
   private String sessionId;
   private String role;
 
-  public MuseumUserDto() {}
+  public MuseumUserDto() {
+  }
 
   public MuseumUserDto(long userId, String email, String name, String password) {
     this.userId = userId;

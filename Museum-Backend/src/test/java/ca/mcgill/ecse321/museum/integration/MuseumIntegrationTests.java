@@ -14,14 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import java.util.List;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class MuseumIntegrationTests {
@@ -114,7 +111,7 @@ public class MuseumIntegrationTests {
     museumDto.setMuseumId(id);
     HttpEntity<?> entity = new HttpEntity<>(header);
     ResponseEntity<MuseumDto> response =
-        client.exchange("/api/museum/app/edit/" + id + "/?name=RQ&visitFee=20", HttpMethod.POST,
+        client.exchange("/api/museum/app/edit/" + id + "/?name=RQ&visitFee=20", HttpMethod.PUT,
             entity, MuseumDto.class);
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has correct status");
@@ -205,7 +202,7 @@ public class MuseumIntegrationTests {
     museumDto.setMuseumId(id);
 
     ResponseEntity<MuseumDto> response = client.exchange(
-        "/api/museum/app/edit/" + id + "/?visitFee=20", HttpMethod.POST, entity, MuseumDto.class);
+        "/api/museum/app/edit/" + id + "/?visitFee=20", HttpMethod.PUT, entity, MuseumDto.class);
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertNotNull(response.getBody(), "Response has body");
@@ -227,7 +224,7 @@ public class MuseumIntegrationTests {
     MuseumDto museumDto = new MuseumDto();
     museumDto.setMuseumId(id);
     ResponseEntity<MuseumDto> response = client.exchange("/api/museum/app/edit/" + id + "/?name=RQ",
-        HttpMethod.POST, entity, MuseumDto.class);
+        HttpMethod.PUT, entity, MuseumDto.class);
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertNotNull(response.getBody(), "Response has body");
@@ -250,7 +247,7 @@ public class MuseumIntegrationTests {
     MuseumDto museumDto = new MuseumDto();
     museumDto.setMuseumId(id);
     ResponseEntity<String> response =
-        client.exchange("/api/museum/app/edit/" + id + "/?name=RQ&visitFee=-10", HttpMethod.POST,
+        client.exchange("/api/museum/app/edit/" + id + "/?name=RQ&visitFee=-10", HttpMethod.PUT,
             entity, String.class);
     assertNotNull(response);
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());

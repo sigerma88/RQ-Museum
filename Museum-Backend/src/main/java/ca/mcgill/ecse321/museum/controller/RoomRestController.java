@@ -13,10 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * RoomRestController class is used as a controller where we call our API for our web application
@@ -46,9 +46,9 @@ public class RoomRestController {
    * @author Siger
    */
 
-  @PostMapping(value = { "/", "" }, produces = "application/json")
+  @PostMapping(value = {"/", ""}, produces = "application/json")
   public ResponseEntity<?> createRoom(HttpServletRequest request,
-      @RequestBody RoomDtoNoIdRequest roomDtoNoIdRequest) {
+                                      @RequestBody RoomDtoNoIdRequest roomDtoNoIdRequest) {
     try {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
@@ -78,7 +78,7 @@ public class RoomRestController {
    * @author Siger
    */
 
-  @GetMapping(value = { "/", "" })
+  @GetMapping(value = {"/", ""})
   public ResponseEntity<?> getAllRooms() {
     try {
       List<RoomDto> roomDtos = new ArrayList<>();
@@ -99,7 +99,7 @@ public class RoomRestController {
    * @author Siger
    */
 
-  @GetMapping(value = { "/{roomId}", "/{roomId}/" })
+  @GetMapping(value = {"/{roomId}", "/{roomId}/"})
   public ResponseEntity<?> getRoomById(@PathVariable Long roomId) {
     try {
       Room room = roomService.getRoomById(roomId);
@@ -117,7 +117,7 @@ public class RoomRestController {
    * @author Siger
    */
 
-  @GetMapping(value = { "/museum/{museumId}", "/museum/{museumId}/" })
+  @GetMapping(value = {"/museum/{museumId}", "/museum/{museumId}/"})
   public ResponseEntity<?> getAllRoomsByMuseumId(@PathVariable Long museumId) {
     try {
       // Get museum
@@ -140,7 +140,7 @@ public class RoomRestController {
   /**
    * RESTful API to update a room
    *
-   * @param roomId - id of the room
+   * @param roomId   - id of the room
    * @param roomName - name of the room
    * @param roomType - type of the room
    * @param museumId - id of the museum of the room
@@ -148,9 +148,9 @@ public class RoomRestController {
    * @author Siger
    */
 
-  @PutMapping(value = { "/{roomId}", "/{roomId}/" }, produces = "application/json")
+  @PutMapping(value = {"/{roomId}", "/{roomId}/"}, produces = "application/json")
   public ResponseEntity<?> editRoom(HttpServletRequest request, @PathVariable("roomId") Long roomId,
-      @RequestBody RoomDtoNoIdRequest roomDtoNoIdRequest) {
+                                    @RequestBody RoomDtoNoIdRequest roomDtoNoIdRequest) {
     try {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
@@ -186,9 +186,9 @@ public class RoomRestController {
    * @author Siger
    */
 
-  @DeleteMapping(value = { "/{roomId}", "/{roomId}/" })
+  @DeleteMapping(value = {"/{roomId}", "/{roomId}/"})
   public ResponseEntity<?> deleteRoom(HttpServletRequest request,
-      @PathVariable("roomId") Long roomId) {
+                                      @PathVariable("roomId") Long roomId) {
     try {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
@@ -212,7 +212,7 @@ public class RoomRestController {
    * @author Siger
    */
 
-  @GetMapping(value = { "/maxArtworks/{roomId}", "/maxArtworks/{roomId}/" })
+  @GetMapping(value = {"/maxArtworks/{roomId}", "/maxArtworks/{roomId}/"})
   public ResponseEntity<?> getMaxArtworks(@PathVariable("roomId") Long roomId) {
     try {
       Room room = roomService.getRoomById(roomId);
@@ -234,7 +234,7 @@ public class RoomRestController {
    * @return The capacity of the room
    * @author kieyanmamiche
    */
-  @GetMapping(value = { "/getRoomCapacity/{roomId}", "/getRoomCapacity/{roomId}/" })
+  @GetMapping(value = {"/getRoomCapacity/{roomId}", "/getRoomCapacity/{roomId}/"})
   public ResponseEntity<?> getRoomCapacity(@PathVariable("roomId") long roomId) {
     try {
       int capacity = roomService.getRoomCapacity(roomId);

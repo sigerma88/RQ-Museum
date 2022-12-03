@@ -14,6 +14,30 @@
   transform: translate(-50%, -50%);
 }
 
+.carousel {
+  height: 320px;
+  width: 100%;
+  margin: 50px auto;
+}
+
+.carousel-item {
+  height: 500px;
+  padding: auto;
+}
+
+.carousel-card {
+  width: 300px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.carousel-card:hover {
+  transform: scale(1.05);
+  transition: all 0.3s ease-in-out;
+}
+
 /* top: 50%;
 transform: translateY(-50%);
 */

@@ -163,26 +163,6 @@ public class AuthenticationIntegrationTest {
   }
 
   /**
-   * Test logout when not logged in
-   *
-   * @author Kevin
-   */
-
-  @Test
-  public void testLogoutWhenNotLoggedin() {
-    VisitorDto visitor = createVisitorAndLogin(UserUtilities.createVisitor(FIRST_VALID_VISITOR_NAME,
-        FIRST_VISITOR_VALID_EMAIL, FIRST_VALID_VISITOR_PASSWORD));
-
-    ResponseEntity<String> response =
-        client.postForEntity("/api/auth/logout", visitor, String.class);
-
-    assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Response has correct status");
-    assertEquals("Cannot logout when not logged in", response.getBody(),
-        "Response has correct name");
-  }
-
-  /**
    * Create a visitor and login
    *
    * @param newVisitor - the visitor to login
@@ -217,7 +197,6 @@ public class AuthenticationIntegrationTest {
     headers.set("Cookie", visitor.getSessionId());
     return headers;
   }
-
 
 
 }

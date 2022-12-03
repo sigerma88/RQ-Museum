@@ -12,7 +12,7 @@ import {
  * @returns the ViewSchedule page
  * @author Victor
  */
-function ViewSchedule() {
+function ViewEmployeeSchedule() {
   const { loggedIn, userRole } = useContext(LoginContext);
   if (userRole === "manager" && loggedIn) {
     return <ManagerViewEmployeeSchedule />;
@@ -27,4 +27,4 @@ function ViewSchedule() {
   }
 }
 
-export default ViewSchedule;
+export default ViewEmployeeSchedule;
