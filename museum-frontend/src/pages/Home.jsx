@@ -136,7 +136,7 @@ function LandingPage() {
  * @author Kevin
  */
 
-function VisitorHomePage({ isLogegdIn }) {
+function VisitorHomePage({ isLoggedIn }) {
   return (
     <>
       <LandingPage />
@@ -148,7 +148,7 @@ function VisitorHomePage({ isLogegdIn }) {
           Book your ticket <KeyboardArrowRightIcon />
         </Button>
       </div>
-      {isLogegdIn ? (
+      {isLoggedIn ? (
         <div style={{ paddingBottom: "110px" }}>
           <Typography variant="h3" style={{ paddingBottom: "20px" }}>
             See your loans

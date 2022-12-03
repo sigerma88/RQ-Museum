@@ -36,7 +36,7 @@ export function Main() {
     localStorage.getItem("userEmail") ?? ""
   );
 
-  const [museum, setMuseum] = useState();
+  const [museum, setMuseum] = useState("");
 
   const [userId, setUserId] = useState(localStorage.getItem("userId") ?? "");
 

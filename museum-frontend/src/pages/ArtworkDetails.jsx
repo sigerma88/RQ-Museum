@@ -157,20 +157,20 @@ function VisitorArtworkLoan({ artwork, userRole, loggedIn, userId }) {
         </Typography>
         <List
           style={{
-            width: "70%",
+            width: "60%",
             padding: "auto",
             margin: "auto",
             display: "flex",
             justifyContent: "space-evenly",
           }}
         >
-          <div style={{ width: "80%" }}>
+          <div style={{ width: "60%" }}>
             <ListItem>
               <ListItemText primary="Loan fee" secondary={artwork.loanFee} />
             </ListItem>
             <Divider variant="middle" />
           </div>
-          <div style={{ width: "80%" }}>
+          <div style={{ width: "60%" }}>
             <ListItem>
               <ListItemText
                 primary="Loan status"
@@ -273,10 +273,10 @@ function VisitorArtworkDetails({ artwork, userRole, loggedIn, userId }) {
             margin: "auto",
             justifyContent: "space-evenly",
             padding: "auto",
-            width: "70%",
+            width: "60%",
           }}
         >
-          <div style={{ width: "80%" }}>
+          <div style={{ width: "60%" }}>
             <ListItem className="artwork-info">
               <ListItemText primary="Name" secondary={artwork.name} />
             </ListItem>
@@ -286,7 +286,7 @@ function VisitorArtworkDetails({ artwork, userRole, loggedIn, userId }) {
             </ListItem>
             <Divider variant="middle" />
           </div>
-          <div style={{ width: "80%" }}>
+          <div style={{ width: "60%" }}>
             <ListItem>
               <ListItemText
                 primary="Room"
