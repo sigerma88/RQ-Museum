@@ -51,6 +51,8 @@ import { LoginContext } from "../Contexts/LoginContext";
 //   );
 // }
 
+const museum = JSON.parse(localStorage.getItem("museum"));
+
 export function MuseumInfo() {
   const { loggedIn, userRole } = useContext(LoginContext);
 
@@ -62,7 +64,6 @@ export function MuseumInfo() {
 }
 
 function ManagerViewMuseumInfo() {
-  const { museum } = useContext(LoginContext);
   const [name, setName] = useState("");
   const [visitFee, setVisitFee] = useState(0);
 
@@ -86,10 +87,11 @@ function ManagerViewMuseumInfo() {
   }));
 
   const handleChange = (event) => {
-    // event.preventDefault();
+    event.preventDefault();
+    const museumId = museum.museumId;
     axios
       .post(
-        `/api/museum/app/edit/${museum.museumId}/?name=` +
+        `/api/museum/app/edit/${museumId}/?name=` +
           name +
           "&visitFee=" +
           visitFee
@@ -101,7 +103,6 @@ function ManagerViewMuseumInfo() {
         console.log(error.response.data);
       });
   };
-  console.log(museum);
 
   return (
     <>

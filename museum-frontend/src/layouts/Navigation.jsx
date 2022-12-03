@@ -52,6 +52,7 @@ export function Navigation() {
       .then((response) => {
         let allRooms = response.data;
         setMuseum(allRooms[0].museum);
+        localStorage.setItem("museum", JSON.stringify(allRooms[0].museum));
         allRooms.sort((a, b) => {
           if (a.roomName === "Storage") {
             return 1;
