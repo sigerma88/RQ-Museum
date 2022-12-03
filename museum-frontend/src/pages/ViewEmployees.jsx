@@ -48,7 +48,6 @@ export function ViewEmployees() {
       .get("/api/employee")
       .then(function (response) {
         // if the request is successful
-        console.log(response.data);
         setEmployees(response.data); // set the state to the data returned from the API
       })
       .catch(function (error) {

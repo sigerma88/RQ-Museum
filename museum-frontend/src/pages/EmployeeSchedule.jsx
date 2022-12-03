@@ -152,7 +152,6 @@ function AddShift({ id, timePeriods, setTimePeriods }) {
       .then(function (response) {
         //CREATE THE SHIFT
         if (response.status === 200) {
-          console.log(response.data);
           const tp = response.data;
           setIsFormInvalid(false);
           //ADD THE SHIFT TO THE EMPLOYEE'S SCHEDULE
@@ -162,7 +161,6 @@ function AddShift({ id, timePeriods, setTimePeriods }) {
             )
             .then(function (response) {
               // if the request is successful
-              console.log(response.data);
               setTimePeriods([...timePeriods, tp]); // set the state to the data returned from the API
             })
             .catch(function (error) {
@@ -258,7 +256,6 @@ export function ManagerViewEmployeeSchedule() {
       .get(`/api/scheduling/employee/shifts/${id}`)
       .then(function (response) {
         // if the request is successful
-        console.log(response.data);
         setTimePeriods(response.data); // set the state to the data returned from the API
       })
       .catch(function (error) {
@@ -274,11 +271,9 @@ export function ManagerViewEmployeeSchedule() {
       .delete(`/api/scheduling/employee/${id}/remove/shift/${tpId}`)
       .then(function (response) {
         // if the request is successful
-        console.log(response.data);
         setTimePeriods(
           timePeriods.filter((timePeriod) => timePeriod.timePeriodId !== tpId)
         );
-        console.log(timePeriods);
       })
       .catch(function (error) {
         console.log(error.response.data);

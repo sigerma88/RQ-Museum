@@ -74,7 +74,6 @@ function ManagerViewMuseumInfo() {
           visitFee
       )
       .then(function (response) {
-        console.log(response.data);
         localStorage.setItem("museum", JSON.stringify(response.data));
       })
       .then(function () {
@@ -137,7 +136,7 @@ function ManagerViewMuseumInfo() {
               <StyledTableCell>{museum.visitFee}</StyledTableCell>
               <StyledTableCell align="right">
                 <a
-                  href={`/museum/schedule/${museum.museumId}`}
+                  href={`/museum/info/schedule/${museum.museumId}`}
                   className="hover-underline-animation"
                 >
                   View&nbsp;{grammarCheck(museum.name)}&nbsp;Opening Hours
@@ -222,7 +221,6 @@ function ViewMuseumInfo() {
     axios
       .get("/api/museum")
       .then(function (response) {
-        console.log(response.data);
         setMuseums(response.data);
       })
       .catch(function (error) {
@@ -299,7 +297,7 @@ function ViewMuseumInfo() {
                   <StyledTableCell>{museum.visitFee}</StyledTableCell>
                   <StyledTableCell align="right">
                     <a
-                      href={`/museum/schedule/${museum.museumId}`}
+                      href={`/museum/info/schedule/${museum.museumId}`}
                       className="hover-underline-animation"
                     >
                       View&nbsp;{grammarCheck(museum.name)}&nbsp;Opening Hours
