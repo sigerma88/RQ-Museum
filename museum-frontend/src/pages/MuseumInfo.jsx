@@ -25,9 +25,11 @@ import { LoginContext } from "../Contexts/LoginContext";
  * @returns Museum information in a table
  */
 function ManagerViewMuseumInfo() {
+  const [museumFromLocalStorage, setMuseumFromLocalStorage] = useState(null);
   const [name, setName] = useState("");
   const [visitFee, setVisitFee] = useState("");
-  const [museumFromLocalStorage, setMuseumFromLocalStorage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isFormInvalid, setIsFormInvalid] = useState(false);
 
   const StyledTableCell = styled(TableCell)(() => ({
     [`&.${tableCellClasses.head}`]: {
@@ -64,12 +66,14 @@ function ManagerViewMuseumInfo() {
       )
       .then(function (response) {
         localStorage.setItem("museum", JSON.stringify(response.data));
-      })
-      .then(function () {
-        window.location.reload();
+        setMuseumFromLocalStorage(response.data);
+        setErrorMessage("");
+        setIsFormInvalid(false);
       })
       .catch(function (error) {
         console.log(error);
+        setErrorMessage(error.response.data);
+        setIsFormInvalid(true);
       });
   };
 
@@ -145,7 +149,15 @@ function ManagerViewMuseumInfo() {
 
       <form
         style={{ width: "100%", alignContent: "flex-end" }}
-        onSubmit={handleChange}
+        onSubmit={(event) => {
+          if (name || visitFee) {
+            handleChange(event);
+          } else {
+            event.preventDefault();
+            setErrorMessage("Please fill out at least one field");
+            setIsFormInvalid(true);
+          }
+        }}
       >
         <Box
           sx={{
@@ -163,6 +175,8 @@ function ManagerViewMuseumInfo() {
             autoComplete="New Name"
             autoFocus
             onChange={(e) => setName(e.target.value)}
+            helperText={errorMessage}
+            error={isFormInvalid}
           />
           <TextField
             margin="normal"
@@ -172,6 +186,8 @@ function ManagerViewMuseumInfo() {
             autoComplete="New Visit Fee"
             autoFocus
             onChange={(e) => setVisitFee(e.target.value)}
+            helperText={errorMessage}
+            error={isFormInvalid}
           />
         </Box>
         <Button

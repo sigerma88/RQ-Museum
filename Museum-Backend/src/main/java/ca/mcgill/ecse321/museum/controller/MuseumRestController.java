@@ -90,7 +90,7 @@ public class MuseumRestController {
    * @return the edited museum
    * @author VZ
    */
-  @PostMapping(value = {"/app/edit/{id}/", "/app/edit/{id}"})
+  @PutMapping(value = {"/app/edit/{id}/", "/app/edit/{id}"})
   public ResponseEntity<?> editMuseum(HttpServletRequest request, @PathVariable("id") long id,
                                       @RequestParam(name = "name", required = false) String name,
                                       @RequestParam(name = "visitFee", required = false) Double visitFee) {
