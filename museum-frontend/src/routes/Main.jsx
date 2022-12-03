@@ -13,6 +13,7 @@ import ArtworkDetails from "../pages/ArtworkDetails";
 import EmployeeCreation from "../pages/EmployeeCreation";
 import TicketViewing from "../pages/TicketViewing";
 import ViewSchedule from "../pages/ViewSchedule";
+import { Footer } from "../layouts/Footer";
 
 /**
  * Function that routes the user to the correct page depending on the url
@@ -35,6 +36,8 @@ export function Main() {
     localStorage.getItem("userEmail") ?? ""
   );
 
+  const [museum, setMuseum] = useState();
+
   const [userId, setUserId] = useState(localStorage.getItem("userId") ?? "");
 
   return (
@@ -50,6 +53,8 @@ export function Main() {
         setUserEmail,
         userId,
         setUserId,
+        museum,
+        setMuseum,
       }}
     >
       <BrowserRouter>
@@ -107,7 +112,7 @@ export function Main() {
               )
             }
           />
-          s
+
           <Route
             path="/profile"
             element={loggedIn ? <Profile /> : <Navigate to="/login" />}
@@ -136,12 +141,10 @@ export function Main() {
             path="/browse/artwork/:artworkId"
             element={<ArtworkDetails />}
           />
-          <Route
-            path="/ticket"
-            element={loggedIn ? <TicketViewing /> : <Navigate to="/login" />}
-          />
+          <Route path="/ticket" element={<TicketViewing />} />
         </Routes>
       </BrowserRouter>
+      <Footer />
     </LoginContext.Provider>
   );
 }
