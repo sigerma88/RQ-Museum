@@ -34,15 +34,15 @@ public class TestTimePeriodService {
   private TimePeriodService timePeriodService;
 
   private static final Long TIME_PERIOD_ID = 1L;
-  private static final Timestamp START_DATE = Timestamp.valueOf("2022-11-18 08:30:00");
-  private static final Timestamp END_DATE = Timestamp.valueOf("2022-11-18 17:35:00");
+  private static final Timestamp START_DATE = Timestamp.valueOf("2222-11-18 08:30:00");
+  private static final Timestamp END_DATE = Timestamp.valueOf("2222-11-18 17:35:00");
 
   private static final Long TIME_PERIOD_ID_2 = 2L;
-  private static final Timestamp START_DATE_2 = Timestamp.valueOf("2022-11-18 08:30:00");
-  private static final Timestamp END_DATE_2 = Timestamp.valueOf("2022-11-18 17:35:00");
+  private static final Timestamp START_DATE_2 = Timestamp.valueOf("2222-11-18 08:30:00");
+  private static final Timestamp END_DATE_2 = Timestamp.valueOf("2222-11-18 17:35:00");
 
-  private static final Timestamp NEW_START_DATE = Timestamp.valueOf("2022-11-19 08:30:00");
-  private static final Timestamp NEW_END_DATE = Timestamp.valueOf("2022-11-19 17:35:00");
+  private static final Timestamp NEW_START_DATE = Timestamp.valueOf("2222-11-19 08:30:00");
+  private static final Timestamp NEW_END_DATE = Timestamp.valueOf("2222-11-19 17:35:00");
 
   private static final Long NON_EXISTING_TIME_PERIOD_ID = -2L;
 
@@ -81,7 +81,7 @@ public class TestTimePeriodService {
     try {
       timePeriod = timePeriodService.createTimePeriod(START_DATE, END_DATE);
     } catch (IllegalArgumentException e) {
-      fail();
+      fail(e);
     }
     assertNotNull(timePeriod);
     assertEquals(START_DATE, timePeriod.getStartDate());

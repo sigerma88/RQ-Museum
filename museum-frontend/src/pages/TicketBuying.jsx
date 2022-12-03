@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Button,
@@ -21,6 +21,18 @@ export function TicketBuying({ open, handleClose, visitorId }) {
   const [ticketDate, setTicketDate] = useState(
     new Date().toLocaleDateString("en-CA", { timeZone: "America/Montreal" })
   );
+  const [visitFee, setVisitFee] = useState(0);
+
+  useEffect(() => {
+    axios
+      .get("/api/museum/1")
+      .then((response) => {
+        setVisitFee(response.data.visitFee);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   const [errorMessage, setErrorMessage] = useState("");
   const [isFormInvalid, setIsFormInvalid] = useState(false);
@@ -58,6 +70,9 @@ export function TicketBuying({ open, handleClose, visitorId }) {
         <DialogContent>
           <DialogContentText>
             Please specify the number of tickets you want to buy and their date.
+          </DialogContentText>
+          <DialogContentText style={{ fontWeight: 700 }}>
+            You'll pay C${visitFee} per ticket.
           </DialogContentText>
           <TextField
             autoFocus
@@ -99,6 +114,9 @@ export function TicketBuying({ open, handleClose, visitorId }) {
             }
             error={isFormInvalid && errorMessage.toLowerCase().includes("date")}
           />
+          <DialogContentText style={{ fontWeight: 700 }}>
+            Total: C${(visitFee * numTickets).toFixed(2)}
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>

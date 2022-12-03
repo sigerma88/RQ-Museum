@@ -9,10 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
-import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -31,7 +32,7 @@ public class LoanRestController {
    */
   @GetMapping(value = {"/{loanId}", "/{loanId}/"})
   public ResponseEntity<?> getLoanById(HttpServletRequest request,
-      @PathVariable("loanId") Long loanId) {
+                                       @PathVariable("loanId") Long loanId) {
     try {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
@@ -145,7 +146,7 @@ public class LoanRestController {
    */
   @DeleteMapping(value = {"/delete/{loanId}", "/delete/{loanId}/"})
   public ResponseEntity<?> deleteLoan(HttpServletRequest request,
-      @PathVariable("loanId") Long loanId) {
+                                      @PathVariable("loanId") Long loanId) {
     try {
       // needs to be rethinked as we want use to cancel their loans, but also restrict visitors to
       // delete other visitors loans

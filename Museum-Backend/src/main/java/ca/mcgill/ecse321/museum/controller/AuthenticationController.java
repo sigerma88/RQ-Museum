@@ -42,7 +42,7 @@ public class AuthenticationController {
 
   @PostMapping("/login")
   public ResponseEntity<?> login(HttpServletRequest request,
-      @RequestBody MuseumUserDto museumUser) {
+                                 @RequestBody MuseumUserDto museumUser) {
     try {
       if (AuthenticationUtility.isLoggedIn(request.getSession())) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot login while logged in");
@@ -93,13 +93,8 @@ public class AuthenticationController {
   public ResponseEntity<?> logout(HttpServletRequest request) {
     try {
       HttpSession session = request.getSession();
-
-      if (AuthenticationUtility.isLoggedIn(session)
-          && AuthenticationUtility.isMuseumUser(session)) {
-        session.invalidate();
-        return ResponseEntity.ok("logged out");
-      }
-      return new ResponseEntity<>("Cannot logout when not logged in", HttpStatus.BAD_REQUEST);
+      session.invalidate();
+      return ResponseEntity.ok("logged out");
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }

@@ -29,6 +29,7 @@ export function Navigation() {
   const [rooms, setRooms] = useState([]);
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const { setMuseum } = useContext(LoginContext);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -50,6 +51,8 @@ export function Navigation() {
       .get("/api/room")
       .then((response) => {
         let allRooms = response.data;
+        setMuseum(allRooms[0].museum);
+        localStorage.setItem("museum", JSON.stringify(allRooms[0].museum));
         allRooms.sort((a, b) => {
           if (a.roomName === "Storage") {
             return 1;
@@ -130,7 +133,7 @@ export function Navigation() {
 
   return (
     <AppBar position="static" style={{ background: "#fff" }}>
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" style={{ position: "relative" }}>
         <Toolbar disableGutters>
           <Typography
             variant="h6"
@@ -140,7 +143,6 @@ export function Navigation() {
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
-              fontFamily: "system-ui, sans-serif",
               fontWeight: 700,
               letterSpacing: ".3rem",
               color: "#000",

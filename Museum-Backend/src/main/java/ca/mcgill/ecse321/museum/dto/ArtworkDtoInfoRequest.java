@@ -2,7 +2,7 @@ package ca.mcgill.ecse321.museum.dto;
 
 /**
  * Artwork DTO
- * 
+ *
  * @author Siger
  */
 

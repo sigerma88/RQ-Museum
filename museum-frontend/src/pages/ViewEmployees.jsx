@@ -45,6 +45,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+// Helper function to check if the name ends with an s and add an apostrophe depending on the case
+function grammarCheck(name) {
+  return name.charAt(name.length - 1) !== "s" ? name + "'s" : name + "'";
+}
+
 /**
  * Function to delete an employee
  *
@@ -113,7 +118,7 @@ function ConfirmationDialog(props) {
  * @author Siger
  * @returns table of employees with name, email and schedule
  */
-export function ViewEmployees() {
+export default function ViewEmployees() {
   const [employees, setEmployees] = useState([]);
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [alertErrorOpen, setAlertErrorOpen] = useState(false);
@@ -127,8 +132,7 @@ export function ViewEmployees() {
         setEmployees(response.data);
       })
       .catch(function (error) {
-        // if the request fails
-        console.log(error.response.data);
+        console.log(error);
       });
   }, []);
 
@@ -317,9 +321,4 @@ export function ViewEmployees() {
       </>
     );
   }
-}
-
-// Helper function to check if the name ends with an s and add an apostrophe depending on the case
-function grammarCheck(name) {
-  return name.charAt(name.length - 1) !== "s" ? name + "'s" : name + "'";
 }

@@ -2,7 +2,7 @@ package ca.mcgill.ecse321.museum.dto;
 
 /**
  * Artwork DTO
- * 
+ *
  * @author Siger
  */
 
@@ -21,7 +21,7 @@ public class ArtworkDtoNoIdRequest {
 
   // Constructor with every attribute including associations
   public ArtworkDtoNoIdRequest(String name, String artist, Boolean isAvailableForLoan, Double loanFee, String image,
-      Boolean isOnLoan, Long roomId) {
+                               Boolean isOnLoan, Long roomId) {
     this.name = name;
     this.artist = artist;
     this.isAvailableForLoan = isAvailableForLoan;
