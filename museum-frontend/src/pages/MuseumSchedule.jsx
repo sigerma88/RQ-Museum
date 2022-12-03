@@ -73,12 +73,12 @@ function AddOpeningHours({ id, timePeriods, setTimePeriods }) {
               setTimePeriods([...timePeriods, tp]); // set the state to the data returned from the API
             })
             .catch(function (error) {
-              console.log(error.response.data);
+              console.log(error);
             });
         }
       })
       .catch(function (error) {
-        console.log(error.response.data);
+        console.log(error);
         setErrorMessage(error.response.data);
         setIsFormInvalid(true);
       });
@@ -87,7 +87,17 @@ function AddOpeningHours({ id, timePeriods, setTimePeriods }) {
   return (
     <>
       <h2 style={{ marginTop: 30 }}>Add Opening Hours</h2>
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={(event) => {
+          if (date && startTime && endTime) {
+            handleSubmit(event);
+          } else {
+            event.preventDefault();
+            setErrorMessage("Please fill out all fields");
+            setIsFormInvalid(true);
+          }
+        }}
+      >
         <div style={{ marginTop: 30 }}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Stack justifyContent="center" direction="row" spacing={3}>
@@ -166,7 +176,7 @@ export function ManagerViewMuseumSchedule() {
         setTimePeriods(response.data); // set the state to the data returned from the API
       })
       .catch(function (error) {
-        console.log(error.response.data);
+        console.log(error);
       });
   }, [id]);
 
@@ -182,7 +192,7 @@ export function ManagerViewMuseumSchedule() {
         );
       })
       .catch(function (error) {
-        console.log(error.response.data);
+        console.log(error);
       });
   };
 
@@ -380,7 +390,7 @@ export function AnyoneViewMuseumSchedule() {
         setTimePeriods(response.data); // set the state to the data returned from the API
       })
       .catch(function (error) {
-        console.log(error.response.data);
+        console.log(error);
       });
   }, [id]);
 

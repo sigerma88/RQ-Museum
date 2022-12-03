@@ -55,7 +55,7 @@ export default function ViewEmployees() {
         setEmployees(response.data); // set the state to the data returned from the API
       })
       .catch(function (error) {
-        console.log(error.response.data);
+        console.log(error);
       });
   }, []);
 

@@ -60,7 +60,7 @@ function RoomCarousel() {
         setRooms(response.data);
       })
       .catch((error) => {
-        console.log(error.response.data);
+        console.log(error);
       });
   }, []);
 

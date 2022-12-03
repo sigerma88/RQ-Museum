@@ -66,7 +66,7 @@ function ManagerViewMuseumInfo() {
         window.location.reload();
       })
       .catch(function (error) {
-        console.log(error.response.data);
+        console.log(error);
       });
   };
 
@@ -211,7 +211,7 @@ function ViewMuseumInfo() {
         setMuseums(response.data);
       })
       .catch(function (error) {
-        console.log(error.response.data);
+        console.log(error);
       });
   }, []);
 
