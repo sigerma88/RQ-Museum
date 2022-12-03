@@ -509,7 +509,6 @@ export function EmployeeViewEmployeeSchedule() {
                   End Time
                 </Typography>
               </StyledTableCell>
-              <StyledTableCell> </StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>{row}</TableBody>
