@@ -58,7 +58,6 @@ function EditMuseumInfo({ id, setMuseums }) {
 }
 
 export function ManagerViewMuseumInfo({ setMuseums, handleChange }) {
-  const { id } = useParams();
   return (
     <>
       <form onSubmit={handleChange}>
@@ -77,8 +76,6 @@ export function ManagerViewMuseumInfo({ setMuseums, handleChange }) {
           sx={{ mt: 1, mb: 1 }}
         />
       </form>
-
-      <p> {id} </p>
     </>
   );
 }
