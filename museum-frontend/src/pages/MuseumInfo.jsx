@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { MuseumSchedule } from "./ViewMuseumOpeningHours";
 import { useParams } from "react-router-dom";
 
@@ -13,68 +13,215 @@ import {
   Typography,
   TableCell,
   tableCellClasses,
+  Box,
   styled,
   Button,
   TextField,
 } from "@mui/material/";
 import { Link } from "react-router-dom";
+import { LoginContext } from "../Contexts/LoginContext";
 
-function EditMuseumInfo({ id, setMuseums }) {
+// function EditMuseumInfo() {
+//   const { museum } = useContext(LoginContext);
+//   const [name, setName] = useState("");
+//   const [visitFee, setVisitFee] = useState(0);
+
+//   const handleChange = (event) => {
+//     // event.preventDefault();
+//     axios
+//       .post(
+//         `/api/museum/app/edit/${museum.museumId}/?name=` +
+//           name +
+//           "&visitFee=" +
+//           visitFee
+//       )
+//       .then(function (response) {
+//         const editedMuseum = response.data;
+//         console.log(response.data);
+//       })
+//       .catch(function (error) {
+//         console.log(error.response.data);
+//       });
+//   };
+
+//   return (
+//     <>
+//       <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+//     </>
+//   );
+// }
+
+export function MuseumInfo() {
+  const { loggedIn, userRole } = useContext(LoginContext);
+
+  if (userRole === "manager" && loggedIn) {
+    return <ManagerViewMuseumInfo />;
+  } else {
+    return <ViewMuseumInfo />;
+  }
+}
+
+function ManagerViewMuseumInfo() {
+  const { museum } = useContext(LoginContext);
   const [name, setName] = useState("");
   const [visitFee, setVisitFee] = useState(0);
 
+  const StyledTableCell = styled(TableCell)(() => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: "#ababab",
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+    },
+  }));
+
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    "&:nth-of-type(odd)": {
+      backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    "&:last-child td, &:last-child th": {
+      border: 0,
+    },
+  }));
+
   const handleChange = (event) => {
-    event.preventDefault();
+    // event.preventDefault();
     axios
       .post(
-        `/api/museum/app/edit/${id}/?name=` + name + "&visitFee=" + visitFee
+        `/api/museum/app/edit/${museum.museumId}/?name=` +
+          name +
+          "&visitFee=" +
+          visitFee
       )
       .then(function (response) {
-        const editedMuseum = response.data;
         console.log(response.data);
       })
       .catch(function (error) {
         console.log(error.response.data);
       });
   };
+  console.log(museum);
 
   return (
     <>
-      <Typography variant="h4" component="h1" marginTop={5} marginBottom={2}>
-        Search for tickets
-      </Typography>
-      {/* <form onSubmit={handleChange}>
-        <TextField
-          id="search"
-          label="Search for visitor by ID"
-          variant="outlined"
-          size="small"
-          sx={{ mt: 1, mb: 1 }}
-          onChange={handleChange}
-        />
-      </form> */}
-    </>
-  );
-}
+      <div>
+        <h1 style={{ marginTop: 20, marginBottom: 20 }}>Museum Information</h1>
+      </div>
+      <TableContainer
+        component={Paper}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          maxHeight: "500px",
+          maxWidth: "1000px",
+          boxShadow: 4,
+          borderRadius: 1,
+          my: 2,
+          mx: "auto",
+        }}
+      >
+        <Table stickyHeader aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>
+                <Typography
+                  sx={{
+                    fontWeight: "bold",
+                    fontSize: 18,
+                  }}
+                >
+                  Name
+                </Typography>
+              </StyledTableCell>
+              <StyledTableCell>
+                <Typography sx={{ fontWeight: "bold", fontSize: 18 }}>
+                  Visit Fee ($)
+                </Typography>
+              </StyledTableCell>
+              <StyledTableCell align="right">
+                <Typography sx={{ fontWeight: "bold", fontSize: 18 }}>
+                  Opening Hours
+                </Typography>
+              </StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <StyledTableRow
+              key={museum.museumId}
+              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+            >
+              <StyledTableCell>{museum.name}</StyledTableCell>
+              <StyledTableCell>{museum.visitFee}</StyledTableCell>
+              <StyledTableCell align="right">
+                <a
+                  href={`/museum/schedule/${museum.museumId}`}
+                  className="hover-underline-animation"
+                >
+                  View&nbsp;{grammarCheck(museum.name)}&nbsp;Opening Hours
+                </a>
+              </StyledTableCell>
+            </StyledTableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-export function ManagerViewMuseumInfo({ setMuseums, handleChange }) {
-  return (
-    <>
-      <form onSubmit={handleChange}>
-        <TextField
-          id="changeName"
-          label="Enter new name"
-          variant="outlined"
-          size="small"
-          sx={{ mt: 1, mb: 1 }}
-        />
-        <TextField
-          id="changeName"
-          label="Enter new visit fee"
-          variant="outlined"
-          size="small"
-          sx={{ mt: 1, mb: 1 }}
-        />
+      <form
+        style={{ width: "100%", alignContent: "flex-end" }}
+        onSubmit={handleChange}
+      >
+        <Box
+          sx={{
+            marginTop: 3,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <TextField
+            margin="normal"
+            id="name"
+            label="New Name"
+            name="New Name"
+            autoComplete="New Name"
+            autoFocus
+            onChange={(e) => setName(e.target.value)}
+          />
+          <TextField
+            margin="normal"
+            id="email"
+            label="New Visit Fee"
+            name="New Visit Fee"
+            autoComplete="New Visit Fee"
+            autoFocus
+            onChange={(e) => setVisitFee(e.target.value)}
+          />
+          {/* <TextField
+            margin="normal"
+            id="oldPassword"
+            label="Old Password"
+            type={"password"}
+            name="email"
+            autoComplete="oldPassword"
+            autoFocus
+          />
+          <TextField
+            margin="normal"
+            id="newPassword"
+            label="New Password"
+            type={"password"}
+            name="email"
+            autoComplete="newPassword"
+            autoFocus
+          /> */}
+        </Box>
+        <Button
+          type="submit"
+          variant="contained"
+          sx={{ mt: 3, mb: 2, width: "150px" }}
+        >
+          Edit Museum
+        </Button>
       </form>
     </>
   );
@@ -85,7 +232,7 @@ export function ManagerViewMuseumInfo({ setMuseums, handleChange }) {
  * @author VZ
  * @returns RQ Museum information in a table
  */
-export function ViewMuseumInfo() {
+function ViewMuseumInfo() {
   const [museums, setMuseums] = useState([]);
 
   const StyledTableCell = styled(TableCell)(() => ({

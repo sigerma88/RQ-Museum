@@ -13,7 +13,7 @@ import ArtworkDetails from "../pages/ArtworkDetails";
 import EmployeeCreation from "../pages/EmployeeCreation";
 import TicketViewing from "../pages/TicketViewing";
 import ViewSchedule from "../pages/ViewSchedule";
-import { ManagerViewMuseumInfo, ViewMuseumInfo } from "../pages/MuseumInfo";
+import { MuseumInfo } from "../pages/MuseumInfo";
 import { ViewMuseumOpeningHours } from "../pages/ViewMuseumOpeningHours";
 import { Footer } from "../layouts/Footer";
 
@@ -131,7 +131,7 @@ export function Main() {
                 )
               }
             /> */}
-            <Route path="" element={<ViewMuseumInfo />} />
+            <Route path="" element={<MuseumInfo />} />
           </Route>
 
           <Route path="/museum/schedule">

@@ -123,7 +123,6 @@ function LandingPage() {
         </div>
         <div style={{ padding: "50px 0px" }}>
           <Typography variant="h3">Explore our rooms</Typography>
-          <RoomCarousel />
         </div>
       </div>
     </div>
