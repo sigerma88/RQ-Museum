@@ -193,8 +193,8 @@ function AddOpeningHours({ id, timePeriods, setTimePeriods }) {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    helperText={isFormInvalid && errorMessage}
-                    error={isFormInvalid && errorMessage}
+                    helperText={errorMessage}
+                    error={isFormInvalid}
                   />
                 )}
               />
@@ -207,8 +207,8 @@ function AddOpeningHours({ id, timePeriods, setTimePeriods }) {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    helperText={isFormInvalid && errorMessage}
-                    error={isFormInvalid && errorMessage}
+                    helperText={errorMessage}
+                    error={isFormInvalid}
                   />
                 )}
               />
@@ -221,8 +221,8 @@ function AddOpeningHours({ id, timePeriods, setTimePeriods }) {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    helperText={isFormInvalid && errorMessage}
-                    error={isFormInvalid && errorMessage}
+                    helperText={errorMessage}
+                    error={isFormInvalid}
                   />
                 )}
               />

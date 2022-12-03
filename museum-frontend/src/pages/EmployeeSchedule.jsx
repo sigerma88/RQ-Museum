@@ -135,7 +135,7 @@ function AddShift({ id, timePeriods, setTimePeriods }) {
   const [date, setDate] = useState(null);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState(false);
   const [isFormInvalid, setIsFormInvalid] = useState(false);
 
   //POST request to add a shift to the employee's schedule
@@ -154,7 +154,6 @@ function AddShift({ id, timePeriods, setTimePeriods }) {
         if (response.status === 200) {
           console.log(response.data);
           const tp = response.data;
-          setErrorMessage("");
           setIsFormInvalid(false);
           //ADD THE SHIFT TO THE EMPLOYEE'S SCHEDULE
           axios
@@ -194,8 +193,8 @@ function AddShift({ id, timePeriods, setTimePeriods }) {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    helperText={isFormInvalid && errorMessage}
-                    error={isFormInvalid && errorMessage}
+                    helperText={errorMessage}
+                    error={isFormInvalid}
                   />
                 )}
               />
@@ -208,8 +207,8 @@ function AddShift({ id, timePeriods, setTimePeriods }) {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    helperText={isFormInvalid && errorMessage}
-                    error={isFormInvalid && errorMessage}
+                    helperText={errorMessage}
+                    error={isFormInvalid}
                   />
                 )}
               />
@@ -222,8 +221,8 @@ function AddShift({ id, timePeriods, setTimePeriods }) {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    helperText={isFormInvalid && errorMessage}
-                    error={isFormInvalid && errorMessage}
+                    helperText={errorMessage}
+                    error={isFormInvalid}
                   />
                 )}
               />
@@ -258,7 +257,7 @@ export function ManagerViewEmployeeSchedule() {
     axios
       .get(`/api/scheduling/employee/shifts/${id}`)
       .then(function (response) {
-        // if the requepst is successful
+        // if the request is successful
         console.log(response.data);
         setTimePeriods(response.data); // set the state to the data returned from the API
       })
@@ -503,7 +502,68 @@ export function EmployeeViewEmployeeSchedule() {
         console.log(error.response.data);
       });
   }, [userId]);
-
+  if (timePeriods.length === 0) {
+    return (
+      <>
+        <div>
+          <h1 style={{ marginTop: 20, marginBottom: 20 }}>
+            Employee's Schedule
+          </h1>
+        </div>
+        <TableContainer
+          component={Paper}
+          sx={{
+            maxWidth: 1000,
+            display: "flex",
+            justifyContent: "center",
+            maxHeight: "500px",
+            boxShadow: 4,
+            borderRadius: 1,
+            my: 2,
+            mx: "auto",
+          }}
+        >
+          <Table stickyHeader aria-label="dense table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18 }}>
+                    Date
+                  </Typography>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18 }}>
+                    Day of the Week
+                  </Typography>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18 }}>
+                    Start Time
+                  </Typography>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18 }}>
+                    End Time
+                  </Typography>
+                </StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <StyledTableCell
+                  sx={{
+                    display: "flex",
+                  }}
+                >
+                  This employee has no shift at the moment.
+                </StyledTableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </>
+    );
+  }
   return (
     <>
       <div>

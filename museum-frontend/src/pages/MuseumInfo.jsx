@@ -42,7 +42,7 @@ export function MuseumInfo() {
  */
 function ManagerViewMuseumInfo() {
   const [name, setName] = useState("");
-  const [visitFee, setVisitFee] = useState(0);
+  const [visitFee, setVisitFee] = useState("");
 
   const StyledTableCell = styled(TableCell)(() => ({
     [`&.${tableCellClasses.head}`]: {
