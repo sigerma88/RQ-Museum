@@ -105,7 +105,9 @@ function ConfirmationDialog(props) {
 }
 
 /**
- * Main function for the ViewEmployees page that displays all employees in the database
+ * Main function for the ViewEmployees page
+ * The page displays a list of all employees and allows the manager to delete them (fire) or add a new one (hire)
+ *
  * @author VZ
  * @author Kevin
  * @author Siger
