@@ -63,7 +63,6 @@ function AddShift({ id, timePeriods, setTimePeriods }) {
         //CREATE THE SHIFT
         if (response.status === 200) {
           const tp = response.data;
-          setIsFormInvalid(false);
           //ADD THE SHIFT TO THE EMPLOYEE'S SCHEDULE
           axios
             .post(
@@ -71,6 +70,8 @@ function AddShift({ id, timePeriods, setTimePeriods }) {
             )
             .then(function (response) {
               // if the request is successful
+              setErrorMessage("");
+              setIsFormInvalid(false);
               setTimePeriods([...timePeriods, tp]); // set the state to the data returned from the API
             })
             .catch(function (error) {

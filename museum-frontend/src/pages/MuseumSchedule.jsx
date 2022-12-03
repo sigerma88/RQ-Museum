@@ -62,14 +62,14 @@ function AddOpeningHours({ id, timePeriods, setTimePeriods }) {
         //CREATE THE SHIFT
         if (response.status === 200) {
           const tp = response.data;
-          setErrorMessage("");
-          setIsFormInvalid(false);
           //ADD THE SHIFT TO MUSEUM'S SCHEDULE
           axios
             .post(
               `/api/scheduling/museum/${id}/add/shift/${response.data.timePeriodId}`
             )
             .then(function (response) {
+              setErrorMessage("");
+              setIsFormInvalid(false);
               setTimePeriods([...timePeriods, tp]); // set the state to the data returned from the API
             })
             .catch(function (error) {
