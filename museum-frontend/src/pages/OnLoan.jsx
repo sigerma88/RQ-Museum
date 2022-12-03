@@ -9,7 +9,9 @@ import {
   Box,
   Typography,
   CardMedia,
+  IconButton,
 } from "@mui/material/";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export function OnLoan() {
   const [loans, setLoans] = useState([]); // initial state set to empty array
@@ -34,6 +36,18 @@ export function OnLoan() {
       });
   }, [userId, userRole]);
 
+  function HandleDeleteBtnClick(loanId) {
+    axios
+      .delete(`/api/loan/delete/${loanId}`)
+      .then(function (response) {
+        console.log(response.data);
+        setLoans(loans.filter((aLoan) => aLoan.loanId !== loanId));
+      })
+      .catch(function (error) {
+        console.log(error.response.data);
+      });
+  }
+
   return (
     <>
       <Box
@@ -55,7 +69,7 @@ export function OnLoan() {
                     sx={{
                       display: "flex",
                       flexDirection: "column",
-                      height: 400,
+                      height: 340,
                     }}
                   >
                     <CardContent>
@@ -99,6 +113,13 @@ export function OnLoan() {
                       >
                         {"Loaned to: " + loan.visitorDto.name}
                       </Typography>
+                      <IconButton
+                        aria-label="delete"
+                        size="small"
+                        onClick={(e) => HandleDeleteBtnClick(loan.loanId)}
+                      >
+                        <DeleteIcon fontSize="inherit" />
+                      </IconButton>
                     </CardContent>
                   </Card>
                 </Grid>

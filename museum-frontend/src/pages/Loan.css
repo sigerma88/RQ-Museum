@@ -1,0 +1,10 @@
+
+
+.button {
+    display: none;
+}
+
+/* Show button on hover */
+.parent:hover + .button {
+    display: block;
+}

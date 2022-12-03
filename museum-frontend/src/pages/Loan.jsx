@@ -10,8 +10,10 @@ import {
   Typography,
   CardMedia,
   Button,
+  IconButton,
 } from "@mui/material/";
 import CircleIcon from "@mui/icons-material/Circle";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { OnLoan } from "./OnLoan";
 
 function StatusOrLoanee(props) {
@@ -140,7 +142,6 @@ function LoanRequests() {
   }
 
   function HandleDeclineBtnClick(loan) {
-    // POST request using fetch inside useEffect React hook
     axios
       .put("/api/loan/edit", {
         loanId: loan.loanId,
@@ -150,6 +151,18 @@ function LoanRequests() {
       })
       .then(function (response) {
         setLoans(loans.filter((aLoan) => aLoan.loanId !== loan.loanId));
+      })
+      .catch(function (error) {
+        console.log(error.response.data);
+      });
+  }
+
+  function HandleDeleteBtnClick(loanId) {
+    axios
+      .delete(`/api/loan/delete/${loanId}`)
+      .then(function (response) {
+        console.log(response.data);
+        setLoans(loans.filter((aLoan) => aLoan.loanId !== loanId));
       })
       .catch(function (error) {
         console.log(error.response.data);
@@ -229,6 +242,17 @@ function LoanRequests() {
                         loanElement={loan}
                         userRole={userRole}
                       />
+                      {userRole === "visitor" ? (
+                        <IconButton
+                          aria-label="delete"
+                          size="small"
+                          onClick={(e) => HandleDeleteBtnClick(loan.loanId)}
+                        >
+                          <DeleteIcon fontSize="inherit" />
+                        </IconButton>
+                      ) : (
+                        ""
+                      )}
                     </CardContent>
                     {userRole === "manager" || userRole === "employee" ? (
                       <div>
