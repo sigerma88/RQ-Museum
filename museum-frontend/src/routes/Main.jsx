@@ -65,6 +65,25 @@ export function Main() {
           <Route path="/" index element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route
+            path="/profile"
+            element={loggedIn ? <Profile /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/employee"
+            element={
+              loggedIn && userRole === "manager" ? (
+                <ViewEmployees />
+              ) : (
+                <Typography
+                  variant="h3"
+                  style={{ margin: "auto", padding: "auto" }}
+                >
+                  You are not authorized to view this page
+                </Typography>
+              )
+            }
+          />
           <Route path="/employee/schedule">
             <Route
               path=":id"
@@ -100,49 +119,6 @@ export function Main() {
             />
           </Route>
           <Route
-            path="/employee"
-            element={
-              loggedIn && userRole === "manager" ? (
-                <ViewEmployees />
-              ) : (
-                <Typography
-                  variant="h3"
-                  style={{ margin: "auto", padding: "auto" }}
-                >
-                  You are not authorized to view this page
-                </Typography>
-              )
-            }
-          />
-
-          <Route path="/museum/info">
-            {/* <Route
-              path=":id"
-              element={
-                loggedIn && userRole === "manager" ? (
-                  <ManagerViewMuseumInfo />
-                ) : (
-                  <Typography
-                    variant="h3"
-                    style={{ margin: "auto", padding: "auto" }}
-                  >
-                    You are not authorized to view this page
-                  </Typography>
-                )
-              }
-            /> */}
-            <Route path="" element={<MuseumInfo />} />
-          </Route>
-
-          <Route path="/museum/schedule">
-            <Route path=":id" element={<ViewMuseumOpeningHours />} />
-          </Route>
-
-          <Route
-            path="/profile"
-            element={loggedIn ? <Profile /> : <Navigate to="/login" />}
-          />
-          <Route
             path="/employee/create"
             element={
               loggedIn && userRole === "manager" ? (
@@ -157,16 +133,21 @@ export function Main() {
               )
             }
           />
-          <Route path="/browse/room/:roomId" element={<ArtworkBrowsing />} />
+          <Route path="/museum/info" element={<MuseumInfo />} />
           <Route
-            path="/loan"
-            element={loggedIn ? <Home /> : <Navigate to="/login" />}
+            path="/museum/info/schedule/:id"
+            element={<ViewMuseumOpeningHours />}
           />
+          <Route path="/browse/room/:roomId" element={<ArtworkBrowsing />} />
           <Route
             path="/browse/artwork/:artworkId"
             element={<ArtworkDetails />}
           />
           <Route path="/ticket" element={<TicketViewing />} />
+          <Route
+            path="/loan"
+            element={loggedIn ? <Home /> : <Navigate to="/login" />}
+          />
         </Routes>
       </BrowserRouter>
       <Footer />

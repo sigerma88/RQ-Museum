@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { LoginContext } from "../Contexts/LoginContext";
-
 import {
   ManagerViewMuseumSchedule,
   AnyoneViewMuseumSchedule,

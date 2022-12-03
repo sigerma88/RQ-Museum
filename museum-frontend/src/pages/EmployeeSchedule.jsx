@@ -264,7 +264,7 @@ export function ManagerViewEmployeeSchedule() {
       .catch(function (error) {
         console.log(error.response.data);
       });
-  }, []);
+  }, [id]);
 
   //DELETE request to remove the timeperiod from the employee's schedule
   const handleRemove = async (event, tpId) => {

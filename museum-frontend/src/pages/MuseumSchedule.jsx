@@ -264,7 +264,7 @@ export function ManagerViewMuseumSchedule() {
       .catch(function (error) {
         console.log(error.response.data);
       });
-  }, []);
+  }, [id]);
 
   //DELETE request to remove the timeperiod from the museum's schedule
   const handleRemove = async (event, tpId) => {
@@ -482,7 +482,7 @@ export function AnyoneViewMuseumSchedule() {
       .catch(function (error) {
         console.log(error.response.data);
       });
-  }, []);
+  }, [id]);
 
   const row = timePeriods.map((timePeriod) => (
     <TableRow key={timePeriod.timePeriodId}>
