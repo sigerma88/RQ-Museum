@@ -353,7 +353,6 @@ public class TestMuseumService {
     assertEquals(MUSEUM_NAME, museum.getName());
     assertEquals(MUSEUM_VISITFEE, museum.getVisitFee());
     assertEquals(MUSEUM_SCHEDULE, museum.getSchedule());
-    assertEquals("Name cannot be empty!", error);
   }
 
   /**
@@ -375,10 +374,8 @@ public class TestMuseumService {
     }
     assertNotNull(museum);
     assertEquals(MUSEUM_NAME, museum.getName());
-    assertEquals(MUSEUM_VISITFEE, museum.getVisitFee());
-    assertEquals(MUSEUM_SCHEDULE, museum.getSchedule());
-    assertEquals("Name cannot be empty!", error);
-
+    assertEquals(NEW_MUSEUM_VISITFEE, museum.getVisitFee());
+    assertEquals(NEW_MUSEUM_SCHEDULE, museum.getSchedule());
   }
 
   /**

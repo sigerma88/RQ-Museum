@@ -25,7 +25,7 @@ public class SchedulingIntegrationTests {
   private static final String FIRST_VALID_MANAGER_NAME = "admin";
   private static final String FIRST_VALID_MANAGER_EMAIL = "admin@mail.ca";
 
-  private static final String VALID_PASSWORD = "#BrazilGp2022";
+  private static final String VALID_PASSWORD = "#BrazilGp2222";
 
   @Autowired
   private TestRestTemplate client;
@@ -292,15 +292,15 @@ public class SchedulingIntegrationTests {
    * @return
    */
   public Long testCreateTimePeriod(HttpHeaders headers) {
-    HttpEntity<?> entity = new HttpEntity<>(new TimePeriodDto("2022-11-17 08:30:00", "2022-11-17 17:35:00"), headers);
+    HttpEntity<?> entity = new HttpEntity<>(new TimePeriodDto("2222-11-17 08:30:00", "2222-11-17 17:35:00"), headers);
     ResponseEntity<TimePeriodDto> response = client.exchange("/api/scheduling/shift/create",
         HttpMethod.POST, entity, TimePeriodDto.class);
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
-    assertEquals("2022-11-17 08:30:00", response.getBody().getStartDate(),
+    assertEquals("2222-11-17 08:30:00", response.getBody().getStartDate(),
         "Response has correct start time");
-    assertEquals("2022-11-17 17:35:00", response.getBody().getEndDate(),
+    assertEquals("2222-11-17 17:35:00", response.getBody().getEndDate(),
         "Response has correct end time");
     return response.getBody().getTimePeriodId();
   }
@@ -318,9 +318,9 @@ public class SchedulingIntegrationTests {
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode(), "The response has the correct status");
     assertNotNull(response.getBody(), "Response has body");
-    assertEquals("2022-11-17 08:30:00", response.getBody().getStartDate(),
+    assertEquals("2222-11-17 08:30:00", response.getBody().getStartDate(),
         "Response has correct start time");
-    assertEquals("2022-11-17 17:35:00", response.getBody().getEndDate(),
+    assertEquals("2222-11-17 17:35:00", response.getBody().getEndDate(),
         "Response has correct end time");
   }
 
@@ -374,7 +374,7 @@ public class SchedulingIntegrationTests {
   @Test
   public void testCreateInvalidTimePeriod() {
     HttpHeaders headers = loginSetupManager();
-    HttpEntity<?> entity = new HttpEntity<>(new TimePeriodDto("2022-11-17 08:30:00", "2022-11-17 07:35:00"), headers);
+    HttpEntity<?> entity = new HttpEntity<>(new TimePeriodDto("2222-11-17 08:30:00", "2222-11-17 07:35:00"), headers);
     ResponseEntity<String> response = client.exchange("/api/scheduling/shift/create", HttpMethod.POST, entity,
         String.class);
     assertNotNull(response);
@@ -392,7 +392,7 @@ public class SchedulingIntegrationTests {
   @Test
   public void testGetInvalidTimePeriod() {
     HttpHeaders headers = loginSetupManager();
-    HttpEntity<?> entity = new HttpEntity<>(new TimePeriodDto("2022-11-17 08:30:00", "2022-11-17 07:35:00"), headers);
+    HttpEntity<?> entity = new HttpEntity<>(new TimePeriodDto("2222-11-17 08:30:00", "2222-11-17 07:35:00"), headers);
     ResponseEntity<String> response = client.exchange("/api/scheduling/shift/" + -1, HttpMethod.GET, entity,
         String.class);
     assertNotNull(response);
@@ -705,12 +705,12 @@ public class SchedulingIntegrationTests {
   public Employee addTimePeriodsToEmployee(Employee employee) {
     // CREATE THE SHIFTS
     TimePeriod shift1 = new TimePeriod();
-    shift1.setStartDate(Timestamp.valueOf("2022-10-28 08:30:00.0"));
-    shift1.setEndDate(Timestamp.valueOf("2022-10-28 17:35:00.0"));
+    shift1.setStartDate(Timestamp.valueOf("2222-10-28 08:30:00.0"));
+    shift1.setEndDate(Timestamp.valueOf("2222-10-28 17:35:00.0"));
 
     TimePeriod shift2 = new TimePeriod();
-    shift2.setStartDate(Timestamp.valueOf("2022-10-29 08:30:00.0"));
-    shift2.setEndDate(Timestamp.valueOf("2022-10-29 17:35:00.0"));
+    shift2.setStartDate(Timestamp.valueOf("2222-10-29 08:30:00.0"));
+    shift2.setEndDate(Timestamp.valueOf("2222-10-29 17:35:00.0"));
 
     // SAVE THE SHIFTS
     timePeriodRepository.save(shift1);
@@ -775,12 +775,12 @@ public class SchedulingIntegrationTests {
 
     // CREATE THE SHIFTS
     TimePeriod shift1 = new TimePeriod();
-    shift1.setStartDate(Timestamp.valueOf("2022-10-28 08:30:00.0"));
-    shift1.setEndDate(Timestamp.valueOf("2022-10-28 17:35:00.0"));
+    shift1.setStartDate(Timestamp.valueOf("2222-10-28 08:30:00.0"));
+    shift1.setEndDate(Timestamp.valueOf("2222-10-28 17:35:00.0"));
 
     TimePeriod shift2 = new TimePeriod();
-    shift2.setStartDate(Timestamp.valueOf("2022-10-29 08:30:00.0"));
-    shift2.setEndDate(Timestamp.valueOf("2022-10-29 17:35:00.0"));
+    shift2.setStartDate(Timestamp.valueOf("2222-10-29 08:30:00.0"));
+    shift2.setEndDate(Timestamp.valueOf("2222-10-29 17:35:00.0"));
 
     // SAVE THE SHIFTS
     timePeriodRepository.save(shift1);
