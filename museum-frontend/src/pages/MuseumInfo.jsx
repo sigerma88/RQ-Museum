@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { MuseumSchedule } from "./ViewMuseumOpeningHours";
+import { useParams } from "react-router-dom";
+
 import axios from "axios";
 import {
   Table,
@@ -13,11 +15,73 @@ import {
   tableCellClasses,
   styled,
   Button,
+  TextField,
 } from "@mui/material/";
+import { Link } from "react-router-dom";
 
-// function editMuseumInfo() {
+function EditMuseumInfo({ id, setMuseums }) {
+  const [name, setName] = useState("");
+  const [visitFee, setVisitFee] = useState(0);
 
-// }
+  const handleChange = (event) => {
+    event.preventDefault();
+    axios
+      .post(
+        `/api/museum/app/edit/${id}/?name=` + name + "&visitFee=" + visitFee
+      )
+      .then(function (response) {
+        const editedMuseum = response.data;
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error.response.data);
+      });
+  };
+
+  return (
+    <>
+      <Typography variant="h4" component="h1" marginTop={5} marginBottom={2}>
+        Search for tickets
+      </Typography>
+      {/* <form onSubmit={handleChange}>
+        <TextField
+          id="search"
+          label="Search for visitor by ID"
+          variant="outlined"
+          size="small"
+          sx={{ mt: 1, mb: 1 }}
+          onChange={handleChange}
+        />
+      </form> */}
+    </>
+  );
+}
+
+export function ManagerViewMuseumInfo({ setMuseums, handleChange }) {
+  const { id } = useParams();
+  return (
+    <>
+      <form onSubmit={handleChange}>
+        <TextField
+          id="changeName"
+          label="Enter new name"
+          variant="outlined"
+          size="small"
+          sx={{ mt: 1, mb: 1 }}
+        />
+        <TextField
+          id="changeName"
+          label="Enter new visit fee"
+          variant="outlined"
+          size="small"
+          sx={{ mt: 1, mb: 1 }}
+        />
+      </form>
+
+      <p> {id} </p>
+    </>
+  );
+}
 
 /**
  * Main function for viewing museum information, including name, visit fee and link to schedule

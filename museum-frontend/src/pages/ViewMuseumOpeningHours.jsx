@@ -6,6 +6,8 @@ import {
   AnyoneViewMuseumSchedule,
 } from "./MuseumSchedule";
 
+import { EditMuseumInfo } from "./MuseumInfo";
+
 /**
  * Main function for the ViewMuseumOpeningHours page,
  * @author VZ

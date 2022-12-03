@@ -138,7 +138,7 @@ function AddShift({ id, timePeriods, setTimePeriods }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [isFormInvalid, setIsFormInvalid] = useState(false);
 
-  //POST request to add a shift to the employee's schedulem
+  //POST request to add a shift to the employee's schedule
   //which entails first creating a time period and
   //then adding it to the employee's schedule
   const handleSubmit = async (event) => {
