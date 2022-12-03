@@ -18,8 +18,6 @@ import {
 } from "@mui/material/";
 import { LoginContext } from "../Contexts/LoginContext";
 
-const museum = JSON.parse(localStorage.getItem("museum"));
-
 /**
  * Function for manager to view and edit museum information, i.e.  name and visit fee
  *
@@ -29,6 +27,7 @@ const museum = JSON.parse(localStorage.getItem("museum"));
 function ManagerViewMuseumInfo() {
   const [name, setName] = useState("");
   const [visitFee, setVisitFee] = useState("");
+  const [museumFromLocalStorage, setMuseumFromLocalStorage] = useState(null);
 
   const StyledTableCell = styled(TableCell)(() => ({
     [`&.${tableCellClasses.head}`]: {
@@ -49,9 +48,13 @@ function ManagerViewMuseumInfo() {
     },
   }));
 
+  useEffect(() => {
+    setMuseumFromLocalStorage(JSON.parse(localStorage.getItem("museum")));
+  }, []);
+
   const handleChange = (event) => {
     event.preventDefault();
-    const museumId = museum.museumId;
+    const museumId = museumFromLocalStorage.museumId;
     axios
       .post(
         `/api/museum/app/edit/${museumId}/?name=` +
@@ -69,6 +72,10 @@ function ManagerViewMuseumInfo() {
         console.log(error);
       });
   };
+
+  if (!museumFromLocalStorage) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -115,17 +122,20 @@ function ManagerViewMuseumInfo() {
           </TableHead>
           <TableBody>
             <StyledTableRow
-              key={museum.museumId}
+              key={museumFromLocalStorage.museumId}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
-              <StyledTableCell>{museum.name}</StyledTableCell>
-              <StyledTableCell>{museum.visitFee}</StyledTableCell>
+              <StyledTableCell>{museumFromLocalStorage.name}</StyledTableCell>
+              <StyledTableCell>
+                {museumFromLocalStorage.visitFee}
+              </StyledTableCell>
               <StyledTableCell align="right">
                 <a
-                  href={`/museum/info/schedule/${museum.museumId}`}
+                  href={`/museum/info/schedule/${museumFromLocalStorage.museumId}`}
                   className="hover-underline-animation"
                 >
-                  View&nbsp;{grammarCheck(museum.name)}&nbsp;Opening Hours
+                  View&nbsp;{grammarCheck(museumFromLocalStorage.name)}
+                  &nbsp;Opening Hours
                 </a>
               </StyledTableCell>
             </StyledTableRow>

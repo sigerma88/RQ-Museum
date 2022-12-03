@@ -12,7 +12,7 @@ import ArtworkBrowsing from "../pages/ArtworkBrowsing";
 import ArtworkDetails from "../pages/ArtworkDetails";
 import EmployeeCreation from "../pages/EmployeeCreation";
 import TicketViewing from "../pages/TicketViewing";
-import ViewSchedule from "../pages/ViewSchedule";
+import ViewEmployeeSchedule from "../pages/ViewEmployeeSchedule";
 import MuseumInfo from "../pages/MuseumInfo";
 import ViewMuseumOpeningHours from "../pages/ViewMuseumOpeningHours";
 import { Footer } from "../layouts/Footer";
@@ -90,7 +90,7 @@ export function Main() {
               element={
                 loggedIn &&
                 (userRole === "employee" || userRole === "manager") ? (
-                  <ViewSchedule />
+                  <ViewEmployeeSchedule />
                 ) : (
                   <Typography
                     variant="h3"
@@ -106,7 +106,7 @@ export function Main() {
               element={
                 loggedIn &&
                 (userRole === "employee" || userRole === "manager") ? (
-                  <ViewSchedule />
+                  <ViewEmployeeSchedule />
                 ) : (
                   <Typography
                     variant="h3"

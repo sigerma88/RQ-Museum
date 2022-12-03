@@ -372,9 +372,12 @@ export function ManagerViewEmployeeSchedule() {
  * @author Victor
  */
 export function EmployeeViewEmployeeSchedule() {
-  const { userId } = useContext(LoginContext);
-
+  const [userId, setUserId] = useState(null);
   const [timePeriods, setTimePeriods] = useState([]);
+
+  useEffect(() => {
+    setUserId(JSON.parse(localStorage.getItem("userId")));
+  }, []);
 
   const StyledTableCell = styled(TableCell)(() => ({
     [`&.${tableCellClasses.head}`]: {
@@ -417,6 +420,7 @@ export function EmployeeViewEmployeeSchedule() {
         console.log(error);
       });
   }, [userId]);
+
   if (timePeriods.length === 0) {
     return (
       <>
