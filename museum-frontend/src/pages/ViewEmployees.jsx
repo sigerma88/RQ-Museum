@@ -41,22 +41,20 @@ function grammarCheck(name) {
 
 /**
  * Main function for the ViewEmployees page that displays all employees in the database
+ *
  * @author VZ and Kevin
  * @returns table of employees with name, email and schedule
  */
 export default function ViewEmployees() {
-  const [employees, setEmployees] = useState([]); // initial state set to empty array
+  const [employees, setEmployees] = useState([]);
 
   useEffect(() => {
-    // function getAllEmployees() {
-    axios // axios is a library that allows us to make HTTP requests
+    axios
       .get("/api/employee")
       .then(function (response) {
-        // if the request is successful
         setEmployees(response.data); // set the state to the data returned from the API
       })
       .catch(function (error) {
-        // if the request fails
         console.log(error.response.data);
       });
   }, []);

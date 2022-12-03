@@ -156,8 +156,7 @@ function AddShift({ id, timePeriods, setTimePeriods }) {
  * @returns table that contains the shifts of an employee by id
  */
 export function ManagerViewEmployeeSchedule() {
-  // const
-  const [timePeriods, setTimePeriods] = useState([]); // initial state set to empty array
+  const [timePeriods, setTimePeriods] = useState([]);
   const { id } = useParams(); //get the employee id from the url
 
   //GET request to get the employee's schedule by id
@@ -364,7 +363,7 @@ export function ManagerViewEmployeeSchedule() {
 export function EmployeeViewEmployeeSchedule() {
   const { userId } = useContext(LoginContext);
 
-  const [timePeriods, setTimePeriods] = useState([]); // initial state set to empty array
+  const [timePeriods, setTimePeriods] = useState([]);
 
   const StyledTableCell = styled(TableCell)(() => ({
     [`&.${tableCellClasses.head}`]: {

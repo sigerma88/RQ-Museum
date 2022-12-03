@@ -48,7 +48,7 @@ function AddOpeningHours({ id, timePeriods, setTimePeriods }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [isFormInvalid, setIsFormInvalid] = useState(false);
 
-  //POST request to add opening hours to the museum's schedulem
+  //POST request to add opening hours to the museum's schedule
   //which entails first creating a time period and
   //then adding it to the museum's schedule
   const handleSubmit = async (event) => {
@@ -71,7 +71,6 @@ function AddOpeningHours({ id, timePeriods, setTimePeriods }) {
               `/api/scheduling/museum/${id}/add/shift/${response.data.timePeriodId}`
             )
             .then(function (response) {
-              // if the request is successful
               setTimePeriods([...timePeriods, tp]); // set the state to the data returned from the API
             })
             .catch(function (error) {
@@ -157,8 +156,7 @@ function AddOpeningHours({ id, timePeriods, setTimePeriods }) {
  * @returns table that contains the opening hours of a museum by id
  */
 function ManagerViewMuseumSchedule() {
-  // const
-  const [timePeriods, setTimePeriods] = useState([]); // initial state set to empty array
+  const [timePeriods, setTimePeriods] = useState([]);
   const { id } = useParams(); //get the museum id from the url
 
   //GET request to get the museum's schedule by id
@@ -166,7 +164,6 @@ function ManagerViewMuseumSchedule() {
     axios
       .get(`/api/scheduling/museum/shifts/${id}`)
       .then(function (response) {
-        // if the request is successful
         setTimePeriods(response.data); // set the state to the data returned from the API
       })
       .catch(function (error) {
@@ -180,8 +177,7 @@ function ManagerViewMuseumSchedule() {
 
     axios
       .delete(`/api/scheduling/museum/${id}/remove/shift/${tpId}`)
-      .then(function (response) {
-        // if the request is successful
+      .then(function () {
         setTimePeriods(
           timePeriods.filter((timePeriod) => timePeriod.timePeriodId !== tpId)
         );
@@ -367,7 +363,7 @@ function ManagerViewMuseumSchedule() {
 function AnyoneViewMuseumSchedule() {
   const { id } = useParams(); //get the museum id from the url
 
-  const [timePeriods, setTimePeriods] = useState([]); // initial state set to empty array
+  const [timePeriods, setTimePeriods] = useState([]);
 
   const StyledTableCell = styled(TableCell)(() => ({
     [`&.${tableCellClasses.head}`]: {
