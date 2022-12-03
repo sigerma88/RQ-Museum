@@ -75,11 +75,14 @@ function ManagerHomePage() {
 /**
  * Employee home page when logged in as a employee
  * @returns Employee Home page
- * @author Kevin
+ * @author Kevin, kieyanmamiche
  */
 
 function EmployeeHomePage() {
-  return <p>Employee</p>;
+  return <Stack>
+          <p>Employee</p>;
+          <Link to="/editRoom">Edit a room</Link>
+      </Stack>
 }
 
 /**

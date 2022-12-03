@@ -8,7 +8,7 @@ import {
   Avatar,
 } from "@mui/material";
 import axios from "axios";
-import "./Login.css";
+import "./Common.css";
 import { LoginContext } from "../Contexts/LoginContext";
 import { useNavigate } from "react-router-dom";
 import LoginIcon from "@mui/icons-material/Login";
@@ -112,7 +112,7 @@ export function Signup() {
                 autoComplete="name"
                 autoFocus
                 onChange={(e) => setName(e.target.value)}
-                className="login-field"
+                className="text-field"
               />
               <TextField
                 margin="normal"
@@ -123,7 +123,7 @@ export function Signup() {
                 autoComplete="email"
                 autoFocus
                 onChange={(e) => setEmail(e.target.value)}
-                className="login-field"
+                className="text-field"
                 helperText={
                   isFormInvalid &&
                   errorMessage.includes("email") &&
@@ -141,7 +141,7 @@ export function Signup() {
                 autoComplete="email"
                 autoFocus
                 onChange={(e) => setPassword(e.target.value)}
-                className="login-field"
+                className="text-field"
                 helperText={
                   isFormInvalid &&
                   errorMessage.includes("Password") &&

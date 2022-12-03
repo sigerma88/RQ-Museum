@@ -8,7 +8,7 @@ import {
   Paper,
   Avatar,
 } from "@mui/material";
-import "./Login.css";
+import "./Common.css";
 import { LoginContext } from "../Contexts/LoginContext";
 import { useNavigate } from "react-router-dom";
 
@@ -100,7 +100,7 @@ export function Login() {
                 autoComplete="email"
                 autoFocus
                 onChange={(e) => setEmail(e.target.value)}
-                className="login-field"
+                className="text-field"
                 helperText={
                   isFormInvalid &&
                   errorMessage.includes("email") &&
@@ -124,7 +124,7 @@ export function Login() {
                   errorMessage
                 }
                 error={isFormInvalid}
-                className="login-field"
+                className="text-field"
               />
             </Box>
             <p style={{ color: "red" }}>{errorMessage}</p>

@@ -8,7 +8,7 @@ import {
   Paper,
   Stack,
 } from "@mui/material";
-import "./Login.css";
+import "./Common.css";
 import { LoginContext } from "../Contexts/LoginContext";
 import Avatar from "@mui/material/Avatar";
 import { deepOrange } from "@mui/material/colors";
@@ -147,7 +147,7 @@ export function EditVisitor() {
                   autoFocus
                   onChange={(e) => setName(e.target.value)}
                   defaultValue={userName}
-                  className="login-field"
+                  className="text-field"
                   helperText={
                     isFormInvalid &&
                     errorMessage.includes("name") &&
@@ -163,7 +163,7 @@ export function EditVisitor() {
                   autoComplete="email"
                   autoFocus
                   onChange={(e) => setEmail(e.target.value)}
-                  className="login-field"
+                  className="text-field"
                   defaultValue={userEmail}
                   helperText={
                     isFormInvalid &&
@@ -181,7 +181,7 @@ export function EditVisitor() {
                   autoComplete="oldPassword"
                   autoFocus
                   onChange={(e) => setOldPassword(e.target.value)}
-                  className="login-field"
+                  className="text-field"
                   helperText={
                     isFormInvalid &&
                     errorMessage.includes("Old password") &&
@@ -198,7 +198,7 @@ export function EditVisitor() {
                   autoComplete="newPassword"
                   autoFocus
                   onChange={(e) => setPassword(e.target.value)}
-                  className="login-field"
+                  className="text-field"
                   helperText={
                     isFormInvalid &&
                     errorMessage.includes("Password") &&
@@ -356,7 +356,7 @@ function StaffMember() {
                   autoComplete="oldPassword"
                   autoFocus
                   onChange={(e) => setOldPassword(e.target.value)}
-                  className="login-field"
+                  className="text-field"
                   helperText={
                     isFormInvalid &&
                     errorMessage.includes("Old password") &&
@@ -373,7 +373,7 @@ function StaffMember() {
                   autoComplete="newPassword"
                   autoFocus
                   onChange={(e) => setPassword(e.target.value)}
-                  className="login-field"
+                  className="text-field"
                   helperText={
                     isFormInvalid &&
                     errorMessage.includes("Password") &&

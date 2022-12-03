@@ -12,7 +12,7 @@ import {
   List,
   ListItem,
 } from "@mui/material";
-import "./Login.css";
+import "./Common.css";
 import Avatar from "@mui/material/Avatar";
 import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
 

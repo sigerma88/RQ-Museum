@@ -11,15 +11,13 @@ import {
   Select,
   MenuItem
 } from "@mui/material";
-import "./Login.css";
+import "./Common.css";
 
 /**
  * Edit room
  * @returns  Edit room page
  * @author kieyanmamiche
  */
-
-
 
 export function EditRoom() {
 
@@ -30,6 +28,10 @@ export function EditRoom() {
   const [errorMessage, setErrorMessage] = useState("");
   const [isFormInvalid, setIsFormInvalid] = useState(false);
 
+ /**
+  * Set room to null when text input is just whitespace
+  * @author kieyanmamiche
+  */
   useEffect(() => {
       if (roomId != null && roomId.trim().length === 0) {
         setRoomId(null);
@@ -46,46 +48,60 @@ export function EditRoom() {
       if (museumId != null && museumId.trim().length === 0) {
         setMuseumId(null);
       }
-    }, [roomId, roomName, roomType, museumId]);
+  }, [roomId, roomName, roomType, museumId]);
 
+ /**
+  * Function which is called when we submit the form
+  * @author kieyanmamiche
+  */
   const handleSubmit = async (event) => {
 
     event.preventDefault();
 
-    axios
-      .put(`/api/room/${roomId}`, {
-        roomName: roomName,
-        roomType: roomType,
-        museumId: museumId,
-      })
-      .then(function (response) {
-        if (response.status === 200) {
-          if (roomName !== null) {
-            setRoomName(roomName);
-            localStorage.setItem("roomName", roomName);
-          }
-
-          if (roomType !== null) {
-            setRoomType(roomType);
-            localStorage.setItem("roomType", roomType);
-          }
-
-          if (museumId !== null) {
-            setMuseumId(museumId);
-            localStorage.setItem("museumId", museumId);
-          }
-
-          window.location.reload();
-        }
-      })
-      .catch(function (error) {
-        setErrorMessage(error.response.data);
+    if (roomId == null){
+        setErrorMessage("No room id entered");
         setIsFormInvalid(true);
-      });
+    }else{
+            axios
+              .put(`/api/room/${roomId}`, {
+                roomName: roomName,
+                roomType: roomType,
+                museumId: museumId,
+              })
+              .then(function (response) {
+                if (response.status === 200) {
+
+                  setErrorMessage(null);
+                  setIsFormInvalid(false);
+
+                  if (roomName !== null) {
+                    setRoomName(roomName);
+                    localStorage.setItem("roomName", roomName);
+                  }
+
+                  if (roomType !== null) {
+                    setRoomType(roomType);
+                    localStorage.setItem("roomType", roomType);
+                  }
+
+                  if (museumId !== null) {
+                    setMuseumId(museumId);
+                    localStorage.setItem("museumId", museumId);
+                  }
+                }
+              })
+              .catch(function (error) {
+                setErrorMessage(error.response.data);
+                setIsFormInvalid(true);
+              });
+    }
   };
 
 
-
+ /**
+  * The component that we return which represents the EditRoom Form
+  * @author kieyanmamiche
+  */
     return (<>
         <div className="EditRoom" style={{ marginTop: "3%" }}>
         <Typography style={{ fontSize: "36px" }} gutterBottom>
@@ -128,6 +144,7 @@ export function EditRoom() {
                   autoFocus
                   onChange={(e) => setRoomId(e.target.value)}
                   defaultValue={roomId}
+                  className = "text-field"
                 />
                 <TextField
                   margin="normal"
@@ -138,8 +155,9 @@ export function EditRoom() {
                   autoFocus
                   onChange={(e) => setRoomName(e.target.value)}
                   defaultValue={roomName}
+                  className = "text-field"
                 />
-                <FormControl style={{minWidth: 190}}>
+                <FormControl className = "text-field">
                   <InputLabel id="demo-simple-select-label">Room Type</InputLabel>
                   <Select
                     labelId="roomType"
@@ -160,13 +178,14 @@ export function EditRoom() {
                   autoComplete="museum id"
                   autoFocus
                   onChange={(e) => setMuseumId(e.target.value)}
+                  className = "text-field"
                 />
                 <div
                     style={{
                     height: 20
                     }}
                 > </div>
-                <Typography variant="b1" component="b1" color="red">
+                <Typography variant="p" component="p" color="red">
                   {isFormInvalid && errorMessage}
                 </Typography>
 
