@@ -21,22 +21,8 @@ import { LoginContext } from "../Contexts/LoginContext";
 const museum = JSON.parse(localStorage.getItem("museum"));
 
 /**
- * Main function that returns component depending on if it's the manager or not
- * @author VZ
- * @returns Museum information in a table
- */
-export function MuseumInfo() {
-  const { loggedIn, userRole } = useContext(LoginContext);
-
-  if (userRole === "manager" && loggedIn) {
-    return <ManagerViewMuseumInfo />;
-  } else {
-    return <ViewMuseumInfo />;
-  }
-}
-
-/**
  * Function for manager to view and edit museum information, i.e.  name and visit fee
+ *
  * @author VZ
  * @returns Museum information in a table
  */
@@ -191,7 +177,8 @@ function ManagerViewMuseumInfo() {
 }
 
 /**
- * Main function for viewing museum information, including name, visit fee and link to schedule
+ * Function for viewing museum information, including name, visit fee and link to schedule
+ *
  * @author VZ
  * @returns RQ Museum information in a table
  */
@@ -316,4 +303,19 @@ function ViewMuseumInfo() {
 // Helper function to check if the name ends with an s and add an apostrophe depending on the case
 function grammarCheck(name) {
   return name.charAt(name.length - 1) !== "s" ? name + "'s" : name + "'";
+}
+
+/**
+ * Main function that returns component depending on if it's the manager or not
+ * @author VZ
+ * @returns Museum information in a table
+ */
+export default function MuseumInfo() {
+  const { loggedIn, userRole } = useContext(LoginContext);
+
+  if (loggedIn && userRole === "manager") {
+    return <ManagerViewMuseumInfo />;
+  } else {
+    return <ViewMuseumInfo />;
+  }
 }

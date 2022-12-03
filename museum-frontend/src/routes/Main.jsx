@@ -7,13 +7,13 @@ import { Navigation } from "../layouts/Navigation";
 import { Login } from "../pages/Login";
 import { Signup } from "../pages/Signup";
 import { Profile } from "../pages/Profile";
-import { ViewEmployees } from "../pages/ViewEmployees";
+import ViewEmployees from "../pages/ViewEmployees";
 import ArtworkBrowsing from "../pages/ArtworkBrowsing";
 import ArtworkDetails from "../pages/ArtworkDetails";
 import EmployeeCreation from "../pages/EmployeeCreation";
 import TicketViewing from "../pages/TicketViewing";
 import ViewSchedule from "../pages/ViewSchedule";
-import { MuseumInfo } from "../pages/MuseumInfo";
+import MuseumInfo from "../pages/MuseumInfo";
 import ViewMuseumOpeningHours from "../pages/MuseumSchedule";
 import { Footer } from "../layouts/Footer";
 

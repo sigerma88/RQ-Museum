@@ -34,12 +34,17 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+// Helper function to check if the name ends with an s and add an apostrophe depending on the case
+function grammarCheck(name) {
+  return name.charAt(name.length - 1) !== "s" ? name + "'s" : name + "'";
+}
+
 /**
  * Main function for the ViewEmployees page that displays all employees in the database
  * @author VZ and Kevin
  * @returns table of employees with name, email and schedule
  */
-export function ViewEmployees() {
+export default function ViewEmployees() {
   const [employees, setEmployees] = useState([]); // initial state set to empty array
 
   useEffect(() => {
@@ -155,9 +160,4 @@ export function ViewEmployees() {
       </>
     );
   }
-}
-
-// Helper function to check if the name ends with an s and add an apostrophe depending on the case
-function grammarCheck(name) {
-  return name.charAt(name.length - 1) !== "s" ? name + "'s" : name + "'";
 }
