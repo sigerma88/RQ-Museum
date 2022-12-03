@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import {
@@ -23,6 +23,7 @@ import {
   TextField,
 } from "@mui/material";
 import dayjs from "dayjs";
+import { LoginContext } from "../Contexts/LoginContext";
 
 /**
  * Helper function to get the day of the week from a date
@@ -245,7 +246,7 @@ function AddOpeningHours({ id, timePeriods, setTimePeriods }) {
  * @author VZ and Kevin
  * @returns table that contains the opening hours of a museum by id
  */
-export function ManagerViewMuseumSchedule() {
+function ManagerViewMuseumSchedule() {
   // const
   const [timePeriods, setTimePeriods] = useState([]); // initial state set to empty array
   const { id } = useParams(); //get the museum id from the url
@@ -453,7 +454,7 @@ export function ManagerViewMuseumSchedule() {
  * @returns
  * @author Victor
  */
-export function AnyoneViewMuseumSchedule() {
+function AnyoneViewMuseumSchedule() {
   const { id } = useParams(); //get the museum id from the url
 
   const [timePeriods, setTimePeriods] = useState([]); // initial state set to empty array
@@ -551,4 +552,19 @@ export function AnyoneViewMuseumSchedule() {
       </TableContainer>
     </>
   );
+}
+
+/**
+ * Main function for the ViewMuseumOpeningHours page,
+ *
+ * @author VZ
+ * @returns the function either for manager who can edit opening hours, or anyone else who can only view
+ */
+export default function ViewMuseumOpeningHours() {
+  const { loggedIn, userRole } = useContext(LoginContext);
+  if (userRole === "manager" && loggedIn) {
+    return <ManagerViewMuseumSchedule />;
+  } else {
+    return <AnyoneViewMuseumSchedule />;
+  }
 }

@@ -14,7 +14,7 @@ import EmployeeCreation from "../pages/EmployeeCreation";
 import TicketViewing from "../pages/TicketViewing";
 import ViewSchedule from "../pages/ViewSchedule";
 import { MuseumInfo } from "../pages/MuseumInfo";
-import { ViewMuseumOpeningHours } from "../pages/ViewMuseumOpeningHours";
+import ViewMuseumOpeningHours from "../pages/MuseumSchedule";
 import { Footer } from "../layouts/Footer";
 
 /**
