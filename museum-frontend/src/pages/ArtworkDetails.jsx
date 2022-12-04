@@ -136,7 +136,8 @@ function LoanConfirmation({ open, close, userId, artwork }) {
  * @param userRole - The user role
  * @param loggedIn - The logged in status
  * @returns The visitor artwork loan section
- * @author Siger, Kevin (redesign)
+ * @author Siger
+ * @author Kevin
  */
 function VisitorArtworkLoan({ artwork, userRole, loggedIn, userId }) {
   const [open, setOpen] = useState(false);
@@ -230,13 +231,15 @@ function VisitorArtworkLoan({ artwork, userRole, loggedIn, userId }) {
 }
 
 /**
- * VisitorArtworkBrowsing component
+ * VisitorArtworkDetails component
+ * Shows the details of the artwork and the artwork itself as viewed by a visitor
  *
  * @param artwork - The artwork object
  * @param userRole - The user role
  * @param loggedIn - The logged in status
- * @returns The visitor artwork browsing section
- * @author Siger, Kevin
+ * @returns The visitor artwork detail browsing section
+ * @author Siger
+ * @author Kevin
  */
 function VisitorArtworkDetails({ artwork, userRole, loggedIn, userId }) {
   const imageHeight = window.innerHeight * 0.89;
@@ -315,12 +318,137 @@ function VisitorArtworkDetails({ artwork, userRole, loggedIn, userId }) {
   );
 }
 
-function ManagerArtworkDetails() {
-  return <p>Admin</p>;
+/**
+ * Staff artwork loan section
+ *
+ * @param artwork - The artwork object
+ * @returns The staff artwork loan section
+ * @author Siger
+ * @author Kevin
+ */
+function StaffArtworkLoan({ artwork }) {
+  return (
+    <div>
+      <Typography variant="h5" margin={2}>
+        Loan information
+      </Typography>
+      <List
+        style={{
+          width: "70%",
+          padding: "auto",
+          margin: "auto",
+          display: "flex",
+          justifyContent: "space-evenly",
+        }}
+      >
+        <div style={{ width: "80%" }}>
+          <ListItem>
+            <ListItemText
+              primary="Loan fee"
+              secondary={artwork.loanFee ? artwork.loanFee : "N/A"}
+            />
+          </ListItem>
+          <Divider variant="middle" />
+        </div>
+        <div style={{ width: "80%" }}>
+          <ListItem>
+            <ListItemText
+              primary="Loan status"
+              secondary={
+                <LoanStatus
+                  isAvailableForLoan={artwork.isAvailableForLoan}
+                  isOnLoan={artwork.isOnLoan}
+                />
+              }
+            ></ListItemText>
+          </ListItem>
+          <Divider variant="middle" />
+        </div>
+      </List>
+      {/* TODO: Add form for manager or employee to edit artwork  */}
+    </div>
+  );
 }
 
-function EmployeeArtworkDetails() {
-  return <p>Employee</p>;
+/**
+ * StaffArtworkDetails component
+ * Shows the details of the artwork and the artwork itself as viewed by a staff member
+ *
+ * @param artwork - The artwork object
+ * @returns The staff artwork detail browsing section
+ * @author Siger
+ * @author Kevin
+ */
+function StaffArtworkDetails({ artwork }) {
+  const imageHeight = window.innerHeight * 0.89;
+
+  // Get the artwork status from the server
+  const [artworkStatus, setArtworkStatus] = useState({});
+  useEffect(() => {
+    if (artwork.artworkId !== undefined) {
+      getArtworkStatus(artwork.artworkId).then((artworkStatus) => {
+        setArtworkStatus(artworkStatus);
+      });
+    } else {
+      setArtworkStatus({});
+    }
+  }, [artwork.artworkId]);
+
+  return (
+    <>
+      <Typography variant="h4" margin={5}>
+        {artwork.name}
+      </Typography>
+      <img
+        src={artwork.image}
+        alt="artwork"
+        style={{ height: imageHeight, borderRadius: 10 }}
+      />
+      <div style={{ margin: "50px auto" }}>
+        <Typography variant="h5" margin={2}>
+          Artwork information
+        </Typography>
+        <List
+          style={{
+            display: "flex",
+            margin: "auto",
+            justifyContent: "space-evenly",
+            padding: "auto",
+            width: "70%",
+          }}
+        >
+          <div style={{ width: "80%" }}>
+            <ListItem className="artwork-info">
+              <ListItemText primary="Name" secondary={artwork.name} />
+            </ListItem>
+            <Divider variant="middle" />
+            <ListItem>
+              <ListItemText primary="Artist" secondary={artwork.artist} />
+            </ListItem>
+            <Divider variant="middle" />
+          </div>
+          <div style={{ width: "80%" }}>
+            <ListItem>
+              <ListItemText
+                primary="Room"
+                secondary={artwork.room ? artwork.room.roomName : "None"}
+              />
+            </ListItem>
+            <Divider variant="middle" />
+            <ListItem>
+              <ListItemText
+                primary="Artwork status"
+                secondary={computeArtworkStatus(artworkStatus)}
+              />
+            </ListItem>
+            <Divider variant="middle" />
+          </div>
+        </List>
+      </div>
+
+      <StaffArtworkLoan artwork={artwork} />
+    </>
+  );
 }
 
 /**
@@ -342,10 +470,8 @@ function ArtworkDetails() {
   }, [artworkId]);
 
   const { loggedIn, userRole, userId } = useContext(LoginContext);
-  if (userRole === "manager" && loggedIn) {
-    return <ManagerArtworkDetails />;
-  } else if (userRole === "employee" && loggedIn) {
-    return <EmployeeArtworkDetails />;
+  if (loggedIn && (userRole === "manager" || userRole === "employee")) {
+    return <StaffArtworkDetails artwork={artwork} />;
   } else {
     return (
       <VisitorArtworkDetails
