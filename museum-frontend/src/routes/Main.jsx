@@ -7,6 +7,9 @@ import { Navigation } from "../layouts/Navigation";
 import { Login } from "../pages/Login";
 import { Signup } from "../pages/Signup";
 import { Profile } from "../pages/Profile";
+import { EditArtworkInfo } from "../pages/EditArtworkInfo";
+import { EditArtworkLoanInfo } from "../pages/EditArtworkLoanInfo";
+import { MoveArtwork } from "../pages/MoveArtwork";
 import { ViewEmployees } from "../pages/ViewEmployees";
 import ArtworkBrowsing from "../pages/ArtworkBrowsing";
 import ArtworkDetails from "../pages/ArtworkDetails";
@@ -107,7 +110,9 @@ export function Main() {
               )
             }
           />
-          s
+           <Route path="/editArtworkInfo" element={<EditArtworkInfo />} />
+           <Route path="/editArtworkLoanInfo" element={<EditArtworkLoanInfo />} />
+           <Route path="/moveArtwork" element={<MoveArtwork />} />
           <Route
             path="/profile"
             element={loggedIn ? <Profile /> : <Navigate to="/login" />}

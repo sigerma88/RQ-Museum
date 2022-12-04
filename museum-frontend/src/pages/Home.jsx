@@ -4,6 +4,7 @@ import "./Home.css";
 import { LoginContext } from "../Contexts/LoginContext";
 import { Link } from "react-router-dom";
 import MuseumPhotoBackground from "../assets/MuseumPhotoBackground.jpg";
+import Stack from '@mui/material/Stack';
 
 /**
  * General page when user goes to the website
@@ -73,7 +74,12 @@ function ManagerHomePage() {
   return (
     <>
       {LandingPage()}
-      <Link to="/employee">View all employees</Link>
+      return <Stack>
+              <Link to="/editArtworkInfo">Edit an artworks info</Link>
+              <Link to="/editArtworkLoanInfo">Edit an artworks loan info</Link>
+              <Link to="/moveArtwork">Move an artwork to a different room</Link>
+              <Link to="/employees">View all employees</Link>
+       </Stack>
     </>
   );
 }
