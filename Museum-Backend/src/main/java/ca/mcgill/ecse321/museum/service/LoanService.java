@@ -142,7 +142,7 @@ public class LoanService {
 
     // If the patch is to accept the loan request, the artwork must be updated to be on loan
     loan.setRequestAccepted(requestAccepted);
-    if (requestAccepted) {
+    if (requestAccepted != null && requestAccepted) {
       Artwork artwork = loan.getArtwork();
       artwork.setIsOnLoan(true);
       artworkRepository.save(artwork);

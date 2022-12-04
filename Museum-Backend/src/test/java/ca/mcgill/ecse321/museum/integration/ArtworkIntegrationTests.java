@@ -64,11 +64,10 @@ public class ArtworkIntegrationTests {
     artworkRepository.deleteAll();
     roomRepository.deleteAll();
     museumRepository.deleteAll();
-    scheduleRepository.deleteAll();
     employeeRepository.deleteAll();
+    scheduleRepository.deleteAll();
     visitorRepository.deleteAll();
     managerRepository.deleteAll();
-
 
     // Create stubs
 
@@ -108,8 +107,8 @@ public class ArtworkIntegrationTests {
     artworkRepository.deleteAll();
     roomRepository.deleteAll();
     museumRepository.deleteAll();
-    scheduleRepository.deleteAll();
     employeeRepository.deleteAll();
+    scheduleRepository.deleteAll();
     visitorRepository.deleteAll();
     managerRepository.deleteAll();
   }

@@ -226,11 +226,11 @@ public class LoanIntegrationTest {
         "Response has correct visitorDto");
     assertEquals(artwork.getArtworkId(), response.getBody().getArtworkDto().getArtworkId(),
         "Response has correct artworkDto");
-    assertNull(response.getBody().getArtworkDto().getRoom(),
-        "Artwork is no longer associated to room");
+    assertNotNull(response.getBody().getArtworkDto().getRoom(),
+        "Artwork is still associated to room");
     assertTrue(response.getBody().getLoanId() > 0, "Response has valid ID");
-    assertEquals(0, roomRepository.findRoomByRoomId(room.getRoomId()).getCurrentNumberOfArtwork(),
-        "Room that previously had artwork has now 1 less artwork");
+    assertEquals(1, roomRepository.findRoomByRoomId(room.getRoomId()).getCurrentNumberOfArtwork(),
+        "Room that previously had artwork still has it");
 
   }
 

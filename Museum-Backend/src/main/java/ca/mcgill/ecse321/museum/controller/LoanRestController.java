@@ -198,7 +198,7 @@ public class LoanRestController {
           return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to delete this loan");
         }
         // Check if loan is accepted and the delete is done by a visitor
-        if (loan.getRequestAccepted()) {
+        if (loan.getRequestAccepted() != null && loan.getRequestAccepted()) {
           return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
               .body("You are not authorized to delete a loan that has been accepted");
         }
