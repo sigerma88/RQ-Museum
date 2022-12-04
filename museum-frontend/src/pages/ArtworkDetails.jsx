@@ -19,6 +19,7 @@ import { LoginContext } from "../Contexts/LoginContext";
 import { LoanStatus, LoanStatusForStaff } from "./ArtworkBrowsing";
 import LockIcon from "@mui/icons-material/Lock";
 import "./LoanStatus.css";
+import { MoveArtwork } from "./MoveArtwork";
 
 /**
  * Function to get the artwork from the server
@@ -319,6 +320,94 @@ function VisitorArtworkDetails({ artwork, userRole, loggedIn, userId }) {
 }
 
 /**
+ * Staff artwork info section
+ *
+ * @param artwork - The artwork object
+ * @returns The staff artwork info section
+ * @author Siger
+ * @author Kevin
+ */
+function StaffArtworkInfo({ artwork, setArtwork }) {
+  // Get the artwork status from the server
+  const [artworkStatus, setArtworkStatus] = useState({});
+  useEffect(() => {
+    if (artwork.artworkId !== undefined) {
+      getArtworkStatus(artwork.artworkId).then((artworkStatus) => {
+        setArtworkStatus(artworkStatus);
+      });
+    } else {
+      setArtworkStatus({});
+    }
+  }, [artwork.artworkId]);
+
+  return (
+    <div style={{ margin: "50px auto" }}>
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          width: "70%",
+          margin: "auto",
+        }}
+      >
+        <Grid item xs={6}>
+          <Typography variant="h5" margin={2}>
+            Artwork information
+          </Typography>
+        </Grid>
+        <Grid item xs={6}>
+          <Button
+            variant="contained"
+            style={{ margin: 2 }}
+            onClick={() => {
+              // TODO: Edit artwork info
+            }}
+          >
+            Edit artwork info
+          </Button>
+        </Grid>
+      </Grid>
+      <List
+        style={{
+          display: "flex",
+          margin: "auto",
+          justifyContent: "space-evenly",
+          padding: "auto",
+          width: "70%",
+        }}
+      >
+        <div style={{ width: "80%" }}>
+          <ListItem className="artwork-info">
+            <ListItemText primary="Name" secondary={artwork.name} />
+          </ListItem>
+          <Divider variant="middle" />
+          <ListItem>
+            <ListItemText primary="Artist" secondary={artwork.artist} />
+          </ListItem>
+          <Divider variant="middle" />
+        </div>
+        <div style={{ width: "80%" }}>
+          <ListItem>
+            <ListItemText
+              primary="Room"
+              secondary={artwork.room ? artwork.room.roomName : "None"}
+            />
+          </ListItem>
+          <Divider variant="middle" />
+          <ListItem>
+            <ListItemText
+              primary="Artwork status"
+              secondary={computeArtworkStatus(artworkStatus)}
+            />
+          </ListItem>
+          <Divider variant="middle" />
+        </div>
+      </List>
+    </div>
+  );
+}
+
+/**
  * Staff artwork loan section
  *
  * @param artwork - The artwork object
@@ -326,7 +415,7 @@ function VisitorArtworkDetails({ artwork, userRole, loggedIn, userId }) {
  * @author Siger
  * @author Kevin
  */
-function StaffArtworkLoan({ artwork }) {
+function StaffArtworkLoan({ artwork, setArtwork }) {
   return (
     <div style={{ margin: "50px auto" }}>
       <Grid
@@ -394,6 +483,89 @@ function StaffArtworkLoan({ artwork }) {
 }
 
 /**
+ * Staff artwork room section
+ *
+ * @param artwork - The artwork object
+ * @returns The staff artwork room section
+ * @author Siger
+ */
+function StaffArtworkRoom({ artwork, setArtwork }) {
+  // Dialog for moving artwork
+  const [moveArtworkDialogOpen, setMoveArtworkDialogOpen] = useState(false);
+  const handleMoveArtworkDialogOpen = () => {
+    setMoveArtworkDialogOpen(true);
+  };
+  const handleMoveArtworkDialogClose = () => {
+    setMoveArtworkDialogOpen(false);
+  };
+
+  return (
+    <div style={{ margin: "50px auto" }}>
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          width: "70%",
+          margin: "auto",
+        }}
+      >
+        <Grid item xs={6}>
+          <Typography variant="h5" margin={2}>
+            Room
+          </Typography>
+        </Grid>
+        <Grid item xs={6}>
+          <Button
+            variant="contained"
+            style={{ margin: 2 }}
+            onClick={handleMoveArtworkDialogOpen}
+          >
+            Move artwork
+          </Button>
+        </Grid>
+      </Grid>
+      <List
+        style={{
+          width: "70%",
+          padding: "auto",
+          margin: "auto",
+          display: "flex",
+          justifyContent: "space-evenly",
+        }}
+      >
+        <div style={{ width: "80%" }}>
+          <ListItem>
+            <ListItemText
+              primary="Museum"
+              secondary={artwork.room ? artwork.room.museum.name : "None"}
+            />
+          </ListItem>
+          <Divider variant="middle" />
+        </div>
+        <div style={{ width: "80%" }}>
+          <ListItem>
+            <ListItemText
+              primary="Room"
+              secondary={artwork.room ? artwork.room.roomName : "None"}
+            ></ListItemText>
+          </ListItem>
+          <Divider variant="middle" />
+        </div>
+      </List>
+
+      {artwork && artwork.room ? (
+        <MoveArtwork
+          open={moveArtworkDialogOpen}
+          handleClose={handleMoveArtworkDialogClose}
+          artwork={artwork}
+          setArtwork={setArtwork}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+/**
  * StaffArtworkDetails component
  * Shows the details of the artwork and the artwork itself as viewed by a staff member
  *
@@ -402,20 +574,8 @@ function StaffArtworkLoan({ artwork }) {
  * @author Siger
  * @author Kevin
  */
-function StaffArtworkDetails({ artwork }) {
+function StaffArtworkDetails({ artwork, setArtwork }) {
   const imageHeight = window.innerHeight * 0.89;
-
-  // Get the artwork status from the server
-  const [artworkStatus, setArtworkStatus] = useState({});
-  useEffect(() => {
-    if (artwork.artworkId !== undefined) {
-      getArtworkStatus(artwork.artworkId).then((artworkStatus) => {
-        setArtworkStatus(artworkStatus);
-      });
-    } else {
-      setArtworkStatus({});
-    }
-  }, [artwork.artworkId]);
 
   return (
     <>
@@ -453,127 +613,12 @@ function StaffArtworkDetails({ artwork }) {
         alt="artwork"
         style={{ height: imageHeight, borderRadius: 10 }}
       />
-      <div style={{ margin: "50px auto" }}>
-        <Grid
-          container
-          spacing={2}
-          sx={{
-            width: "70%",
-            margin: "auto",
-          }}
-        >
-          <Grid item xs={6}>
-            <Typography variant="h5" margin={2}>
-              Artwork information
-            </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <Button
-              variant="contained"
-              style={{ margin: 2 }}
-              onClick={() => {
-                // TODO: Edit artwork info
-              }}
-            >
-              Edit artwork info
-            </Button>
-          </Grid>
-        </Grid>
-        <List
-          style={{
-            display: "flex",
-            margin: "auto",
-            justifyContent: "space-evenly",
-            padding: "auto",
-            width: "70%",
-          }}
-        >
-          <div style={{ width: "80%" }}>
-            <ListItem className="artwork-info">
-              <ListItemText primary="Name" secondary={artwork.name} />
-            </ListItem>
-            <Divider variant="middle" />
-            <ListItem>
-              <ListItemText primary="Artist" secondary={artwork.artist} />
-            </ListItem>
-            <Divider variant="middle" />
-          </div>
-          <div style={{ width: "80%" }}>
-            <ListItem>
-              <ListItemText
-                primary="Room"
-                secondary={artwork.room ? artwork.room.roomName : "None"}
-              />
-            </ListItem>
-            <Divider variant="middle" />
-            <ListItem>
-              <ListItemText
-                primary="Artwork status"
-                secondary={computeArtworkStatus(artworkStatus)}
-              />
-            </ListItem>
-            <Divider variant="middle" />
-          </div>
-        </List>
-      </div>
 
-      <StaffArtworkLoan artwork={artwork} />
+      <StaffArtworkInfo artwork={artwork} setArtwork={setArtwork} />
 
-      <div style={{ margin: "50px auto" }}>
-        <Grid
-          container
-          spacing={2}
-          sx={{
-            width: "70%",
-            margin: "auto",
-          }}
-        >
-          <Grid item xs={6}>
-            <Typography variant="h5" margin={2}>
-              Room
-            </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <Button
-              variant="contained"
-              style={{ margin: 2 }}
-              onClick={() => {
-                // TODO: Move artwork
-              }}
-            >
-              Move artwork
-            </Button>
-          </Grid>
-        </Grid>
-        <List
-          style={{
-            width: "70%",
-            padding: "auto",
-            margin: "auto",
-            display: "flex",
-            justifyContent: "space-evenly",
-          }}
-        >
-          <div style={{ width: "80%" }}>
-            <ListItem>
-              <ListItemText
-                primary="Museum"
-                secondary={artwork.room ? artwork.room.museum.name : "None"}
-              />
-            </ListItem>
-            <Divider variant="middle" />
-          </div>
-          <div style={{ width: "80%" }}>
-            <ListItem>
-              <ListItemText
-                primary="Room"
-                secondary={artwork.room ? artwork.room.roomName : "None"}
-              ></ListItemText>
-            </ListItem>
-            <Divider variant="middle" />
-          </div>
-        </List>
-      </div>
+      <StaffArtworkLoan artwork={artwork} setArtwork={setArtwork} />
+
+      <StaffArtworkRoom artwork={artwork} setArtwork={setArtwork} />
     </>
   );
 }
@@ -594,11 +639,11 @@ function ArtworkDetails() {
     getArtwork(artworkId).then((artwork) => {
       setArtwork(artwork);
     });
-  }, [artworkId]);
+  }, [artworkId, artwork]);
 
   const { loggedIn, userRole, userId } = useContext(LoginContext);
   if (loggedIn && (userRole === "manager" || userRole === "employee")) {
-    return <StaffArtworkDetails artwork={artwork} />;
+    return <StaffArtworkDetails artwork={artwork} setArtwork={setArtwork} />;
   } else {
     return (
       <VisitorArtworkDetails

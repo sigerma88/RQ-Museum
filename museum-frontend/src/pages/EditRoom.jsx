@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import {
   Typography,
@@ -125,6 +125,7 @@ export function EditRoom({ open, handleClose, room, setRoom }) {
                 {isFormInvalid && errorMessage}
               </Typography>
             </Box>
+
             <DialogActions>
               <LoadingButton
                 variant="contained"

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Typography, TextField, Button, Box, Paper } from "@mui/material";
-import "./Common.css";
+import "./Login.css";
 
 /**
  * Edit Artwork Info
