@@ -27,6 +27,7 @@ function getArtworks(roomId) {
 
 /**
  * Function to get the room from the server
+ *
  * @param roomId - The room ID to get the room from
  * @returns The fetched room
  * @author Siger
@@ -48,12 +49,12 @@ function getRoom(roomId) {
 
 /**
  * Loan Status message
+ *
  * @param isAvailableForLoan - If artwork is loanable
  * @param isOnLoan - If artwork is on loan
  * @returns The loan status message
  * @author Kevin
  */
-
 export function LoanStatus({ isAvailableForLoan, isOnLoan }) {
   if (!isAvailableForLoan) {
     return (
@@ -76,8 +77,87 @@ export function LoanStatus({ isAvailableForLoan, isOnLoan }) {
   }
 }
 
+function ArtworkList({ artworks, room }) {
+  return (
+    <Grid container spacing={4}>
+      {artworks.map((card) => (
+        <Grid item key={card.artworkId} xs={12} sm={6} md={3}>
+          <Card
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              height: "400px",
+              width: "100%",
+              position: "relative",
+            }}
+            className="card"
+          >
+            <a
+              style={{
+                fontStyle: "none",
+                textDecoration: "none",
+                color: "black",
+              }}
+              href={`/browse/artwork/${card.artworkId}`}
+            >
+              <CardMedia
+                component="img"
+                style={{
+                  objectFit: "cover",
+                  height: "200px",
+                }}
+                image={card.image}
+                alt="Artwork image"
+              />
+              <CardContent
+                sx={{
+                  flexGrow: 1,
+                }}
+              >
+                <Typography
+                  gutterBottom
+                  variant="subtitle1"
+                  style={{ fontWeight: "bold" }}
+                >
+                  {card.name}
+                </Typography>
+                <Typography variant="subtitle2">
+                  {"by " + card.artist}
+                </Typography>
+                <div
+                  style={
+                    !card.isAvailableForLoan
+                      ? {
+                          position: "absolute",
+                          bottom: "65px",
+                          width: "90%",
+                          margin: "auto 0px",
+                        }
+                      : {
+                          position: "absolute",
+                          bottom: "65px",
+                          width: "88%",
+                          margin: "auto 0px",
+                        }
+                  }
+                >
+                  <LoanStatus
+                    isAvailableForLoan={card.isAvailableForLoan}
+                    isOnLoan={card.isOnLoan}
+                  />
+                </div>
+              </CardContent>
+            </a>
+          </Card>
+        </Grid>
+      ))}
+    </Grid>
+  );
+}
+
 /**
  * VisitorArtworkBrowsing component
+ * Artwork browsing as viewed by the visitor
  *
  * @param artworks - The artworks to display
  * @param room - The room to display
@@ -94,90 +174,35 @@ function VisitorArtworkBrowsing({ artworks, room }) {
       </div>
 
       <Container sx={{ py: 5 }}>
-        <Grid container spacing={4}>
-          {artworks.map((card) => (
-            <Grid item key={card.artworkId} xs={12} sm={6} md={3}>
-              <Card
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  height: "400px",
-                  width: "100%",
-                  position: "relative",
-                }}
-                className="card"
-              >
-                <a
-                  style={{
-                    fontStyle: "none",
-                    textDecoration: "none",
-                    color: "black",
-                  }}
-                  href={`/browse/artwork/${card.artworkId}`}
-                >
-                  <CardMedia
-                    component="img"
-                    style={{
-                      objectFit: "cover",
-                      height: "200px",
-                    }}
-                    image={card.image}
-                    alt="Artwork image"
-                  />
-                  <CardContent
-                    sx={{
-                      flexGrow: 1,
-                    }}
-                  >
-                    <Typography
-                      gutterBottom
-                      variant="subtitle1"
-                      style={{ fontWeight: "bold" }}
-                    >
-                      {card.name}
-                    </Typography>
-                    <Typography variant="subtitle2">
-                      {"by " + card.artist}
-                    </Typography>
-                    <div
-                      style={
-                        !card.isAvailableForLoan
-                          ? {
-                              position: "absolute",
-                              bottom: "65px",
-                              width: "90%",
-                              margin: "auto 0px",
-                            }
-                          : {
-                              position: "absolute",
-                              bottom: "65px",
-                              width: "88%",
-                              margin: "auto 0px",
-                            }
-                      }
-                    >
-                      <LoanStatus
-                        isAvailableForLoan={card.isAvailableForLoan}
-                        isOnLoan={card.isOnLoan}
-                      />
-                    </div>
-                  </CardContent>
-                </a>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+        <ArtworkList artworks={artworks} room={room} />
       </Container>
     </>
   );
 }
 
-function ManagerArtworkBrowsing() {
-  return <p>Admin</p>;
-}
+/**
+ * StaffArtworkBrowsing component
+ * Artwork browsing as viewed by the staff
+ *
+ * @param artworks - The artworks to display
+ * @param room - The room to display
+ * @author Siger, Kevin(redesign)
+ */
+function StaffArtworkBrowsing() {
+  return (
+    <>
+      <div style={{ lineHeight: "14px" }}>
+        <Typography variant="h4" component="h1" marginTop={5}>
+          {room.roomName}
+        </Typography>
+        <Typography>{artworks.length} artworks</Typography>
+      </div>
 
-function EmployeeArtworkBrowsing() {
-  return <p>Employee</p>;
+      <Container sx={{ py: 5 }}>
+        <ArtworkList artworks={artworks} room={room} />
+      </Container>
+    </>
+  );
 }
 
 /**
@@ -207,10 +232,8 @@ function ArtworkBrowsing() {
   }, [roomId]);
 
   const { loggedIn, userRole } = useContext(LoginContext);
-  if (userRole === "manager" && loggedIn) {
-    return <ManagerArtworkBrowsing />;
-  } else if (userRole === "employee" && loggedIn) {
-    return <EmployeeArtworkBrowsing />;
+  if (loggedIn && (userRole === "manager" || userRole === "employee")) {
+    return <StaffArtworkBrowsing />;
   } else {
     return <VisitorArtworkBrowsing artworks={artworks} room={room} />;
   }
