@@ -22,6 +22,7 @@ import "./LoanStatus.css";
 import { EditArtworkInfo } from "./EditArtworkInfo";
 import { EditArtworkLoanInfo } from "./EditArtworkLoanInfo";
 import { MoveArtwork } from "./MoveArtwork";
+import { ArtworkImageChanging } from "./ArtworkImageChanging";
 
 /**
  * Function to get the artwork from the server
@@ -609,6 +610,15 @@ function StaffArtworkRoom({ artwork, setArtwork }) {
 function StaffArtworkDetails({ artwork, setArtwork }) {
   const imageHeight = window.innerHeight * 0.89;
 
+  // Dialog for changing artwork image
+  const [artworkImageDialogOpen, setArtworkImageDialogOpen] = useState(false);
+  const handleArtworkImageDialogOpen = () => {
+    setArtworkImageDialogOpen(true);
+  };
+  const handleArtworkImageDialogClose = () => {
+    setArtworkImageDialogOpen(false);
+  };
+
   return (
     <>
       <Grid container spacing={2}>
@@ -622,9 +632,7 @@ function StaffArtworkDetails({ artwork, setArtwork }) {
             variant="contained"
             color="primary"
             sx={{ marginTop: 5, marginLeft: 2 }}
-            onClick={() => {
-              // TODO: Change artwork image
-            }}
+            onClick={handleArtworkImageDialogOpen}
           >
             Change image
           </Button>
@@ -651,6 +659,15 @@ function StaffArtworkDetails({ artwork, setArtwork }) {
       <StaffArtworkLoan artwork={artwork} setArtwork={setArtwork} />
 
       <StaffArtworkRoom artwork={artwork} setArtwork={setArtwork} />
+
+      {artwork && artwork.artworkId ? (
+        <ArtworkImageChanging
+          artwork={artwork}
+          setArtwork={setArtwork}
+          open={artworkImageDialogOpen}
+          handleClose={handleArtworkImageDialogClose}
+        />
+      ) : null}
     </>
   );
 }
