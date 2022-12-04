@@ -14,15 +14,24 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Business logic for loanController
+ * 
+ * @author Eric
+ */
+
 @Service
 public class LoanService {
 
   @Autowired
   private LoanRepository loanRepository;
+
   @Autowired
   private ArtworkRepository artworkRepository;
+
   @Autowired
   private VisitorRepository visitorRepository;
+
   @Autowired
   private ArtworkService artworkService;
 
@@ -33,6 +42,7 @@ public class LoanService {
    * @return loan identified by loanId
    * @author Eric
    */
+
   @Transactional
   public Loan getLoanById(Long loanId) {
     Loan loan = loanRepository.findLoanByLoanId(loanId);
@@ -48,9 +58,26 @@ public class LoanService {
    * @return list<Loan> of all loans from the database
    * @author Eric
    */
+
   @Transactional
   public List<Loan> getAllLoans() {
     return toList(loanRepository.findAll());
+  }
+
+  /**
+   * Method to get all loans from the database by the userId
+   *
+   * @return list<Loan> of all loans from the database
+   * @author Eric
+   */
+
+  @Transactional
+  public List<Loan> getAllLoansByUserId(Long userId) {
+    Visitor visitor = visitorRepository.findVisitorByMuseumUserId(userId);
+    if (visitor == null) {
+      throw new IllegalArgumentException("Visitor does not exist");
+    }
+    return toList(loanRepository.findLoanByVisitor(visitor));
   }
 
   /**
@@ -60,6 +87,7 @@ public class LoanService {
    * @return loan created using the attributes of loanDto
    * @author Eric
    */
+
   @Transactional
   public Loan createLoan(LoanDto loanDto) {
     // Error handling associations
@@ -104,6 +132,7 @@ public class LoanService {
    * @return updated loan
    * @author Eric
    */
+
   @Transactional
   public Loan putLoanById(Long loanId, Boolean requestAccepted) {
     Loan loan = loanRepository.findLoanByLoanId(loanId);
@@ -111,10 +140,12 @@ public class LoanService {
       throw new IllegalArgumentException("Loan does not exist");
     }
 
-    // If the patch is to accept the loan request, the artwork must be removed from the room it's in
+    // If the patch is to accept the loan request, the artwork must be updated to be on loan
     loan.setRequestAccepted(requestAccepted);
-    if (requestAccepted) {
-      loan.setArtwork(artworkService.removeArtworkFromRoom(loan.getArtwork().getArtworkId()));
+    if (requestAccepted != null && requestAccepted) {
+      Artwork artwork = loan.getArtwork();
+      artwork.setIsOnLoan(true);
+      artworkRepository.save(artwork);
     }
     return loanRepository.save(loan);
   }
@@ -125,11 +156,19 @@ public class LoanService {
    * @param loanId - Long primary key of loan
    * @author Eric
    */
+
   @Transactional
   public void deleteLoanByLoanId(Long loanId) {
     Loan loan = loanRepository.findLoanByLoanId(loanId);
     if (loan == null) {
       throw new IllegalArgumentException("Loan does not exist");
+    }
+
+    // Update artwork if the loan request was accepted
+    if (loan.getRequestAccepted() != null && loan.getRequestAccepted()) {
+      Artwork artwork = loan.getArtwork();
+      artwork.setIsOnLoan(false);
+      artworkRepository.save(artwork);
     }
 
     loanRepository.deleteLoanByLoanId(loanId);
@@ -142,6 +181,7 @@ public class LoanService {
    * @return List
    * @author Tutorial notes
    */
+
   private <T> List<T> toList(Iterable<T> iterable) {
     List<T> resultList = new ArrayList<T>();
     for (T t : iterable) {
@@ -149,6 +189,5 @@ public class LoanService {
     }
     return resultList;
   }
-
 
 }

@@ -30,7 +30,7 @@ public class LoanRestController {
    * @return loanDto with loanId
    * @author Eric
    */
-  @GetMapping(value = {"/{loanId}", "/{loanId}/"})
+  @GetMapping(value = { "/{loanId}", "/{loanId}/" })
   public ResponseEntity<?> getLoanById(HttpServletRequest request,
                                        @PathVariable("loanId") Long loanId) {
     try {
@@ -39,7 +39,7 @@ public class LoanRestController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
       } else if (!AuthenticationUtility.isMuseumUser(session)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body("Your need to be a musuem user to access this");
+            .body("Your need to be a museum user to access this");
       }
 
       // Check if loan exists
@@ -48,7 +48,47 @@ public class LoanRestController {
         return ResponseEntity.badRequest().body("Loan does not exist");
       }
       LoanDto loanDto = DtoUtility.convertToDto(loan);
+
+      // Check if loan is associated with the logged in visitor
+      if (!AuthenticationUtility.isStaffMember(session)) {
+        if (!AuthenticationUtility.checkUserId(session, loanDto.getVisitorDto().getMuseumUserId())) {
+          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to view this loan");
+        }
+      }
+
+      // Return loanDto response
       return ResponseEntity.ok(loanDto);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+
+  /**
+   * RESTful API to get all loans by userId
+   *
+   * @return List of all loans
+   * @author Eric
+   */
+  @GetMapping(value = { "/view/{userId}", "/view/{userId}/" })
+  public ResponseEntity<?> getLoansByUserId(HttpServletRequest request, @PathVariable("userId") Long userId) {
+    try {
+      HttpSession session = request.getSession();
+      if (!AuthenticationUtility.isLoggedIn(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
+      } else if (!AuthenticationUtility.isMuseumUser(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body("You need to be a museum user to access this");
+      } else if (!AuthenticationUtility.isStaffMember(session)) {
+        if (!AuthenticationUtility.checkUserId(session, userId)) {
+          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to view this page");
+        }
+      }
+
+      List<LoanDto> loanDtos = new ArrayList<LoanDto>();
+      for (Loan loan : loanService.getAllLoansByUserId(userId)) {
+        loanDtos.add(DtoUtility.convertToDto(loan));
+      }
+      return ResponseEntity.ok(loanDtos);
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
@@ -60,23 +100,24 @@ public class LoanRestController {
    * @return List of all loans
    * @author Eric
    */
-  @GetMapping(value = {"", "/"})
+  @GetMapping(value = { "", "/" })
   public ResponseEntity<?> getLoans(HttpServletRequest request) {
     try {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
-      } else if (!AuthenticationUtility.isMuseumUser(session)) {
+      } else if (!AuthenticationUtility.isStaffMember(session)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body("You need to be a staff member to access this");
       }
+
       List<LoanDto> loanDtos = new ArrayList<LoanDto>();
       for (Loan loan : loanService.getAllLoans()) {
         loanDtos.add(DtoUtility.convertToDto(loan));
       }
-      return new ResponseEntity<>(loanDtos, HttpStatus.FOUND);
+      return ResponseEntity.ok(loanDtos);
     } catch (Exception e) {
-      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+      return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
 
@@ -87,26 +128,23 @@ public class LoanRestController {
    * @return loanDto of patched loan if successful
    * @author Eric
    */
-  @PutMapping(value = {"/edit", "/edit/"})
+  @PutMapping(value = { "/edit", "/edit/" })
   public ResponseEntity<?> putLoan(HttpServletRequest request, @RequestBody LoanDto loanDto) {
     try {
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You are not logged in");
-      } else if (!AuthenticationUtility.isMuseumUser(session)) {
+      } else if (!AuthenticationUtility.isStaffMember(session)) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body("You need to be a staff member to access this");
       }
 
-      return new ResponseEntity<>(
-          ((DtoUtility.convertToDto(
-              loanService.putLoanById(loanDto.getLoanId(), loanDto.getRequestAccepted())))),
-          HttpStatus.OK);
+      return ResponseEntity
+          .ok(DtoUtility.convertToDto(loanService.putLoanById(loanDto.getLoanId(), loanDto.getRequestAccepted())));
     } catch (Exception e) {
-      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+      return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
-
 
   /**
    * RESTful API to create a loan
@@ -115,10 +153,9 @@ public class LoanRestController {
    * @return List of all
    * @author Eric
    */
-  @PostMapping(value = {"/create", "/create/"})
+  @PostMapping(value = { "/create", "/create/" })
   public ResponseEntity<?> postLoan(HttpServletRequest request, @RequestBody LoanDto loanDto) {
     try {
-
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
@@ -128,12 +165,10 @@ public class LoanRestController {
       }
 
       Loan persistedLoan = loanService.createLoan(loanDto);
-
       LoanDto persistedLoanDto = DtoUtility.convertToDto(persistedLoan);
-
-      return new ResponseEntity<>(persistedLoanDto, HttpStatus.CREATED);
+      return ResponseEntity.ok(persistedLoanDto);
     } catch (Exception e) {
-      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+      return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
 
@@ -144,13 +179,10 @@ public class LoanRestController {
    * @return String "Loan deleted" if successful
    * @author Eric
    */
-  @DeleteMapping(value = {"/delete/{loanId}", "/delete/{loanId}/"})
+  @DeleteMapping(value = { "/delete/{loanId}", "/delete/{loanId}/" })
   public ResponseEntity<?> deleteLoan(HttpServletRequest request,
                                       @PathVariable("loanId") Long loanId) {
     try {
-      // needs to be rethinked as we want use to cancel their loans, but also restrict visitors to
-      // delete other visitors loans
-
       HttpSession session = request.getSession();
       if (!AuthenticationUtility.isLoggedIn(session)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
@@ -159,11 +191,23 @@ public class LoanRestController {
             .body("You need to be a museum user to access this");
       }
 
-      loanService.deleteLoanByLoanId(loanId);
+      Loan loan = loanService.getLoanById(loanId);
+      if (!AuthenticationUtility.isStaffMember(session)) {
+        if (!AuthenticationUtility.checkUserId(session, loan.getVisitor().getMuseumUserId())) {
+          // Check if loan is associated with the logged in visitor
+          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to delete this loan");
+        }
+        // Check if loan is accepted and the delete is done by a visitor
+        if (loan.getRequestAccepted() != null && loan.getRequestAccepted()) {
+          return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+              .body("You are not authorized to delete a loan that has been accepted");
+        }
+      }
 
-      return new ResponseEntity<>("Loan deleted", HttpStatus.OK);
+      loanService.deleteLoanByLoanId(loanId);
+      return ResponseEntity.ok("Loan deleted");
     } catch (Exception e) {
-      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+      return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
 

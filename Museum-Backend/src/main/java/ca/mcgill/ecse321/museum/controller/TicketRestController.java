@@ -41,7 +41,7 @@ public class TicketRestController {
       if (!AuthenticationUtility.isLoggedIn(session)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
       } else if (!AuthenticationUtility.isVisitor(session)) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Your are not a visitor");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not a visitor");
       }
       List<TicketDto> boughtTickets = new ArrayList<>();
       for (Ticket ticket : ticketService.createTickets(ticketDtoNoIdRequest.getVisitorId(),

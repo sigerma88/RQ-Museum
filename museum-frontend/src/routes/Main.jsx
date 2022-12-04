@@ -15,6 +15,7 @@ import TicketViewing from "../pages/TicketViewing";
 import ViewEmployeeSchedule from "../pages/ViewEmployeeSchedule";
 import MuseumInfo from "../pages/MuseumInfo";
 import ViewMuseumOpeningHours from "../pages/ViewMuseumOpeningHours";
+import { Loan } from "../pages/Loan";
 import { Footer } from "../layouts/Footer";
 
 /**
@@ -146,7 +147,7 @@ export function Main() {
           <Route path="/ticket" element={<TicketViewing />} />
           <Route
             path="/loan"
-            element={loggedIn ? <Home /> : <Navigate to="/login" />}
+            element={loggedIn ? <Loan /> : <Navigate to="/login" />}
           />
         </Routes>
       </BrowserRouter>
