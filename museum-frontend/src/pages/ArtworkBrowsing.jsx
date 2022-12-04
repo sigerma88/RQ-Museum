@@ -1,11 +1,21 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Card, CardContent, CardMedia, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardMedia,
+  Grid,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { Container } from "@mui/system";
 import { LoginContext } from "../Contexts/LoginContext";
 import "./LoanStatus.css";
 import "./ArtworkBrowsing.css";
+import { RoomDetails } from "./RoomDetails";
 
 /**
  * Function to get the artworks from the server
@@ -77,7 +87,16 @@ export function LoanStatus({ isAvailableForLoan, isOnLoan }) {
   }
 }
 
-function ArtworkList({ artworks, room }) {
+/**
+ * This component displays a list of artworks
+ *
+ * @param artworks - The artworks to display
+ * @param room - The room to display
+ * @returns List of artworks
+ * @author Siger
+ * @author Kevin
+ */
+function ArtworkList({ artworks }) {
   return (
     <Grid container spacing={4}>
       {artworks.map((card) => (
@@ -161,21 +180,55 @@ function ArtworkList({ artworks, room }) {
  *
  * @param artworks - The artworks to display
  * @param room - The room to display
- * @author Siger, Kevin(redesign)
+ * @author Siger
  */
 function VisitorArtworkBrowsing({ artworks, room }) {
+  // Room details modal
+  const [roomDetailModalOpen, setRoomDetailModalOpen] = useState(false);
+  const handleRoomDetailModalOpen = () => setRoomDetailModalOpen(true);
+  const handleRoomDetailModalClose = () => setRoomDetailModalOpen(false);
+
   return (
     <>
       <div style={{ lineHeight: "14px" }}>
-        <Typography variant="h4" component="h1" marginTop={5}>
-          {room.roomName}
-        </Typography>
-        <Typography>{artworks.length} artworks</Typography>
+        {room.roomName === "All Rooms" ? (
+          <Box item xs={12} sm={6}>
+            <Typography variant="h4" component="h1" marginTop={5}>
+              {room.roomName}
+            </Typography>
+            <Typography>{artworks.length} artworks</Typography>
+          </Box>
+        ) : (
+          <Tooltip
+            title="See more information about this room"
+            placement="right"
+            arrow
+            followCursor
+          >
+            <Box
+              style={{ cursor: "pointer" }}
+              onClick={handleRoomDetailModalOpen}
+            >
+              <Typography variant="h4" component="h1" marginTop={5}>
+                {room.roomName}
+              </Typography>
+              <Typography>{artworks.length} artworks</Typography>
+            </Box>
+          </Tooltip>
+        )}
       </div>
 
       <Container sx={{ py: 5 }}>
-        <ArtworkList artworks={artworks} room={room} />
+        <ArtworkList artworks={artworks} />
       </Container>
+
+      {room && room.museum && (
+        <RoomDetails
+          room={room}
+          open={roomDetailModalOpen}
+          handleClose={handleRoomDetailModalClose}
+        />
+      )}
     </>
   );
 }
@@ -186,21 +239,94 @@ function VisitorArtworkBrowsing({ artworks, room }) {
  *
  * @param artworks - The artworks to display
  * @param room - The room to display
- * @author Siger, Kevin(redesign)
+ * @author Siger
  */
-function StaffArtworkBrowsing() {
+function StaffArtworkBrowsing({ artworks, room }) {
+  // Room details modal
+  const [roomDetailModalOpen, setRoomDetailModalOpen] = useState(false);
+  const handleRoomDetailModalOpen = () => setRoomDetailModalOpen(true);
+  const handleRoomDetailModalClose = () => setRoomDetailModalOpen(false);
+
   return (
     <>
       <div style={{ lineHeight: "14px" }}>
-        <Typography variant="h4" component="h1" marginTop={5}>
-          {room.roomName}
-        </Typography>
-        <Typography>{artworks.length} artworks</Typography>
+        <Grid container spacing={2}>
+          {room.roomName === "All Rooms" ? (
+            <Grid item xs={12} sm={6}>
+              <Typography variant="h4" component="h1" marginTop={5}>
+                {room.roomName}
+              </Typography>
+              <Typography>{artworks.length} artworks</Typography>
+            </Grid>
+          ) : (
+            <Tooltip
+              title="See more information about this room"
+              placement="right"
+              arrow
+              followCursor
+            >
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                style={{ cursor: "pointer" }}
+                onClick={handleRoomDetailModalOpen}
+              >
+                <Typography variant="h4" component="h1" marginTop={5}>
+                  {room.roomName}
+                </Typography>
+                <Typography>{artworks.length} artworks</Typography>
+              </Grid>
+            </Tooltip>
+          )}
+          <Grid item xs={12} sm={6}>
+            <Button
+              variant="contained"
+              color="success"
+              sx={{ marginTop: 5 }}
+              onClick={() => {
+                // TODO: Add room
+              }}
+            >
+              New Room
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={room.roomName === "All Rooms"}
+              sx={{ marginTop: 5, marginLeft: 2 }}
+              onClick={() => {
+                // TODO: Edit room
+              }}
+            >
+              Edit Room
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              disabled={room.roomName === "All Rooms"}
+              sx={{ marginTop: 5, marginLeft: 2 }}
+              onClick={() => {
+                // TODO: Delete room
+              }}
+            >
+              Delete Room
+            </Button>
+          </Grid>
+        </Grid>
       </div>
 
       <Container sx={{ py: 5 }}>
-        <ArtworkList artworks={artworks} room={room} />
+        <ArtworkList artworks={artworks} />
       </Container>
+
+      {room && room.museum && (
+        <RoomDetails
+          room={room}
+          open={roomDetailModalOpen}
+          handleClose={handleRoomDetailModalClose}
+        />
+      )}
     </>
   );
 }
@@ -233,7 +359,7 @@ function ArtworkBrowsing() {
 
   const { loggedIn, userRole } = useContext(LoginContext);
   if (loggedIn && (userRole === "manager" || userRole === "employee")) {
-    return <StaffArtworkBrowsing />;
+    return <StaffArtworkBrowsing artworks={artworks} room={room} />;
   } else {
     return <VisitorArtworkBrowsing artworks={artworks} room={room} />;
   }

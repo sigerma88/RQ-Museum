@@ -46,7 +46,6 @@ export function OnLoan({ loanAccepted }) {
     axios
       .delete(`/api/loan/delete/${loanId}`)
       .then(function (response) {
-        console.log(response.data);
         setLoans(loans.filter((aLoan) => aLoan.loanId !== loanId));
       })
       .catch(function (error) {
