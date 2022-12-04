@@ -14,7 +14,6 @@ import {
   DialogActions,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import "./Login.css";
 
 /**
  * Dialog with the form to edit a room
@@ -101,12 +100,12 @@ export function EditRoom({ open, handleClose, room, setRoom }) {
                 name="roomName"
                 margin="normal"
                 autoFocus
-                className="login-field"
+                sx={{ width: "60%", marginBottom: 3, marginTop: 3 }}
                 value={roomName}
                 onChange={(e) => setRoomName(e.target.value)}
                 error={isFormInvalid}
               />
-              <FormControl className="login-field">
+              <FormControl sx={{ width: "60%" }}>
                 <InputLabel>Room Type</InputLabel>
                 <Select
                   labelId="roomType"

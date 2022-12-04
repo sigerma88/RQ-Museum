@@ -19,6 +19,7 @@ import { LoginContext } from "../Contexts/LoginContext";
 import { LoanStatus, LoanStatusForStaff } from "./ArtworkBrowsing";
 import LockIcon from "@mui/icons-material/Lock";
 import "./LoanStatus.css";
+import { EditArtworkInfo } from "./EditArtworkInfo";
 import { MoveArtwork } from "./MoveArtwork";
 
 /**
@@ -340,6 +341,16 @@ function StaffArtworkInfo({ artwork, setArtwork }) {
     }
   }, [artwork.artworkId]);
 
+  // Dialog for editing artwork info
+  const [editArtworkInfoDialogOpen, setEditArtworkInfoDialogOpen] =
+    useState(false);
+  const handleEditArtworkInfoDialogOpen = () => {
+    setEditArtworkInfoDialogOpen(true);
+  };
+  const handleEditArtworkInfoDialogClose = () => {
+    setEditArtworkInfoDialogOpen(false);
+  };
+
   return (
     <div style={{ margin: "50px auto" }}>
       <Grid
@@ -359,9 +370,7 @@ function StaffArtworkInfo({ artwork, setArtwork }) {
           <Button
             variant="contained"
             style={{ margin: 2 }}
-            onClick={() => {
-              // TODO: Edit artwork info
-            }}
+            onClick={handleEditArtworkInfoDialogOpen}
           >
             Edit artwork info
           </Button>
@@ -388,10 +397,7 @@ function StaffArtworkInfo({ artwork, setArtwork }) {
         </div>
         <div style={{ width: "80%" }}>
           <ListItem>
-            <ListItemText
-              primary="Room"
-              secondary={artwork.room ? artwork.room.roomName : "None"}
-            />
+            <ListItemText primary="Image" secondary={artwork.image} />
           </ListItem>
           <Divider variant="middle" />
           <ListItem>
@@ -403,6 +409,15 @@ function StaffArtworkInfo({ artwork, setArtwork }) {
           <Divider variant="middle" />
         </div>
       </List>
+
+      {artwork && artwork.name && artwork.artist ? (
+        <EditArtworkInfo
+          artwork={artwork}
+          setArtwork={setArtwork}
+          open={editArtworkInfoDialogOpen}
+          handleClose={handleEditArtworkInfoDialogClose}
+        />
+      ) : null}
     </div>
   );
 }

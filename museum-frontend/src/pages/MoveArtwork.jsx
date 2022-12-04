@@ -13,7 +13,6 @@ import {
   DialogActions,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import "./Login.css";
 
 /**
  * Function which gets all the rooms and their information
@@ -123,7 +122,7 @@ export function MoveArtwork({ open, handleClose, artwork, setArtwork }) {
                   onChange={(e) => setRoomId(e.target.value)}
                 >
                   {rooms.map((room) => (
-                    <MenuItem value={String(room["roomId"])}>
+                    <MenuItem key={room.roomId} value={String(room["roomId"])}>
                       {room["roomName"]}
                     </MenuItem>
                   ))}
