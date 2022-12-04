@@ -128,7 +128,7 @@ function LoanRequests({ loanAccepted, setLoanAccepted }) {
   useEffect(() => {
     let url = "";
     if (userRole === "visitor") {
-      url = `/api/loan/view/${userId}`;
+      url = `/api/loan/user/${userId}`;
     } else if (userRole === "manager" || userRole === "employee") {
       url = "/api/loan";
     }

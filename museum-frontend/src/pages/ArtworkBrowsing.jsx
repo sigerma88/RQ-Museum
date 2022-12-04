@@ -88,6 +88,80 @@ export function LoanStatus({ isAvailableForLoan, isOnLoan }) {
 }
 
 /**
+ * More detailed Loan Status message for staff
+ *
+ * @param isAvailableForLoan - If artwork is loanable
+ * @param isOnLoan - If artwork is on loan
+ * @param artworkId - The artwork ID
+ * @returns The loan status message
+ * @author Kevin
+ * @author Siger
+ */
+export function LoanStatusForStaff({
+  isAvailableForLoan,
+  isOnLoan,
+  artworkId,
+}) {
+  const [LoanRequested, setLoanRequested] = useState(false);
+
+  // Check if loan is requested
+  useEffect(() => {
+    axios
+      .get(`/api/loan/artwork/${artworkId}`)
+      .then((response) => {
+        if (response.data.length > 0) {
+          for (let i = 0; i < response.data.length; i++) {
+            if (response.data[i].requestAccepted === null) {
+              setLoanRequested(true);
+            }
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [artworkId]);
+
+  if (LoanRequested) {
+    return (
+      <Typography
+        variant="caption"
+        color={"gray"}
+        title="See loan requests"
+        style={{ cursor: "pointer" }}
+        onClick={() => (window.location = "/loan")}
+      >
+        <span className="yellow-dot"></span> Loan requested
+      </Typography>
+    );
+  } else if (!isAvailableForLoan) {
+    return (
+      <Typography variant="caption" color={"gray"}>
+        <span className="red-dot"></span> Unavailable for loan
+      </Typography>
+    );
+  } else if (isAvailableForLoan && !isOnLoan) {
+    return (
+      <Typography variant="caption" color={"gray"}>
+        <span className="green-dot"></span> Available for loan
+      </Typography>
+    );
+  } else if (isOnLoan) {
+    return (
+      <Typography
+        variant="caption"
+        color={"gray"}
+        title="See artworks on loan"
+        style={{ cursor: "pointer" }}
+        onClick={() => (window.location = "/loan")}
+      >
+        <span className="orange-dot"></span> Currently on loan
+      </Typography>
+    );
+  }
+}
+
+/**
  * This component displays a list of artworks
  *
  * @param artworks - The artworks to display
@@ -97,6 +171,8 @@ export function LoanStatus({ isAvailableForLoan, isOnLoan }) {
  * @author Kevin
  */
 function ArtworkList({ artworks }) {
+  const { loggedIn, userRole } = useContext(LoginContext);
+
   return (
     <Grid container spacing={4}>
       {artworks.map((card) => (
@@ -160,10 +236,19 @@ function ArtworkList({ artworks }) {
                         }
                   }
                 >
-                  <LoanStatus
-                    isAvailableForLoan={card.isAvailableForLoan}
-                    isOnLoan={card.isOnLoan}
-                  />
+                  {loggedIn &&
+                  (userRole === "manager" || userRole === "employee") ? (
+                    <LoanStatusForStaff
+                      isAvailableForLoan={card.isAvailableForLoan}
+                      isOnLoan={card.isOnLoan}
+                      artworkId={card.artworkId}
+                    />
+                  ) : (
+                    <LoanStatus
+                      isAvailableForLoan={card.isAvailableForLoan}
+                      isOnLoan={card.isOnLoan}
+                    />
+                  )}
                 </div>
               </CardContent>
             </a>

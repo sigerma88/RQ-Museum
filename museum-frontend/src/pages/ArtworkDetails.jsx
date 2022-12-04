@@ -16,7 +16,7 @@ import {
   Grid,
 } from "@mui/material";
 import { LoginContext } from "../Contexts/LoginContext";
-import { LoanStatus } from "./ArtworkBrowsing";
+import { LoanStatus, LoanStatusForStaff } from "./ArtworkBrowsing";
 import LockIcon from "@mui/icons-material/Lock";
 import "./LoanStatus.css";
 
@@ -377,9 +377,10 @@ function StaffArtworkLoan({ artwork }) {
             <ListItemText
               primary="Loan status"
               secondary={
-                <LoanStatus
+                <LoanStatusForStaff
                   isAvailableForLoan={artwork.isAvailableForLoan}
                   isOnLoan={artwork.isOnLoan}
+                  artworkId={artwork.artworkId}
                 />
               }
             ></ListItemText>

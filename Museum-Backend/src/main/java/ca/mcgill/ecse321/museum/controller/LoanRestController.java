@@ -69,7 +69,7 @@ public class LoanRestController {
    * @return List of all loans
    * @author Eric
    */
-  @GetMapping(value = { "/view/{userId}", "/view/{userId}/" })
+  @GetMapping(value = { "/user/{userId}", "/user/{userId}/" })
   public ResponseEntity<?> getLoansByUserId(HttpServletRequest request, @PathVariable("userId") Long userId) {
     try {
       HttpSession session = request.getSession();
@@ -86,6 +86,34 @@ public class LoanRestController {
 
       List<LoanDto> loanDtos = new ArrayList<LoanDto>();
       for (Loan loan : loanService.getAllLoansByUserId(userId)) {
+        loanDtos.add(DtoUtility.convertToDto(loan));
+      }
+      return ResponseEntity.ok(loanDtos);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+
+  /**
+   * RESTful API to get all loans by artworkId
+   *
+   * @param artworkId - Long Id artwork
+   * @return List of all loans
+   * @author Siger
+   */
+  @GetMapping(value = { "/artwork/{artworkId}", "/artwork/{artworkId}/" })
+  public ResponseEntity<?> getLoansByArtworkId(HttpServletRequest request, @PathVariable("artworkId") Long artworkId) {
+    try {
+      HttpSession session = request.getSession();
+      if (!AuthenticationUtility.isLoggedIn(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not logged in");
+      } else if (!AuthenticationUtility.isStaffMember(session)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body("You are not authorized to access this");
+      }
+
+      List<LoanDto> loanDtos = new ArrayList<LoanDto>();
+      for (Loan loan : loanService.getAllLoansByArtworkId(artworkId)) {
         loanDtos.add(DtoUtility.convertToDto(loan));
       }
       return ResponseEntity.ok(loanDtos);
