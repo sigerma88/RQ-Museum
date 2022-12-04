@@ -260,7 +260,7 @@ public class ArtworkService {
 
     // Delete loan if artwork is on loan
     List<Loan> loan = loanRepository.findLoanByArtwork(artwork);
-    if (loan != null || loan.size() > 0) {
+    if (loan != null && loan.size() > 0) {
       loanRepository.deleteLoanByArtwork(artwork);
     }
 
