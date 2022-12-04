@@ -13,6 +13,7 @@ import {
   DialogContent,
   DialogTitle,
   Avatar,
+  Grid,
 } from "@mui/material";
 import { LoginContext } from "../Contexts/LoginContext";
 import { LoanStatus } from "./ArtworkBrowsing";
@@ -222,7 +223,6 @@ function VisitorArtworkLoan({ artwork, userRole, loggedIn, userId }) {
             </a>
           </div>
         )}
-        {/* TODO: Add form for manager or employee to edit artwork  */}
       </div>
     );
   } else {
@@ -328,10 +328,32 @@ function VisitorArtworkDetails({ artwork, userRole, loggedIn, userId }) {
  */
 function StaffArtworkLoan({ artwork }) {
   return (
-    <div>
-      <Typography variant="h5" margin={2}>
-        Loan information
-      </Typography>
+    <div style={{ margin: "50px auto" }}>
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          width: "70%",
+          margin: "auto",
+        }}
+      >
+        <Grid item xs={6}>
+          <Typography variant="h5" margin={2}>
+            Loan information
+          </Typography>
+        </Grid>
+        <Grid item xs={6}>
+          <Button
+            variant="contained"
+            style={{ margin: 2 }}
+            onClick={() => {
+              // TODO: Edit loan info
+            }}
+          >
+            Edit loan info
+          </Button>
+        </Grid>
+      </Grid>
       <List
         style={{
           width: "70%",
@@ -396,18 +418,66 @@ function StaffArtworkDetails({ artwork }) {
 
   return (
     <>
-      <Typography variant="h4" margin={5}>
-        {artwork.name}
-      </Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6}>
+          <Typography variant="h4" margin={5}>
+            {artwork.name}
+          </Typography>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ marginTop: 5, marginLeft: 2 }}
+            onClick={() => {
+              // TODO: Change artwork image
+            }}
+          >
+            Change image
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            sx={{ marginTop: 5, marginLeft: 2 }}
+            onClick={() => {
+              // TODO: Delete artwork
+            }}
+          >
+            Delete artwork
+          </Button>
+        </Grid>
+      </Grid>
       <img
         src={artwork.image}
         alt="artwork"
         style={{ height: imageHeight, borderRadius: 10 }}
       />
       <div style={{ margin: "50px auto" }}>
-        <Typography variant="h5" margin={2}>
-          Artwork information
-        </Typography>
+        <Grid
+          container
+          spacing={2}
+          sx={{
+            width: "70%",
+            margin: "auto",
+          }}
+        >
+          <Grid item xs={6}>
+            <Typography variant="h5" margin={2}>
+              Artwork information
+            </Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <Button
+              variant="contained"
+              style={{ margin: 2 }}
+              onClick={() => {
+                // TODO: Edit artwork info
+              }}
+            >
+              Edit artwork info
+            </Button>
+          </Grid>
+        </Grid>
         <List
           style={{
             display: "flex",
@@ -447,6 +517,62 @@ function StaffArtworkDetails({ artwork }) {
       </div>
 
       <StaffArtworkLoan artwork={artwork} />
+
+      <div style={{ margin: "50px auto" }}>
+        <Grid
+          container
+          spacing={2}
+          sx={{
+            width: "70%",
+            margin: "auto",
+          }}
+        >
+          <Grid item xs={6}>
+            <Typography variant="h5" margin={2}>
+              Room
+            </Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <Button
+              variant="contained"
+              style={{ margin: 2 }}
+              onClick={() => {
+                // TODO: Move artwork
+              }}
+            >
+              Move artwork
+            </Button>
+          </Grid>
+        </Grid>
+        <List
+          style={{
+            width: "70%",
+            padding: "auto",
+            margin: "auto",
+            display: "flex",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <div style={{ width: "80%" }}>
+            <ListItem>
+              <ListItemText
+                primary="Museum"
+                secondary={artwork.room ? artwork.room.museum.name : "None"}
+              />
+            </ListItem>
+            <Divider variant="middle" />
+          </div>
+          <div style={{ width: "80%" }}>
+            <ListItem>
+              <ListItemText
+                primary="Room"
+                secondary={artwork.room ? artwork.room.roomName : "None"}
+              ></ListItemText>
+            </ListItem>
+            <Divider variant="middle" />
+          </div>
+        </List>
+      </div>
     </>
   );
 }

@@ -318,6 +318,16 @@ function StaffArtworkBrowsing({ artworks, room }) {
 
       <Container sx={{ py: 5 }}>
         <ArtworkList artworks={artworks} />
+        <Button
+          variant="contained"
+          color="success"
+          sx={{ marginTop: 5 }}
+          onClick={() => {
+            // TODO: Add artwork
+          }}
+        >
+          New Artwork
+        </Button>
       </Container>
 
       {room && room.museum && (
