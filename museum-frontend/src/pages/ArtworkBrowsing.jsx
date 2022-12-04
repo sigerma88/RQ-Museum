@@ -16,6 +16,7 @@ import { LoginContext } from "../Contexts/LoginContext";
 import "./LoanStatus.css";
 import "./ArtworkBrowsing.css";
 import { RoomDetails } from "./RoomDetails";
+import { EditRoom } from "./EditRoom";
 
 /**
  * Function to get the artworks from the server
@@ -326,11 +327,16 @@ function VisitorArtworkBrowsing({ artworks, room }) {
  * @param room - The room to display
  * @author Siger
  */
-function StaffArtworkBrowsing({ artworks, room }) {
+function StaffArtworkBrowsing({ artworks, room, setRoom }) {
   // Room details modal
   const [roomDetailModalOpen, setRoomDetailModalOpen] = useState(false);
   const handleRoomDetailModalOpen = () => setRoomDetailModalOpen(true);
   const handleRoomDetailModalClose = () => setRoomDetailModalOpen(false);
+
+  // Edit room modal
+  const [editRoomModalOpen, setEditRoomModalOpen] = useState(false);
+  const handleEditRoomModalOpen = () => setEditRoomModalOpen(true);
+  const handleEditRoomModalClose = () => setEditRoomModalOpen(false);
 
   return (
     <>
@@ -380,9 +386,7 @@ function StaffArtworkBrowsing({ artworks, room }) {
               color="primary"
               disabled={room.roomName === "All Rooms"}
               sx={{ marginTop: 5, marginLeft: 2 }}
-              onClick={() => {
-                // TODO: Edit room
-              }}
+              onClick={handleEditRoomModalOpen}
             >
               Edit Room
             </Button>
@@ -422,6 +426,14 @@ function StaffArtworkBrowsing({ artworks, room }) {
           handleClose={handleRoomDetailModalClose}
         />
       )}
+      {room && room.museum && (
+        <EditRoom
+          room={room}
+          setRoom={setRoom}
+          open={editRoomModalOpen}
+          handleClose={handleEditRoomModalClose}
+        />
+      )}
     </>
   );
 }
@@ -450,11 +462,13 @@ function ArtworkBrowsing() {
     getRoom(roomId).then((room) => {
       setRoom(room);
     });
-  }, [roomId]);
+  }, [roomId, room]);
 
   const { loggedIn, userRole } = useContext(LoginContext);
   if (loggedIn && (userRole === "manager" || userRole === "employee")) {
-    return <StaffArtworkBrowsing artworks={artworks} room={room} />;
+    return (
+      <StaffArtworkBrowsing artworks={artworks} room={room} setRoom={setRoom} />
+    );
   } else {
     return <VisitorArtworkBrowsing artworks={artworks} room={room} />;
   }

@@ -135,10 +135,15 @@ public class RoomService {
     }
 
     // Set new values
-    if (roomName != null)
+    if (roomName != null && roomName.trim().length() != 0)
       room.setRoomName(roomName);
-    if (roomType != null)
+    if (roomType != null) {
+      // Check if new room type is valid
+      if (roomType != RoomType.Storage && room.getCurrentNumberOfArtwork() > getMaxNumberOfArtwork(roomType)) {
+        throw new IllegalArgumentException("Room type capacity is too small");
+      }
       room.setRoomType(roomType);
+    }
     if (museum != null)
       room.setMuseum(museum);
     roomRepository.save(room);

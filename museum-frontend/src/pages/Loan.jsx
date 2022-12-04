@@ -162,7 +162,7 @@ function LoanRequests({ loanAccepted, setLoanAccepted }) {
         setLoanAccepted(!loanAccepted);
       })
       .catch(function (error) {
-        console.log(error.response.data);
+        console.log(error);
       });
   }
 
@@ -178,7 +178,7 @@ function LoanRequests({ loanAccepted, setLoanAccepted }) {
         setLoans(loans.filter((aLoan) => aLoan.loanId !== loan.loanId));
       })
       .catch(function (error) {
-        console.log(error.response.data);
+        console.log(error);
       });
   }
 
@@ -189,7 +189,7 @@ function LoanRequests({ loanAccepted, setLoanAccepted }) {
         setLoans(loans.filter((aLoan) => aLoan.loanId !== loanId));
       })
       .catch(function (error) {
-        console.log(error.response.data);
+        console.log(error);
       });
   }
 

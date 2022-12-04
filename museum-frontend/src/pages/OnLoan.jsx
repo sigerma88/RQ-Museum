@@ -49,7 +49,7 @@ export function OnLoan({ loanAccepted }) {
         setLoans(loans.filter((aLoan) => aLoan.loanId !== loanId));
       })
       .catch(function (error) {
-        console.log(error.response.data);
+        console.log(error);
       });
   }
 

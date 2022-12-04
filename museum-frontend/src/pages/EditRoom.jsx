@@ -3,109 +3,74 @@ import axios from "axios";
 import {
   Typography,
   TextField,
-  Button,
   Box,
-  Paper,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import "./Login.css";
 
 /**
- * Edit room
- * @returns  Edit room page
+ * Dialog with the form to edit a room
+ *
+ * @returns  Edit room form
  * @author kieyanmamiche
+ * @author Siger
  */
 
-export function EditRoom() {
-  const [roomId, setRoomId] = useState(null);
-  const [roomName, setRoomName] = useState(null);
-  const [roomType, setRoomType] = useState(null);
-  const [museumId, setMuseumId] = useState(null);
+export function EditRoom({ open, handleClose, room, setRoom }) {
+  const roomId = room.roomId;
+  const museumName = room.museum.name;
+  const [roomName, setRoomName] = useState(room.roomName);
+  const [roomType, setRoomType] = useState(room.roomType);
   const [errorMessage, setErrorMessage] = useState("");
   const [isFormInvalid, setIsFormInvalid] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  /**
-   * Set room to null when text input is just whitespace
-   * @author kieyanmamiche
-   */
-  useEffect(() => {
-    if (roomId != null && roomId.trim().length === 0) {
-      setRoomId(null);
-    }
-
-    if (roomName != null && roomName.trim().length === 0) {
-      setRoomName(null);
-    }
-
-    if (roomType != null && roomType.trim().length === 0) {
-      setRoomType(null);
-    }
-
-    if (museumId != null && museumId.trim().length === 0) {
-      setMuseumId(null);
-    }
-  }, [roomId, roomName, roomType, museumId]);
-
-  /**
-   * Function which is called when we submit the form
-   * @author kieyanmamiche
-   */
+  // Function which is called when we submit the form
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (roomId == null) {
-      setErrorMessage("No room id entered");
-      setIsFormInvalid(true);
-    } else {
-      axios
-        .put(`/api/room/${roomId}`, {
-          roomName: roomName,
-          roomType: roomType,
-          museumId: museumId,
-        })
-        .then(function (response) {
-          if (response.status === 200) {
-            setErrorMessage(null);
-            setIsFormInvalid(false);
-
-            if (roomName !== null) {
-              setRoomName(roomName);
-              localStorage.setItem("roomName", roomName);
-            }
-
-            if (roomType !== null) {
-              setRoomType(roomType);
-              localStorage.setItem("roomType", roomType);
-            }
-
-            if (museumId !== null) {
-              setMuseumId(museumId);
-              localStorage.setItem("museumId", museumId);
-            }
-          }
-        })
-        .catch(function (error) {
-          setErrorMessage(error.response.data);
+    axios
+      .put(`/api/room/${roomId}`, {
+        roomName: roomName,
+        roomType: roomType,
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setErrorMessage(null);
+          setIsFormInvalid(false);
+          room.roomName = roomName;
+          room.roomType = roomType;
+          setRoom(room);
+          setLoading(false);
+          handleClose();
+        } else {
+          setLoading(false);
+          setErrorMessage("Something went wrong");
           setIsFormInvalid(true);
-        });
-    }
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setErrorMessage(error.response.data);
+        setIsFormInvalid(true);
+        setLoading(false);
+      });
   };
 
-  /**
-   * The component that we return which represents the EditRoom Form
-   * @author kieyanmamiche
-   */
   return (
     <>
-      <div className="EditRoom" style={{ marginTop: "3%" }}>
-        <Typography style={{ fontSize: "36px" }} gutterBottom>
-          Edit Room
-        </Typography>
+      <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+        <DialogTitle>Edit Room</DialogTitle>
 
-        <div
+        <DialogContent
           style={{
             display: "flex",
             justifyContent: "space-evenly",
@@ -113,94 +78,67 @@ export function EditRoom() {
             marginTop: "3%",
           }}
         >
-          <Paper
-            elevation={3}
-            style={{
-              width: "60%",
-              padding: "50px 50px",
+          <form
+            style={{ width: "100%", alignContent: "flex-end" }}
+            onSubmit={(event) => {
+              setLoading(true);
+              handleSubmit(event);
             }}
           >
-            <form
-              style={{ width: "100%", alignContent: "flex-end" }}
-              onSubmit={handleSubmit}
+            <Box
+              sx={{
+                marginTop: 3,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
             >
-              <Box
-                sx={{
-                  marginTop: 3,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <TextField
-                  margin="normal"
-                  id="roomId"
-                  label="RoomId"
-                  name="roomId"
-                  autoComplete="roomId"
-                  autoFocus
-                  onChange={(e) => setRoomId(e.target.value)}
-                  defaultValue={roomId}
-                  className="login-field"
-                />
-                <TextField
-                  margin="normal"
-                  id="roomName"
-                  label="Room Name"
-                  name="room name"
-                  autoComplete="room name"
-                  autoFocus
-                  onChange={(e) => setRoomName(e.target.value)}
-                  defaultValue={roomName}
-                  className="login-field"
-                />
-                <FormControl className="login-field">
-                  <InputLabel id="demo-simple-select-label">
-                    Room Type
-                  </InputLabel>
-                  <Select
-                    labelId="roomType"
-                    id="roomType"
-                    label="Room Type"
-                    onChange={(e) => setRoomType(e.target.value)}
-                  >
-                    <MenuItem value={"0"}>Small</MenuItem>
-                    <MenuItem value={"1"}>Large</MenuItem>
-                    <MenuItem value={"2"}>Storage</MenuItem>
-                  </Select>
-                </FormControl>
-                <TextField
-                  margin="normal"
-                  id="museumId"
-                  label="Museum Id"
-                  name="museum id"
-                  autoComplete="museum id"
-                  autoFocus
-                  onChange={(e) => setMuseumId(e.target.value)}
-                  className="login-field"
-                />
-                <div
-                  style={{
-                    height: 20,
-                  }}
+              <Typography>Room ID: {roomId}</Typography>
+              <Typography>Museum: {museumName}</Typography>
+              <TextField
+                id="roomName"
+                label="Room Name"
+                name="roomName"
+                margin="normal"
+                autoFocus
+                className="login-field"
+                value={roomName}
+                onChange={(e) => setRoomName(e.target.value)}
+                error={isFormInvalid}
+              />
+              <FormControl className="login-field">
+                <InputLabel>Room Type</InputLabel>
+                <Select
+                  labelId="roomType"
+                  id="roomType"
+                  label="Room Type"
+                  value={roomType}
+                  onChange={(e) => setRoomType(e.target.value)}
+                  error={isFormInvalid}
                 >
-                  {" "}
-                </div>
-                <Typography variant="p" component="p" color="red">
-                  {isFormInvalid && errorMessage}
-                </Typography>
-              </Box>
-              <Button
-                type="submit"
+                  <MenuItem value={"Small"}>Small</MenuItem>
+                  <MenuItem value={"Large"}>Large</MenuItem>
+                  <MenuItem value={"Storage"}>Storage</MenuItem>
+                </Select>
+              </FormControl>
+              <Typography variant="p" component="p" color="red">
+                {isFormInvalid && errorMessage}
+              </Typography>
+            </Box>
+            <DialogActions>
+              <LoadingButton
                 variant="contained"
-                sx={{ mt: 3, mb: 2, width: "40%" }}
+                loading={loading}
+                loadingPosition="end"
+                sx={{ mt: 3, mb: 2, width: "30%" }}
+                type="submit"
               >
                 Edit Room
-              </Button>
-            </form>
-          </Paper>
-        </div>
-      </div>
+              </LoadingButton>
+            </DialogActions>
+          </form>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
