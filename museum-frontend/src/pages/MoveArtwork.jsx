@@ -57,7 +57,6 @@ export function MoveArtwork({ open, handleClose, artwork, setArtwork }) {
   // Function which is called when we submit the form to move the artwork
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     axios
       .post(`/api/artwork//moveArtworkToRoom/${artworkId}/${roomId}`, null)
       .then((response) => {
@@ -66,10 +65,8 @@ export function MoveArtwork({ open, handleClose, artwork, setArtwork }) {
           setIsFormInvalid(false);
           artwork.room.roomId = roomId;
           setArtwork(artwork);
-          setLoading(false);
           handleClose();
         } else {
-          setLoading(false);
           setErrorMessage("Something went wrong");
           setIsFormInvalid(true);
         }
@@ -78,8 +75,9 @@ export function MoveArtwork({ open, handleClose, artwork, setArtwork }) {
         console.log(error);
         setErrorMessage(error.response.data);
         setIsFormInvalid(true);
-        setLoading(false);
       });
+
+    setLoading(false);
   };
 
   return (
@@ -141,7 +139,7 @@ export function MoveArtwork({ open, handleClose, artwork, setArtwork }) {
                 sx={{ mt: 3, mb: 2, width: "50%" }}
                 type="submit"
               >
-                Move artwork
+                Submit
               </LoadingButton>
             </DialogActions>
           </form>

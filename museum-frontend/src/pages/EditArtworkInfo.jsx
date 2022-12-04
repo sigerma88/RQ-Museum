@@ -42,10 +42,8 @@ export function EditArtworkInfo({ open, handleClose, artwork, setArtwork }) {
           artwork.name = artworkName;
           artwork.artist = artworkArtist;
           setArtwork(artwork);
-          setLoading(false);
           handleClose();
         } else {
-          setLoading(false);
           setErrorMessage("Something went wrong");
           setIsFormInvalid(true);
         }
@@ -54,14 +52,15 @@ export function EditArtworkInfo({ open, handleClose, artwork, setArtwork }) {
         console.log(error);
         setErrorMessage(error.response.data);
         setIsFormInvalid(true);
-        setLoading(false);
       });
+
+    setLoading(false);
   };
 
   return (
     <>
       <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
-        <DialogTitle>Edit Artwork Info</DialogTitle>
+        <DialogTitle>Edit Artwork Information</DialogTitle>
 
         <DialogContent
           style={{
@@ -120,7 +119,7 @@ export function EditArtworkInfo({ open, handleClose, artwork, setArtwork }) {
                 sx={{ mt: 3, mb: 2, width: "50%" }}
                 type="submit"
               >
-                Edit Artwork Info
+                Submit
               </LoadingButton>
             </DialogActions>
           </form>

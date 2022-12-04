@@ -20,6 +20,7 @@ import { LoanStatus, LoanStatusForStaff } from "./ArtworkBrowsing";
 import LockIcon from "@mui/icons-material/Lock";
 import "./LoanStatus.css";
 import { EditArtworkInfo } from "./EditArtworkInfo";
+import { EditArtworkLoanInfo } from "./EditArtworkLoanInfo";
 import { MoveArtwork } from "./MoveArtwork";
 
 /**
@@ -410,7 +411,7 @@ function StaffArtworkInfo({ artwork, setArtwork }) {
         </div>
       </List>
 
-      {artwork && artwork.name && artwork.artist ? (
+      {artwork && artwork.artworkId ? (
         <EditArtworkInfo
           artwork={artwork}
           setArtwork={setArtwork}
@@ -431,6 +432,16 @@ function StaffArtworkInfo({ artwork, setArtwork }) {
  * @author Kevin
  */
 function StaffArtworkLoan({ artwork, setArtwork }) {
+  // Dialog for editing artwork loan info
+  const [editArtworkLoanInfoDialogOpen, setEditArtworkLoanInfoDialogOpen] =
+    useState(false);
+  const handleEditArtworkLoanInfoDialogOpen = () => {
+    setEditArtworkLoanInfoDialogOpen(true);
+  };
+  const handleEditArtworkLoanInfoDialogClose = () => {
+    setEditArtworkLoanInfoDialogOpen(false);
+  };
+
   return (
     <div style={{ margin: "50px auto" }}>
       <Grid
@@ -450,9 +461,7 @@ function StaffArtworkLoan({ artwork, setArtwork }) {
           <Button
             variant="contained"
             style={{ margin: 2 }}
-            onClick={() => {
-              // TODO: Edit loan info
-            }}
+            onClick={handleEditArtworkLoanInfoDialogOpen}
           >
             Edit loan info
           </Button>
@@ -492,7 +501,15 @@ function StaffArtworkLoan({ artwork, setArtwork }) {
           <Divider variant="middle" />
         </div>
       </List>
-      {/* TODO: Add form for manager or employee to edit artwork  */}
+
+      {artwork && artwork.artworkId ? (
+        <EditArtworkLoanInfo
+          artwork={artwork}
+          setArtwork={setArtwork}
+          open={editArtworkLoanInfoDialogOpen}
+          handleClose={handleEditArtworkLoanInfoDialogClose}
+        />
+      ) : null}
     </div>
   );
 }

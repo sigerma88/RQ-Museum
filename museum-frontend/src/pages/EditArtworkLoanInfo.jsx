@@ -1,58 +1,61 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import {
   Typography,
   TextField,
-  Button,
   Box,
-  Paper,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
-import "./Login.css";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 /**
- * Edit EditArtworkLoanInfo
+ * Function to check if the input is in currency format
+ *
+ * @param value - The value to check
+ * @returns  True if the value is in currency format, false otherwise
+ * @author Siger
+ */
+function isCurrency(value) {
+  return /^\d+(\.\d{1,2})?$/.test(value);
+}
+
+/**
+ * Function for the dialog to edit an artwork's loan info
+ *
  * @returns  A form to edit the artwork loan info
  * @author kieyanmamiche
+ * @author Siger
  */
 
-export function EditArtworkLoanInfo() {
-  const [artworkId, setArtworkId] = useState(null);
-  const [isAvailableForLoan, setIsAvailableForLoan] = useState(null);
-  const [loanFee, setLoanFee] = useState(null);
+export function EditArtworkLoanInfo({
+  open,
+  handleClose,
+  artwork,
+  setArtwork,
+}) {
+  const artworkId = artwork.artworkId;
+  const [isAvailableForLoan, setIsAvailableForLoan] = useState(
+    artwork.isAvailableForLoan
+  );
+  const [loanFee, setLoanFee] = useState(artwork.loanFee);
+  const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isFormInvalid, setIsFormInvalid] = useState(false);
 
-  /**
-   * To set EditArtworkLoanInfo parameters to null when text input is just whitespace
-   * @author kieyanmamiche
-   */
-  useEffect(() => {
-    if (artworkId != null && artworkId.trim().length === 0) {
-      setArtworkId(null);
-    }
-
-    if (isAvailableForLoan != null && isAvailableForLoan.trim().length === 0) {
-      setIsAvailableForLoan(null);
-    }
-
-    if (loanFee != null && loanFee.trim().length === 0) {
-      setLoanFee(null);
-    }
-  }, [artworkId, isAvailableForLoan, loanFee]);
-
-  /**
-   * Function which is called when we submit the form
-   * @author kieyanmamiche
-   */
+  // Function which is called when we submit the form
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (artworkId == null) {
-      setErrorMessage("No artwork id entered");
+    // Check if loan fee is in currency format
+    if (!isCurrency(loanFee)) {
+      setErrorMessage("Loan fee must be in currency format");
       setIsFormInvalid(true);
     } else {
       axios
@@ -64,37 +67,31 @@ export function EditArtworkLoanInfo() {
           if (response.status === 200) {
             setErrorMessage(null);
             setIsFormInvalid(false);
-
-            if (isAvailableForLoan !== null) {
-              setIsAvailableForLoan(isAvailableForLoan);
-              localStorage.setItem("isAvailableForLoan", isAvailableForLoan);
-            }
-
-            if (loanFee !== null) {
-              setLoanFee(loanFee);
-              localStorage.setItem("loanFee", loanFee);
-            }
+            artwork.isAvailableForLoan = isAvailableForLoan;
+            artwork.loanFee = loanFee;
+            setArtwork(artwork);
+            handleClose();
+          } else {
+            setErrorMessage("Something went wrong");
+            setIsFormInvalid(true);
           }
         })
         .catch(function (error) {
+          console.log(error);
           setErrorMessage(error.response.data);
           setIsFormInvalid(true);
         });
     }
+
+    setLoading(false);
   };
 
-  /**
-   * The component that we return which represents the EditArtworkLoanInfo Form
-   * @author kieyanmamiche
-   */
   return (
     <>
-      <div className="EditArtworkLoanInfo" style={{ marginTop: "3%" }}>
-        <Typography style={{ fontSize: "36px" }} gutterBottom>
-          Edit Artwork Loan Info
-        </Typography>
+      <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
+        <DialogTitle>Edit Artwork Loan Information</DialogTitle>
 
-        <div
+        <DialogContent
           style={{
             display: "flex",
             justifyContent: "space-evenly",
@@ -102,83 +99,68 @@ export function EditArtworkLoanInfo() {
             marginTop: "3%",
           }}
         >
-          <Paper
-            elevation={3}
-            style={{
-              width: "60%",
-              padding: "50px 50px",
+          <form
+            style={{ width: "100%", alignContent: "flex-end" }}
+            onSubmit={(event) => {
+              setLoading(true);
+              handleSubmit(event);
             }}
           >
-            <form
-              style={{ width: "100%", alignContent: "flex-end" }}
-              onSubmit={handleSubmit}
+            <Box
+              sx={{
+                marginTop: 3,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
             >
-              <Box
-                sx={{
-                  marginTop: 3,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <TextField
-                  margin="normal"
-                  id="artworkId"
-                  label="ArtworkId"
-                  name="artworkId"
-                  autoComplete="artworkId"
-                  autoFocus
-                  onChange={(e) => setArtworkId(e.target.value)}
-                  defaultValue={artworkId}
-                  className="login-field"
-                />
-                <FormControl className="login-field">
-                  <InputLabel id="demo-simple-select-label">
-                    Is artwork available for loan?
-                  </InputLabel>
-                  <Select
-                    labelId="isAvailableForLoan"
-                    id="isAvailableForLoan"
-                    label="Is artwork available for loan"
-                    onChange={(e) => setIsAvailableForLoan(e.target.value)}
-                  >
-                    <MenuItem value={"true"}>Available for loan</MenuItem>
-                    <MenuItem value={"false"}>Not available for loan</MenuItem>
-                  </Select>
-                </FormControl>
-                <TextField
-                  margin="normal"
-                  id="loanFee"
-                  label="Loan Fee"
-                  name="Loan Fee"
-                  autoComplete="Loan Fee"
-                  autoFocus
-                  onChange={(e) => setLoanFee(e.target.value)}
-                  defaultValue={loanFee}
-                  className="login-field"
-                />
-                <div
-                  style={{
-                    height: 20,
-                  }}
+              <Typography>Artwork ID: {artworkId}</Typography>
+              <FormControl sx={{ width: "60%", marginBottom: 3, marginTop: 3 }}>
+                <InputLabel id="demo-simple-select-label">
+                  Available for loan?
+                </InputLabel>
+                <Select
+                  labelId="isAvailableForLoan"
+                  id="isAvailableForLoan"
+                  label="Available for loan?"
+                  value={isAvailableForLoan}
+                  onChange={(e) => setIsAvailableForLoan(e.target.value)}
+                  error={isFormInvalid}
                 >
-                  {" "}
-                </div>
-                <Typography variant="p" component="p" color="red">
-                  {isFormInvalid && errorMessage}
-                </Typography>
-              </Box>
-              <Button
-                type="submit"
+                  <MenuItem value={"true"}>Available for loan</MenuItem>
+                  <MenuItem value={"false"}>Not available for loan</MenuItem>
+                </Select>
+              </FormControl>
+              <TextField
+                id="loanFee"
+                label="Loan Fee"
+                name="Loan Fee"
+                margin="normal"
+                autoFocus
+                sx={{ width: "60%" }}
+                value={loanFee}
+                onChange={(e) => setLoanFee(e.target.value)}
+                error={isFormInvalid}
+              />
+              <Typography variant="p" component="p" color="red">
+                {isFormInvalid && errorMessage}
+              </Typography>
+            </Box>
+
+            <DialogActions>
+              <LoadingButton
                 variant="contained"
-                sx={{ mt: 3, mb: 2, width: "40%" }}
+                loading={loading}
+                loadingPosition="end"
+                sx={{ mt: 3, mb: 2, width: "50%" }}
+                type="submit"
               >
-                Edit Artwork Loan Info
-              </Button>
-            </form>
-          </Paper>
-        </div>
-      </div>
+                Submit
+              </LoadingButton>
+            </DialogActions>
+          </form>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

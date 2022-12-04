@@ -48,10 +48,8 @@ export function EditRoom({ open, handleClose, room, setRoom }) {
           room.roomName = roomName;
           room.roomType = roomType;
           setRoom(room);
-          setLoading(false);
           handleClose();
         } else {
-          setLoading(false);
           setErrorMessage("Something went wrong");
           setIsFormInvalid(true);
         }
@@ -60,8 +58,9 @@ export function EditRoom({ open, handleClose, room, setRoom }) {
         console.log(error);
         setErrorMessage(error.response.data);
         setIsFormInvalid(true);
-        setLoading(false);
       });
+
+    setLoading(false);
   };
 
   return (
@@ -133,7 +132,7 @@ export function EditRoom({ open, handleClose, room, setRoom }) {
                 sx={{ mt: 3, mb: 2, width: "30%" }}
                 type="submit"
               >
-                Edit Room
+                Submit
               </LoadingButton>
             </DialogActions>
           </form>
