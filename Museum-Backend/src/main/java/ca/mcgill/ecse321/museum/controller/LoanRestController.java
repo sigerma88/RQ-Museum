@@ -191,11 +191,16 @@ public class LoanRestController {
             .body("You need to be a museum user to access this");
       }
 
-      // Check if loan is associated with the logged in visitor
       Loan loan = loanService.getLoanById(loanId);
       if (!AuthenticationUtility.isStaffMember(session)) {
         if (!AuthenticationUtility.checkUserId(session, loan.getVisitor().getMuseumUserId())) {
+          // Check if loan is associated with the logged in visitor
           return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to delete this loan");
+        }
+        // Check if loan is accepted and the delete is done by a visitor
+        if (loan.getRequestAccepted()) {
+          return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+              .body("You are not authorized to delete a loan that has been accepted");
         }
       }
 

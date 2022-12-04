@@ -11,6 +11,7 @@ import {
   CardMedia,
   Button,
   IconButton,
+  Tooltip,
 } from "@mui/material/";
 import CircleIcon from "@mui/icons-material/Circle";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -120,9 +121,9 @@ function DisplayRoom(props) {
  * @returns A card for each loan request
  * @author Eric
  */
-function LoanRequests() {
-  const [loans, setLoans] = useState([]); // initial state set to empty array
+function LoanRequests({ loanAccepted, setLoanAccepted }) {
   const { userId, userRole } = useContext(LoginContext);
+  const [loans, setLoans] = useState([]);
 
   useEffect(() => {
     let url = "";
@@ -158,6 +159,7 @@ function LoanRequests() {
       })
       .then(function (response) {
         setLoans(loans.filter((aLoan) => aLoan.loanId !== loan.loanId));
+        setLoanAccepted(!loanAccepted);
       })
       .catch(function (error) {
         console.log(error.response.data);
@@ -184,7 +186,6 @@ function LoanRequests() {
     axios
       .delete(`/api/loan/delete/${loanId}`)
       .then(function (response) {
-        console.log(response.data);
         setLoans(loans.filter((aLoan) => aLoan.loanId !== loanId));
       })
       .catch(function (error) {
@@ -208,7 +209,7 @@ function LoanRequests() {
           <Container>
             <Grid container spacing={3} justifyContent="center">
               {loans.map((loan) => (
-                <Grid item key={loan.loanID} xs={4}>
+                <Grid item key={loan.loanId} xs={4}>
                   <Card
                     sx={{
                       display: "flex",
@@ -265,14 +266,18 @@ function LoanRequests() {
                         loanElement={loan}
                         userRole={userRole}
                       />
-                      {userRole === "visitor" ? (
-                        <IconButton
-                          aria-label="delete"
-                          size="small"
-                          onClick={(e) => HandleDeleteBtnClick(loan.loanId)}
-                        >
-                          <DeleteIcon fontSize="inherit" />
-                        </IconButton>
+                      {userRole === "visitor" &&
+                      (loan.requestAccepted === null ||
+                        loan.requestAccepted === false) ? (
+                        <Tooltip title="Delete" placement="bottom" arrow>
+                          <IconButton
+                            aria-label="delete"
+                            size="medium"
+                            onClick={(e) => HandleDeleteBtnClick(loan.loanId)}
+                          >
+                            <DeleteIcon fontSize="inherit" />
+                          </IconButton>
+                        </Tooltip>
                       ) : (
                         ""
                       )}
@@ -321,13 +326,17 @@ function LoanRequests() {
  */
 export function Loan() {
   const { userRole } = useContext(LoginContext);
+  const [loanAccepted, setLoanAccepted] = useState(false);
 
   return (
     <>
       <Typography variant="h4" component="h1" marginTop={5} marginBottom={2}>
         Loan Requests
       </Typography>
-      <LoanRequests />
+      <LoanRequests
+        loanAccepted={loanAccepted}
+        setLoanAccepted={setLoanAccepted}
+      />
       {userRole === "manager" || userRole === "employee" ? (
         <div>
           <Typography
@@ -338,7 +347,7 @@ export function Loan() {
           >
             Artworks currently on loan
           </Typography>
-          <OnLoan />
+          <OnLoan loanAccepted={loanAccepted} />
         </div>
       ) : null}
     </>

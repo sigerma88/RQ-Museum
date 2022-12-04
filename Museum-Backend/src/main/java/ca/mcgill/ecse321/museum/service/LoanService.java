@@ -140,11 +140,12 @@ public class LoanService {
       throw new IllegalArgumentException("Loan does not exist");
     }
 
-    // If the patch is to accept the loan request, the artwork must be removed from
-    // the room it's in
+    // If the patch is to accept the loan request, the artwork must be updated to be on loan
     loan.setRequestAccepted(requestAccepted);
     if (requestAccepted) {
-      loan.setArtwork(artworkService.removeArtworkFromRoom(loan.getArtwork().getArtworkId()));
+      Artwork artwork = loan.getArtwork();
+      artwork.setIsOnLoan(true);
+      artworkRepository.save(artwork);
     }
     return loanRepository.save(loan);
   }
@@ -161,6 +162,13 @@ public class LoanService {
     Loan loan = loanRepository.findLoanByLoanId(loanId);
     if (loan == null) {
       throw new IllegalArgumentException("Loan does not exist");
+    }
+
+    // Update artwork if the loan request was accepted
+    if (loan.getRequestAccepted() != null && loan.getRequestAccepted()) {
+      Artwork artwork = loan.getArtwork();
+      artwork.setIsOnLoan(false);
+      artworkRepository.save(artwork);
     }
 
     loanRepository.deleteLoanByLoanId(loanId);

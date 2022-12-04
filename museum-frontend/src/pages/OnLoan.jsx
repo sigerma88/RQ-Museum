@@ -10,6 +10,7 @@ import {
   Typography,
   CardMedia,
   IconButton,
+  Tooltip,
 } from "@mui/material/";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -18,8 +19,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
  * @returns A card for each artwork on loan
  * @author Eric
  */
-export function OnLoan() {
-  const [loans, setLoans] = useState([]); // initial state set to empty array
+export function OnLoan({ loanAccepted }) {
+  const [loans, setLoans] = useState([]);
   const { userId, userRole } = useContext(LoginContext);
 
   useEffect(() => {
@@ -39,7 +40,7 @@ export function OnLoan() {
       .catch(function (error) {
         console.log(error);
       });
-  }, [userId, userRole]);
+  }, [userId, userRole, loanAccepted]);
 
   function HandleDeleteBtnClick(loanId) {
     axios
@@ -69,7 +70,7 @@ export function OnLoan() {
           <Container>
             <Grid container spacing={3} justifyContent="center">
               {loans.map((loan) => (
-                <Grid item key={loan.loanID} xs={4}>
+                <Grid item key={loan.loanId} xs={4}>
                   <Card
                     sx={{
                       display: "flex",
@@ -118,13 +119,15 @@ export function OnLoan() {
                       >
                         {"Loaned to: " + loan.visitorDto.name}
                       </Typography>
-                      <IconButton
-                        aria-label="delete"
-                        size="small"
-                        onClick={(e) => HandleDeleteBtnClick(loan.loanId)}
-                      >
-                        <DeleteIcon fontSize="inherit" />
-                      </IconButton>
+                      <Tooltip title="Delete" placement="bottom" arrow>
+                        <IconButton
+                          aria-label="delete"
+                          size="medium"
+                          onClick={(e) => HandleDeleteBtnClick(loan.loanId)}
+                        >
+                          <DeleteIcon fontSize="inherit" />
+                        </IconButton>
+                      </Tooltip>
                     </CardContent>
                   </Card>
                 </Grid>
