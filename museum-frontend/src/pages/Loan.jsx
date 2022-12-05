@@ -122,8 +122,14 @@ function DisplayRoom(props) {
  * @author Eric
  */
 function LoanRequests({ loanAccepted, setLoanAccepted }) {
-  const { userId, userRole } = useContext(LoginContext);
+  const [userId, setUserId] = useState(null);
+  const [userRole, setUserRole] = useState(null);
   const [loans, setLoans] = useState([]);
+
+  useEffect(() => {
+    setUserId(JSON.parse(localStorage.getItem("userId")));
+    setUserRole(localStorage.getItem("userRole"));
+  }, []);
 
   useEffect(() => {
     let url = "";
@@ -135,7 +141,6 @@ function LoanRequests({ loanAccepted, setLoanAccepted }) {
     axios
       .get(url)
       .then((response) => {
-        // if the request is successfull
         const loan = response.data;
         if (userRole === "visitor") {
           setLoans(loan);
