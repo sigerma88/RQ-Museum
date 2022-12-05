@@ -59,8 +59,8 @@ Run the following command on the terminal `brew install postgresql`
 ### MacOS
 
 1. Open Terminal
-2. Asses the PostgreSQL server
-   1. Command: `psql postgres`     
+2. Access the PostgreSQL server
+   1. Command: `psql postgres`
 3. Create a `museum` database (if it is the first time on this computer)
    1. Command: `CREATE DATABASE museum;`
 4. Switch to `museum` database
