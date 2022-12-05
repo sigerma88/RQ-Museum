@@ -1,0 +1,580 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 15.0
+-- Dumped by pg_dump version 15.0
+
+-- Started on 2022-12-04 23:56:21
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 214 (class 1259 OID 41475)
+-- Name: artwork; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.artwork (
+    artwork_id bigint NOT NULL,
+    artist character varying(255) NOT NULL,
+    image character varying(255) NOT NULL,
+    is_available_for_loan boolean NOT NULL,
+    is_on_loan boolean NOT NULL,
+    loan_fee double precision,
+    name character varying(255) NOT NULL,
+    room_id bigint
+);
+
+
+ALTER TABLE public.artwork OWNER TO postgres;
+
+--
+-- TOC entry 215 (class 1259 OID 41482)
+-- Name: employee; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.employee (
+    museum_user_id bigint NOT NULL,
+    email character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    password character varying(255) NOT NULL,
+    schedule_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.employee OWNER TO postgres;
+
+--
+-- TOC entry 225 (class 1259 OID 41548)
+-- Name: hibernate_sequence; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.hibernate_sequence
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.hibernate_sequence OWNER TO postgres;
+
+--
+-- TOC entry 216 (class 1259 OID 41489)
+-- Name: loan; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.loan (
+    loan_id bigint NOT NULL,
+    request_accepted boolean,
+    artwork_id bigint NOT NULL,
+    visitor_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.loan OWNER TO postgres;
+
+--
+-- TOC entry 217 (class 1259 OID 41494)
+-- Name: manager; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.manager (
+    museum_user_id bigint NOT NULL,
+    email character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    password character varying(255) NOT NULL
+);
+
+
+ALTER TABLE public.manager OWNER TO postgres;
+
+--
+-- TOC entry 218 (class 1259 OID 41501)
+-- Name: museum; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.museum (
+    museum_id bigint NOT NULL,
+    name character varying(255) NOT NULL,
+    visit_fee double precision NOT NULL,
+    schedule_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.museum OWNER TO postgres;
+
+--
+-- TOC entry 219 (class 1259 OID 41506)
+-- Name: room; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.room (
+    room_id bigint NOT NULL,
+    current_number_of_artwork integer NOT NULL,
+    room_name character varying(255) NOT NULL,
+    room_type integer NOT NULL,
+    museum_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.room OWNER TO postgres;
+
+--
+-- TOC entry 220 (class 1259 OID 41511)
+-- Name: schedule; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.schedule (
+    schedule_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.schedule OWNER TO postgres;
+
+--
+-- TOC entry 221 (class 1259 OID 41516)
+-- Name: schedule_of_time_period; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.schedule_of_time_period (
+    schedule_of_time_period_id bigint NOT NULL,
+    schedule_id bigint NOT NULL,
+    time_period_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.schedule_of_time_period OWNER TO postgres;
+
+--
+-- TOC entry 222 (class 1259 OID 41521)
+-- Name: ticket; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.ticket (
+    ticket_id bigint NOT NULL,
+    visit_date date NOT NULL,
+    visitor_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.ticket OWNER TO postgres;
+
+--
+-- TOC entry 223 (class 1259 OID 41526)
+-- Name: time_period; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.time_period (
+    time_period_id bigint NOT NULL,
+    end_date timestamp without time zone NOT NULL,
+    start_date timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.time_period OWNER TO postgres;
+
+--
+-- TOC entry 224 (class 1259 OID 41531)
+-- Name: visitor; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.visitor (
+    museum_user_id bigint NOT NULL,
+    email character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    password character varying(255) NOT NULL
+);
+
+
+ALTER TABLE public.visitor OWNER TO postgres;
+
+--
+-- TOC entry 3396 (class 0 OID 41475)
+-- Dependencies: 214
+-- Data for Name: artwork; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.artwork (artwork_id, artist, image, is_available_for_loan, is_on_loan, loan_fee, name, room_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3397 (class 0 OID 41482)
+-- Dependencies: 215
+-- Data for Name: employee; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.employee (museum_user_id, email, name, password, schedule_id) FROM stdin;
+2	siger.ma@museum.ca	Siger Ma	txbEy{2u	2
+3	kevin.luo@museum.ca	Kevin Luo	M_?yb1ky	3
+4	victor.zhao@museum.ca	Victor Zhao	3s_U$PkV	4
+5	eric.joung@museum.ca	Eric Joung	>3p33qX6	5
+6	kieyan.mamiche.afara@museum.ca	Kieyan Mamiche Afara	hYZ+0zxG	6
+7	zahra.landou@museum.ca	Zahra Landou	oGF#Br3$	7
+\.
+
+
+--
+-- TOC entry 3398 (class 0 OID 41489)
+-- Dependencies: 216
+-- Data for Name: loan; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.loan (loan_id, request_accepted, artwork_id, visitor_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3399 (class 0 OID 41494)
+-- Dependencies: 217
+-- Data for Name: manager; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.manager (museum_user_id, email, name, password) FROM stdin;
+1	marwaan.kanaan@museum.ca	Marwan Kanaan	VerySecurePassword123!@#
+\.
+
+
+--
+-- TOC entry 3400 (class 0 OID 41501)
+-- Dependencies: 218
+-- Data for Name: museum; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.museum (museum_id, name, visit_fee, schedule_id) FROM stdin;
+1	Rougon-Macquart	7	1
+\.
+
+
+--
+-- TOC entry 3401 (class 0 OID 41506)
+-- Dependencies: 219
+-- Data for Name: room; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.room (room_id, current_number_of_artwork, room_name, room_type, museum_id) FROM stdin;
+1	0	Large Room 1	1	1
+2	0	Large Room 2	1	1
+3	0	Large Room 3	1	1
+4	0	Large Room 4	1	1
+5	0	Large Room 5	1	1
+6	0	Small Room 1	0	1
+7	0	Small Room 2	0	1
+8	0	Small Room 3	0	1
+9	0	Small Room 4	0	1
+10	0	Small Room 5	0	1
+11	0	Storage	2	1
+\.
+
+
+--
+-- TOC entry 3402 (class 0 OID 41511)
+-- Dependencies: 220
+-- Data for Name: schedule; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.schedule (schedule_id) FROM stdin;
+1
+2
+3
+4
+5
+6
+7
+\.
+
+
+--
+-- TOC entry 3403 (class 0 OID 41516)
+-- Dependencies: 221
+-- Data for Name: schedule_of_time_period; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.schedule_of_time_period (schedule_of_time_period_id, schedule_id, time_period_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3404 (class 0 OID 41521)
+-- Dependencies: 222
+-- Data for Name: ticket; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.ticket (ticket_id, visit_date, visitor_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3405 (class 0 OID 41526)
+-- Dependencies: 223
+-- Data for Name: time_period; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.time_period (time_period_id, end_date, start_date) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3406 (class 0 OID 41531)
+-- Dependencies: 224
+-- Data for Name: visitor; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.visitor (museum_user_id, email, name, password) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3413 (class 0 OID 0)
+-- Dependencies: 225
+-- Name: hibernate_sequence; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.hibernate_sequence', 28980, true);
+
+
+--
+-- TOC entry 3214 (class 2606 OID 41481)
+-- Name: artwork artwork_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.artwork
+    ADD CONSTRAINT artwork_pkey PRIMARY KEY (artwork_id);
+
+
+--
+-- TOC entry 3216 (class 2606 OID 41488)
+-- Name: employee employee_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.employee
+    ADD CONSTRAINT employee_pkey PRIMARY KEY (museum_user_id);
+
+
+--
+-- TOC entry 3222 (class 2606 OID 41493)
+-- Name: loan loan_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.loan
+    ADD CONSTRAINT loan_pkey PRIMARY KEY (loan_id);
+
+
+--
+-- TOC entry 3224 (class 2606 OID 41500)
+-- Name: manager manager_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.manager
+    ADD CONSTRAINT manager_pkey PRIMARY KEY (museum_user_id);
+
+
+--
+-- TOC entry 3228 (class 2606 OID 41505)
+-- Name: museum museum_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.museum
+    ADD CONSTRAINT museum_pkey PRIMARY KEY (museum_id);
+
+
+--
+-- TOC entry 3232 (class 2606 OID 41510)
+-- Name: room room_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.room
+    ADD CONSTRAINT room_pkey PRIMARY KEY (room_id);
+
+
+--
+-- TOC entry 3236 (class 2606 OID 41520)
+-- Name: schedule_of_time_period schedule_of_time_period_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.schedule_of_time_period
+    ADD CONSTRAINT schedule_of_time_period_pkey PRIMARY KEY (schedule_of_time_period_id);
+
+
+--
+-- TOC entry 3234 (class 2606 OID 41515)
+-- Name: schedule schedule_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.schedule
+    ADD CONSTRAINT schedule_pkey PRIMARY KEY (schedule_id);
+
+
+--
+-- TOC entry 3238 (class 2606 OID 41525)
+-- Name: ticket ticket_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ticket
+    ADD CONSTRAINT ticket_pkey PRIMARY KEY (ticket_id);
+
+
+--
+-- TOC entry 3240 (class 2606 OID 41530)
+-- Name: time_period time_period_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.time_period
+    ADD CONSTRAINT time_period_pkey PRIMARY KEY (time_period_id);
+
+
+--
+-- TOC entry 3242 (class 2606 OID 41547)
+-- Name: visitor uk_21o54drbh1sbielx0xcajfkcd; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.visitor
+    ADD CONSTRAINT uk_21o54drbh1sbielx0xcajfkcd UNIQUE (email);
+
+
+--
+-- TOC entry 3226 (class 2606 OID 41543)
+-- Name: manager uk_ch4c0h9mgdd2c5lategqkpsyi; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.manager
+    ADD CONSTRAINT uk_ch4c0h9mgdd2c5lategqkpsyi UNIQUE (email);
+
+
+--
+-- TOC entry 3218 (class 2606 OID 41539)
+-- Name: employee uk_fopic1oh5oln2khj8eat6ino0; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.employee
+    ADD CONSTRAINT uk_fopic1oh5oln2khj8eat6ino0 UNIQUE (email);
+
+
+--
+-- TOC entry 3220 (class 2606 OID 41541)
+-- Name: employee uk_irpbs2uawie0k57o5vti7ala9; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.employee
+    ADD CONSTRAINT uk_irpbs2uawie0k57o5vti7ala9 UNIQUE (schedule_id);
+
+
+--
+-- TOC entry 3230 (class 2606 OID 41545)
+-- Name: museum uk_qosabr4vq0g47ml65u0xb6fbp; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.museum
+    ADD CONSTRAINT uk_qosabr4vq0g47ml65u0xb6fbp UNIQUE (schedule_id);
+
+
+--
+-- TOC entry 3244 (class 2606 OID 41537)
+-- Name: visitor visitor_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.visitor
+    ADD CONSTRAINT visitor_pkey PRIMARY KEY (museum_user_id);
+
+
+--
+-- TOC entry 3253 (class 2606 OID 41589)
+-- Name: ticket fk37ftit4hrpnv9hb1mvl6pir6l; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ticket
+    ADD CONSTRAINT fk37ftit4hrpnv9hb1mvl6pir6l FOREIGN KEY (visitor_id) REFERENCES public.visitor(museum_user_id);
+
+
+--
+-- TOC entry 3246 (class 2606 OID 41554)
+-- Name: employee fk7x5aix1qibuo7dnv5r40xwqxk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.employee
+    ADD CONSTRAINT fk7x5aix1qibuo7dnv5r40xwqxk FOREIGN KEY (schedule_id) REFERENCES public.schedule(schedule_id);
+
+
+--
+-- TOC entry 3250 (class 2606 OID 41574)
+-- Name: room fkc5w53pwbc7uwmegn8rwvji3x4; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.room
+    ADD CONSTRAINT fkc5w53pwbc7uwmegn8rwvji3x4 FOREIGN KEY (museum_id) REFERENCES public.museum(museum_id);
+
+
+--
+-- TOC entry 3249 (class 2606 OID 41569)
+-- Name: museum fkcdidd5jajpiigaivgsr0hp4k5; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.museum
+    ADD CONSTRAINT fkcdidd5jajpiigaivgsr0hp4k5 FOREIGN KEY (schedule_id) REFERENCES public.schedule(schedule_id);
+
+
+--
+-- TOC entry 3251 (class 2606 OID 41579)
+-- Name: schedule_of_time_period fkg3990okj6ei81xiq1qu681wxd; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.schedule_of_time_period
+    ADD CONSTRAINT fkg3990okj6ei81xiq1qu681wxd FOREIGN KEY (schedule_id) REFERENCES public.schedule(schedule_id);
+
+
+--
+-- TOC entry 3245 (class 2606 OID 41549)
+-- Name: artwork fkhtrlpbqpb1u9m8s2j0cnc07; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.artwork
+    ADD CONSTRAINT fkhtrlpbqpb1u9m8s2j0cnc07 FOREIGN KEY (room_id) REFERENCES public.room(room_id);
+
+
+--
+-- TOC entry 3247 (class 2606 OID 41559)
+-- Name: loan fkpd5c4xgagb10rrsquh5uw01nu; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.loan
+    ADD CONSTRAINT fkpd5c4xgagb10rrsquh5uw01nu FOREIGN KEY (artwork_id) REFERENCES public.artwork(artwork_id);
+
+
+--
+-- TOC entry 3248 (class 2606 OID 41564)
+-- Name: loan fkrpay5qbh985u8swimk40igdiq; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.loan
+    ADD CONSTRAINT fkrpay5qbh985u8swimk40igdiq FOREIGN KEY (visitor_id) REFERENCES public.visitor(museum_user_id);
+
+
+--
+-- TOC entry 3252 (class 2606 OID 41584)
+-- Name: schedule_of_time_period fkx4gc79vm150iwylqoh6bk6ht; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.schedule_of_time_period
+    ADD CONSTRAINT fkx4gc79vm150iwylqoh6bk6ht FOREIGN KEY (time_period_id) REFERENCES public.time_period(time_period_id);
+
+
+-- Completed on 2022-12-04 23:56:21
+
+--
+-- PostgreSQL database dump complete
+--
+

@@ -30,17 +30,31 @@ Run the following command on the terminal `brew install postgresql`
 3. Start the PostgreSQL server
    1. Command: `pg_ctl -D "C:\Program Files\PostgreSQL\15\data" start`
    2. Other possible commands instead of `start` are `stop` or `restart`
-4. Accesss the PostgreSQL server and create a `museum` database (if it is the first time on this computer)
-   1. Command: `psql -U postgres`
-   2. Enter your password
-   3. Command: `CREATE DATABASE museum;`
-
-Note: If you have the PgAdmin application downloaded, you can access and view the database there after starting the PostgreSQL server
 
 ### Mac
 
 1. Open terminal
 2. Run the command `brew services start postgresql`
+
+## Set up the database (Usually only need to do this once the first time)
+
+**Note: You should have started the PostgreSQL server before this, see previous section for how.**
+
+### Windows
+
+1. Open the command line
+2. Go to the PostgreSQL folder
+   1. Usual path should be `C:\Program Files\PostgreSQL\15\bin`
+   2. Command: `cd "C:\Program Files\PostgreSQL\15\bin"`
+3. Accesss the PostgreSQL server and create a `museum` database (if it is the first time on this computer)
+   1. Command: `psql -U postgres`
+   2. Enter your password
+   3. Command: `CREATE DATABASE museum;`
+4. Exit the PostgreSQL server
+   1. Command: `\q`
+5. Import the database dump
+   1. Command: `psql -U postgres museum < FULL PATH TO THE SQL FILE`
+      - The relative path to the SQL file in question is `sql_dumps\museum_base_dump`
 
 ## Build and start the back-end application locally
 
