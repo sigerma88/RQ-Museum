@@ -36,7 +36,7 @@ export function EditRoom({ open, handleClose, room, setRoom }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    axios
+    await axios
       .put(`/api/room/${roomId}`, {
         roomName: roomName,
         roomType: roomType,
@@ -60,7 +60,7 @@ export function EditRoom({ open, handleClose, room, setRoom }) {
         setIsFormInvalid(true);
       });
 
-    setLoading(false);
+    await setLoading(false);
   };
 
   return (

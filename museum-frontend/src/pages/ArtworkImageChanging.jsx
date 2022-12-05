@@ -53,7 +53,7 @@ export function ArtworkImageChanging({
       setErrorMessage("Image must be a valid image URL");
       setIsFormInvalid(true);
     } else {
-      axios
+      await axios
         .put(`/api/artwork/info/${artworkId}`, {
           image: image,
         })
@@ -76,7 +76,7 @@ export function ArtworkImageChanging({
         });
     }
 
-    setLoading(false);
+    await setLoading(false);
   };
 
   return (

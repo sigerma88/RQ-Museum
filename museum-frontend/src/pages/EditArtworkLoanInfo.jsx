@@ -59,7 +59,7 @@ export function EditArtworkLoanInfo({
       setErrorMessage("Loan fee must be in currency format");
       setIsFormInvalid(true);
     } else {
-      axios
+      await axios
         .put(`/api/artwork/loanInfo/${artworkId}`, {
           isAvailableForLoan: isAvailableForLoan,
           loanFee: loanFee,
@@ -84,7 +84,7 @@ export function EditArtworkLoanInfo({
         });
     }
 
-    setLoading(false);
+    await setLoading(false);
   };
 
   return (
