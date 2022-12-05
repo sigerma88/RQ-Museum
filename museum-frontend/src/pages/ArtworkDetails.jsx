@@ -524,7 +524,7 @@ function StaffArtworkLoan({ artwork, setArtwork }) {
  * @returns The staff artwork room section
  * @author Siger
  */
-function StaffArtworkRoom({ artwork, setArtwork }) {
+function StaffArtworkRoom({ artwork, artworkMoved, setArtworkMoved }) {
   // Dialog for moving artwork
   const [moveArtworkDialogOpen, setMoveArtworkDialogOpen] = useState(false);
   const handleMoveArtworkDialogOpen = () => {
@@ -593,7 +593,8 @@ function StaffArtworkRoom({ artwork, setArtwork }) {
           open={moveArtworkDialogOpen}
           handleClose={handleMoveArtworkDialogClose}
           artwork={artwork}
-          setArtwork={setArtwork}
+          artworkMoved={artworkMoved}
+          setArtworkMoved={setArtworkMoved}
         />
       ) : null}
     </div>
@@ -609,7 +610,12 @@ function StaffArtworkRoom({ artwork, setArtwork }) {
  * @author Siger
  * @author Kevin
  */
-function StaffArtworkDetails({ artwork, setArtwork }) {
+function StaffArtworkDetails({
+  artwork,
+  setArtwork,
+  artworkMoved,
+  setArtworkMoved,
+}) {
   const imageHeight = window.innerHeight * 0.89;
 
   // Dialog for changing artwork image
@@ -667,7 +673,11 @@ function StaffArtworkDetails({ artwork, setArtwork }) {
 
       <StaffArtworkLoan artwork={artwork} setArtwork={setArtwork} />
 
-      <StaffArtworkRoom artwork={artwork} setArtwork={setArtwork} />
+      <StaffArtworkRoom
+        artwork={artwork}
+        artworkMoved={artworkMoved}
+        setArtworkMoved={setArtworkMoved}
+      />
 
       {artwork && artwork.artworkId ? (
         <>
@@ -701,15 +711,23 @@ function ArtworkDetails() {
 
   // Get the artworks from the server
   const [artwork, setArtwork] = useState({});
+  const [artworkMoved, setArtworkMoved] = useState(false);
   useEffect(() => {
     getArtwork(artworkId).then((artwork) => {
       setArtwork(artwork);
     });
-  }, [artworkId]);
+  }, [artworkId, artworkMoved]);
 
   const { loggedIn, userRole, userId } = useContext(LoginContext);
   if (loggedIn && (userRole === "manager" || userRole === "employee")) {
-    return <StaffArtworkDetails artwork={artwork} setArtwork={setArtwork} />;
+    return (
+      <StaffArtworkDetails
+        artwork={artwork}
+        setArtwork={setArtwork}
+        artworkMoved={artworkMoved}
+        setArtworkMoved={setArtworkMoved}
+      />
+    );
   } else {
     return (
       <VisitorArtworkDetails

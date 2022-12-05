@@ -39,7 +39,13 @@ function getRooms() {
  * @author Siger
  */
 
-export function MoveArtwork({ open, handleClose, artwork, setArtwork }) {
+export function MoveArtwork({
+  open,
+  handleClose,
+  artwork,
+  artworkMoved,
+  setArtworkMoved,
+}) {
   const artworkId = artwork.artworkId;
   const [roomId, setRoomId] = useState(artwork.room.roomId);
   const [rooms, setRooms] = useState([]);
@@ -63,8 +69,7 @@ export function MoveArtwork({ open, handleClose, artwork, setArtwork }) {
         if (response.status === 200) {
           setErrorMessage(null);
           setIsFormInvalid(false);
-          artwork.room.roomId = roomId;
-          setArtwork(artwork);
+          setArtworkMoved(!artworkMoved);
           handleClose();
         } else {
           setErrorMessage("Something went wrong");
