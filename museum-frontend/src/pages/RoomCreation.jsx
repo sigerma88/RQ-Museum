@@ -1,78 +1,77 @@
 import React, { useState } from "react";
 import axios from "axios";
 import {
-  Typography,
-  TextField,
   Box,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Dialog,
   DialogTitle,
   DialogContent,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  Typography,
+  MenuItem,
   DialogActions,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 /**
- * Dialog with the form to edit a room
+ * Function for the dialog to create a room
  *
- * @returns  Edit room form
- * @author kieyanmamiche
+ * @returns  A form to create a room
  * @author Siger
  */
-
-export function EditRoom({
-  open,
-  handleClose,
-  room,
-  roomChanged,
-  setRoomChanged,
-}) {
-  const roomId = room.roomId;
-  const museumName = room.museum.name;
-  const [roomName, setRoomName] = useState(room.roomName);
-  const [roomType, setRoomType] = useState(room.roomType);
+export function RoomCreation({ open, handleClose, museum }) {
+  const [roomName, setRoomName] = useState("");
+  const [roomType, setRoomType] = useState("");
+  const currentNumberOfArtwork = 0;
+  const museumId = museum.museumId;
+  const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isFormInvalid, setIsFormInvalid] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  // Function which is called when we submit the form
+  // Function which is called when we submit the form to create the room
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    await axios
-      .put(`/api/room/${roomId}`, {
-        roomName: roomName,
-        roomType: roomType,
-      })
-      .then((response) => {
-        if (response.status === 200) {
-          setErrorMessage(null);
-          setIsFormInvalid(false);
-          room.roomName = roomName;
-          room.roomType = roomType;
-          setRoomChanged(!roomChanged);
-          handleClose();
-        } else {
-          setErrorMessage("Something went wrong");
+    if (roomName.trim() === "" || roomType.trim() === "") {
+      setErrorMessage("Please fill in all the fields");
+      setIsFormInvalid(true);
+      setLoading(false);
+    } else {
+      axios
+        .post("/api/room", {
+          roomName: roomName,
+          roomType: roomType,
+          currentNumberOfArtwork: currentNumberOfArtwork,
+          museumId: museumId,
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            setErrorMessage(null);
+            setIsFormInvalid(false);
+            handleClose();
+            setLoading(false);
+            window.location = "/browse/room/" + response.data.roomId;
+          } else {
+            setErrorMessage("Something went wrong");
+            setIsFormInvalid(true);
+            setLoading(false);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          setErrorMessage(error.response.data);
           setIsFormInvalid(true);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        setErrorMessage(error.response.data);
-        setIsFormInvalid(true);
-      });
-
-    await setLoading(false);
+          setLoading(false);
+        });
+    }
   };
 
   return (
     <>
       <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-        <DialogTitle>Edit Room</DialogTitle>
+        <DialogTitle>Create Room</DialogTitle>
 
         <DialogContent
           style={{
@@ -97,8 +96,7 @@ export function EditRoom({
                 alignItems: "center",
               }}
             >
-              <Typography>Room ID: {roomId}</Typography>
-              <Typography>Museum: {museumName}</Typography>
+              <Typography>Museum: {museum.name}</Typography>
               <TextField
                 id="roomName"
                 label="Room Name"

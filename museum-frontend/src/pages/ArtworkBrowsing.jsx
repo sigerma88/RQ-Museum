@@ -16,7 +16,10 @@ import { LoginContext } from "../Contexts/LoginContext";
 import "./LoanStatus.css";
 import "./ArtworkBrowsing.css";
 import { RoomDetails } from "./RoomDetails";
+import { RoomCreation } from "./RoomCreation";
 import { EditRoom } from "./EditRoom";
+import { RoomDeleteConfirmation } from "./RoomDeleteConfirmation";
+import { ArtworkCreation } from "./ArtworkCreation";
 
 /**
  * Function to get the artworks from the server
@@ -327,16 +330,31 @@ function VisitorArtworkBrowsing({ artworks, room }) {
  * @param room - The room to display
  * @author Siger
  */
-function StaffArtworkBrowsing({ artworks, room, setRoom }) {
+function StaffArtworkBrowsing({ artworks, room, roomChanged, setRoomChanged }) {
   // Room details modal
   const [roomDetailModalOpen, setRoomDetailModalOpen] = useState(false);
   const handleRoomDetailModalOpen = () => setRoomDetailModalOpen(true);
   const handleRoomDetailModalClose = () => setRoomDetailModalOpen(false);
 
+  // Add room modal
+  const [addRoomModalOpen, setAddRoomModalOpen] = useState(false);
+  const handleAddRoomModalOpen = () => setAddRoomModalOpen(true);
+  const handleAddRoomModalClose = () => setAddRoomModalOpen(false);
+
   // Edit room modal
   const [editRoomModalOpen, setEditRoomModalOpen] = useState(false);
   const handleEditRoomModalOpen = () => setEditRoomModalOpen(true);
   const handleEditRoomModalClose = () => setEditRoomModalOpen(false);
+
+  // Delete room modal
+  const [deleteRoomModalOpen, setDeleteRoomModalOpen] = useState(false);
+  const handleDeleteRoomModalOpen = () => setDeleteRoomModalOpen(true);
+  const handleDeleteRoomModalClose = () => setDeleteRoomModalOpen(false);
+
+  // Add artwork modal
+  const [addArtworkModalOpen, setAddArtworkModalOpen] = useState(false);
+  const handleAddArtworkModalOpen = () => setAddArtworkModalOpen(true);
+  const handleAddArtworkModalClose = () => setAddArtworkModalOpen(false);
 
   return (
     <>
@@ -375,9 +393,7 @@ function StaffArtworkBrowsing({ artworks, room, setRoom }) {
               variant="contained"
               color="success"
               sx={{ marginTop: 5 }}
-              onClick={() => {
-                // TODO: Add room
-              }}
+              onClick={handleAddRoomModalOpen}
             >
               New Room
             </Button>
@@ -395,9 +411,7 @@ function StaffArtworkBrowsing({ artworks, room, setRoom }) {
               color="error"
               disabled={room.roomName === "All Rooms"}
               sx={{ marginTop: 5, marginLeft: 2 }}
-              onClick={() => {
-                // TODO: Delete room
-              }}
+              onClick={handleDeleteRoomModalOpen}
             >
               Delete Room
             </Button>
@@ -411,28 +425,50 @@ function StaffArtworkBrowsing({ artworks, room, setRoom }) {
           variant="contained"
           color="success"
           sx={{ marginTop: 5 }}
-          onClick={() => {
-            // TODO: Add artwork
-          }}
+          onClick={handleAddArtworkModalOpen}
         >
           New Artwork
         </Button>
       </Container>
 
       {room && room.museum && (
-        <RoomDetails
-          room={room}
-          open={roomDetailModalOpen}
-          handleClose={handleRoomDetailModalClose}
-        />
+        <>
+          <RoomDetails
+            room={room}
+            open={roomDetailModalOpen}
+            handleClose={handleRoomDetailModalClose}
+          />
+
+          <RoomCreation
+            open={addRoomModalOpen}
+            handleClose={handleAddRoomModalClose}
+            museum={room.museum}
+          />
+
+          <EditRoom
+            room={room}
+            roomChanged={roomChanged}
+            setRoomChanged={setRoomChanged}
+            open={editRoomModalOpen}
+            handleClose={handleEditRoomModalClose}
+          />
+        </>
       )}
-      {room && room.museum && (
-        <EditRoom
-          room={room}
-          setRoom={setRoom}
-          open={editRoomModalOpen}
-          handleClose={handleEditRoomModalClose}
-        />
+
+      {room && room.roomId && (
+        <>
+          <RoomDeleteConfirmation
+            room={room}
+            open={deleteRoomModalOpen}
+            handleClose={handleDeleteRoomModalClose}
+          />
+
+          <ArtworkCreation
+            room={room}
+            open={addArtworkModalOpen}
+            handleClose={handleAddArtworkModalClose}
+          />
+        </>
       )}
     </>
   );
@@ -458,16 +494,22 @@ function ArtworkBrowsing() {
 
   // Get the room from the server
   const [room, setRoom] = useState({});
+  const [roomChanged, setRoomChanged] = useState(false);
   useEffect(() => {
     getRoom(roomId).then((room) => {
       setRoom(room);
     });
-  }, [roomId, room]);
+  }, [roomId, roomChanged]);
 
   const { loggedIn, userRole } = useContext(LoginContext);
   if (loggedIn && (userRole === "manager" || userRole === "employee")) {
     return (
-      <StaffArtworkBrowsing artworks={artworks} room={room} setRoom={setRoom} />
+      <StaffArtworkBrowsing
+        artworks={artworks}
+        room={room}
+        roomChanged={roomChanged}
+        setRoomChanged={setRoomChanged}
+      />
     );
   } else {
     return <VisitorArtworkBrowsing artworks={artworks} room={room} />;

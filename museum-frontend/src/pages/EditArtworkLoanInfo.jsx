@@ -22,7 +22,8 @@ import LoadingButton from "@mui/lab/LoadingButton";
  * @returns  True if the value is in currency format, false otherwise
  * @author Siger
  */
-function isCurrency(value) {
+export function isCurrency(value) {
+  if (value === "" || value === null) return true;
   return /^\d+(\.\d{1,2})?$/.test(value);
 }
 
@@ -58,7 +59,7 @@ export function EditArtworkLoanInfo({
       setErrorMessage("Loan fee must be in currency format");
       setIsFormInvalid(true);
     } else {
-      axios
+      await axios
         .put(`/api/artwork/loanInfo/${artworkId}`, {
           isAvailableForLoan: isAvailableForLoan,
           loanFee: loanFee,
@@ -83,7 +84,7 @@ export function EditArtworkLoanInfo({
         });
     }
 
-    setLoading(false);
+    await setLoading(false);
   };
 
   return (
@@ -116,9 +117,7 @@ export function EditArtworkLoanInfo({
             >
               <Typography>Artwork ID: {artworkId}</Typography>
               <FormControl sx={{ width: "60%", marginBottom: 3, marginTop: 3 }}>
-                <InputLabel id="demo-simple-select-label">
-                  Available for loan?
-                </InputLabel>
+                <InputLabel>Available for loan?</InputLabel>
                 <Select
                   labelId="isAvailableForLoan"
                   id="isAvailableForLoan"

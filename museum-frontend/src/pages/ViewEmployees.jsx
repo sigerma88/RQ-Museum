@@ -25,6 +25,7 @@ import {
   ListItemAvatar,
 } from "@mui/material/";
 import "./ViewEmployees.css";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
@@ -51,24 +52,6 @@ function grammarCheck(name) {
 }
 
 /**
- * Function to delete an employee
- *
- * @param employeeId - The employee id
- * @returns The api response
- * @author Siger
- */
-function deleteEmployee(employeeId) {
-  return axios
-    .delete(`/api/employee/${employeeId}`)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-}
-
-/**
  * Function for the confirmation dialog when deleting an employee
  *
  * @param props - The props for the dialog
@@ -76,7 +59,44 @@ function deleteEmployee(employeeId) {
  * @author Siger
  */
 function ConfirmationDialog(props) {
-  const { open, close, employees } = props;
+  const {
+    open,
+    close,
+    employees,
+    setEmployees,
+    selectedEmployees,
+    handleSelect,
+  } = props;
+  const [loading, setLoading] = useState(false);
+
+  // Function to delete the selected employees
+  const handleDelete = async (event) => {
+    event.preventDefault();
+    await setLoading(true);
+    for (let i = 0; i < selectedEmployees.length; i++) {
+      await axios
+        .delete(`/api/employee/${selectedEmployees[i].museumUserId}`)
+        .then((response) => {
+          if (response.status === 200) {
+            setEmployees(
+              employees.filter(
+                (employee) =>
+                  employee.museumUserId !== selectedEmployees[i].museumUserId
+              )
+            );
+            handleSelect(selectedEmployees[i]);
+          } else {
+            console.log("Something went wrong");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
+    await setLoading(false);
+    await close();
+  };
 
   return (
     <Dialog open={open} onClose={close}>
@@ -84,7 +104,7 @@ function ConfirmationDialog(props) {
         Are you sure you want to delete the selected employees?
       </DialogTitle>
       <List>
-        {employees.map((employee) => (
+        {selectedEmployees.map((employee) => (
           // List the employees to be deleted
           <ListItem key={employee.museumUserId}>
             <ListItemAvatar>{employee.museumUserId}</ListItemAvatar>
@@ -93,17 +113,18 @@ function ConfirmationDialog(props) {
         ))}
       </List>
       <DialogActions>
-        <Button onClick={close}>Cancel</Button>
-        <Button
-          onClick={() => {
-            employees.forEach((employee) => {
-              deleteEmployee(employee.museumUserId);
-            });
-            window.location.reload();
-          }}
+        <Button sx={{ width: 150 }} onClick={close}>
+          Cancel
+        </Button>
+        <LoadingButton
+          loading={loading}
+          loadingPosition="end"
+          color="error"
+          sx={{ width: 150 }}
+          onClick={handleDelete}
         >
           Confirm
-        </Button>
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   );
@@ -134,7 +155,7 @@ export default function ViewEmployees() {
       .catch(function (error) {
         console.log(error);
       });
-  }, []);
+  }, [employees]);
 
   const handleSelect = (employee) => {
     if (selectedEmployees.includes(employee)) {
@@ -292,7 +313,9 @@ export default function ViewEmployees() {
                 >
                   <StyledTableCell>
                     <Checkbox
-                      checked={selectedEmployees.includes(employee)}
+                      checked={selectedEmployees
+                        .map((e) => e.museumUserId)
+                        .includes(employee.museumUserId)}
                       onChange={() => {
                         handleSelect(employee);
                       }}
@@ -313,11 +336,17 @@ export default function ViewEmployees() {
             </TableBody>
           </Table>
         </TableContainer>
-        <ConfirmationDialog
-          open={deleteConfirmOpen}
-          close={handleDeleteConfirmClose}
-          employees={selectedEmployees}
-        />
+
+        {employees[0].museumUserId !== null && (
+          <ConfirmationDialog
+            open={deleteConfirmOpen}
+            close={handleDeleteConfirmClose}
+            selectedEmployees={selectedEmployees}
+            handleSelect={handleSelect}
+            employees={employees}
+            setEmployees={setEmployees}
+          />
+        )}
       </>
     );
   }

@@ -57,7 +57,7 @@ export function MoveArtwork({ open, handleClose, artwork, setArtwork }) {
   // Function which is called when we submit the form to move the artwork
   const handleSubmit = async (event) => {
     event.preventDefault();
-    axios
+    await axios
       .post(`/api/artwork//moveArtworkToRoom/${artworkId}/${roomId}`, null)
       .then((response) => {
         if (response.status === 200) {
@@ -77,7 +77,7 @@ export function MoveArtwork({ open, handleClose, artwork, setArtwork }) {
         setIsFormInvalid(true);
       });
 
-    setLoading(false);
+    await setLoading(false);
   };
 
   return (
@@ -109,9 +109,7 @@ export function MoveArtwork({ open, handleClose, artwork, setArtwork }) {
               }}
             >
               <FormControl sx={{ width: "90%" }}>
-                <InputLabel id="demo-simple-select-label">
-                  Select room
-                </InputLabel>
+                <InputLabel>Select room</InputLabel>
                 <Select
                   labelId="rooms"
                   id="rooms"

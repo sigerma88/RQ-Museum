@@ -30,7 +30,7 @@ export function EditArtworkInfo({ open, handleClose, artwork, setArtwork }) {
   // Function which is called when we submit the form
   const handleSubmit = async (event) => {
     event.preventDefault();
-    axios
+    await axios
       .put(`/api/artwork/info/${artworkId}`, {
         name: artworkName,
         artist: artworkArtist,
@@ -54,7 +54,7 @@ export function EditArtworkInfo({ open, handleClose, artwork, setArtwork }) {
         setIsFormInvalid(true);
       });
 
-    setLoading(false);
+    await setLoading(false);
   };
 
   return (
