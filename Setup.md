@@ -56,6 +56,19 @@ Run the following command on the terminal `brew install postgresql`
    1. Command: `psql -U postgres museum < FULL PATH TO THE SQL FILE`
       - The relative path to the SQL file in question is `sql_dumps\museum_base_dump`
 
+### MacOS
+
+1. Open Terminal
+2. Asses the PostgreSQL server
+   1. Command: `psql postgres`     
+3. Create a `museum` database (if it is the first time on this computer)
+   1. Command: `CREATE DATABASE museum;`
+4. Switch to `museum` database
+   1. Command: `\c museum`
+5. Import the database dump
+   1. Command: `\i FULL PATH TO THE SQL FILE`
+      - The relative path to the SQL file in question is `sql_dumps\museum_base_dump`
+
 ## Build and start the back-end application locally
 
 _Note:_
