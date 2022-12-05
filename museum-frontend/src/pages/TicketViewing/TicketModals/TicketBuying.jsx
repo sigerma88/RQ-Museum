@@ -9,7 +9,7 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
-import { LoginContext } from "../Contexts/LoginContext";
+import { LoginContext } from "../../../Contexts/LoginContext";
 
 /**
  * Dialog component for visitors to specify what tickets they want to buy

@@ -1,7 +1,7 @@
 .pass-card-content {
   height: 200px;
   width: 800px;
-  background-image: url(../assets/RQ_logo.svg);
+  background-image: url(../../../assets/RQ_logo.svg);
   background-repeat: no-repeat;
   background-position: left;
   background-size: 40%;
@@ -15,7 +15,7 @@
 .pass-expired {
   height: 200px;
   width: 800px;
-  background-image: url(../assets/RQ_logo.svg);
+  background-image: url(../../../assets/RQ_logo.svg);
   background-repeat: no-repeat;
   background-position: left;
   background-size: 40%;
