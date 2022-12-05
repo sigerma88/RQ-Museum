@@ -175,9 +175,7 @@ public class LoanService {
           loanRequest.setRequestAccepted(false);
           loanRepository.save(loanRequest);
         }
-
       }
-
     }
     return loanRepository.save(loan);
   }
