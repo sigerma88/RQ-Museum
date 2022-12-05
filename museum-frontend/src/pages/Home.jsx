@@ -13,13 +13,12 @@ import { Link } from "react-router-dom";
 import MuseumPhotoBackground from "../assets/MuseumPhotoBackground.jpg";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { Carousel } from "react-bootstrap";
-import HomePainting from "../assets/HomePainting.jpg";
 import RoomImage from "../assets/RoomImage.jpg";
 import axios from "axios";
 
 function RoomCard({ room }) {
   return (
-    <a href={`/browse/room/${room.roomId}`}>
+    <Link to={`/browse/room/${room.roomId}`}>
       <Card className="carousel-card">
         <CardMedia
           component="img"
@@ -47,7 +46,7 @@ function RoomCard({ room }) {
           </Typography>
         </CardContent>
       </Card>
-    </a>
+    </Link>
   );
 }
 
@@ -123,6 +122,7 @@ function LandingPage() {
         </div>
         <div style={{ padding: "50px 0px" }}>
           <Typography variant="h3">Explore our rooms</Typography>
+          <RoomCarousel />
         </div>
       </div>
     </div>
@@ -135,13 +135,38 @@ function LandingPage() {
  * @author Kevin
  */
 
-function VisitorHomePage({ isLogegdIn }) {
+function VisitorHomePage({ isLoggedIn }) {
   return (
     <>
-      {LandingPage()}
-      <p>Visitor</p>
+      <LandingPage />
+      <div style={{ paddingBottom: "110px" }}>
+        <Typography variant="h3" style={{ paddingBottom: "20px" }}>
+          Buy your tickets
+        </Typography>
+        <Button component={Link} to="/ticket" variant="outlined">
+          Book your ticket <KeyboardArrowRightIcon />
+        </Button>
+      </div>
+      {isLoggedIn ? (
+        <div style={{ paddingBottom: "110px" }}>
+          <Typography variant="h3" style={{ paddingBottom: "20px" }}>
+            See your loans
+          </Typography>
+          <Button component={Link} to="/loan" variant="outlined">
+            View your loans <KeyboardArrowRightIcon />
+          </Button>
+        </div>
+      ) : (
+        ""
+      )}
       <br />
-      <Link to="/museum/info">View museum info</Link>
+      <Typography variant="h3" style={{ paddingBottom: "20px" }}>
+        See our prices and schedule
+      </Typography>
+      <Button component={Link} variant="outlined" to="/museum/info">
+        View museum info
+        <KeyboardArrowRightIcon />
+      </Button>
     </>
   );
 }
@@ -155,7 +180,7 @@ function VisitorHomePage({ isLogegdIn }) {
 function ManagerHomePage() {
   return (
     <>
-      {LandingPage()}
+      <LandingPage />
       <Typography variant="h3" style={{ paddingBottom: "20px" }}>
         Manage your employees
       </Typography>
@@ -175,7 +200,7 @@ function ManagerHomePage() {
 function EmployeeHomePage() {
   return (
     <>
-      {LandingPage()}
+      <LandingPage />
       <Link to="/employee/schedule/">View your schedule</Link>
       <br />
       <Link to="/museum/info">View museum info</Link>
@@ -199,8 +224,7 @@ function Home() {
   } else {
     return (
       <>
-        <LandingPage />
-        <Link to="/museum/info">View museum info</Link>
+        <VisitorHomePage isLoggedIn={loggedIn} />
       </>
     );
   }

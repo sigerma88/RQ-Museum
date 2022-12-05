@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { Container } from "@mui/system";
 import { LoginContext } from "../Contexts/LoginContext";
+import { Link } from "react-router-dom";
 import "./LoanStatus.css";
 import "./ArtworkBrowsing.css";
 import { RoomDetails } from "./RoomDetails";
@@ -191,13 +192,13 @@ function ArtworkList({ artworks }) {
             }}
             className="card"
           >
-            <a
+            <Link
               style={{
                 fontStyle: "none",
                 textDecoration: "none",
                 color: "black",
               }}
-              href={`/browse/artwork/${card.artworkId}`}
+              to={`/browse/artwork/${card.artworkId}`}
             >
               <CardMedia
                 component="img"
@@ -255,7 +256,7 @@ function ArtworkList({ artworks }) {
                   )}
                 </div>
               </CardContent>
-            </a>
+            </Link>
           </Card>
         </Grid>
       ))}

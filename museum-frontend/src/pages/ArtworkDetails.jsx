@@ -24,6 +24,7 @@ import { EditArtworkLoanInfo } from "./EditArtworkLoanInfo";
 import { MoveArtwork } from "./MoveArtwork";
 import { ArtworkImageChanging } from "./ArtworkImageChanging";
 import { ArtworkDeleteConfirmation } from "./ArtworkDeleteConfirmation";
+import { Link } from "react-router-dom";
 
 /**
  * Function to get the artwork from the server
@@ -164,20 +165,20 @@ function VisitorArtworkLoan({ artwork, userRole, loggedIn, userId }) {
         </Typography>
         <List
           style={{
-            width: "70%",
+            width: "60%",
             padding: "auto",
             margin: "auto",
             display: "flex",
             justifyContent: "space-evenly",
           }}
         >
-          <div style={{ width: "80%" }}>
+          <div style={{ width: "60%" }}>
             <ListItem>
               <ListItemText primary="Loan fee" secondary={artwork.loanFee} />
             </ListItem>
             <Divider variant="middle" />
           </div>
-          <div style={{ width: "80%" }}>
+          <div style={{ width: "60%" }}>
             <ListItem>
               <ListItemText
                 primary="Loan status"
@@ -223,9 +224,9 @@ function VisitorArtworkLoan({ artwork, userRole, loggedIn, userId }) {
               <LockIcon />
             </Avatar>
             <Typography variant="h4">Login to request a loan</Typography>
-            <a href="/login" style={{ textDecoration: "underline" }}>
+            <Link to="/login" style={{ textDecoration: "underline" }}>
               <Typography>Click here to login</Typography>
-            </a>
+            </Link>
           </div>
         )}
       </div>
@@ -259,7 +260,7 @@ function VisitorArtworkDetails({ artwork, userRole, loggedIn, userId }) {
     } else {
       setArtworkStatus({});
     }
-  }, [artwork.artworkId]);
+  }, []);
 
   return (
     <>
@@ -281,10 +282,10 @@ function VisitorArtworkDetails({ artwork, userRole, loggedIn, userId }) {
             margin: "auto",
             justifyContent: "space-evenly",
             padding: "auto",
-            width: "70%",
+            width: "60%",
           }}
         >
-          <div style={{ width: "80%" }}>
+          <div style={{ width: "60%" }}>
             <ListItem className="artwork-info">
               <ListItemText primary="Name" secondary={artwork.name} />
             </ListItem>
@@ -294,7 +295,7 @@ function VisitorArtworkDetails({ artwork, userRole, loggedIn, userId }) {
             </ListItem>
             <Divider variant="middle" />
           </div>
-          <div style={{ width: "80%" }}>
+          <div style={{ width: "60%" }}>
             <ListItem>
               <ListItemText
                 primary="Room"
@@ -342,7 +343,7 @@ function StaffArtworkInfo({ artwork, setArtwork }) {
     } else {
       setArtworkStatus({});
     }
-  }, [artwork.artworkId]);
+  }, []);
 
   // Dialog for editing artwork info
   const [editArtworkInfoDialogOpen, setEditArtworkInfoDialogOpen] =
@@ -704,7 +705,7 @@ function ArtworkDetails() {
     getArtwork(artworkId).then((artwork) => {
       setArtwork(artwork);
     });
-  }, [artworkId, artwork]);
+  }, [artworkId]);
 
   const { loggedIn, userRole, userId } = useContext(LoginContext);
   if (loggedIn && (userRole === "manager" || userRole === "employee")) {

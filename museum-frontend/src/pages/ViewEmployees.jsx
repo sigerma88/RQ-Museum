@@ -25,6 +25,7 @@ import {
   ListItemAvatar,
 } from "@mui/material/";
 import "./ViewEmployees.css";
+import { Link } from "react-router-dom";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 const StyledTableCell = styled(TableCell)(() => ({
@@ -49,6 +50,24 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 // Helper function to check if the name ends with an s and add an apostrophe depending on the case
 function grammarCheck(name) {
   return name.charAt(name.length - 1) !== "s" ? name + "'s" : name + "'";
+}
+
+/**
+ * Function to delete an employee
+ *
+ * @param employeeId - The employee id
+ * @returns The api response
+ * @author Siger
+ */
+function deleteEmployee(employeeId) {
+  return axios
+    .delete(`/api/employee/${employeeId}`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.log(error.toJSON());
+    });
 }
 
 /**
@@ -190,10 +209,9 @@ export default function ViewEmployees() {
           </h1>
           <Button
             variant="contained"
+            component={Link}
             sx={{ position: "relative", right: -300, top: -55 }}
-            onClick={() => {
-              window.location.href = "/employee/create";
-            }}
+            to="/employee/create"
           >
             Add Employee
           </Button>
@@ -213,12 +231,11 @@ export default function ViewEmployees() {
           </Grid>
           <Grid item xs={2}>
             <Button
+              component={Link}
               variant="contained"
               color="success"
               sx={{ marginTop: 3.5 }}
-              onClick={() => {
-                window.location.href = "/employee/create";
-              }}
+              to="/employee/create"
             >
               Hire Employee
             </Button>
@@ -324,12 +341,12 @@ export default function ViewEmployees() {
                   <StyledTableCell>{employee.name}</StyledTableCell>
                   <StyledTableCell>{employee.email}</StyledTableCell>
                   <StyledTableCell align="right">
-                    <a
-                      href={`/employee/schedule/${employee.museumUserId}`}
+                    <Link
+                      to={`/employee/schedule/${employee.museumUserId}`}
                       className="hover-underline-animation"
                     >
                       View&nbsp;{grammarCheck(employee.name)}&nbsp;schedule
-                    </a>
+                    </Link>
                   </StyledTableCell>
                 </StyledTableRow>
               ))}

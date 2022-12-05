@@ -16,6 +16,7 @@ import {
   Button,
   TextField,
 } from "@mui/material/";
+import { Link } from "react-router-dom";
 import { LoginContext } from "../Contexts/LoginContext";
 
 /**
@@ -58,7 +59,7 @@ function ManagerViewMuseumInfo() {
     event.preventDefault();
     const museumId = museumFromLocalStorage.museumId;
     axios
-      .post(
+      .put(
         `/api/museum/app/edit/${museumId}/?name=` +
           name +
           "&visitFee=" +
@@ -134,13 +135,13 @@ function ManagerViewMuseumInfo() {
                 {museumFromLocalStorage.visitFee}
               </StyledTableCell>
               <StyledTableCell align="right">
-                <a
-                  href={`/museum/info/schedule/${museumFromLocalStorage.museumId}`}
+                <Link
+                  to={`/museum/info/schedule/${museumFromLocalStorage.museumId}`}
                   className="hover-underline-animation"
                 >
                   View&nbsp;{grammarCheck(museumFromLocalStorage.name)}
                   &nbsp;Opening Hours
-                </a>
+                </Link>
               </StyledTableCell>
             </StyledTableRow>
           </TableBody>
@@ -309,12 +310,12 @@ function ViewMuseumInfo() {
                   <StyledTableCell>{museum.name}</StyledTableCell>
                   <StyledTableCell>{museum.visitFee}</StyledTableCell>
                   <StyledTableCell align="right">
-                    <a
-                      href={`/museum/info/schedule/${museum.museumId}`}
+                    <Link
+                      to={`/museum/info/schedule/${museum.museumId}`}
                       className="hover-underline-animation"
                     >
                       View&nbsp;{grammarCheck(museum.name)}&nbsp;Opening Hours
-                    </a>
+                    </Link>
                   </StyledTableCell>
                 </StyledTableRow>
               ))}

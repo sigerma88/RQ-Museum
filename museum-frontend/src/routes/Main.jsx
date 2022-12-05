@@ -17,6 +17,7 @@ import MuseumInfo from "../pages/MuseumInfo";
 import ViewMuseumOpeningHours from "../pages/ViewMuseumOpeningHours";
 import { Loan } from "../pages/Loan";
 import { Footer } from "../layouts/Footer";
+import "./Main.css";
 
 /**
  * Function that routes the user to the correct page depending on the url
@@ -39,7 +40,7 @@ export function Main() {
     localStorage.getItem("userEmail") ?? ""
   );
 
-  const [museum, setMuseum] = useState();
+  const [museum, setMuseum] = useState("");
 
   const [userId, setUserId] = useState(localStorage.getItem("userId") ?? "");
 
@@ -60,38 +61,22 @@ export function Main() {
         setMuseum,
       }}
     >
-      <BrowserRouter>
-        <Navigation />
-        <Routes>
-          <Route path="/" index element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route
-            path="/profile"
-            element={loggedIn ? <Profile /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/employee"
-            element={
-              loggedIn && userRole === "manager" ? (
-                <ViewEmployees />
-              ) : (
-                <Typography
-                  variant="h3"
-                  style={{ margin: "auto", padding: "auto" }}
-                >
-                  You are not authorized to view this page
-                </Typography>
-              )
-            }
-          />
-          <Route path="/employee/schedule">
+      <div className="main-content">
+        <BrowserRouter>
+          <Navigation />
+          <Routes>
+            <Route path="/" index element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
             <Route
-              path=":id"
+              path="/profile"
+              element={loggedIn ? <Profile /> : <Navigate to="/login" />}
+            />
+            <Route
+              path="/employee"
               element={
-                loggedIn &&
-                (userRole === "employee" || userRole === "manager") ? (
-                  <ViewEmployeeSchedule />
+                loggedIn && userRole === "manager" ? (
+                  <ViewEmployees />
                 ) : (
                   <Typography
                     variant="h3"
@@ -102,12 +87,45 @@ export function Main() {
                 )
               }
             />
+            <Route path="/employee/schedule">
+              <Route
+                path=":id"
+                element={
+                  loggedIn &&
+                  (userRole === "employee" || userRole === "manager") ? (
+                    <ViewEmployeeSchedule />
+                  ) : (
+                    <Typography
+                      variant="h3"
+                      style={{ margin: "auto", padding: "auto" }}
+                    >
+                      You are not authorized to view this page
+                    </Typography>
+                  )
+                }
+              />
+              <Route
+                path=""
+                element={
+                  loggedIn &&
+                  (userRole === "employee" || userRole === "manager") ? (
+                    <ViewEmployeeSchedule />
+                  ) : (
+                    <Typography
+                      variant="h3"
+                      style={{ margin: "auto", padding: "auto" }}
+                    >
+                      You are not authorized to view this page
+                    </Typography>
+                  )
+                }
+              />
+            </Route>
             <Route
-              path=""
+              path="/employee/create"
               element={
-                loggedIn &&
-                (userRole === "employee" || userRole === "manager") ? (
-                  <ViewEmployeeSchedule />
+                loggedIn && userRole === "manager" ? (
+                  <EmployeeCreation />
                 ) : (
                   <Typography
                     variant="h3"
@@ -118,39 +136,24 @@ export function Main() {
                 )
               }
             />
-          </Route>
-          <Route
-            path="/employee/create"
-            element={
-              loggedIn && userRole === "manager" ? (
-                <EmployeeCreation />
-              ) : (
-                <Typography
-                  variant="h3"
-                  style={{ margin: "auto", padding: "auto" }}
-                >
-                  You are not authorized to view this page
-                </Typography>
-              )
-            }
-          />
-          <Route path="/museum/info" element={<MuseumInfo />} />
-          <Route
-            path="/museum/info/schedule/:id"
-            element={<ViewMuseumOpeningHours />}
-          />
-          <Route path="/browse/room/:roomId" element={<ArtworkBrowsing />} />
-          <Route
-            path="/browse/artwork/:artworkId"
-            element={<ArtworkDetails />}
-          />
-          <Route path="/ticket" element={<TicketViewing />} />
-          <Route
-            path="/loan"
-            element={loggedIn ? <Loan /> : <Navigate to="/login" />}
-          />
-        </Routes>
-      </BrowserRouter>
+            <Route path="/museum/info" element={<MuseumInfo />} />
+            <Route
+              path="/museum/info/schedule/:id"
+              element={<ViewMuseumOpeningHours />}
+            />
+            <Route path="/browse/room/:roomId" element={<ArtworkBrowsing />} />
+            <Route
+              path="/browse/artwork/:artworkId"
+              element={<ArtworkDetails />}
+            />
+            <Route path="/ticket" element={<TicketViewing />} />
+            <Route
+              path="/loan"
+              element={loggedIn ? <Loan /> : <Navigate to="/login" />}
+            />
+          </Routes>
+        </BrowserRouter>
+      </div>
       <Footer />
     </LoginContext.Provider>
   );
