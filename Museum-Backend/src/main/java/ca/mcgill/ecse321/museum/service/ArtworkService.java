@@ -63,6 +63,10 @@ public class ArtworkService {
       throw new IllegalArgumentException("Artist name cannot be empty");
     }
 
+    if (isAvailableForLoan == null) {
+      throw new IllegalArgumentException("Loan availability cannot be empty");
+    }
+
     if (isAvailableForLoan) {
       if (loanFee == null) {
         throw new IllegalArgumentException("Loan fee cannot be null if artwork is available for loan");
@@ -267,8 +271,7 @@ public class ArtworkService {
     // Change room's current number of artworks
     Room room = artwork.getRoom();
     if (room != null) {
-      room.setCurrentNumberOfArtwork(room.getCurrentNumberOfArtwork() - 1);
-      roomRepository.save(room);
+      roomService.changeCurrentNumberOfArtwork(room.getRoomId(), room.getCurrentNumberOfArtwork() - 1);
     }
 
     // Delete artwork

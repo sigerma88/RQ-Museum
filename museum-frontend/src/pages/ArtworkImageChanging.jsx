@@ -18,7 +18,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
  * @returns True if the value is a valid image URL, false otherwise
  * @author Siger
  */
-function isValidImageURL(value) {
+export function isValidImageURL(value) {
   return /^(https?:\/\/.*\.(?:png|jpg|jpeg))$/.test(value);
 }
 
@@ -85,7 +85,12 @@ export function ArtworkImageChanging({
         <DialogTitle>Change Artwork Image</DialogTitle>
 
         <DialogContent>
-          <form onSubmit={handleSubmit}>
+          <form
+            onSubmit={(event) => {
+              setLoading(true);
+              handleSubmit(event);
+            }}
+          >
             <TextField
               label="Image URL"
               variant="standard"

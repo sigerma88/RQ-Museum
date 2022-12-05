@@ -17,6 +17,7 @@ import "./LoanStatus.css";
 import "./ArtworkBrowsing.css";
 import { RoomDetails } from "./RoomDetails";
 import { EditRoom } from "./EditRoom";
+import { ArtworkCreation } from "./ArtworkCreation";
 
 /**
  * Function to get the artworks from the server
@@ -338,6 +339,11 @@ function StaffArtworkBrowsing({ artworks, room, setRoom }) {
   const handleEditRoomModalOpen = () => setEditRoomModalOpen(true);
   const handleEditRoomModalClose = () => setEditRoomModalOpen(false);
 
+  // Add artwork modal
+  const [addArtworkModalOpen, setAddArtworkModalOpen] = useState(false);
+  const handleAddArtworkModalOpen = () => setAddArtworkModalOpen(true);
+  const handleAddArtworkModalClose = () => setAddArtworkModalOpen(false);
+
   return (
     <>
       <div style={{ lineHeight: "14px" }}>
@@ -411,27 +417,34 @@ function StaffArtworkBrowsing({ artworks, room, setRoom }) {
           variant="contained"
           color="success"
           sx={{ marginTop: 5 }}
-          onClick={() => {
-            // TODO: Add artwork
-          }}
+          onClick={handleAddArtworkModalOpen}
         >
           New Artwork
         </Button>
       </Container>
 
       {room && room.museum && (
-        <RoomDetails
-          room={room}
-          open={roomDetailModalOpen}
-          handleClose={handleRoomDetailModalClose}
-        />
+        <>
+          <RoomDetails
+            room={room}
+            open={roomDetailModalOpen}
+            handleClose={handleRoomDetailModalClose}
+          />
+
+          <EditRoom
+            room={room}
+            setRoom={setRoom}
+            open={editRoomModalOpen}
+            handleClose={handleEditRoomModalClose}
+          />
+        </>
       )}
-      {room && room.museum && (
-        <EditRoom
+
+      {room && room.roomId && (
+        <ArtworkCreation
           room={room}
-          setRoom={setRoom}
-          open={editRoomModalOpen}
-          handleClose={handleEditRoomModalClose}
+          open={addArtworkModalOpen}
+          handleClose={handleAddArtworkModalClose}
         />
       )}
     </>

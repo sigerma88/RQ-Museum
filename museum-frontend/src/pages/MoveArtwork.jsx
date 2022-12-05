@@ -109,9 +109,7 @@ export function MoveArtwork({ open, handleClose, artwork, setArtwork }) {
               }}
             >
               <FormControl sx={{ width: "90%" }}>
-                <InputLabel id="demo-simple-select-label">
-                  Select room
-                </InputLabel>
+                <InputLabel>Select room</InputLabel>
                 <Select
                   labelId="rooms"
                   id="rooms"
