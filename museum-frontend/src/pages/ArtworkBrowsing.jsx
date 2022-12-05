@@ -18,6 +18,7 @@ import "./ArtworkBrowsing.css";
 import { RoomDetails } from "./RoomDetails";
 import { RoomCreation } from "./RoomCreation";
 import { EditRoom } from "./EditRoom";
+import { RoomDeleteConfirmation } from "./RoomDeleteConfirmation";
 import { ArtworkCreation } from "./ArtworkCreation";
 
 /**
@@ -345,6 +346,11 @@ function StaffArtworkBrowsing({ artworks, room, setRoom }) {
   const handleEditRoomModalOpen = () => setEditRoomModalOpen(true);
   const handleEditRoomModalClose = () => setEditRoomModalOpen(false);
 
+  // Delete room modal
+  const [deleteRoomModalOpen, setDeleteRoomModalOpen] = useState(false);
+  const handleDeleteRoomModalOpen = () => setDeleteRoomModalOpen(true);
+  const handleDeleteRoomModalClose = () => setDeleteRoomModalOpen(false);
+
   // Add artwork modal
   const [addArtworkModalOpen, setAddArtworkModalOpen] = useState(false);
   const handleAddArtworkModalOpen = () => setAddArtworkModalOpen(true);
@@ -405,9 +411,7 @@ function StaffArtworkBrowsing({ artworks, room, setRoom }) {
               color="error"
               disabled={room.roomName === "All Rooms"}
               sx={{ marginTop: 5, marginLeft: 2 }}
-              onClick={() => {
-                // TODO: Delete room
-              }}
+              onClick={handleDeleteRoomModalOpen}
             >
               Delete Room
             </Button>
@@ -451,11 +455,19 @@ function StaffArtworkBrowsing({ artworks, room, setRoom }) {
       )}
 
       {room && room.roomId && (
-        <ArtworkCreation
-          room={room}
-          open={addArtworkModalOpen}
-          handleClose={handleAddArtworkModalClose}
-        />
+        <>
+          <RoomDeleteConfirmation
+            room={room}
+            open={deleteRoomModalOpen}
+            handleClose={handleDeleteRoomModalClose}
+          />
+
+          <ArtworkCreation
+            room={room}
+            open={addArtworkModalOpen}
+            handleClose={handleAddArtworkModalClose}
+          />
+        </>
       )}
     </>
   );

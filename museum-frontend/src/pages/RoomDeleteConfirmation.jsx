@@ -5,29 +5,29 @@ import {
   DialogTitle,
   DialogActions,
   Button,
-  DialogContent,
   Typography,
+  DialogContent,
 } from "@mui/material";
 
 /**
- * Function for artwork delete confirmation dialog
+ * Function for room delete confirmation dialog
  *
- * @returns  A dialog to confirm the deletion of an artwork
+ * @returns  A dialog to confirm the deletion of a room
  * @author Siger
  */
-export function ArtworkDeleteConfirmation({ artwork, open, handleClose }) {
+export function RoomDeleteConfirmation({ room, open, handleClose }) {
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Function which is called when we submit the form to delete the artwork
+  // Function which is called when we submit the form to delete the room
   const handleSubmit = async (event) => {
     event.preventDefault();
     axios
-      .delete(`/api/artwork/${artwork.artworkId}`)
+      .delete(`/api/room/${room.roomId}`)
       .then((response) => {
         if (response.status === 200) {
           setErrorMessage("");
           handleClose();
-          window.location = "/browse/room/" + artwork.room.roomId;
+          window.location = "/";
         } else {
           console.log("Something went wrong");
           setErrorMessage("Something went wrong");
@@ -42,7 +42,7 @@ export function ArtworkDeleteConfirmation({ artwork, open, handleClose }) {
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
       <DialogTitle>
-        Are you sure you want to delete the artwork {artwork.name}?
+        Are you sure you want to delete the room {room.roomName}?
       </DialogTitle>
 
       <DialogContent>
