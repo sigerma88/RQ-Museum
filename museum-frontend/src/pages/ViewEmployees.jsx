@@ -53,24 +53,6 @@ function grammarCheck(name) {
 }
 
 /**
- * Function to delete an employee
- *
- * @param employeeId - The employee id
- * @returns The api response
- * @author Siger
- */
-function deleteEmployee(employeeId) {
-  return axios
-    .delete(`/api/employee/${employeeId}`)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      console.log(error.toJSON());
-    });
-}
-
-/**
  * Function for the confirmation dialog when deleting an employee
  *
  * @param props - The props for the dialog
