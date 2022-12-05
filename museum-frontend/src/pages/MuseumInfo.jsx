@@ -59,7 +59,7 @@ function ManagerViewMuseumInfo() {
     event.preventDefault();
     const museumId = museumFromLocalStorage.museumId;
     axios
-      .post(
+      .put(
         `/api/museum/app/edit/${museumId}/?name=` +
           name +
           "&visitFee=" +

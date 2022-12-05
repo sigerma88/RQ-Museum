@@ -160,7 +160,13 @@ function VisitorHomePage({ isLoggedIn }) {
         ""
       )}
       <br />
-      <Link to="/museum/info">View museum info</Link>
+      <Typography variant="h3" style={{ paddingBottom: "20px" }}>
+        See our prices and schedule
+      </Typography>
+      <Button component={Link} variant="outlined" to="/museum/info">
+        View museum info
+        <KeyboardArrowRightIcon />
+      </Button>
     </>
   );
 }
@@ -194,7 +200,7 @@ function ManagerHomePage() {
 function EmployeeHomePage() {
   return (
     <>
-      {LandingPage()}
+      <LandingPage />
       <Link to="/employee/schedule/">View your schedule</Link>
       <br />
       <Link to="/museum/info">View museum info</Link>
@@ -218,7 +224,7 @@ function Home() {
   } else {
     return (
       <>
-        <VisitorHomePage />
+        <VisitorHomePage isLoggedIn={loggedIn} />
       </>
     );
   }
