@@ -113,6 +113,10 @@ export function Signup() {
                 autoFocus
                 onChange={(e) => setName(e.target.value)}
                 className="login-field"
+                helperText={
+                  isFormInvalid && errorMessage.includes("name") && errorMessage
+                }
+                error={isFormInvalid && errorMessage.includes("name")}
               />
               <TextField
                 margin="normal"
