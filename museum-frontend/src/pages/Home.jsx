@@ -27,7 +27,6 @@ function RoomCard({ room }) {
           height="100%"
           image={RoomImage}
           style={{ objectFit: "cover", filter: "brightness(0.4)" }}
-          alt="Paella dish"
         />
         <CardContent
           className="room-content"
@@ -69,14 +68,23 @@ function RoomCarousel() {
     <Carousel variant="dark" className="carousel">
       <Carousel.Item className="carousel-item">
         <Stack direction="row" justifyContent="center" spacing={2}>
-          {rooms.slice(0, rooms.length / 2).map((room) => (
+          {rooms.slice(0, rooms.length / 2.5).map((room) => (
             <RoomCard key={room.roomId} room={room} />
           ))}
         </Stack>
       </Carousel.Item>
       <Carousel.Item className="carousel-item">
         <Stack direction="row" justifyContent="center" spacing={2}>
-          {rooms.slice(rooms.length / 2, rooms.length).map((room) => (
+          {rooms
+            .slice(rooms.length / 2.5, 2 * (rooms.length / 2.5))
+            .map((room) => (
+              <RoomCard key={room.roomId} room={room} />
+            ))}
+        </Stack>
+      </Carousel.Item>
+      <Carousel.Item className="carousel-item">
+        <Stack direction="row" justifyContent="center" spacing={2}>
+          {rooms.slice(2 * (rooms.length / 2.5), rooms.length).map((room) => (
             <RoomCard key={room.roomId} room={room} />
           ))}
         </Stack>
