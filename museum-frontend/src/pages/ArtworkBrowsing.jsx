@@ -16,6 +16,7 @@ import { LoginContext } from "../Contexts/LoginContext";
 import "./LoanStatus.css";
 import "./ArtworkBrowsing.css";
 import { RoomDetails } from "./RoomDetails";
+import { RoomCreation } from "./RoomCreation";
 import { EditRoom } from "./EditRoom";
 import { ArtworkCreation } from "./ArtworkCreation";
 
@@ -334,6 +335,11 @@ function StaffArtworkBrowsing({ artworks, room, setRoom }) {
   const handleRoomDetailModalOpen = () => setRoomDetailModalOpen(true);
   const handleRoomDetailModalClose = () => setRoomDetailModalOpen(false);
 
+  // Add room modal
+  const [addRoomModalOpen, setAddRoomModalOpen] = useState(false);
+  const handleAddRoomModalOpen = () => setAddRoomModalOpen(true);
+  const handleAddRoomModalClose = () => setAddRoomModalOpen(false);
+
   // Edit room modal
   const [editRoomModalOpen, setEditRoomModalOpen] = useState(false);
   const handleEditRoomModalOpen = () => setEditRoomModalOpen(true);
@@ -381,9 +387,7 @@ function StaffArtworkBrowsing({ artworks, room, setRoom }) {
               variant="contained"
               color="success"
               sx={{ marginTop: 5 }}
-              onClick={() => {
-                // TODO: Add room
-              }}
+              onClick={handleAddRoomModalOpen}
             >
               New Room
             </Button>
@@ -429,6 +433,12 @@ function StaffArtworkBrowsing({ artworks, room, setRoom }) {
             room={room}
             open={roomDetailModalOpen}
             handleClose={handleRoomDetailModalClose}
+          />
+
+          <RoomCreation
+            open={addRoomModalOpen}
+            handleClose={handleAddRoomModalClose}
+            museum={room.museum}
           />
 
           <EditRoom
