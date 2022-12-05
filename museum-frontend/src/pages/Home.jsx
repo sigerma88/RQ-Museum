@@ -207,6 +207,39 @@ function ViewMuseumInfoCard() {
   );
 }
 
+function ViewEmployeeScheduleCard() {
+  return (
+    <Link to={`/employee/schedule`} className="employeeAndManager-card">
+      <Card>
+        <CardMedia
+          component="img"
+          height="100%"
+          image={MuseumInfoImage}
+          style={{ objectFit: "cover", filter: "brightness(0.4)" }}
+          alt="Image of employees"
+        />
+        <CardContent
+          style={{
+            position: "absolute",
+            top: "40%",
+            width: "100%",
+            textAlign: "center",
+            color: "white",
+          }}
+        >
+          <Typography
+            variant="h5"
+            component="div"
+            style={{ fontWeight: 500, fontSize: "32px" }}
+          >
+            View your schedule
+          </Typography>
+        </CardContent>
+      </Card>
+    </Link>
+  );
+}
+
 /**
  * Visitor home page when logged in as a visitor
  * @returns Visitor Home page
@@ -259,15 +292,18 @@ function ManagerHomePage() {
   return (
     <>
       <LandingPage />
-      <Typography variant="h3" style={{ paddingBottom: "20px" }}>
-        Manage your employees
-      </Typography>
-      <ViewEmployeeCard />
-      <br />
-      <Typography variant="h3" style={{ paddingBottom: "20px" }}>
-        View Museum Info
-      </Typography>
-      <ViewMuseumInfoCard />
+      <div style={{ marginBottom: "100px" }}>
+        <Typography variant="h3" style={{ paddingBottom: "20px" }}>
+          Employees
+        </Typography>
+        <ViewEmployeeCard />
+      </div>
+      <div>
+        <Typography variant="h3" style={{ paddingBottom: "20px" }}>
+          Museum Info
+        </Typography>
+        <ViewMuseumInfoCard />
+      </div>
     </>
   );
 }
@@ -282,9 +318,18 @@ function EmployeeHomePage() {
   return (
     <>
       <LandingPage />
-      <Link to="/employee/schedule/">View your schedule</Link>
-      <br />
-      <Link to="/museum/info">View museum info</Link>
+      <div style={{ marginBottom: "100px" }}>
+        <Typography variant="h3" style={{ paddingBottom: "20px" }}>
+          Schedule
+        </Typography>
+        <ViewEmployeeScheduleCard />
+      </div>
+      <div>
+        <Typography variant="h3" style={{ paddingBottom: "20px" }}>
+          Museum Info
+        </Typography>
+        <ViewMuseumInfoCard />
+      </div>
     </>
   );
 }
