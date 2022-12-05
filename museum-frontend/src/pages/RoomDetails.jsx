@@ -1,20 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { Box, Modal, Typography } from "@mui/material";
+import {
+  Box,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Typography,
+} from "@mui/material";
 import { LoginContext } from "../Contexts/LoginContext";
-
-// Box styling
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 800,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
 
 /**
  * Function to seem more information about a room
@@ -58,11 +51,9 @@ export function RoomDetails({ room, open, handleClose }) {
 
   if (loggedIn && (userRole === "manager" || userRole === "employee")) {
     return (
-      <Modal open={open} onClose={handleClose}>
-        <Box sx={style}>
-          <Typography variant="h4" component="h1" marginTop={5}>
-            {room.roomName}
-          </Typography>
+      <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
+        <DialogTitle>{room.roomName}</DialogTitle>
+        <DialogContent>
           <Typography>ID: {room.roomId}</Typography>
           <Typography>Museum: {room.museum.name}</Typography>
           <Typography>Room type: {room.roomType}</Typography>
@@ -71,23 +62,21 @@ export function RoomDetails({ room, open, handleClose }) {
           </Typography>
           <Typography>Max capacity: {roomCapacity}</Typography>
           <Typography>Remaining capacity: {remainingCapacity}</Typography>
-        </Box>
-      </Modal>
+        </DialogContent>
+      </Dialog>
     );
   } else {
     return (
-      <Modal open={open} onClose={handleClose}>
-        <Box sx={style}>
-          <Typography variant="h4" component="h1" marginTop={5}>
-            {room.roomName}
-          </Typography>
+      <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
+        <DialogTitle>{room.roomName}</DialogTitle>
+        <DialogContent>
           <Typography>Museum: {room.museum.name}</Typography>
           <Typography>Room type: {room.roomType}</Typography>
           <Typography>
             Number of artworks: {room.currentNumberOfArtwork}
           </Typography>
-        </Box>
-      </Modal>
+        </DialogContent>
+      </Dialog>
     );
   }
 }
