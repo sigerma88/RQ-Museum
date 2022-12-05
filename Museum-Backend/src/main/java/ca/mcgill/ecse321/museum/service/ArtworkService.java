@@ -264,6 +264,13 @@ public class ArtworkService {
       loanRepository.deleteLoanByArtwork(artwork);
     }
 
+    // Change room's current number of artworks
+    Room room = artwork.getRoom();
+    if (room != null) {
+      room.setCurrentNumberOfArtwork(room.getCurrentNumberOfArtwork() - 1);
+      roomRepository.save(room);
+    }
+
     // Delete artwork
     artworkRepository.deleteArtworkByArtworkId(artworkId);
 

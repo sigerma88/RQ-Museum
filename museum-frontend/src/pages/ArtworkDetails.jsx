@@ -23,6 +23,7 @@ import { EditArtworkInfo } from "./EditArtworkInfo";
 import { EditArtworkLoanInfo } from "./EditArtworkLoanInfo";
 import { MoveArtwork } from "./MoveArtwork";
 import { ArtworkImageChanging } from "./ArtworkImageChanging";
+import { ArtworkDeleteConfirmation } from "./ArtworkDeleteConfirmation";
 
 /**
  * Function to get the artwork from the server
@@ -619,6 +620,15 @@ function StaffArtworkDetails({ artwork, setArtwork }) {
     setArtworkImageDialogOpen(false);
   };
 
+  // Dialog for deleting artwork
+  const [deleteArtworkDialogOpen, setDeleteArtworkDialogOpen] = useState(false);
+  const handleDeleteArtworkDialogOpen = () => {
+    setDeleteArtworkDialogOpen(true);
+  };
+  const handleDeleteArtworkDialogClose = () => {
+    setDeleteArtworkDialogOpen(false);
+  };
+
   return (
     <>
       <Grid container spacing={2}>
@@ -640,9 +650,7 @@ function StaffArtworkDetails({ artwork, setArtwork }) {
             variant="contained"
             color="error"
             sx={{ marginTop: 5, marginLeft: 2 }}
-            onClick={() => {
-              // TODO: Delete artwork
-            }}
+            onClick={handleDeleteArtworkDialogOpen}
           >
             Delete artwork
           </Button>
@@ -661,12 +669,20 @@ function StaffArtworkDetails({ artwork, setArtwork }) {
       <StaffArtworkRoom artwork={artwork} setArtwork={setArtwork} />
 
       {artwork && artwork.artworkId ? (
-        <ArtworkImageChanging
-          artwork={artwork}
-          setArtwork={setArtwork}
-          open={artworkImageDialogOpen}
-          handleClose={handleArtworkImageDialogClose}
-        />
+        <>
+          <ArtworkImageChanging
+            artwork={artwork}
+            setArtwork={setArtwork}
+            open={artworkImageDialogOpen}
+            handleClose={handleArtworkImageDialogClose}
+          />
+
+          <ArtworkDeleteConfirmation
+            artwork={artwork}
+            open={deleteArtworkDialogOpen}
+            handleClose={handleDeleteArtworkDialogClose}
+          />
+        </>
       ) : null}
     </>
   );

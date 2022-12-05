@@ -24,8 +24,8 @@ const style = {
  */
 export function RoomDetails({ room, open, handleClose }) {
   const { loggedIn, userRole } = useContext(LoginContext);
-  const [roomCapacity, setRoomCapacity] = useState(0);
-  const [remainingCapacity, setRemainingCapacity] = useState(0);
+  const [roomCapacity, setRoomCapacity] = useState("Loading...");
+  const [remainingCapacity, setRemainingCapacity] = useState("Loading...");
 
   // Get room max capacity and remaining capacity
   useEffect(() => {
