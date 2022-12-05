@@ -8,10 +8,10 @@ import {
   Paper,
   Stack,
 } from "@mui/material";
-import "./Login.css";
-import { LoginContext } from "../Contexts/LoginContext";
 import Avatar from "@mui/material/Avatar";
 import { deepOrange } from "@mui/material/colors";
+import "./Login/Login.css";
+import { LoginContext } from "../../Contexts/LoginContext";
 
 /**
  * Edit visitor profile

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import {
   Box,
@@ -12,15 +12,14 @@ import {
   Typography,
 } from "@mui/material";
 import { Container } from "@mui/system";
-import { LoginContext } from "../Contexts/LoginContext";
-import { Link } from "react-router-dom";
-import "./LoanStatus.css";
+import "../LoanViewing/LoanStatus.css";
 import "./ArtworkBrowsing.css";
-import { RoomDetails } from "./RoomDetails";
-import { RoomCreation } from "./RoomCreation";
-import { EditRoom } from "./EditRoom";
-import { RoomDeleteConfirmation } from "./RoomDeleteConfirmation";
-import { ArtworkCreation } from "./ArtworkCreation";
+import { LoginContext } from "../../Contexts/LoginContext";
+import { RoomDetails } from "./RoomModals/RoomDetails";
+import { RoomCreation } from "./RoomModals/RoomCreation";
+import { EditRoom } from "./RoomModals/EditRoom";
+import { RoomDeleteConfirmation } from "./RoomModals/RoomDeleteConfirmation";
+import { ArtworkCreation } from "./ArtworkModals/ArtworkCreation";
 
 /**
  * Function to get the artworks from the server

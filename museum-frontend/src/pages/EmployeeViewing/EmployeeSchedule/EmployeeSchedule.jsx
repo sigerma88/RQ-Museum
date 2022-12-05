@@ -29,27 +29,27 @@ import {
   getDayOfWeek,
   getMonth,
   getYear,
-} from "./utils/DateUtils";
+} from "../../utils/DateUtils";
 
 /**
- * Function to add opening hours to museum, only manager can
+ * Function to add shift to an employee
  *
  * @author VZ
- * @param {id} - id of the museum
+ * @param {id} - id of the employee
  * @param {timePeriods} - array of time periods
  * @param {setTimePeriods} - function to set the time periods
- * @returns a form to add opening hours to the museum
+ * @returns a form to add a shift
  */
-function AddOpeningHours({ id, timePeriods, setTimePeriods }) {
+function AddShift({ id, timePeriods, setTimePeriods }) {
   const [date, setDate] = useState(null);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState(false);
   const [isFormInvalid, setIsFormInvalid] = useState(false);
 
-  //POST request to add opening hours to the museum's schedule
+  //POST request to add a shift to the employee's schedule
   //which entails first creating a time period and
-  //then adding it to the museum's schedule
+  //then adding it to the employee's schedule
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -62,12 +62,13 @@ function AddOpeningHours({ id, timePeriods, setTimePeriods }) {
         //CREATE THE SHIFT
         if (response.status === 200) {
           const tp = response.data;
-          //ADD THE SHIFT TO MUSEUM'S SCHEDULE
+          //ADD THE SHIFT TO THE EMPLOYEE'S SCHEDULE
           axios
             .post(
-              `/api/scheduling/museum/${id}/add/shift/${response.data.timePeriodId}`
+              `/api/scheduling/employee/${id}/add/shift/${response.data.timePeriodId}`
             )
             .then(function (response) {
+              // if the request is successful
               setErrorMessage("");
               setIsFormInvalid(false);
               setTimePeriods([...timePeriods, tp]); // set the state to the data returned from the API
@@ -86,7 +87,7 @@ function AddOpeningHours({ id, timePeriods, setTimePeriods }) {
 
   return (
     <>
-      <h2 style={{ marginTop: 30 }}>Add Opening Hours</h2>
+      <h2 style={{ marginTop: 30 }}>Add Shift</h2>
       <form
         onSubmit={(event) => {
           if (date && startTime && endTime) {
@@ -149,9 +150,9 @@ function AddOpeningHours({ id, timePeriods, setTimePeriods }) {
         <Button
           variant="contained"
           type="submit"
-          style={{ width: 190, marginTop: 30, padding: 10 }}
+          style={{ width: 120, marginTop: 30, padding: 10 }}
         >
-          Add Opening Hours
+          Add Shift
         </Button>
       </form>
     </>
@@ -159,20 +160,21 @@ function AddOpeningHours({ id, timePeriods, setTimePeriods }) {
 }
 
 /**
- * Main function that returns the schedule of a museum as viewed by the manager so they can edit opening hours
+ * Main function that returns the schedule of an employee as viewed by the manager so he can edit them
  *
  * @author VZ and Kevin
- * @returns table that contains the opening hours of a museum by id
+ * @returns table that contains the shifts of an employee by id
  */
-export function ManagerViewMuseumSchedule() {
+export function ManagerViewEmployeeSchedule() {
   const [timePeriods, setTimePeriods] = useState([]);
-  const { id } = useParams(); //get the museum id from the url
+  const { id } = useParams(); //get the employee id from the url
 
-  //GET request to get the museum's schedule by id
+  //GET request to get the employee's schedule by id
   useEffect(() => {
     axios
-      .get(`/api/scheduling/museum/shifts/${id}`)
+      .get(`/api/scheduling/employee/shifts/${id}`)
       .then(function (response) {
+        // if the request is successful
         setTimePeriods(response.data); // set the state to the data returned from the API
       })
       .catch(function (error) {
@@ -180,13 +182,14 @@ export function ManagerViewMuseumSchedule() {
       });
   }, [id]);
 
-  //DELETE request to remove the timeperiod from the museum's schedule
+  //DELETE request to remove the timeperiod from the employee's schedule
   const handleRemove = async (event, tpId) => {
     event.preventDefault();
 
     axios
-      .delete(`/api/scheduling/museum/${id}/remove/shift/${tpId}`)
-      .then(function () {
+      .delete(`/api/scheduling/employee/${id}/remove/shift/${tpId}`)
+      .then(function (response) {
+        // if the request is successful
         setTimePeriods(
           timePeriods.filter((timePeriod) => timePeriod.timePeriodId !== tpId)
         );
@@ -198,8 +201,8 @@ export function ManagerViewMuseumSchedule() {
 
   // Date formatted as DD MM YYYY
   // We only need the start date, because we are assuming that a shift spans one day at most
-  // If the manager wants to schedule a opening hours that spans multiple days,
-  // they can schedule multiple opening hours
+  // If the manager wants to schedule a shift that spans multiple days,
+  // they can schedule multiple shifts
   const row = timePeriods.map((timePeriod) => (
     <TableRow key={timePeriod.timePeriodId}>
       <TableCell>
@@ -222,7 +225,7 @@ export function ManagerViewMuseumSchedule() {
         <Button
           onClick={(event) => handleRemove(event, timePeriod.timePeriodId)}
         >
-          Remove
+          Remove Shift
         </Button>
       </TableCell>
     </TableRow>
@@ -242,7 +245,7 @@ export function ManagerViewMuseumSchedule() {
       <>
         <div>
           <h1 style={{ marginTop: 20, marginBottom: 20 }}>
-            Museum's Opening Hours
+            Employee's Schedule
           </h1>
         </div>
 
@@ -291,13 +294,13 @@ export function ManagerViewMuseumSchedule() {
                     display: "flex",
                   }}
                 >
-                  The Museum is currently closed
+                  This employee has no shift at the moment.
                 </StyledTableCell>
               </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
-        <AddOpeningHours
+        <AddShift
           id={id}
           timePeriods={timePeriods}
           setTimePeriods={setTimePeriods}
@@ -308,9 +311,7 @@ export function ManagerViewMuseumSchedule() {
   return (
     <>
       <div>
-        <h1 style={{ marginTop: 20, marginBottom: 20 }}>
-          Museum's Opening Hours
-        </h1>
+        <h1 style={{ marginTop: 20, marginBottom: 20 }}>Employee's Schedule</h1>
       </div>
       <TableContainer
         component={Paper}
@@ -354,7 +355,7 @@ export function ManagerViewMuseumSchedule() {
           <TableBody>{row}</TableBody>
         </Table>
       </TableContainer>
-      <AddOpeningHours
+      <AddShift
         id={id}
         timePeriods={timePeriods}
         setTimePeriods={setTimePeriods}
@@ -364,15 +365,18 @@ export function ManagerViewMuseumSchedule() {
 }
 
 /**
- * Main function that returns the schedule of the museum as viewed by anyone but the manager
+ * Main function that returns the schedule of an employee as viewed by the employee for consultation
  *
- * @returns
+ * @returns the ViewSchedule page
  * @author Victor
  */
-export function AnyoneViewMuseumSchedule() {
-  const { id } = useParams(); //get the museum id from the url
-
+export function EmployeeViewEmployeeSchedule() {
+  const [userId, setUserId] = useState(null);
   const [timePeriods, setTimePeriods] = useState([]);
+
+  useEffect(() => {
+    setUserId(JSON.parse(localStorage.getItem("userId")));
+  }, []);
 
   const StyledTableCell = styled(TableCell)(() => ({
     [`&.${tableCellClasses.head}`]: {
@@ -382,17 +386,6 @@ export function AnyoneViewMuseumSchedule() {
       fontSize: 14,
     },
   }));
-
-  useEffect(() => {
-    axios
-      .get(`/api/scheduling/museum/shifts/${id}`)
-      .then(function (response) {
-        setTimePeriods(response.data); // set the state to the data returned from the API
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }, [id]);
 
   const row = timePeriods.map((timePeriod) => (
     <TableRow key={timePeriod.timePeriodId}>
@@ -416,12 +409,83 @@ export function AnyoneViewMuseumSchedule() {
     </TableRow>
   ));
 
+  useEffect(() => {
+    axios
+      .get(`/api/scheduling/employee/shifts/${userId}`)
+      .then(function (response) {
+        setTimePeriods(response.data); // set the state to the data returned from the API
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, [userId]);
+
+  if (timePeriods.length === 0) {
+    return (
+      <>
+        <div>
+          <h1 style={{ marginTop: 20, marginBottom: 20 }}>
+            Employee's Schedule
+          </h1>
+        </div>
+        <TableContainer
+          component={Paper}
+          sx={{
+            maxWidth: 1000,
+            display: "flex",
+            justifyContent: "center",
+            maxHeight: "500px",
+            boxShadow: 4,
+            borderRadius: 1,
+            my: 2,
+            mx: "auto",
+          }}
+        >
+          <Table stickyHeader aria-label="dense table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18 }}>
+                    Date
+                  </Typography>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18 }}>
+                    Day of the Week
+                  </Typography>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18 }}>
+                    Start Time
+                  </Typography>
+                </StyledTableCell>
+                <StyledTableCell>
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18 }}>
+                    End Time
+                  </Typography>
+                </StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <StyledTableCell
+                  sx={{
+                    display: "flex",
+                  }}
+                >
+                  This employee has no shift at the moment.
+                </StyledTableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </>
+    );
+  }
   return (
     <>
       <div>
-        <h1 style={{ marginTop: 20, marginBottom: 20 }}>
-          Museum's Opening Hours
-        </h1>
+        <h1 style={{ marginTop: 20, marginBottom: 20 }}>Employee's Schedule</h1>
       </div>
       <TableContainer
         component={Paper}

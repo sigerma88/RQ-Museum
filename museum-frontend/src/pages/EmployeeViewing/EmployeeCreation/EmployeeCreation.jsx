@@ -12,9 +12,9 @@ import {
   List,
   ListItem,
 } from "@mui/material";
-import "./Login.css";
 import Avatar from "@mui/material/Avatar";
 import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
+import "../../Profile/Login/Login.css";
 
 /**
  * Page where manager creates employees

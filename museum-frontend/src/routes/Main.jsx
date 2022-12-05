@@ -2,22 +2,22 @@ import React, { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Typography } from "@mui/material";
 import { LoginContext } from "../Contexts/LoginContext";
-import Home from "../pages/Home";
+import Home from "../pages/HomePages/Home";
 import { Navigation } from "../layouts/Navigation";
-import { Login } from "../pages/Login";
-import { Signup } from "../pages/Signup";
-import { Profile } from "../pages/Profile";
-import ViewEmployees from "../pages/ViewEmployees";
-import ArtworkBrowsing from "../pages/ArtworkBrowsing";
-import ArtworkDetails from "../pages/ArtworkDetails";
-import EmployeeCreation from "../pages/EmployeeCreation";
-import TicketViewing from "../pages/TicketViewing";
-import ViewEmployeeSchedule from "../pages/ViewEmployeeSchedule";
-import MuseumInfo from "../pages/MuseumInfo";
-import ViewMuseumOpeningHours from "../pages/ViewMuseumOpeningHours";
-import { Loan } from "../pages/Loan";
+import { Login } from "../pages/Profile/Login/Login";
+import { Signup } from "../pages/Profile/Signup/Signup";
+import { Profile } from "../pages/Profile/Profile";
+import ViewEmployees from "../pages/EmployeeViewing/ViewEmployees";
+import ArtworkBrowsing from "../pages/ArtworkBrowsing/ArtworkBrowsing";
+import ArtworkDetails from "../pages/ArtworkBrowsing/ArtworkDetails/ArtworkDetails";
+import EmployeeCreation from "../pages/EmployeeViewing/EmployeeCreation/EmployeeCreation";
+import TicketViewing from "../pages/TicketViewing/TicketViewing";
+import ViewEmployeeSchedule from "../pages/EmployeeViewing/EmployeeSchedule/ViewEmployeeSchedule";
+import MuseumInfo from "../pages/MuseumViewing/MuseumInfo";
+import ViewMuseumOpeningHours from "../pages/MuseumViewing/MuseumSchedule/ViewMuseumOpeningHours";
+import { Loan } from "../pages/LoanViewing/Loan";
 import { Footer } from "../layouts/Footer";
-import "../routes/Main.css";
+import "./Main.css";
 
 /**
  * Function that routes the user to the correct page depending on the url

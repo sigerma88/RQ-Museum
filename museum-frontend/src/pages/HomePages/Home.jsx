@@ -1,4 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import { Carousel } from "react-bootstrap";
 import {
   Typography,
   Button,
@@ -7,16 +10,13 @@ import {
   Stack,
   CardMedia,
 } from "@mui/material";
-import "./Home.css";
-import { LoginContext } from "../Contexts/LoginContext";
-import { Link } from "react-router-dom";
-import MuseumPhotoBackground from "../assets/MuseumPhotoBackground.jpg";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import { Carousel } from "react-bootstrap";
-import RoomImage from "../assets/RoomImage.jpg";
-import EmployeesImage from "../assets/EmployeesImage.jpg";
-import MuseumInfoImage from "../assets/MuseumInfoImage.jpg";
-import axios from "axios";
+import MuseumPhotoBackground from "../../assets/MuseumPhotoBackground.jpg";
+import RoomImage from "../../assets/RoomImage.jpg";
+import EmployeesImage from "../../assets/EmployeesImage.jpg";
+import MuseumInfoImage from "../../assets/MuseumInfoImage.jpg";
+import "./Home.css";
+import { LoginContext } from "../../Contexts/LoginContext";
 
 function RoomCard({ room }) {
   return (

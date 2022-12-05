@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
-import { LoginContext } from "../Contexts/LoginContext";
+import { LoginContext } from "../../../Contexts/LoginContext";
 import {
   ManagerViewMuseumSchedule,
   AnyoneViewMuseumSchedule,
-} from "./MuseumSchedule";
+} from "../MuseumSchedule/MuseumSchedule";
 
 /**
  * Main function for the ViewMuseumOpeningHours page,

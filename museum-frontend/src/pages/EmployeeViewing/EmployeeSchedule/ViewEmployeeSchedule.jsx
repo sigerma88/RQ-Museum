@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Typography } from "@mui/material/";
-import { LoginContext } from "../Contexts/LoginContext";
+import { LoginContext } from "../../../Contexts/LoginContext";
 import {
   ManagerViewEmployeeSchedule,
   EmployeeViewEmployeeSchedule,
