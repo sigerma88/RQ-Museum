@@ -158,7 +158,13 @@ function LoanRequests({ loanAccepted, setLoanAccepted }) {
         visitorDto: loan.visitorDto,
       })
       .then(function (response) {
-        setLoans(loans.filter((aLoan) => aLoan.loanId !== loan.loanId));
+        setLoans(
+          loans.filter(
+            (aLoan) =>
+              aLoan.loanId !== loan.loanId &&
+              aLoan.artworkDto.artworkId !== loan.artworkDto.artworkId
+          )
+        );
         setLoanAccepted(!loanAccepted);
       })
       .catch(function (error) {
