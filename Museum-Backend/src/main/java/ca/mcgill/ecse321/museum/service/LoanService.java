@@ -157,12 +157,27 @@ public class LoanService {
       throw new IllegalArgumentException("Loan does not exist");
     }
 
-    // If the patch is to accept the loan request, the artwork must be updated to be on loan
+    // If artwork is already loaned out, deny loan edit request
+    if (loan.getArtwork().getIsOnLoan()) {
+      throw new IllegalArgumentException("Cannot edit a loan request on an artwork that is already on loan");
+    }
+
+    // If the patch is to accept the loan request, the artwork must be updated to be
+    // on loan and all other loan requests for the same artwork will be refused
     loan.setRequestAccepted(requestAccepted);
     if (requestAccepted != null && requestAccepted) {
       Artwork artwork = loan.getArtwork();
-      artwork.setIsOnLoan(true);
+      artwork.setIsOnLoan(requestAccepted);
       artworkRepository.save(artwork);
+      List<Loan> loansForSameArtwork = loanRepository.findLoanByArtwork(artwork);
+      for (Loan loanRequest : loansForSameArtwork) {
+        if (loanRequest.getVisitor().getMuseumUserId() != loan.getVisitor().getMuseumUserId()) {
+          loanRequest.setRequestAccepted(false);
+          loanRepository.save(loanRequest);
+        }
+
+      }
+
     }
     return loanRepository.save(loan);
   }
