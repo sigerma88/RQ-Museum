@@ -81,6 +81,23 @@ public class LoanService {
   }
 
   /**
+   * Method to get all loans from the database by the artworkId
+   * 
+   * @param artworkId - Long primary key of artwork
+   * @return list<Loan> of all loans from the database
+   * @author Siger
+   */
+
+  @Transactional
+  public List<Loan> getAllLoansByArtworkId(Long artworkId) {
+    Artwork artwork = artworkRepository.findArtworkByArtworkId(artworkId);
+    if (artwork == null) {
+      throw new IllegalArgumentException("Artwork does not exist");
+    }
+    return toList(loanRepository.findLoanByArtwork(artwork));
+  }
+
+  /**
    * Method to create loan
    *
    * @param loanDto - loanDto

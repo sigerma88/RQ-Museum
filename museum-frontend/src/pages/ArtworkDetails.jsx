@@ -13,11 +13,17 @@ import {
   DialogContent,
   DialogTitle,
   Avatar,
+  Grid,
 } from "@mui/material";
 import { LoginContext } from "../Contexts/LoginContext";
-import { LoanStatus } from "./ArtworkBrowsing";
+import { LoanStatus, LoanStatusForStaff } from "./ArtworkBrowsing";
 import LockIcon from "@mui/icons-material/Lock";
 import "./LoanStatus.css";
+import { EditArtworkInfo } from "./EditArtworkInfo";
+import { EditArtworkLoanInfo } from "./EditArtworkLoanInfo";
+import { MoveArtwork } from "./MoveArtwork";
+import { ArtworkImageChanging } from "./ArtworkImageChanging";
+import { ArtworkDeleteConfirmation } from "./ArtworkDeleteConfirmation";
 import { Link } from "react-router-dom";
 
 /**
@@ -137,7 +143,8 @@ function LoanConfirmation({ open, close, userId, artwork }) {
  * @param userRole - The user role
  * @param loggedIn - The logged in status
  * @returns The visitor artwork loan section
- * @author Siger, Kevin (redesign)
+ * @author Siger
+ * @author Kevin
  */
 function VisitorArtworkLoan({ artwork, userRole, loggedIn, userId }) {
   const [open, setOpen] = useState(false);
@@ -222,7 +229,6 @@ function VisitorArtworkLoan({ artwork, userRole, loggedIn, userId }) {
             </Link>
           </div>
         )}
-        {/* TODO: Add form for manager or employee to edit artwork  */}
       </div>
     );
   } else {
@@ -231,13 +237,15 @@ function VisitorArtworkLoan({ artwork, userRole, loggedIn, userId }) {
 }
 
 /**
- * VisitorArtworkBrowsing component
+ * VisitorArtworkDetails component
+ * Shows the details of the artwork and the artwork itself as viewed by a visitor
  *
  * @param artwork - The artwork object
  * @param userRole - The user role
  * @param loggedIn - The logged in status
- * @returns The visitor artwork browsing section
- * @author Siger, Kevin
+ * @returns The visitor artwork detail browsing section
+ * @author Siger
+ * @author Kevin
  */
 function VisitorArtworkDetails({ artwork, userRole, loggedIn, userId }) {
   const imageHeight = window.innerHeight * 0.89;
@@ -252,7 +260,7 @@ function VisitorArtworkDetails({ artwork, userRole, loggedIn, userId }) {
     } else {
       setArtworkStatus({});
     }
-  }, [artwork.artworkId]);
+  }, []);
 
   return (
     <>
@@ -316,12 +324,369 @@ function VisitorArtworkDetails({ artwork, userRole, loggedIn, userId }) {
   );
 }
 
-function ManagerArtworkDetails() {
-  return <p>Admin</p>;
+/**
+ * Staff artwork info section
+ *
+ * @param artwork - The artwork object
+ * @returns The staff artwork info section
+ * @author Siger
+ * @author Kevin
+ */
+function StaffArtworkInfo({ artwork, setArtwork }) {
+  // Get the artwork status from the server
+  const [artworkStatus, setArtworkStatus] = useState({});
+  useEffect(() => {
+    if (artwork.artworkId !== undefined) {
+      getArtworkStatus(artwork.artworkId).then((artworkStatus) => {
+        setArtworkStatus(artworkStatus);
+      });
+    } else {
+      setArtworkStatus({});
+    }
+  }, []);
+
+  // Dialog for editing artwork info
+  const [editArtworkInfoDialogOpen, setEditArtworkInfoDialogOpen] =
+    useState(false);
+  const handleEditArtworkInfoDialogOpen = () => {
+    setEditArtworkInfoDialogOpen(true);
+  };
+  const handleEditArtworkInfoDialogClose = () => {
+    setEditArtworkInfoDialogOpen(false);
+  };
+
+  return (
+    <div style={{ margin: "50px auto" }}>
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          width: "70%",
+          margin: "auto",
+        }}
+      >
+        <Grid item xs={6}>
+          <Typography variant="h5" margin={2}>
+            Artwork information
+          </Typography>
+        </Grid>
+        <Grid item xs={6}>
+          <Button
+            variant="contained"
+            style={{ margin: 2 }}
+            onClick={handleEditArtworkInfoDialogOpen}
+          >
+            Edit artwork info
+          </Button>
+        </Grid>
+      </Grid>
+      <List
+        style={{
+          display: "flex",
+          margin: "auto",
+          justifyContent: "space-evenly",
+          padding: "auto",
+          width: "70%",
+        }}
+      >
+        <div style={{ width: "80%" }}>
+          <ListItem className="artwork-info">
+            <ListItemText primary="Name" secondary={artwork.name} />
+          </ListItem>
+          <Divider variant="middle" />
+          <ListItem>
+            <ListItemText primary="Artist" secondary={artwork.artist} />
+          </ListItem>
+          <Divider variant="middle" />
+        </div>
+        <div style={{ width: "80%" }}>
+          <ListItem>
+            <ListItemText primary="Image" secondary={artwork.image} />
+          </ListItem>
+          <Divider variant="middle" />
+          <ListItem>
+            <ListItemText
+              primary="Artwork status"
+              secondary={computeArtworkStatus(artworkStatus)}
+            />
+          </ListItem>
+          <Divider variant="middle" />
+        </div>
+      </List>
+
+      {artwork && artwork.artworkId ? (
+        <EditArtworkInfo
+          artwork={artwork}
+          setArtwork={setArtwork}
+          open={editArtworkInfoDialogOpen}
+          handleClose={handleEditArtworkInfoDialogClose}
+        />
+      ) : null}
+    </div>
+  );
 }
 
-function EmployeeArtworkDetails() {
-  return <p>Employee</p>;
+/**
+ * Staff artwork loan section
+ *
+ * @param artwork - The artwork object
+ * @returns The staff artwork loan section
+ * @author Siger
+ * @author Kevin
+ */
+function StaffArtworkLoan({ artwork, setArtwork }) {
+  // Dialog for editing artwork loan info
+  const [editArtworkLoanInfoDialogOpen, setEditArtworkLoanInfoDialogOpen] =
+    useState(false);
+  const handleEditArtworkLoanInfoDialogOpen = () => {
+    setEditArtworkLoanInfoDialogOpen(true);
+  };
+  const handleEditArtworkLoanInfoDialogClose = () => {
+    setEditArtworkLoanInfoDialogOpen(false);
+  };
+
+  return (
+    <div style={{ margin: "50px auto" }}>
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          width: "70%",
+          margin: "auto",
+        }}
+      >
+        <Grid item xs={6}>
+          <Typography variant="h5" margin={2}>
+            Loan information
+          </Typography>
+        </Grid>
+        <Grid item xs={6}>
+          <Button
+            variant="contained"
+            style={{ margin: 2 }}
+            onClick={handleEditArtworkLoanInfoDialogOpen}
+          >
+            Edit loan info
+          </Button>
+        </Grid>
+      </Grid>
+      <List
+        style={{
+          width: "70%",
+          padding: "auto",
+          margin: "auto",
+          display: "flex",
+          justifyContent: "space-evenly",
+        }}
+      >
+        <div style={{ width: "80%" }}>
+          <ListItem>
+            <ListItemText
+              primary="Loan fee"
+              secondary={artwork.loanFee ? artwork.loanFee : "N/A"}
+            />
+          </ListItem>
+          <Divider variant="middle" />
+        </div>
+        <div style={{ width: "80%" }}>
+          <ListItem>
+            <ListItemText
+              primary="Loan status"
+              secondary={
+                <LoanStatusForStaff
+                  isAvailableForLoan={artwork.isAvailableForLoan}
+                  isOnLoan={artwork.isOnLoan}
+                  artworkId={artwork.artworkId}
+                />
+              }
+            ></ListItemText>
+          </ListItem>
+          <Divider variant="middle" />
+        </div>
+      </List>
+
+      {artwork && artwork.artworkId ? (
+        <EditArtworkLoanInfo
+          artwork={artwork}
+          setArtwork={setArtwork}
+          open={editArtworkLoanInfoDialogOpen}
+          handleClose={handleEditArtworkLoanInfoDialogClose}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+/**
+ * Staff artwork room section
+ *
+ * @param artwork - The artwork object
+ * @returns The staff artwork room section
+ * @author Siger
+ */
+function StaffArtworkRoom({ artwork, setArtwork }) {
+  // Dialog for moving artwork
+  const [moveArtworkDialogOpen, setMoveArtworkDialogOpen] = useState(false);
+  const handleMoveArtworkDialogOpen = () => {
+    setMoveArtworkDialogOpen(true);
+  };
+  const handleMoveArtworkDialogClose = () => {
+    setMoveArtworkDialogOpen(false);
+  };
+
+  return (
+    <div style={{ margin: "50px auto" }}>
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          width: "70%",
+          margin: "auto",
+        }}
+      >
+        <Grid item xs={6}>
+          <Typography variant="h5" margin={2}>
+            Room
+          </Typography>
+        </Grid>
+        <Grid item xs={6}>
+          <Button
+            variant="contained"
+            style={{ margin: 2 }}
+            onClick={handleMoveArtworkDialogOpen}
+          >
+            Move artwork
+          </Button>
+        </Grid>
+      </Grid>
+      <List
+        style={{
+          width: "70%",
+          padding: "auto",
+          margin: "auto",
+          display: "flex",
+          justifyContent: "space-evenly",
+        }}
+      >
+        <div style={{ width: "80%" }}>
+          <ListItem>
+            <ListItemText
+              primary="Museum"
+              secondary={artwork.room ? artwork.room.museum.name : "None"}
+            />
+          </ListItem>
+          <Divider variant="middle" />
+        </div>
+        <div style={{ width: "80%" }}>
+          <ListItem>
+            <ListItemText
+              primary="Room"
+              secondary={artwork.room ? artwork.room.roomName : "None"}
+            ></ListItemText>
+          </ListItem>
+          <Divider variant="middle" />
+        </div>
+      </List>
+
+      {artwork && artwork.room ? (
+        <MoveArtwork
+          open={moveArtworkDialogOpen}
+          handleClose={handleMoveArtworkDialogClose}
+          artwork={artwork}
+          setArtwork={setArtwork}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+/**
+ * StaffArtworkDetails component
+ * Shows the details of the artwork and the artwork itself as viewed by a staff member
+ *
+ * @param artwork - The artwork object
+ * @returns The staff artwork detail browsing section
+ * @author Siger
+ * @author Kevin
+ */
+function StaffArtworkDetails({ artwork, setArtwork }) {
+  const imageHeight = window.innerHeight * 0.89;
+
+  // Dialog for changing artwork image
+  const [artworkImageDialogOpen, setArtworkImageDialogOpen] = useState(false);
+  const handleArtworkImageDialogOpen = () => {
+    setArtworkImageDialogOpen(true);
+  };
+  const handleArtworkImageDialogClose = () => {
+    setArtworkImageDialogOpen(false);
+  };
+
+  // Dialog for deleting artwork
+  const [deleteArtworkDialogOpen, setDeleteArtworkDialogOpen] = useState(false);
+  const handleDeleteArtworkDialogOpen = () => {
+    setDeleteArtworkDialogOpen(true);
+  };
+  const handleDeleteArtworkDialogClose = () => {
+    setDeleteArtworkDialogOpen(false);
+  };
+
+  return (
+    <>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6}>
+          <Typography variant="h4" margin={5}>
+            {artwork.name}
+          </Typography>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ marginTop: 5, marginLeft: 2 }}
+            onClick={handleArtworkImageDialogOpen}
+          >
+            Change image
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            sx={{ marginTop: 5, marginLeft: 2 }}
+            onClick={handleDeleteArtworkDialogOpen}
+          >
+            Delete artwork
+          </Button>
+        </Grid>
+      </Grid>
+      <img
+        src={artwork.image}
+        alt="artwork"
+        style={{ height: imageHeight, borderRadius: 10 }}
+      />
+
+      <StaffArtworkInfo artwork={artwork} setArtwork={setArtwork} />
+
+      <StaffArtworkLoan artwork={artwork} setArtwork={setArtwork} />
+
+      <StaffArtworkRoom artwork={artwork} setArtwork={setArtwork} />
+
+      {artwork && artwork.artworkId ? (
+        <>
+          <ArtworkImageChanging
+            artwork={artwork}
+            setArtwork={setArtwork}
+            open={artworkImageDialogOpen}
+            handleClose={handleArtworkImageDialogClose}
+          />
+
+          <ArtworkDeleteConfirmation
+            artwork={artwork}
+            open={deleteArtworkDialogOpen}
+            handleClose={handleDeleteArtworkDialogClose}
+          />
+        </>
+      ) : null}
+    </>
+  );
 }
 
 /**
@@ -343,10 +708,8 @@ function ArtworkDetails() {
   }, [artworkId]);
 
   const { loggedIn, userRole, userId } = useContext(LoginContext);
-  if (userRole === "manager" && loggedIn) {
-    return <ManagerArtworkDetails />;
-  } else if (userRole === "employee" && loggedIn) {
-    return <EmployeeArtworkDetails />;
+  if (loggedIn && (userRole === "manager" || userRole === "employee")) {
+    return <StaffArtworkDetails artwork={artwork} setArtwork={setArtwork} />;
   } else {
     return (
       <VisitorArtworkDetails

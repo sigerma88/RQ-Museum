@@ -63,6 +63,10 @@ public class ArtworkService {
       throw new IllegalArgumentException("Artist name cannot be empty");
     }
 
+    if (isAvailableForLoan == null) {
+      throw new IllegalArgumentException("Loan availability cannot be empty");
+    }
+
     if (isAvailableForLoan) {
       if (loanFee == null) {
         throw new IllegalArgumentException("Loan fee cannot be null if artwork is available for loan");
@@ -198,11 +202,11 @@ public class ArtworkService {
     }
 
     // Edit artwork information
-    if (name != null)
+    if (name != null && name.trim().length() != 0)
       artwork.setName(name);
-    if (artist != null)
+    if (artist != null && artist.trim().length() != 0)
       artwork.setArtist(artist);
-    if (image != null)
+    if (image != null && image.trim().length() != 0)
       artwork.setImage(image);
     return artworkRepository.save(artwork);
   }
@@ -259,9 +263,15 @@ public class ArtworkService {
     }
 
     // Delete loan if artwork is on loan
-    Loan loan = loanRepository.findLoanByArtwork(artwork);
-    if (loan != null) {
+    List<Loan> loan = loanRepository.findLoanByArtwork(artwork);
+    if (loan != null && loan.size() > 0) {
       loanRepository.deleteLoanByArtwork(artwork);
+    }
+
+    // Change room's current number of artworks
+    Room room = artwork.getRoom();
+    if (room != null) {
+      roomService.changeCurrentNumberOfArtwork(room.getRoomId(), room.getCurrentNumberOfArtwork() - 1);
     }
 
     // Delete artwork

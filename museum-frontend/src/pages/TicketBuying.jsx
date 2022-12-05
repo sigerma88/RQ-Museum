@@ -47,6 +47,7 @@ export function TicketBuying({ open, handleClose, visitorId }) {
         window.location.reload();
       })
       .catch((error) => {
+        console.log(error);
         setErrorMessage(error.response.data);
         setIsFormInvalid(true);
       });
