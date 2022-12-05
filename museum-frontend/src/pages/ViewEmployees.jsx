@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
+  Grid,
   Table,
   TableBody,
   TableHead,
@@ -12,8 +13,19 @@ import {
   tableCellClasses,
   styled,
   Button,
+  Checkbox,
+  Snackbar,
+  Alert,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
 } from "@mui/material/";
 import "./ViewEmployees.css";
+import { Link } from "react-router-dom";
 
 const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
@@ -34,28 +46,120 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+// Helper function to check if the name ends with an s and add an apostrophe depending on the case
+function grammarCheck(name) {
+  return name.charAt(name.length - 1) !== "s" ? name + "'s" : name + "'";
+}
+
 /**
- * Main function for the ViewEmployees page that displays all employees in the database
- * @author VZ and Kevin
+ * Function to delete an employee
+ *
+ * @param employeeId - The employee id
+ * @returns The api response
+ * @author Siger
+ */
+function deleteEmployee(employeeId) {
+  return axios
+    .delete(`/api/employee/${employeeId}`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.log(error.toJSON());
+    });
+}
+
+/**
+ * Function for the confirmation dialog when deleting an employee
+ *
+ * @param props - The props for the dialog
+ * @returns The confirmation dialog
+ * @author Siger
+ */
+function ConfirmationDialog(props) {
+  const { open, close, employees } = props;
+
+  return (
+    <Dialog open={open} onClose={close}>
+      <DialogTitle>
+        Are you sure you want to delete the selected employees?
+      </DialogTitle>
+      <List>
+        {employees.map((employee) => (
+          // List the employees to be deleted
+          <ListItem key={employee.museumUserId}>
+            <ListItemAvatar>{employee.museumUserId}</ListItemAvatar>
+            <ListItemText primary={employee.name} secondary={employee.email} />
+          </ListItem>
+        ))}
+      </List>
+      <DialogActions>
+        <Button onClick={close}>Cancel</Button>
+        <Button
+          onClick={() => {
+            employees.forEach((employee) => {
+              deleteEmployee(employee.museumUserId);
+            });
+            window.location.reload();
+          }}
+        >
+          Confirm
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
+/**
+ * Main function for the ViewEmployees page
+ * The page displays a list of all employees and allows the manager to delete them (fire) or add a new one (hire)
+ *
+ * @author VZ
+ * @author Kevin
+ * @author Siger
  * @returns table of employees with name, email and schedule
  */
-export function ViewEmployees() {
-  const [employees, setEmployees] = useState([]); // initial state set to empty array
+export default function ViewEmployees() {
+  const [employees, setEmployees] = useState([]);
+  const [selectedEmployees, setSelectedEmployees] = useState([]);
+  const [alertErrorOpen, setAlertErrorOpen] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
   useEffect(() => {
-    // function getAllEmployees() {
-    axios // axios is a library that allows us to make HTTP requests
+    axios
       .get("/api/employee")
       .then(function (response) {
-        // if the request is successful
-        console.log(response.data);
-        setEmployees(response.data); // set the state to the data returned from the API
+        // set the state to the data returned from the API
+        setEmployees(response.data);
       })
       .catch(function (error) {
-        // if the request fails
-        console.log(error.response.data);
+        console.log(error);
       });
   }, []);
+
+  const handleSelect = (employee) => {
+    if (selectedEmployees.includes(employee)) {
+      setSelectedEmployees(selectedEmployees.filter((e) => e !== employee));
+    } else {
+      setSelectedEmployees([...selectedEmployees, employee]);
+    }
+  };
+
+  // Handle the opening of the alert for bad selection for deletion
+  const handleAlertErrorOpen = () => {
+    setAlertErrorOpen(true);
+  };
+  const handleAlertErrorClose = () => {
+    setAlertErrorOpen(false);
+  };
+
+  // Handle the opening of the confirmation dialog for deletion
+  const handleDeleteConfirmOpen = () => {
+    setDeleteConfirmOpen(true);
+  };
+  const handleDeleteConfirmClose = () => {
+    setDeleteConfirmOpen(false);
+  };
 
   if (employees.length === 0) {
     return (
@@ -66,10 +170,9 @@ export function ViewEmployees() {
           </h1>
           <Button
             variant="contained"
+            component={Link}
             sx={{ position: "relative", right: -300, top: -55 }}
-            onClick={() => {
-              window.location.href = "/employee/create";
-            }}
+            to="/employee/create"
           >
             Add Employee
           </Button>
@@ -80,20 +183,50 @@ export function ViewEmployees() {
   } else {
     return (
       <>
-        <div>
-          <h1 style={{ marginTop: 20, marginBottom: 20 }}>
-            List&nbsp;of&nbsp;all&nbsp;Employees
-          </h1>
-          <Button
-            variant="contained"
-            sx={{ position: "relative", right: -300, top: -55 }}
-            onClick={() => {
-              window.location.href = "/employee/create";
-            }}
-          >
-            Add Employee
-          </Button>
-        </div>
+        <Grid container spacing={2}>
+          <Grid item xs={4}></Grid>
+          <Grid item xs={4}>
+            <h1 style={{ marginTop: 20, marginBottom: 20 }}>
+              List of all Employees
+            </h1>
+          </Grid>
+          <Grid item xs={2}>
+            <Button
+              component={Link}
+              variant="contained"
+              color="success"
+              sx={{ marginTop: 3.5 }}
+              to="/employee/create"
+            >
+              Hire Employee
+            </Button>
+          </Grid>
+          <Grid item xs={2}>
+            <Button
+              variant="contained"
+              color="error"
+              sx={{ marginTop: 3.5 }}
+              onClick={() => {
+                if (selectedEmployees.length === 0) {
+                  handleAlertErrorOpen();
+                } else {
+                  handleDeleteConfirmOpen();
+                }
+              }}
+            >
+              Fire Employee
+            </Button>
+            <Snackbar open={alertErrorOpen} onClose={handleAlertErrorClose}>
+              <Alert
+                onClose={handleAlertErrorClose}
+                severity="error"
+                sx={{ width: "100%" }}
+              >
+                Error: No employee selected.
+              </Alert>
+            </Snackbar>
+          </Grid>
+        </Grid>
         <TableContainer
           component={Paper}
           sx={{
@@ -110,6 +243,24 @@ export function ViewEmployees() {
           <Table stickyHeader aria-label="simple table">
             <TableHead>
               <TableRow>
+                <StyledTableCell>
+                  <Checkbox
+                    checked={selectedEmployees.length === employees.length}
+                    indeterminate={
+                      selectedEmployees.length > 0 &&
+                      selectedEmployees.length < employees.length
+                    }
+                    onChange={() => {
+                      if (selectedEmployees.length < employees.length) {
+                        setSelectedEmployees(
+                          employees.map((employee) => employee)
+                        );
+                      } else {
+                        setSelectedEmployees([]);
+                      }
+                    }}
+                  />
+                </StyledTableCell>
                 <StyledTableCell>
                   <Typography
                     sx={{
@@ -138,27 +289,35 @@ export function ViewEmployees() {
                   key={employee.museumUserId}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
+                  <StyledTableCell>
+                    <Checkbox
+                      checked={selectedEmployees.includes(employee)}
+                      onChange={() => {
+                        handleSelect(employee);
+                      }}
+                    />
+                  </StyledTableCell>
                   <StyledTableCell>{employee.name}</StyledTableCell>
                   <StyledTableCell>{employee.email}</StyledTableCell>
                   <StyledTableCell align="right">
-                    <a
-                      href={`/employee/schedule/${employee.museumUserId}`}
+                    <Link
+                      to={`/employee/schedule/${employee.museumUserId}`}
                       className="hover-underline-animation"
                     >
                       View&nbsp;{grammarCheck(employee.name)}&nbsp;schedule
-                    </a>
+                    </Link>
                   </StyledTableCell>
                 </StyledTableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
+        <ConfirmationDialog
+          open={deleteConfirmOpen}
+          close={handleDeleteConfirmClose}
+          employees={selectedEmployees}
+        />
       </>
     );
   }
-}
-
-// Helper function to check if the name ends with an s and add an apostrophe depending on the case
-function grammarCheck(name) {
-  return name.charAt(name.length - 1) !== "s" ? name + "'s" : name + "'";
 }

@@ -13,13 +13,12 @@ import { Link } from "react-router-dom";
 import MuseumPhotoBackground from "../assets/MuseumPhotoBackground.jpg";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { Carousel } from "react-bootstrap";
-import HomePainting from "../assets/HomePainting.jpg";
 import RoomImage from "../assets/RoomImage.jpg";
 import axios from "axios";
 
 function RoomCard({ room }) {
   return (
-    <a href={`/browse/room/${room.roomId}`}>
+    <Link to={`/browse/room/${room.roomId}`}>
       <Card className="carousel-card">
         <CardMedia
           component="img"
@@ -47,7 +46,7 @@ function RoomCard({ room }) {
           </Typography>
         </CardContent>
       </Card>
-    </a>
+    </Link>
   );
 }
 
@@ -60,7 +59,7 @@ function RoomCarousel() {
         setRooms(response.data);
       })
       .catch((error) => {
-        console.log(error.response.data);
+        console.log(error);
       });
   }, []);
 
@@ -144,7 +143,7 @@ function VisitorHomePage({ isLoggedIn }) {
         <Typography variant="h3" style={{ paddingBottom: "20px" }}>
           Buy your tickets
         </Typography>
-        <Button href="/ticket" variant="outlined">
+        <Button component={Link} to="/ticket" variant="outlined">
           Book your ticket <KeyboardArrowRightIcon />
         </Button>
       </div>
@@ -153,17 +152,15 @@ function VisitorHomePage({ isLoggedIn }) {
           <Typography variant="h3" style={{ paddingBottom: "20px" }}>
             See your loans
           </Typography>
-          <Button href="/loan" variant="outlined">
+          <Button component={Link} to="/loan" variant="outlined">
             View your loans <KeyboardArrowRightIcon />
           </Button>
         </div>
       ) : (
         ""
       )}
-      <img
-        src={HomePainting}
-        style={{ borderRadius: "10px", height: "55%", width: "55%" }}
-      />
+      <br />
+      <Link to="/museum/info">View museum info</Link>
     </>
   );
 }
@@ -177,11 +174,13 @@ function VisitorHomePage({ isLoggedIn }) {
 function ManagerHomePage() {
   return (
     <>
-      {LandingPage()}
+      <LandingPage />
       <Typography variant="h3" style={{ paddingBottom: "20px" }}>
         Manage your employees
       </Typography>
       <Link to="/employee">View all employees</Link>
+      <br />
+      <Link to="/museum/info">View museum info</Link>
     </>
   );
 }
@@ -196,7 +195,9 @@ function EmployeeHomePage() {
   return (
     <>
       {LandingPage()}
-      <a href="/employee/schedule/">View your schedule</a>
+      <Link to="/employee/schedule/">View your schedule</Link>
+      <br />
+      <Link to="/museum/info">View museum info</Link>
     </>
   );
 }
@@ -215,7 +216,11 @@ function Home() {
   } else if (userRole === "employee" && loggedIn) {
     return <EmployeeHomePage />;
   } else {
-    return <VisitorHomePage isLoggedIn={loggedIn} />;
+    return (
+      <>
+        <VisitorHomePage />
+      </>
+    );
   }
 }
 

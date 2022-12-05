@@ -8,7 +8,7 @@ import { Button } from "@mui/material";
  */
 
 export function Footer() {
-  const footerNavigation = ["Home", "Room", "Ticket", "Loan"];
+  const footerNavigation = ["Home", "Room", "Ticket", "Loan", "Info"];
 
   return (
     <footer
@@ -16,6 +16,7 @@ export function Footer() {
         bottom: 0,
         backgroundColor: "black",
         marginTop: "100px",
+        width: "100%",
         padding: "50px",
       }}
     >
@@ -34,6 +35,8 @@ export function Footer() {
                 ? "/"
                 : item === "Room"
                 ? `/browse/room/all`
+                : item === "Info"
+                ? "/museum/info"
                 : `/${item.toLowerCase()}`
             }
             sx={{ my: 2, color: "white", display: "block", fontSize: "16px" }}

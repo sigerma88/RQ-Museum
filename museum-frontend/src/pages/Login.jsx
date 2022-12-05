@@ -11,6 +11,7 @@ import {
 import "./Login.css";
 import { LoginContext } from "../Contexts/LoginContext";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 /**
  * Login page
@@ -53,7 +54,6 @@ export function Login() {
           localStorage.setItem("userRole", response.data.role);
           localStorage.setItem("loggedIn", true);
           localStorage.setItem("userId", response.data.museumUserId);
-
           navigate("/");
         }
       })
@@ -126,12 +126,12 @@ export function Login() {
                 className="login-field"
               />
             </Box>
-            <a
+            <Link
               style={{ margin: "20px", textDecoration: "underline" }}
-              href="/signup"
+              to="/signup"
             >
               Need an account? Click here
-            </a>
+            </Link>
             <p style={{ color: "red" }}>
               {errorMessage && errorMessage.includes("login")
                 ? errorMessage

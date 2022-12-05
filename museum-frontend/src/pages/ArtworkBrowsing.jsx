@@ -4,6 +4,7 @@ import axios from "axios";
 import { Card, CardContent, CardMedia, Grid, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 import { LoginContext } from "../Contexts/LoginContext";
+import { Link } from "react-router-dom";
 import "./LoanStatus.css";
 import "./ArtworkBrowsing.css";
 
@@ -107,13 +108,13 @@ function VisitorArtworkBrowsing({ artworks, room }) {
                 }}
                 className="card"
               >
-                <a
+                <Link
                   style={{
                     fontStyle: "none",
                     textDecoration: "none",
                     color: "black",
                   }}
-                  href={`/browse/artwork/${card.artworkId}`}
+                  to={`/browse/artwork/${card.artworkId}`}
                 >
                   <CardMedia
                     component="img"
@@ -162,7 +163,7 @@ function VisitorArtworkBrowsing({ artworks, room }) {
                       />
                     </div>
                   </CardContent>
-                </a>
+                </Link>
               </Card>
             </Grid>
           ))}

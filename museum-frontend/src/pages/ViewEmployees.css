@@ -9,7 +9,7 @@ a:visited {
 .hover-underline-animation {
   display: inline-block;
   position: relative;
-  color: #000000;
+  color: #4141be;
 }
 
 .hover-underline-animation::after {
@@ -20,7 +20,7 @@ a:visited {
   height: 2px;
   bottom: 0;
   left: 0;
-  background-color: #414142;
+  background-color: #4141be;
   transform-origin: bottom right;
   transition: transform 0.25s ease-out;
 }

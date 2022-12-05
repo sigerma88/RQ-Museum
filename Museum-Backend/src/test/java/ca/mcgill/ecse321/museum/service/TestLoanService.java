@@ -727,7 +727,7 @@ public class TestLoanService {
     Loan patchedLoan = loanService.putLoanById(FOURTH_LOAN_ID, true);
     assertEquals(true, patchedLoan.getRequestAccepted());
     assertEquals(true, patchedLoan.getArtwork().getIsOnLoan());
-    assertNull(patchedLoan.getArtwork().getRoom());
+    assertNotNull(patchedLoan.getArtwork().getRoom());
   }
 
   /**

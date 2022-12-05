@@ -18,6 +18,7 @@ import { LoginContext } from "../Contexts/LoginContext";
 import { LoanStatus } from "./ArtworkBrowsing";
 import LockIcon from "@mui/icons-material/Lock";
 import "./LoanStatus.css";
+import { Link } from "react-router-dom";
 
 /**
  * Function to get the artwork from the server
@@ -216,9 +217,9 @@ function VisitorArtworkLoan({ artwork, userRole, loggedIn, userId }) {
               <LockIcon />
             </Avatar>
             <Typography variant="h4">Login to request a loan</Typography>
-            <a href="/login" style={{ textDecoration: "underline" }}>
+            <Link to="/login" style={{ textDecoration: "underline" }}>
               <Typography>Click here to login</Typography>
-            </a>
+            </Link>
           </div>
         )}
         {/* TODO: Add form for manager or employee to edit artwork  */}

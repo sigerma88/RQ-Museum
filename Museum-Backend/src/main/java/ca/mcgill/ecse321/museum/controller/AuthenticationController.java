@@ -42,7 +42,7 @@ public class AuthenticationController {
 
   @PostMapping("/login")
   public ResponseEntity<?> login(HttpServletRequest request,
-      @RequestBody MuseumUserDto museumUser) {
+                                 @RequestBody MuseumUserDto museumUser) {
     try {
       if (AuthenticationUtility.isLoggedIn(request.getSession())) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot login while logged in");

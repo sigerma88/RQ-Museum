@@ -21,12 +21,6 @@ import java.util.List;
  * @author Victor
  * @author Siger
  */
-
-/**
- * Service class for Museum
- *
- * @author
- */
 @Service
 public class MuseumService {
 
@@ -50,6 +44,7 @@ public class MuseumService {
    *
    * @param museumId - museum id
    * @return museum
+   * @author VZ
    */
 
   @Transactional
@@ -121,10 +116,7 @@ public class MuseumService {
     if ((name == null || name.trim().length() == 0) && visitFee == null && schedule == null) {
       throw new IllegalArgumentException("Nothing to edit, all fields are empty");
     }
-    if (name != null) {
-      if (name.trim().length() == 0) {
-        throw new IllegalArgumentException("Name cannot be empty!");
-      }
+    if (name != null && name.trim().length() != 0) {
       museum.setName(name);
     }
     if (visitFee != null) {

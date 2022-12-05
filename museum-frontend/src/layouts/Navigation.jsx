@@ -8,9 +8,8 @@ import {
   Container,
   Menu,
   MenuItem,
-  Link,
 } from "@mui/material";
-
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { LoginContext } from "../Contexts/LoginContext";
 import { useNavigate } from "react-router-dom";
@@ -52,6 +51,7 @@ export function Navigation() {
       .then((response) => {
         let allRooms = response.data;
         setMuseum(allRooms[0].museum);
+        localStorage.setItem("museum", JSON.stringify(allRooms[0].museum));
         allRooms.sort((a, b) => {
           if (a.roomName === "Storage") {
             return 1;
@@ -99,10 +99,10 @@ export function Navigation() {
     return (
       <>
         <Box>
-          <Button style={{ color: "black" }} href="/login">
+          <Button component={Link} style={{ color: "black" }} to="/login">
             Login
           </Button>
-          <Button style={{ color: "black" }} href="/signup">
+          <Button component={Link} style={{ color: "black" }} to="/signup">
             Sign up
           </Button>
         </Box>
@@ -119,7 +119,7 @@ export function Navigation() {
     return (
       <>
         <Box>
-          <Button href="/profile" style={{ color: "black" }}>
+          <Button component={Link} to="/profile" style={{ color: "black" }}>
             Profile
           </Button>
           <Button style={{ color: "black" }} onClick={handleLogout}>
@@ -137,8 +137,8 @@ export function Navigation() {
           <Typography
             variant="h6"
             noWrap
-            component="a"
-            href="/"
+            component={Link}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -177,7 +177,7 @@ export function Navigation() {
               {rooms.map((room) => (
                 <Link
                   style={{ color: "black", textDecoration: "none" }}
-                  href={`/browse/room/${room.roomId}`}
+                  to={`/browse/room/${room.roomId}`}
                   key={room.roomId}
                 >
                   <MenuItem key={room.roomId}>{room.roomName}</MenuItem>
@@ -185,7 +185,7 @@ export function Navigation() {
               ))}
               <Link
                 style={{ color: "black", textDecoration: "none" }}
-                href="/browse/room/all"
+                to="/browse/room/all"
               >
                 <MenuItem>All Rooms</MenuItem>
               </Link>
@@ -193,7 +193,8 @@ export function Navigation() {
             {generalPage.map((page) => (
               <Button
                 key={page}
-                href={page === "Home" ? "/" : `/${page.toLowerCase()}`}
+                component={Link}
+                to={page === "Home" ? "/" : `/${page.toLowerCase()}`}
                 sx={{ my: 2, color: "black", display: "block" }}
               >
                 {page}

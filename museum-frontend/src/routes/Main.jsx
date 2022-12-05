@@ -7,13 +7,17 @@ import { Navigation } from "../layouts/Navigation";
 import { Login } from "../pages/Login";
 import { Signup } from "../pages/Signup";
 import { Profile } from "../pages/Profile";
-import { ViewEmployees } from "../pages/ViewEmployees";
+import ViewEmployees from "../pages/ViewEmployees";
 import ArtworkBrowsing from "../pages/ArtworkBrowsing";
 import ArtworkDetails from "../pages/ArtworkDetails";
 import EmployeeCreation from "../pages/EmployeeCreation";
 import TicketViewing from "../pages/TicketViewing";
-import ViewSchedule from "../pages/ViewSchedule";
+import ViewEmployeeSchedule from "../pages/ViewEmployeeSchedule";
+import MuseumInfo from "../pages/MuseumInfo";
+import ViewMuseumOpeningHours from "../pages/ViewMuseumOpeningHours";
+import { Loan } from "../pages/Loan";
 import { Footer } from "../layouts/Footer";
+import "./Main.css";
 
 /**
  * Function that routes the user to the correct page depending on the url
@@ -57,19 +61,22 @@ export function Main() {
         setMuseum,
       }}
     >
-      <BrowserRouter>
-        <Navigation />
-        <Routes>
-          <Route path="/" index element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/employee/schedule">
+      <div className="main-content">
+        <BrowserRouter>
+          <Navigation />
+          <Routes>
+            <Route path="/" index element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
             <Route
-              path=":id"
+              path="/profile"
+              element={loggedIn ? <Profile /> : <Navigate to="/login" />}
+            />
+            <Route
+              path="/employee"
               element={
-                loggedIn &&
-                (userRole === "employee" || userRole === "manager") ? (
-                  <ViewSchedule />
+                loggedIn && userRole === "manager" ? (
+                  <ViewEmployees />
                 ) : (
                   <Typography
                     variant="h3"
@@ -80,12 +87,45 @@ export function Main() {
                 )
               }
             />
+            <Route path="/employee/schedule">
+              <Route
+                path=":id"
+                element={
+                  loggedIn &&
+                  (userRole === "employee" || userRole === "manager") ? (
+                    <ViewEmployeeSchedule />
+                  ) : (
+                    <Typography
+                      variant="h3"
+                      style={{ margin: "auto", padding: "auto" }}
+                    >
+                      You are not authorized to view this page
+                    </Typography>
+                  )
+                }
+              />
+              <Route
+                path=""
+                element={
+                  loggedIn &&
+                  (userRole === "employee" || userRole === "manager") ? (
+                    <ViewEmployeeSchedule />
+                  ) : (
+                    <Typography
+                      variant="h3"
+                      style={{ margin: "auto", padding: "auto" }}
+                    >
+                      You are not authorized to view this page
+                    </Typography>
+                  )
+                }
+              />
+            </Route>
             <Route
-              path=""
+              path="/employee/create"
               element={
-                loggedIn &&
-                (userRole === "employee" || userRole === "manager") ? (
-                  <ViewSchedule />
+                loggedIn && userRole === "manager" ? (
+                  <EmployeeCreation />
                 ) : (
                   <Typography
                     variant="h3"
@@ -96,54 +136,24 @@ export function Main() {
                 )
               }
             />
-          </Route>
-          <Route
-            path="/employee"
-            element={
-              loggedIn && userRole === "manager" ? (
-                <ViewEmployees />
-              ) : (
-                <Typography
-                  variant="h3"
-                  style={{ margin: "auto", padding: "auto" }}
-                >
-                  You are not authorized to view this page
-                </Typography>
-              )
-            }
-          />
-
-          <Route
-            path="/profile"
-            element={loggedIn ? <Profile /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/employee/create"
-            element={
-              loggedIn && userRole === "manager" ? (
-                <EmployeeCreation />
-              ) : (
-                <Typography
-                  variant="h3"
-                  style={{ margin: "auto", padding: "auto" }}
-                >
-                  You are not authorized to view this page
-                </Typography>
-              )
-            }
-          />
-          <Route path="/browse/room/:roomId" element={<ArtworkBrowsing />} />
-          <Route
-            path="/loan"
-            element={loggedIn ? <Home /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/browse/artwork/:artworkId"
-            element={<ArtworkDetails />}
-          />
-          <Route path="/ticket" element={<TicketViewing />} />
-        </Routes>
-      </BrowserRouter>
+            <Route path="/museum/info" element={<MuseumInfo />} />
+            <Route
+              path="/museum/info/schedule/:id"
+              element={<ViewMuseumOpeningHours />}
+            />
+            <Route path="/browse/room/:roomId" element={<ArtworkBrowsing />} />
+            <Route
+              path="/browse/artwork/:artworkId"
+              element={<ArtworkDetails />}
+            />
+            <Route path="/ticket" element={<TicketViewing />} />
+            <Route
+              path="/loan"
+              element={loggedIn ? <Loan /> : <Navigate to="/login" />}
+            />
+          </Routes>
+        </BrowserRouter>
+      </div>
       <Footer />
     </LoginContext.Provider>
   );
