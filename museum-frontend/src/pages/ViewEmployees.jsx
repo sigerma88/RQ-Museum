@@ -119,7 +119,6 @@ function ConfirmationDialog(props) {
         </Button>
         <LoadingButton
           loading={loading}
-          loadingPosition="end"
           color="error"
           sx={{ width: 150 }}
           onClick={handleDelete}

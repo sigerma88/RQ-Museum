@@ -127,7 +127,6 @@ export function ArtworkImageChanging({
               <LoadingButton
                 variant="contained"
                 loading={loading}
-                loadingPosition="end"
                 sx={{ mt: 3, mb: 2, width: "20%" }}
                 type="submit"
               >

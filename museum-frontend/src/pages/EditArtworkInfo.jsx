@@ -115,7 +115,6 @@ export function EditArtworkInfo({ open, handleClose, artwork, setArtwork }) {
               <LoadingButton
                 variant="contained"
                 loading={loading}
-                loadingPosition="end"
                 sx={{ mt: 3, mb: 2, width: "50%" }}
                 type="submit"
               >
