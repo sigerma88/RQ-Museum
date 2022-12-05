@@ -7,10 +7,10 @@ import {
   Typography,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { LoginContext } from "../Contexts/LoginContext";
-import { Login } from "./Login";
-import { GenerateTicketPasses } from "./Ticket";
-import { TicketBuying } from "./TicketBuying";
+import { LoginContext } from "../../Contexts/LoginContext";
+import { Login } from "../Profile/Login/Login";
+import { GenerateTicketPasses } from "./Tickets/Ticket";
+import { TicketBuying } from "./TicketModals/TicketBuying";
 
 /**
  * Visitor ticket viewing component

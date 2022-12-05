@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import {
   Button,
@@ -15,16 +15,15 @@ import {
   Avatar,
   Grid,
 } from "@mui/material";
-import { LoginContext } from "../Contexts/LoginContext";
-import { LoanStatus, LoanStatusForStaff } from "./ArtworkBrowsing";
 import LockIcon from "@mui/icons-material/Lock";
-import "./LoanStatus.css";
-import { EditArtworkInfo } from "./EditArtworkInfo";
-import { EditArtworkLoanInfo } from "./EditArtworkLoanInfo";
-import { MoveArtwork } from "./MoveArtwork";
-import { ArtworkImageChanging } from "./ArtworkImageChanging";
-import { ArtworkDeleteConfirmation } from "./ArtworkDeleteConfirmation";
-import { Link } from "react-router-dom";
+import "../../LoanViewing/LoanStatus.css";
+import { LoginContext } from "../../../Contexts/LoginContext";
+import { LoanStatus, LoanStatusForStaff } from "../ArtworkBrowsing";
+import { EditArtworkInfo } from "../ArtworkModals/EditArtworkInfo";
+import { EditArtworkLoanInfo } from "../ArtworkModals/EditArtworkLoanInfo";
+import { MoveArtwork } from "../ArtworkModals/MoveArtwork";
+import { ArtworkImageChanging } from "../ArtworkModals/ArtworkImageChanging";
+import { ArtworkDeleteConfirmation } from "../ArtworkModals/ArtworkDeleteConfirmation";
 
 /**
  * Function to get the artwork from the server

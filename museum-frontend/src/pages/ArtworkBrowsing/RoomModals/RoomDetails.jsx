@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Dialog, DialogContent, DialogTitle, Typography } from "@mui/material";
-import { LoginContext } from "../Contexts/LoginContext";
+import { LoginContext } from "../../../Contexts/LoginContext";
 
 /**
  * Function to seem more information about a room

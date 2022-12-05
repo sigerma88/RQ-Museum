@@ -17,7 +17,7 @@ import {
   TextField,
 } from "@mui/material/";
 import { Link } from "react-router-dom";
-import { LoginContext } from "../Contexts/LoginContext";
+import { LoginContext } from "../../Contexts/LoginContext";
 
 /**
  * Function for manager to view and edit museum information, i.e.  name and visit fee

@@ -1,4 +1,5 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   Typography,
@@ -8,51 +9,54 @@ import {
   Paper,
   Avatar,
 } from "@mui/material";
-import "./Login.css";
-import { LoginContext } from "../Contexts/LoginContext";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import LoginIcon from "@mui/icons-material/Login";
+import "../Login/Login.css";
+import { LoginContext } from "../../../Contexts/LoginContext";
 
 /**
- * Login page
- * @returns Login page
+ * Sign in page
+ * @returns  Sign in page
  * @author Kevin
  */
 
-export function Login() {
+export function Signup() {
   // State variables for the form
-  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isFormInvalid, setIsFormInvalid] = useState(false);
-  const { setLoggedIn, setUserEmail, setUserRole, setUserName, setUserId } =
-    useContext(LoginContext);
+  const { setLoggedIn, setUserRole, setUserName, setUserEmail, setUserId } =
+    React.useContext(LoginContext);
 
   const navigate = useNavigate();
 
   /**
-   * Logs in a user when the form is submitted
+   * Registers a new user when the form is submitted
    * @author Kevin
-   **/
+   */
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     axios
-      .post("/api/auth/login", {
+      .post("/api/profile/visitor/register", {
+        name: name,
         email: email,
         password: password,
       })
       .then(function (response) {
         if (response.status === 200) {
+          // Setting information about the user once logged in to be used in the app
           setUserRole(response.data.role);
           setUserName(response.data.name);
           setUserEmail(response.data.email);
-          setUserId(response.data.id);
+          setUserId(response.data.museumUserId);
           setLoggedIn(true);
           localStorage.setItem("userName", response.data.name);
-          localStorage.setItem("userEmail", response.data.email);
           localStorage.setItem("userRole", response.data.role);
-          localStorage.setItem("loggedIn", true);
+          localStorage.setItem("loggedIn", "true");
+          localStorage.setItem("userEmail", response.data.email);
           localStorage.setItem("userId", response.data.museumUserId);
           navigate("/");
         }
@@ -66,10 +70,15 @@ export function Login() {
 
   return (
     <>
-      <div className="Login" style={{ marginTop: "10%" }}>
+      <div className="Signup" style={{ marginTop: "10%" }}>
         <Paper
           elevation={3}
-          style={{ width: "50%", margin: "auto", padding: "50px" }}
+          style={{
+            width: "50%",
+            margin: "auto",
+            padding: "50px",
+            align: "space-between",
+          }}
         >
           <Avatar
             sx={{
@@ -77,10 +86,13 @@ export function Login() {
               marginBottom: "20px",
               width: "50px",
               height: "50px",
+              bgcolor: "black",
             }}
-          ></Avatar>
+          >
+            <LoginIcon />
+          </Avatar>
           <Typography variant="h4" component="h1">
-            Log in
+            Sign up
           </Typography>
           <form onSubmit={handleSubmit}>
             <Box
@@ -91,6 +103,17 @@ export function Login() {
                 alignItems: "center",
               }}
             >
+              <TextField
+                margin="normal"
+                required
+                id="name"
+                label="Name"
+                name="name"
+                autoComplete="name"
+                autoFocus
+                onChange={(e) => setName(e.target.value)}
+                className="login-field"
+              />
               <TextField
                 margin="normal"
                 required
@@ -106,7 +129,7 @@ export function Login() {
                   errorMessage.includes("email") &&
                   errorMessage
                 }
-                error={isFormInvalid}
+                error={isFormInvalid && errorMessage.includes("email")}
               />
               <TextField
                 margin="normal"
@@ -118,32 +141,21 @@ export function Login() {
                 autoComplete="email"
                 autoFocus
                 onChange={(e) => setPassword(e.target.value)}
+                className="login-field"
                 helperText={
                   isFormInvalid &&
-                  errorMessage.includes("password") &&
+                  errorMessage.includes("Password") &&
                   errorMessage
                 }
-                error={isFormInvalid}
-                className="login-field"
+                error={isFormInvalid && errorMessage.includes("Password")}
               />
             </Box>
-            <Link
-              style={{ margin: "20px", textDecoration: "underline" }}
-              to="/signup"
-            >
-              Need an account? Click here
-            </Link>
-            <p style={{ color: "red" }}>
-              {errorMessage && errorMessage.includes("login")
-                ? errorMessage
-                : null}
-            </p>
             <Button
               type="submit"
               variant="contained"
               sx={{ mt: 3, mb: 2, width: "40%" }}
             >
-              Log in
+              Sign up
             </Button>
           </form>
         </Paper>
