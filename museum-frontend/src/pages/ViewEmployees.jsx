@@ -66,7 +66,7 @@ function ConfirmationDialog(props) {
     employees,
     setEmployees,
     selectedEmployees,
-    handleSelect,
+    setSelectedEmployees,
   } = props;
   const [loading, setLoading] = useState(false);
 
@@ -85,7 +85,6 @@ function ConfirmationDialog(props) {
                   employee.museumUserId !== selectedEmployees[i].museumUserId
               )
             );
-            handleSelect(selectedEmployees[i]);
           } else {
             console.log("Something went wrong");
           }
@@ -95,6 +94,7 @@ function ConfirmationDialog(props) {
         });
     }
 
+    await setSelectedEmployees([]);
     await setLoading(false);
     await close();
   };
@@ -341,7 +341,7 @@ export default function ViewEmployees() {
             open={deleteConfirmOpen}
             close={handleDeleteConfirmClose}
             selectedEmployees={selectedEmployees}
-            handleSelect={handleSelect}
+            setSelectedEmployees={setSelectedEmployees}
             employees={employees}
             setEmployees={setEmployees}
           />
