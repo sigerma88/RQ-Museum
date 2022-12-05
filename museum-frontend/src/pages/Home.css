@@ -29,3 +29,17 @@
   transform: scale(1.05);
   transition: all 0.3s ease-in-out;
 }
+
+.employeeAndManager-card {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.employeeAndManager-card:hover {
+  transform: scale(1.05);
+  transition: all 0.3s ease-in-out;
+}

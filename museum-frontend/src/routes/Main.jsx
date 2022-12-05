@@ -17,7 +17,7 @@ import MuseumInfo from "../pages/MuseumInfo";
 import ViewMuseumOpeningHours from "../pages/ViewMuseumOpeningHours";
 import { Loan } from "../pages/Loan";
 import { Footer } from "../layouts/Footer";
-import "./Main.css";
+import "../routes/Main.css";
 
 /**
  * Function that routes the user to the correct page depending on the url
