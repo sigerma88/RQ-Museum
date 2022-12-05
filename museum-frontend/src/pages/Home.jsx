@@ -15,6 +15,7 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { Carousel } from "react-bootstrap";
 import RoomImage from "../assets/RoomImage.jpg";
 import EmployeesImage from "../assets/EmployeesImage.jpg";
+import MuseumInfoImage from "../assets/MuseumInfoImage.jpg";
 import axios from "axios";
 
 function RoomCard({ room }) {
@@ -130,10 +131,15 @@ function LandingPage() {
   );
 }
 
+/**
+ * Card that links to view employees page
+ * @returns card with link to view employees page
+ * @author Eric
+ */
 function ViewEmployeeCard() {
   return (
-    <Link to={`/employee`}>
-      <Card className="employee-card">
+    <Link to={`/employee`} className="employeeAndManager-card">
+      <Card>
         <CardMedia
           component="img"
           height="100%"
@@ -156,6 +162,44 @@ function ViewEmployeeCard() {
             style={{ fontWeight: 500, fontSize: "32px" }}
           >
             Manage your employees
+          </Typography>
+        </CardContent>
+      </Card>
+    </Link>
+  );
+}
+
+/**
+ * Card that links to view museum info page
+ * @returns card with link to view museum info page
+ * @author Eric
+ */
+function ViewMuseumInfoCard() {
+  return (
+    <Link to={`/museum/info`} className="employeeAndManager-card">
+      <Card>
+        <CardMedia
+          component="img"
+          height="100%"
+          image={MuseumInfoImage}
+          style={{ objectFit: "cover", filter: "brightness(0.4)" }}
+          alt="Image of employees"
+        />
+        <CardContent
+          style={{
+            position: "absolute",
+            top: "40%",
+            width: "100%",
+            textAlign: "center",
+            color: "white",
+          }}
+        >
+          <Typography
+            variant="h5"
+            component="div"
+            style={{ fontWeight: 500, fontSize: "32px" }}
+          >
+            View museum info
           </Typography>
         </CardContent>
       </Card>
@@ -223,7 +267,7 @@ function ManagerHomePage() {
       <Typography variant="h3" style={{ paddingBottom: "20px" }}>
         View Museum Info
       </Typography>
-      <Link to="/museum/info">View museum info</Link>
+      <ViewMuseumInfoCard />
     </>
   );
 }
