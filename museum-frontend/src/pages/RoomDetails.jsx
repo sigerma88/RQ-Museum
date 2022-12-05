@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import {
-  Box,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Typography,
-} from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, Typography } from "@mui/material";
 import { LoginContext } from "../Contexts/LoginContext";
 
 /**

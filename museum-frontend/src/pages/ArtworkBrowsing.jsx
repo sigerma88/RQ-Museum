@@ -330,7 +330,7 @@ function VisitorArtworkBrowsing({ artworks, room }) {
  * @param room - The room to display
  * @author Siger
  */
-function StaffArtworkBrowsing({ artworks, room, setRoom }) {
+function StaffArtworkBrowsing({ artworks, room, roomChanged, setRoomChanged }) {
   // Room details modal
   const [roomDetailModalOpen, setRoomDetailModalOpen] = useState(false);
   const handleRoomDetailModalOpen = () => setRoomDetailModalOpen(true);
@@ -447,7 +447,8 @@ function StaffArtworkBrowsing({ artworks, room, setRoom }) {
 
           <EditRoom
             room={room}
-            setRoom={setRoom}
+            roomChanged={roomChanged}
+            setRoomChanged={setRoomChanged}
             open={editRoomModalOpen}
             handleClose={handleEditRoomModalClose}
           />
@@ -493,16 +494,22 @@ function ArtworkBrowsing() {
 
   // Get the room from the server
   const [room, setRoom] = useState({});
+  const [roomChanged, setRoomChanged] = useState(false);
   useEffect(() => {
     getRoom(roomId).then((room) => {
       setRoom(room);
     });
-  }, [roomId, room]);
+  }, [roomId, roomChanged]);
 
   const { loggedIn, userRole } = useContext(LoginContext);
   if (loggedIn && (userRole === "manager" || userRole === "employee")) {
     return (
-      <StaffArtworkBrowsing artworks={artworks} room={room} setRoom={setRoom} />
+      <StaffArtworkBrowsing
+        artworks={artworks}
+        room={room}
+        roomChanged={roomChanged}
+        setRoomChanged={setRoomChanged}
+      />
     );
   } else {
     return <VisitorArtworkBrowsing artworks={artworks} room={room} />;

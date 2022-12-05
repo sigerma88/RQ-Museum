@@ -23,7 +23,13 @@ import LoadingButton from "@mui/lab/LoadingButton";
  * @author Siger
  */
 
-export function EditRoom({ open, handleClose, room, setRoom }) {
+export function EditRoom({
+  open,
+  handleClose,
+  room,
+  roomChanged,
+  setRoomChanged,
+}) {
   const roomId = room.roomId;
   const museumName = room.museum.name;
   const [roomName, setRoomName] = useState(room.roomName);
@@ -47,7 +53,7 @@ export function EditRoom({ open, handleClose, room, setRoom }) {
           setIsFormInvalid(false);
           room.roomName = roomName;
           room.roomType = roomType;
-          setRoom(room);
+          setRoomChanged(!roomChanged);
           handleClose();
         } else {
           setErrorMessage("Something went wrong");
