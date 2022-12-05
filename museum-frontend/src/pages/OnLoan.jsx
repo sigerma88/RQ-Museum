@@ -26,7 +26,7 @@ export function OnLoan({ loanAccepted }) {
   useEffect(() => {
     let url = "";
     if (userRole === "visitor") {
-      url = `/api/loan/view/${userId}`;
+      url = `/api/loan/user/${userId}`;
     } else if (userRole === "manager" || userRole === "employee") {
       url = "/api/loan";
     }
@@ -46,11 +46,10 @@ export function OnLoan({ loanAccepted }) {
     axios
       .delete(`/api/loan/delete/${loanId}`)
       .then(function (response) {
-        console.log(response.data);
         setLoans(loans.filter((aLoan) => aLoan.loanId !== loanId));
       })
       .catch(function (error) {
-        console.log(error.response.data);
+        console.log(error);
       });
   }
 

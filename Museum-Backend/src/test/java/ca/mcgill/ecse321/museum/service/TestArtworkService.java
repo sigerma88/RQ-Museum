@@ -382,8 +382,10 @@ public class TestArtworkService {
       Artwork artwork = invocation.getArgument(0);
       if (artwork.getArtworkId().equals(FIRST_ARTWORK_ID)) {
         // Create a loan stub
+        List<Loan> loans = new ArrayList<>();
         Loan loan = createLoanStub(artwork);
-        return loan;
+        loans.add(loan);
+        return loans;
       } else {
         return null;
       }

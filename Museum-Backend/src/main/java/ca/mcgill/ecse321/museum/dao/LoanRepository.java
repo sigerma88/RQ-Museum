@@ -21,7 +21,7 @@ public interface LoanRepository extends CrudRepository<Loan, Long> {
 
   List<Loan> findLoanByVisitor(Visitor visitor);
 
-  Loan findLoanByArtwork(Artwork artwork);
+  List<Loan> findLoanByArtwork(Artwork artwork);
 
   Loan findLoanByArtworkAndVisitor(Artwork artwork, Visitor visitor);
 
