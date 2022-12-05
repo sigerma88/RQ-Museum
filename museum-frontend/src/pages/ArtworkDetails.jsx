@@ -260,7 +260,7 @@ function VisitorArtworkDetails({ artwork, userRole, loggedIn, userId }) {
     } else {
       setArtworkStatus({});
     }
-  }, []);
+  }, [artwork.artworkId]);
 
   return (
     <>
@@ -343,7 +343,7 @@ function StaffArtworkInfo({ artwork, setArtwork }) {
     } else {
       setArtworkStatus({});
     }
-  }, []);
+  }, [artwork.artworkId]);
 
   // Dialog for editing artwork info
   const [editArtworkInfoDialogOpen, setEditArtworkInfoDialogOpen] =
