@@ -103,11 +103,13 @@ Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/De
 
 **Contributions**
 
-|         Name         | Contributions                                            | Effort (hours) |
-| :------------------: | -------------------------------------------------------- | :------------: |
-|       Siger Ma       |   |     47        |
-|     Victor Zhao      |   |     24        |
-|     Zahra Landou     |   |     5        |
-|      Eric Joung      |   |      21       |
-| Kieyan Mamiche Afara |   |      23       |
-|      Kevin Luo       |   |      43       |
+# Effort Table
+
+|         Name         | Contributions                                                                               | Effort (hours) |
+| :------------------: | ------------------------------------------------------------------------------------------- | :------------: |
+|       Siger Ma       | Designed UI pages organization. Creating issues and managing Kanban board. Responsible for multiple UI components (see project board), backend improvements for artwork, room, loan and ticket RESTful APIs. Integration of software and SQL dump. |        47       |
+|     Victor Zhao      | Learn React and JS, responsible for manager viewing all employees and viewing/editing the employee's schedule, employee viewing their own schedule, documented                                                                                            |        24        |
+|     Zahra Landou     |  Documented                                                                                           |    5            |
+|      Eric Joung      |  Learn React and JS, did most of the UI for loan page and some of manager home page, documented                                                                                          |           21     |
+| Kieyan Mamiche Afara | Learn React and JS, did most of the UI for edit room, edit artwork loan info, edit artwork info and move artwork, documented the system architecture                                                                                             |      23          |
+|      Kevin Luo       | Frontend setup. Account authorization management and restricting RESTful endpoints. Responsible for login, editing Profile (manager, visitor, employee), sign up page for visitors, creating employee accounts from manager account, navigation bar, visitor home page, employee home page. Helping in debugging.                      |      43          
