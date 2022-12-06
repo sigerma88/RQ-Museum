@@ -27,12 +27,12 @@ We are 6 McGill University students in the ECSE department.
 
 |         Name         | Sprint 1 Efforts (hours) | Sprint 2 Efforts (hours) | Sprint 3 Efforts (hours) | Total Effort (hours) |
 | :------------------: | :----------------------: | :----------------------: | :----------------------: | :------------------: |
-|       Siger Ma       |            35            |            49             |            47             |          0           |
-|     Victor Zhao      |            19            |            55             |            24             |          0           |
-|     Zahra Landou     |            18            |            47             |            5             |          0           |
-|      Eric Joung      |            16            |            34             |            21             |          0           |
-| Kieyan Mamiche Afara |            18            |            36             |            23             |          0           |
-|      Kevin Luo       |            26            |            41             |            43             |          0           |
+|       Siger Ma       |            35            |            49             |            47             |          131           |
+|     Victor Zhao      |            19            |            55             |            24             |          98          |
+|     Zahra Landou     |            18            |            47             |            5             |          70           |
+|      Eric Joung      |            16            |            34             |            21             |          71           |
+| Kieyan Mamiche Afara |            18            |            36             |            23             |          77           |
+|      Kevin Luo       |            26            |            41             |            43             |          110           |
 
 ## Deliverable Reports
 
