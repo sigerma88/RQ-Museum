@@ -103,8 +103,6 @@ Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/De
 
 **Contributions**
 
-# Effort Table
-
 |         Name         | Contributions                                                                               | Effort (hours) |
 | :------------------: | ------------------------------------------------------------------------------------------- | :------------: |
 |       Siger Ma       | Designed UI pages organization. Creating issues and managing Kanban board. Responsible for multiple UI components (see project board), backend improvements for artwork, room, loan and ticket RESTful APIs. Integration of software and SQL dump. |        47       |
