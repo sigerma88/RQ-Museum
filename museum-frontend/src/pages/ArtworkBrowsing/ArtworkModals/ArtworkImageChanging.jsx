@@ -18,8 +18,10 @@ import LoadingButton from "@mui/lab/LoadingButton";
  * @returns True if the value is a valid image URL, false otherwise
  * @author Siger
  */
-export function isValidImageURL(value) {
-  return /^(https?:\/\/.*\.(?:png|jpg|jpeg))$/.test(value);
+export function isValidImageURL(image) {
+  let width = image.clientWidth;
+  let height = image.clientHeight;
+  return width > 0 && height > 0;
 }
 
 /**
@@ -49,7 +51,7 @@ export function ArtworkImageChanging({
     event.preventDefault();
 
     // Check if image is a valid image URL
-    if (!isValidImageURL(image)) {
+    if (!isValidImageURL(document.getElementById("imagePreview"))) {
       setErrorMessage("Image must be a valid image URL");
       setIsFormInvalid(true);
     } else {
@@ -120,7 +122,7 @@ export function ArtworkImageChanging({
                 marginTop: "1rem",
               }}
             >
-              <img src={image} alt="Artwork" height={imageHeight} />
+              <img src={image} alt="" height={imageHeight} id="imagePreview" />
             </Box>
 
             <DialogActions>
