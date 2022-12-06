@@ -91,15 +91,15 @@ Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/De
 Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/Deliverable-3) to view the project report for Deliverable 3.
 
 
-**Roles**
-|         Name         | Roles                                              |
-| :------------------: | -------------------------------------------------- |
-|       Siger Ma       |         |
-|     Victor Zhao      |         |
-|     Zahra Landou     |          |
-|      Eric Joung      |          |
-| Kieyan Mamiche Afara |          |
-|      Kevin Luo       |         |
+
+|         Name         | Roles    |
+| :------------------: | -------- |
+|       Siger Ma       |     Manager, Reviewer, Documenting, Developer  |
+|     Victor Zhao      |    Developer, Documenting   |
+|     Zahra Landou     |     Documenting     |
+|      Eric Joung      |       Developer, Documenting   |
+| Kieyan Mamiche Afara |       Developer, Documenting   |
+|      Kevin Luo       |    Manager, Reviewer, Developer      |
 
 **Contributions**
 
