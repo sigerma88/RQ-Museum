@@ -81,7 +81,11 @@ export function Navigation() {
       .then(function (response) {
         if (response.status === 200) {
           setLoggedIn(false);
-          localStorage.clear();
+          localStorage.removeItem("userName");
+          localStorage.removeItem("userEmail");
+          localStorage.removeItem("userRole");
+          localStorage.removeItem("userId");
+          localStorage.setItem("loggedIn", false);
           navigate("/");
         }
       })
