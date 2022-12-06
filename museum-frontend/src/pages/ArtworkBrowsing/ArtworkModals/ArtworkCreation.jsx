@@ -41,11 +41,11 @@ function getRooms() {
  * @author Siger
  */
 export function ArtworkCreation({ open, handleClose, room }) {
-  const [name, setName] = useState(null);
-  const [artist, setArtist] = useState(null);
+  const [name, setName] = useState("");
+  const [artist, setArtist] = useState("");
   const [isAvailableForLoan, setIsAvailableForLoan] = useState(false);
-  const [loanFee, setLoanFee] = useState(null);
-  const [image, setImage] = useState(null);
+  const [loanFee, setLoanFee] = useState("");
+  const [image, setImage] = useState("");
   const isOnLoan = false;
   const [roomId, setRoomId] = useState(room.roomId);
   const [rooms, setRooms] = useState([]);
@@ -65,7 +65,7 @@ export function ArtworkCreation({ open, handleClose, room }) {
     event.preventDefault();
 
     // Check if image is a valid image URL and if loan fee is a valid currency
-    if (!isValidImageURL(image)) {
+    if (!isValidImageURL(document.getElementById("imagePreview"))) {
       setErrorMessage("Image must be a valid image URL");
       setIsFormInvalid(true);
       setLoading(false);
@@ -223,7 +223,7 @@ export function ArtworkCreation({ open, handleClose, room }) {
                   height: "100%",
                 }}
               >
-                <img src={image} alt="Artwork" width="100%" />
+                <img src={image} alt="" width="100%" id="imagePreview" />
               </Box>
             </Grid>
           </Grid>
