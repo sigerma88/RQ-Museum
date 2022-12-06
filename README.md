@@ -27,12 +27,12 @@ We are 6 McGill University students in the ECSE department.
 
 |         Name         | Sprint 1 Efforts (hours) | Sprint 2 Efforts (hours) | Sprint 3 Efforts (hours) | Total Effort (hours) |
 | :------------------: | :----------------------: | :----------------------: | :----------------------: | :------------------: |
-|       Siger Ma       |            35            |            49             |            0             |          0           |
-|     Victor Zhao      |            19            |            55             |            0             |          0           |
-|     Zahra Landou     |            18            |            47             |            0             |          0           |
-|      Eric Joung      |            16            |            34             |            0             |          0           |
-| Kieyan Mamiche Afara |            18            |            36             |            0             |          0           |
-|      Kevin Luo       |            26            |            41             |            0             |          0           |
+|       Siger Ma       |            35            |            49             |            47             |          0           |
+|     Victor Zhao      |            19            |            55             |            24             |          0           |
+|     Zahra Landou     |            18            |            47             |            5             |          0           |
+|      Eric Joung      |            16            |            34             |            21             |          0           |
+| Kieyan Mamiche Afara |            18            |            36             |            23             |          0           |
+|      Kevin Luo       |            26            |            41             |            43             |          0           |
 
 ## Deliverable Reports
 
@@ -105,9 +105,9 @@ Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/De
 
 |         Name         | Contributions                                            | Effort (hours) |
 | :------------------: | -------------------------------------------------------- | :------------: |
-|       Siger Ma       |   |             |
-|     Victor Zhao      |   |             |
-|     Zahra Landou     |   |             |
-|      Eric Joung      |   |             |
-| Kieyan Mamiche Afara |   |             |
-|      Kevin Luo       |   |             |
+|       Siger Ma       |   |     47        |
+|     Victor Zhao      |   |     24        |
+|     Zahra Landou     |   |     5        |
+|      Eric Joung      |   |      21       |
+| Kieyan Mamiche Afara |   |      23       |
+|      Kevin Luo       |   |      43       |
