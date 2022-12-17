@@ -8,7 +8,7 @@ See [Setup.md](Setup.md)
 
 This project aims to develop a website for a museum such that it offers better services for the community. The museum software system allows visitors to browse all of the museum's artworks and create an account where they can purchase museum passes and request items on loan. The application also assists the manager in managing the museum through their account. For instance, it allows the manager to schedule opening hours, make employee schedules, price visit and rental fees, manage tasks, and hire/fire employees. Each employee will also have a unique account where they can decide where artwork should be displayed and move artwork from storage to rooms and vice-versa.
 
-For more information, you can access our [wiki](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki)!
+For more information, you can access our [wiki](https://github.com/sigerma88/RQ-Museum/wiki)!
 
 ## Group Members
 
@@ -38,7 +38,7 @@ We are 6 McGill University students in the ECSE department.
 
 ### Deliverable 1
 
-Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/Deliverable-1) to view the project report for Deliverable 1.
+Click [here](https://github.com/sigerma88/RQ-Museum/wiki/Deliverable-1) to view the project report for Deliverable 1.
 
 **Roles**
 | Name | Roles |
@@ -62,7 +62,7 @@ Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/De
 
 ### Deliverable 2
 
-Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/Deliverable-2) to view the project report for Deliverable 2.
+Click [here](https://github.com/sigerma88/RQ-Museum/wiki/Deliverable-2) to view the project report for Deliverable 2.
 
 **Roles**
 |         Name         | Roles                                              |
@@ -88,7 +88,7 @@ Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/De
 
 ### Deliverable 3
 
-Click [here](https://github.com/McGill-ECSE321-Fall2022/project-group-17/wiki/Deliverable-3) to view the project report for Deliverable 3.
+Click [here](https://github.com/sigerma88/RQ-Museum/wiki/Deliverable-3) to view the project report for Deliverable 3.
 
 
 
